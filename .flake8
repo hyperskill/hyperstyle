@@ -1,0 +1,116 @@
+[flake8]
+ignore =
+# Do not call getattr with a constant attribute value, it is not any safer than
+# normal property access.
+  B009,
+# Do not call setattr with a constant attribute value, it is not any safer than
+# normal property access.
+  B010,
+# Missing docstring in public module
+  D100,
+# Missing docstring in public class
+  D101,
+# Missing docstring in public method
+  D102,
+# Missing docstring in public function
+  D103,
+# Missing docstring in public package
+  D104,
+# Missing docstring in magic method
+  D105,
+# Missing docstring in public nested class
+  D106,
+# Missing docstring in __init__
+  D107,
+# Using null=True is not recommended for some of the Django ORM fields.
+# E.g. CharField, EmailField, ImageField, FileField, UUIDField, SlugField, TextField
+  DJ01,
+# Missing namespace in urls include()
+  DJ05,
+# ModelForm.Meta should not set fields to '__all__'
+  DJ07,
+# __str__ method should be present in all db models
+  DJ08,
+# visually indented line with same indent as next logical line
+  E129
+# line break after binary operator
+  W504,
+# You shouldn`t assign value to variable if it will be use only as return value
+  R504,
+# Use of assert detected
+  S101,
+# Use of insecure MD2, MD4, MD5, or SHA1 hash function
+  S303,
+# Standard pseudo-random generators are not suitable for security/cryptographic
+# purposes
+  S311,
+# String literal formatting using f-string.
+  SFS301,
+# variable in function should be lowercase
+  N806,
+# Missing type annotation for *args
+  ANN002,
+# Missing type annotation for **kwargs
+  ANN003,
+# Missing type annotation for self in method
+  ANN101,
+# Missing type annotation for cls in classmethod
+  ANN102,
+# An unused argument starting with an underscore
+  U101,
+# "# noqa: X000" has no matching violations
+  NQA102,
+# @staticmethod should not be used.
+  CLST100,
+# @classmethod should not be used.
+  CLST130,
+# Change outer quotes to avoid escaping innter quotes
+  Q003,
+# Found commented out code
+  E800,
+# Imports
+  I100, I201, I202,
+# Class attribute "type" is shadowing a python builtin
+  A003,
+# Continuation
+  E126,
+# Print found
+  T001,
+# Subprocess call
+  S603,
+
+exclude = .git, */data, env/, venv/
+
+max-line-length = 100
+max-doc-length = 100
+
+import-order-style = smarkets
+application-import-names = review
+app-import-names = review
+
+inline-quotes = '
+max-annotations-complexity = 4
+min-coverage-percents = 100
+max-function-length = 117
+max-parameters-amount = 9
+dictionaries = en_US,python,technical
+
+ignore-names =
+  failureException,
+  longMessage,
+  maxDiff,
+  setUp,
+  setUpClass,
+  setUpTestData,
+  tearDown,
+  tearDownClass,
+classmethod-decorators =
+  classmethod,
+  classonlymethod,
+  classproperty,
+
+max-expression-complexity = 13
+
+unused-arguments-ignore-abstract-functions = true
+unused-arguments-ignore-stub-functions = true
+unused-arguments-ignore-variadic-names = true

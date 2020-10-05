@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ed4413ce-c61b-4cf3-a871-79aa38187a28" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../tests/data/java/test_constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/data/java/test_constants.java" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ed4413ce-c61b-4cf3-a871-79aa38187a28" name="Default Changelist" comment="" />
+      <created>1577277297642</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1577277297642</updated>
+    </task>
+    <servers />
+  </component>
+</project>

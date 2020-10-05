@@ -1,0 +1,15 @@
+[flake8]
+disable_noqa=True
+ignore=W291,  # trailing whitespaces
+       W292,  # no newline at end of file
+       W293,  # blank line contains whitespaces
+       W503,  # line break before binary operator
+       C408,  # unnecessary (dict/list/tuple) call - rewrite as a literal
+       E501,  # line too long
+       E800,  # commented out code
+       I101,  # order of imports within a line
+       I202,  # additional new line
+       Q000,
+       E301, E302, E303, E304, E305,  # problem with stepik templates
+       E402,  # module level import not at top of file
+       I100,  # Import statements are in the wrong order
