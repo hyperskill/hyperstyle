@@ -2,19 +2,17 @@
 
 ## Description
 
-A tool for running pre-configured linters and evaluating code quality.
-It is used for https://hyperskill.org/.
-
-What it does:
-* runs pre-configured linters for several programming languages
-* parses their output and prints the result using a unified JSON-based format
-* evaluates the code quality value (**EXCELLENT**, **GOOD**, **MODERATE**, or **BAD**)
-
-The tool is used on the [Hyperskill](https://hyperskill.org/) platform 
+A tool for running a set of pre-configured linters and evaluating code quality.
+It is used on the [Hyperskill](https://hyperskill.org/) platform 
 to check the quality of learners' code.
 
-[Read more detail about the project at Hyperskill Help Center](https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality)
+What it does:
+* runs linters for several programming languages and parses their output
+* prints the result using a unified JSON-based format
+* evaluates the code quality value (**EXCELLENT**, **GOOD**, **MODERATE**, or **BAD**) 
+based on the linters' output and some heuristics
 
+[Read more detail about the project at Hyperskill Help Center](https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality)
 
 ## License and 3rd party software
 
