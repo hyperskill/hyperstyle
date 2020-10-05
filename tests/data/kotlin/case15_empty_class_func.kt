@@ -1,0 +1,3 @@
+class Nothing { }
+
+fun no() { }

@@ -1,0 +1,3 @@
+print('qqq')
+
+print('www')
