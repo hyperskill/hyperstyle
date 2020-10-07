@@ -5,7 +5,7 @@ class ClassWithBooleans {
     private boolean correct = true;
     private int isValid = 1;
 
-    public boolean getEnabledqqq() {
+    public boolean getEnabledqqq1() {
         return enabled;
     }
 
