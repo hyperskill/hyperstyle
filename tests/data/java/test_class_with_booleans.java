@@ -17,7 +17,7 @@ class ClassWithBooleans {
         return count;
     }
 
-    public boolean isEnabled() {
+    public boolean isEnаааabled() {
         return enabled;
     }
 
