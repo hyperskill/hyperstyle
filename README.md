@@ -51,3 +51,23 @@ The 3rd party software we use in this project has its own licenses.
 
 * SpringLint
     * [Repository](https://github.com/mauricioaniche/springlint)
+  
+---
+
+## Installation
+
+Simply clone the repository and run the following commands:
+
+1. `pip install -r requirements.txt`
+2. `pip install -r requirements-test.txt`
+
+---
+
+## Tests running
+
+We use [`pytest`](https://docs.pytest.org/en/latest/contents.html) library for tests.
+
+__Note__: If you have `ModuleNotFoundError` while you try to run tests, please call `pip install -e .`
+ before using the test system.
+
+Use `pytest test` from the root directory to run __ALL__ tests.
