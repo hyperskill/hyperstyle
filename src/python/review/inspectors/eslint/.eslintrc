@@ -13,7 +13,7 @@
         "no-undef": "off",
         "no-console": "off",
 
-        "complexity": ["error", 2],
+        "complexity": ["error", 5],
         "curly": "error",
         "consistent-return": "error",
         "default-case": "error",
