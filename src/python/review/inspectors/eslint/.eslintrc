@@ -13,7 +13,7 @@
         "no-undef": "off",
         "no-console": "off",
 
-        "complexity": ["error", 0],
+        "complexity": ["error", 2],
         "curly": "error",
         "consistent-return": "error",
         "default-case": "error",
@@ -35,7 +35,7 @@
         "no-trailing-spaces": "error",
         "no-whitespace-before-property": "error",
         "max-len": ["error", { "code": 80 }],
-        "constructor-super": "error",
+        "constructor-super": "error"
     },
     "env": {}
 }

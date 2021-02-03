@@ -70,4 +70,4 @@ We use [`pytest`](https://docs.pytest.org/en/latest/contents.html) library for t
 __Note__: If you have `ModuleNotFoundError` while you try to run tests, please call `pip install -e .`
  before using the test system.
 
-Use `pytest test` from the root directory to run __ALL__ tests.
+Use `pytest` from the root directory to run __ALL__ tests.

@@ -13,6 +13,7 @@ FILE_NAMES_AND_N_ISSUES = [
 ]
 
 
+# TODO: fix eslint
 @pytest.mark.parametrize(('file_name', 'n_issues'), FILE_NAMES_AND_N_ISSUES)
 def test_file_with_issues(file_name: str, n_issues: int):
     inspector = ESLintInspector()

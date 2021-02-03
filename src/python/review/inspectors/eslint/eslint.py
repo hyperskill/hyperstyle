@@ -32,7 +32,7 @@ class ESLintInspector(BaseInspector):
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
-            output_path = temp_dir / 'output.xml'
+            output_path = path.parent / 'output.xml'
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
@@ -40,6 +40,8 @@ class ESLintInspector(BaseInspector):
                                                   self.inspector_type,
                                                   self.choose_issue_type,
                                                   self.origin_class_to_pattern)
+
+            output_path.unlink()
 
             return issues
 
