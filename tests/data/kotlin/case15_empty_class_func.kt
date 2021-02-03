@@ -1,3 +1,0 @@
-class Nothing { }
-
-fun no() { }

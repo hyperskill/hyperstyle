@@ -1,3 +1,0 @@
-print('qqq')
-
-print('www')
