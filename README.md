@@ -1,4 +1,4 @@
-# hyperstyle
+# Hyperstyle
 
 A tool for running a set of pre-configured linters and evaluating code quality.
 It is used on the [Hyperskill](https://hyperskill.org/) platform 
@@ -9,10 +9,11 @@ to check the quality of learners' code.
 [The dockerized version](https://hub.docker.com/r/stepik/hyperstyle/tags)
 
 ## What it does:
-* runs linters for several programming languages and parses their output
-* prints the result using a unified JSON-based format
-* evaluates the code quality value (**EXCELLENT**, **GOOD**, **MODERATE**, or **BAD**) 
-based on the linters' output and some heuristics
+
+* Runs linters for several programming languages and parses their output;
+* Prints the result using a unified JSON-based format;
+* Evaluates the code quality value (**EXCELLENT**, **GOOD**, **MODERATE**, or **BAD**) 
+based on the linters' output and some heuristics.
 
 
 ## License and 3rd party software
@@ -59,7 +60,7 @@ The 3rd party software we use in this project has its own licenses.
 Simply clone the repository and run the following commands:
 
 1. `pip install -r requirements.txt`
-2. `pip install -r requirements-test.txt`
+2. `pip install -r requirements-test.txt` for tests
 
 ---
 
@@ -70,4 +71,10 @@ We use [`pytest`](https://docs.pytest.org/en/latest/contents.html) library for t
 __Note__: If you have `ModuleNotFoundError` while you try to run tests, please call `pip install -e .`
  before using the test system.
 
+__Note__: We use [eslint](https://eslint.org/) and [open-jdk 11](https://openjdk.java.net/projects/jdk/11/)
+in the tests. Please, set up the environment before running the tests. 
+You can see en example of the environment configuration in 
+the [build.yml](./.github/workflows/build.yml) file.
+
 Use `pytest` from the root directory to run __ALL__ tests.
+
