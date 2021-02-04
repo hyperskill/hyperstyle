@@ -1,3 +1,5 @@
+![Python build](https://github.com/hyperskill/hyperstyle/workflows/Python%20build/badge.svg?branch=develop)
+
 # Hyperstyle
 
 A tool for running a set of pre-configured linters and evaluating code quality.
