@@ -34,8 +34,8 @@ jobs:
     - run: ./node_modules/.bin/eslint --init
 #    - name: Install modules
 #      run: yarn run eslint . --ext .ts,.tsx
-    - name: Run ESLint
-      run: ./node_modules/.bin/eslint . --ext .ts,.tsx
+#    - name: Run ESLint
+#      run: ./node_modules/.bin/eslint . --ext .ts,.tsx
     - name: Test with pytest
       run: |
         pytest
