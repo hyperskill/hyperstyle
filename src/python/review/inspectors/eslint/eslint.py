@@ -21,19 +21,20 @@ class ESLintInspector(BaseInspector):
     }
 
     @classmethod
-    def _create_command(cls, path: Path, output_path: Path) -> List[str]:
+    def _create_command(cls, path: Path, output_path: Path, is_local: bool = False) -> List[str]:
+        eslint_command = 'eslint' if not is_local else './node_modules/.bin/eslint'
         return [
-            'eslint',
+            eslint_command,
             '-c', PATH_ESLINT_CONFIG,
             '-f', 'checkstyle',
             '-o', output_path,
             path,
         ]
 
-    def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict, is_local: bool = False) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
-            output_path = path.parent / 'output.xml'
-            command = self._create_command(path, output_path)
+            output_path = temp_dir / 'output.xml'
+            command = self._create_command(path, output_path, is_local)
             run_in_subprocess(command)
 
             issues = parse_checkstyle_file_result(output_path,
