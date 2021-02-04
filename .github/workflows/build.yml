@@ -30,12 +30,12 @@ jobs:
 #        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 #    - name: Set up Eslint
 #      uses: stefanoeb/eslint-action@1.0.2
-    - run: npm install eslint --save-dev
-    - run: ./node_modules/.bin/eslint --init
-#    - name: Install modules
-#      run: yarn run eslint . --ext .ts,.tsx
-#    - name: Run ESLint
-#      run: ./node_modules/.bin/eslint . --ext .ts,.tsx
+    - name: Set up Eslint
+      run: |
+        npm install eslint --save-dev
+        ./node_modules/.bin/eslint --init
+    - name: Check java version
+      run: java -version
     - name: Test with pytest
       run: |
         pytest
