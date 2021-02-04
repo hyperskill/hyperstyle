@@ -32,9 +32,9 @@ jobs:
 #      uses: stefanoeb/eslint-action@1.0.2
 #    - run: npm install eslint
     - name: Install modules
-        run: yarn run eslint . --ext .ts,.tsx
+      run: yarn run eslint . --ext .ts,.tsx
     - name: Run ESLint
-        run: eslint . --ext .ts,.tsx
+      run: eslint . --ext .ts,.tsx
     - name: Test with pytest
       run: |
         pytest
