@@ -35,7 +35,10 @@ jobs:
         npm install eslint --save-dev
         ./node_modules/.bin/eslint --init
     - name: Check java version
-      run: java -version
+      run: |
+        java -version
+        apt install openjdk-11-jdk
+        java -version
     - name: Test with pytest
       run: |
         pytest
