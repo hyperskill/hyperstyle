@@ -6,7 +6,9 @@
     "eslint": "./node_modules/eslint/bin/eslint.js"
   },
   "dependencies": {
-    "eslint": "^7.19.0",
     "eslint-plugin-standard": "4.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0"
   }
 }
