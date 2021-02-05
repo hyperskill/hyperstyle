@@ -111,9 +111,9 @@ class PythonAstInspector(BaseInspector):
     @classmethod
     def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
         if path.is_file():
-            root_path, path_to_files = path.parent, [path]
+            path_to_files = [path]
         else:
-            root_path, path_to_files = path, get_all_file_paths_in_dir(path)
+            path_to_files = get_all_file_paths_in_dir(path)
 
         path_to_files = language.filter_paths(path_to_files, Language.PYTHON)
 

@@ -76,6 +76,6 @@ class PMDInspector(BaseInspector):
         if not issue_type:
             logger.warning('%s: %s - unknown rule' %
                            (cls.inspector_type.value, rule))
-            issue_type = IssueType.BEST_PRACTICES
+            return IssueType.BEST_PRACTICES
 
         return issue_type

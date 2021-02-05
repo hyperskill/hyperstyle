@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
+from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.quality.model import QualityType, Rule
-from src.python.review.common.language import Language
 
 
 @dataclass
@@ -45,7 +45,6 @@ js_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_lines_bad=10,
     language=Language.JAVA
 )
-
 
 LANGUAGE_TO_CODE_STYLE_RULE_CONFIG = {
     Language.JAVA: java_code_style_rule_config,

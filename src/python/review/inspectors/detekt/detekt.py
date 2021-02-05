@@ -47,17 +47,15 @@ class DetektInspector(BaseInspector):
             command = self._create_command(path, output_path)
 
             run_in_subprocess(command)
-            issues = parse_checkstyle_file_result(output_path,
-                                                  self.inspector_type,
-                                                  self.choose_issue_type,
-                                                  self.origin_class_to_pattern)
-
-            return issues
+            return parse_checkstyle_file_result(output_path,
+                                                self.inspector_type,
+                                                self.choose_issue_type,
+                                                self.origin_class_to_pattern)
 
     @classmethod
     def choose_issue_type(cls, issue_class: str) -> IssueType:
         issue_type = DETECT_CLASS_NAME_TO_ISSUE_TYPE.get(issue_class)
         if not issue_type:
             logger.info(f'{cls.inspector_type.value}: {issue_class} - unknown origin class')
-            issue_type = IssueType.BEST_PRACTICES
+            return IssueType.BEST_PRACTICES
         return issue_type

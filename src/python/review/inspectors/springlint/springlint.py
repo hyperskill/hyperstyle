@@ -9,7 +9,8 @@ from src.python.review.common.file_system import new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, ChildrenNumberIssue, ClassResponseIssue, CodeIssue, CohesionIssue, \
+from src.python.review.inspectors.issue import BaseIssue, ChildrenNumberIssue, ClassResponseIssue, CodeIssue, \
+    CohesionIssue, \
     CouplingIssue, InheritanceIssue, IssueType, MethodNumberIssue, WeightedMethodIssue
 from src.python.review.inspectors.tips import get_child_number_tip, get_class_coupling_tip, get_class_response_tip, \
     get_cohesion_tip, get_inheritance_depth_tip, get_method_number_tip, get_weighted_method_tip

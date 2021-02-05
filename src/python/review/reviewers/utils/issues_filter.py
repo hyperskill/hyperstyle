@@ -3,12 +3,12 @@ from typing import Dict, List
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
+from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import LANGUAGE_TO_COUPLING_RULE_CONFIG
 from src.python.review.quality.rules.cyclomatic_complexity_scoring import LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG
 from src.python.review.quality.rules.function_length_scoring import LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG
 from src.python.review.quality.rules.inheritance_depth_scoring import LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG
 from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG
-from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
 
 
@@ -27,41 +27,40 @@ def filter_low_metric_issues(issues: List[BaseIssue],
 
     # TODO make an abstraction for extraction the value
     for issue in issues:
-        if (issue.type == IssueType.CYCLOMATIC_COMPLEXITY and
-                issue.cc_value <= cyclomatic_complexity_rule_config.cc_value_moderate):
+        if (issue.type == IssueType.CYCLOMATIC_COMPLEXITY
+                and issue.cc_value <= cyclomatic_complexity_rule_config.cc_value_moderate):
             continue
 
-        if (issue.type == IssueType.FUNC_LEN and
-                issue.func_len <= func_len_rule_config.func_len_bad):
+        if (issue.type == IssueType.FUNC_LEN
+                and issue.func_len <= func_len_rule_config.func_len_bad):
             continue
 
-        if (issue.type == IssueType.BOOL_EXPR_LEN and
-                issue.bool_expr_len <= boolean_expression_rule_config.bool_expr_len_good):
+        if (issue.type == IssueType.BOOL_EXPR_LEN
+                and issue.bool_expr_len <= boolean_expression_rule_config.bool_expr_len_good):
             continue
 
-        if (issue.type == IssueType.INHERITANCE_DEPTH and
-                issue.inheritance_tree_depth <= inheritance_depth_rule_config.depth_bad):
+        if (issue.type == IssueType.INHERITANCE_DEPTH
+                and issue.inheritance_tree_depth <= inheritance_depth_rule_config.depth_bad):
             continue
 
-        if (issue.type == IssueType.METHOD_NUMBER and
-                issue.method_number <= method_number_rule_config.method_number_good):
+        if (issue.type == IssueType.METHOD_NUMBER
+                and issue.method_number <= method_number_rule_config.method_number_good):
             continue
 
-        if (issue.type == IssueType.CLASS_RESPONSE and
-                issue.class_response <= response_rule_config.response_good):
+        if (issue.type == IssueType.CLASS_RESPONSE
+                and issue.class_response <= response_rule_config.response_good):
             continue
 
-        if (issue.type == IssueType.WEIGHTED_METHOD and
-                issue.weighted_method <= weighted_methods_rule_config.weighted_methods_good):
+        if (issue.type == IssueType.WEIGHTED_METHOD
+                and issue.weighted_method <= weighted_methods_rule_config.weighted_methods_good):
             continue
 
-        if (issue.type == IssueType.COUPLING and
-                issue.class_objects_coupling <= coupling_rule_config.coupling_moderate):
+        if (issue.type == IssueType.COUPLING
+                and issue.class_objects_coupling <= coupling_rule_config.coupling_moderate):
             continue
 
         # Disable this types of issue, requires further investigation.
-        if (issue.type == IssueType.COHESION or
-                issue.type == IssueType.CHILDREN_NUMBER):
+        if (issue.type == IssueType.COHESION or issue.type == IssueType.CHILDREN_NUMBER):
             continue
 
         filtered_issues.append(issue)
