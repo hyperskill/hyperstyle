@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -80,9 +80,9 @@ class PylintInspector(BaseInspector):
         if code in CODE_TO_ISSUE_TYPE:
             return CODE_TO_ISSUE_TYPE[code]
 
-        issue_type = CATEGORY_TO_ISSUE_TYPE.get(code[0])
+        issue_type: Optional[IssueType] = CATEGORY_TO_ISSUE_TYPE.get(code[0])
         if not issue_type:
             logger.warning(f'pylint: {code} - unknown error category')
-            issue_type = IssueType.BEST_PRACTICES
+            return IssueType.BEST_PRACTICES
 
         return issue_type

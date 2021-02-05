@@ -88,7 +88,6 @@ def perform_language_review(metadata: Metadata,
 def filter_out_of_range_issues(issues: List[BaseIssue],
                                start_line: int = 1,
                                end_line: Optional[int] = None) -> List[BaseIssue]:
-
     if end_line is None:
         end_line = 100_000_000
 

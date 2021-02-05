@@ -1,6 +1,5 @@
 import sys
 
-
 logging_config = {
     'version': 1,
     'formatters': {

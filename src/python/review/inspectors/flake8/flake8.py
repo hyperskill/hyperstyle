@@ -74,6 +74,6 @@ class Flake8Inspector(BaseInspector):
         issue_type = CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix)
         if not issue_type:
             logger.warning(f'flake8: {code} - unknown error code')
-            issue_type = IssueType.BEST_PRACTICES
+            return IssueType.BEST_PRACTICES
 
         return issue_type

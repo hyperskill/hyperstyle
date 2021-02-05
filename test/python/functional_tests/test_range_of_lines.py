@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 from src.python.review.common.subprocess_runner import run_in_subprocess
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 PATH_TO_FILE = DATA_PATH / 'lines_range' / 'code_with_multiple_issues.py'
 
@@ -45,7 +45,6 @@ NO_ISSUES_JSON = {
 
 def test_range_filter_when_no_range_specified(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
 
@@ -57,7 +56,6 @@ def test_range_filter_when_no_range_specified(
 
 def test_range_filter_when_start_line_is_first(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 1
@@ -70,7 +68,6 @@ def test_range_filter_when_start_line_is_first(
 
 def test_range_filter_when_start_line_is_not_first(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 3
@@ -80,8 +77,8 @@ def test_range_filter_when_start_line_is_not_first(
 
     expected_json_with_one_issue = {
         'quality': {
-                'code': 'MODERATE',
-                'text': 'Code quality (beta): MODERATE'},
+            'code': 'MODERATE',
+            'text': 'Code quality (beta): MODERATE'},
         'issues': [{
             'code': 'C0326',
             'text': 'Exactly one space required around assignment',
@@ -97,7 +94,6 @@ def test_range_filter_when_start_line_is_not_first(
 
 def test_range_filter_when_start_out_of_range(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 5
@@ -112,7 +108,6 @@ def test_range_filter_when_start_out_of_range(
 
 def test_range_filter_when_start_line_is_not_positive(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.start_line = 0
 
     with pytest.raises(Exception):
@@ -128,7 +123,6 @@ def test_range_filter_when_start_line_is_not_positive(
 
 def test_range_filter_when_end_line_is_last(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.end_line = 4  # last line with an error
@@ -141,7 +135,6 @@ def test_range_filter_when_end_line_is_last(
 
 def test_range_filter_when_end_line_is_first(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.end_line = 1
@@ -169,7 +162,6 @@ def test_range_filter_when_end_line_is_first(
 
 def test_range_filter_when_end_line_out_of_range(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.end_line = 10
@@ -182,7 +174,6 @@ def test_range_filter_when_end_line_out_of_range(
 
 def test_range_filter_when_both_start_and_end_lines_specified(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 1
@@ -196,7 +187,6 @@ def test_range_filter_when_both_start_and_end_lines_specified(
 
 def test_range_filter_when_equal_start_and_end_lines(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 3
@@ -210,7 +200,6 @@ def test_range_filter_when_equal_start_and_end_lines(
 
 def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 2
@@ -246,7 +235,6 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
 
 def test_range_filter_when_both_start_and_end_lines_out_of_range(
         local_command: LocalCommandBuilder) -> None:
-
     local_command.path = PATH_TO_FILE
     local_command.format = 'json'
     local_command.start_line = 10

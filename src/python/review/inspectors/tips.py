@@ -31,8 +31,8 @@ def add_complexity_tip(description: str) -> str:
 
 
 def get_inheritance_depth_tip() -> str:
-    return 'Too deep inheritance tree is complicated to understand. '\
-            'Try to reduce it (maybe you should use a composition instead).'
+    return 'Too deep inheritance tree is complicated to understand. ' \
+           'Try to reduce it (maybe you should use a composition instead).'
 
 
 # This issue will not be reported at this version

@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 INTELLIJ_INSPECTOR_EXECUTABLE = os.environ.get('INTELLIJ_INSPECTOR_EXECUTABLE')
 INTELLIJ_INSPECTOR_PROJECT = Path(__file__).parent / 'project'
-INTELLIJ_INSPECTOR_SETTINGS = (
-        INTELLIJ_INSPECTOR_PROJECT / '.idea' / 'inspectionProfiles' / 'custom_profiles.xml'
-)
+INTELLIJ_INSPECTOR_SETTINGS = (INTELLIJ_INSPECTOR_PROJECT / '.idea' / 'inspectionProfiles' / 'custom_profiles.xml')
 
 PYTHON_FOLDER = 'python_sources'
 JAVA_FOLDER = 'java_sources/src'
@@ -61,7 +59,6 @@ class IntelliJInspector(BaseInspector):
                 command = self.create_command(temp_dir)
                 run_in_subprocess(command)
                 issues = self.parse(temp_dir, path_in_project_to_origin_path)
-
         finally:
             for file_path_in_project in path_in_project_to_origin_path:
                 file_path_in_project.unlink()

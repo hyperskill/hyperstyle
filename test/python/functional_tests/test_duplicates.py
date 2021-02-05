@@ -30,7 +30,7 @@ def test_allow_duplicates(local_command: LocalCommandBuilder):
     pylint_var_issue_re = re.compile(r'.*PYLINT.*Unused variable \'var\'.*', re.DOTALL)
 
     assert len(stdout_filter_duplicates) < len(stdout_allow_duplicates)
-    assert ((flake8_var_issue_re.match(stdout_allow_duplicates) is not None) and
-            (pylint_var_issue_re.match(stdout_allow_duplicates) is not None))
-    assert ((flake8_var_issue_re.match(stdout_filter_duplicates) is not None) ^
-            (pylint_var_issue_re.match(stdout_filter_duplicates) is not None))
+    assert ((flake8_var_issue_re.match(stdout_allow_duplicates) is not None) and (
+            pylint_var_issue_re.match(stdout_allow_duplicates) is not None))
+    assert ((flake8_var_issue_re.match(stdout_filter_duplicates) is not None) ^ (
+            pylint_var_issue_re.match(stdout_filter_duplicates) is not None))

@@ -13,7 +13,7 @@ from src.python.review.reviewers.utils.metadata_exploration import explore_file,
 
 @pytest.fixture
 def branch_info_response() -> Dict[str, Any]:
-    response = {
+    return {
         'result': {
             'commitsCount': 1,
             'filesCount': 1,
@@ -43,12 +43,10 @@ def branch_info_response() -> Dict[str, Any]:
         }
     }
 
-    return response
-
 
 @pytest.fixture
 def ownership_summary_response() -> Dict[str, Any]:
-    response = {
+    return {
         'result': {
             'files': [
                 {
@@ -64,8 +62,6 @@ def ownership_summary_response() -> Dict[str, Any]:
             ]
         }
     }
-
-    return response
 
 
 @dataclass(frozen=True)

@@ -67,6 +67,6 @@ class CheckstyleInspector(BaseInspector):
         issue_type = CHECK_CLASS_NAME_TO_ISSUE_TYPE.get(check_class_name)
         if not issue_type:
             logger.warning('Checkstyle: %s - unknown check class' % check_class_name)
-            issue_type = IssueType.BEST_PRACTICES
+            return IssueType.BEST_PRACTICES
 
         return issue_type
