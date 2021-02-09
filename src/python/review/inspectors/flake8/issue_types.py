@@ -15,6 +15,9 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
 
     # builtin naming
     'A003': IssueType.BEST_PRACTICES,
+
+    # low cohesion
+    'H601': IssueType.COHESION,
 }
 
 CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
@@ -30,6 +33,7 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'F': IssueType.BEST_PRACTICES,  # standard flake8
     'C': IssueType.BEST_PRACTICES,  # flake8-comprehensions
     'SC': IssueType.BEST_PRACTICES,  # flake8-spellcheck
-
     'WPS': IssueType.BEST_PRACTICES,  # wemake-python-styleguide
+
+    'H': IssueType.COHESION,  # cohesion
 }
