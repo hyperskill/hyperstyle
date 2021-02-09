@@ -22,6 +22,7 @@ class IssueType(Enum):
     COHESION = 'COHESION'
     CLASS_RESPONSE = 'CLASS_RESPONSE'
     METHOD_NUMBER = 'METHOD_NUMBER'
+    DOCSTRING = 'DOCSTRING'
 
 
 @dataclass(frozen=True, eq=True)

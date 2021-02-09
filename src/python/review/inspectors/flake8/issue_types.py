@@ -36,4 +36,6 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'WPS': IssueType.BEST_PRACTICES,  # wemake-python-styleguide
 
     'H': IssueType.COHESION,  # cohesion
+
+    'D': IssueType.DOCSTRING,  # flake8-docstrings
 }
