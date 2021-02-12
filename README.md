@@ -26,37 +26,37 @@ The 3rd party software we use in this project has its own licenses.
 
 Python language:
 
--[x] flake8 [MIT]
+- [x]  flake8 [MIT]
     * [Site and docs](https://flake8.pycqa.org/en/latest/)
     * [Repository](https://github.com/PyCQA/flake8)
   
--[x] Pylint [GNU LGPL v2]
+- [x]  Pylint [GNU LGPL v2]
     * [Site and docs](https://www.pylint.org/)
     * [Repository](https://github.com/PyCQA/pylint)
   
 
 Java language:
 
--[x] PMD [BSD]
+- [x]  PMD [BSD]
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
--[x] Checkstyle [GNU LGPL v2.1]
+- [x]  Checkstyle [GNU LGPL v2.1]
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
   
--[ ] SpotBugs [GNU LGPL v2.1]
+- [ ]  SpotBugs [GNU LGPL v2.1]
     * [Site and docs](https://spotbugs.github.io/)
     * [Repository](https://github.com/spotbugs/spotbugs)
   
--[ ] SpringLint
+- [ ]  SpringLint
     * [Repository](https://github.com/mauricioaniche/springlint)
 
 
 
 Kotlin language:
 
--[x] Detekt [Apache 2.0]
+- [x]  Detekt [Apache 2.0]
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 
@@ -64,7 +64,7 @@ Kotlin language:
 
 JavaScript language:
 
--[x] ESlint [MIT]
+- [x]  ESlint [MIT]
     * [Site and docs](https://eslint.org/)
     * [Repository](https://github.com/eslint/eslint)
   
