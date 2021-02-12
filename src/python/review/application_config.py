@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Optional, Set
+from typing import Optional, Set, List
 
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -22,3 +22,7 @@ class LanguageVersion(Enum):
     JAVA_8 = 'java8'
     JAVA_9 = 'java9'
     JAVA_11 = 'java11'
+
+    @classmethod
+    def values(cls) -> List[str]:
+        return [member.value for _, member in LanguageVersion.__members__.items()]

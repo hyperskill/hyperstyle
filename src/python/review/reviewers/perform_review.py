@@ -2,7 +2,7 @@ import enum
 import logging
 from functools import partial
 from pathlib import Path
-from typing import Final
+from typing import Final, List
 
 from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.language import Language
@@ -44,6 +44,10 @@ class OutputFormat(enum.Enum):
 
     def __repr__(self):
         return str(self)
+
+    @classmethod
+    def values(cls) -> List[str]:
+        return [member.value for _, member in OutputFormat.__members__.items()]
 
 
 def perform_and_print_review(path: Path,
