@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Set, Union
 
-from src.python.review.common.file_system import get_all_file_paths_in_dir
+from src.python.review.common.file_system import get_all_file_system_items
 from src.python.review.common.language import guess_file_language, Language
 
 
@@ -71,7 +71,7 @@ def explore_project(path: Path) -> ProjectMetadata:
         raise AssertionError
 
     inner_files = []
-    for file_path in get_all_file_paths_in_dir(path):
+    for file_path in get_all_file_system_items(path):
         inner_files.append(explore_file(file_path))
 
     return ProjectMetadata(path, inner_files)

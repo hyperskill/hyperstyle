@@ -7,7 +7,7 @@ from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, CyclomaticComplexityIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, CyclomaticComplexityIssue, IssueType, IssueData
 from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
 
 logger = logging.getLogger(__name__)
@@ -45,13 +45,9 @@ class Flake8Inspector(BaseInspector):
             file_path = Path(groups[0])
             line_no = int(groups[1])
 
-            issue_data = {
-                'file_path': file_path,
-                'line_no': line_no,
-                'column_no': int(groups[2]) if int(groups[2]) > 0 else 1,
-                'origin_class': origin_class,
-                'inspector_type': cls.inspector_type,
-            }
+            issue_data = IssueData.get_base_issue_data_dict(file_path, cls.inspector_type, line_number=line_no,
+                                                            column_number=int(groups[2]) if int(groups[2]) > 0 else 1,
+                                                            origin_class=origin_class)
             if cc_match is not None:
                 issue_data['description'] = get_cyclomatic_complexity_tip()
                 issue_data['cc_value'] = int(cc_match.groups()[1])

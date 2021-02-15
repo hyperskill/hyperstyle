@@ -3,12 +3,14 @@ import subprocess
 from pathlib import Path
 from typing import Union
 
+from src.python.review.common.file_system import Encoding, Extension
+
 logger = logging.getLogger(__name__)
 
 
 # TODO it cannot compile gradle-based projects
 def javac_project(dir_path: Path) -> bool:
-    return javac(f'$(find {dir_path} -name "*.java")')
+    return javac(f'$(find {dir_path} -name "*{Extension.JAVA.value}")')
 
 
 def javac(javac_args: Union[str, Path]) -> bool:
@@ -18,7 +20,7 @@ def javac(javac_args: Union[str, Path]) -> bool:
             shell=True,
             stderr=subprocess.STDOUT
         )
-        output_str = str(output_bytes, 'utf-8')
+        output_str = str(output_bytes, Encoding.UTF_ENCODING.value)
 
         if output_str:
             logger.debug(output_str)
@@ -26,5 +28,5 @@ def javac(javac_args: Union[str, Path]) -> bool:
         return True
     except subprocess.CalledProcessError as error:
         logger.error(f'Failed compile java code with error: '
-                     f'{str(error.stdout, "utf-8")}')
+                     f'{str(error.stdout, Encoding.UTF_ENCODING.value)}')
         return False

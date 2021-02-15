@@ -4,7 +4,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, List
 
-from src.python.review.common.file_system import get_all_file_paths_in_dir
+from src.python.review.common.file_system import get_all_file_system_items
 from src.python.review.common.java_compiler import javac, javac_project
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -35,11 +35,11 @@ class SpotbugsInspector(BaseInspector):
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
         if path.is_file():
-            compilation_ok = javac(path)
+            is_successful = javac(path)
         else:
-            compilation_ok = javac_project(path)
+            is_successful = javac_project(path)
 
-        if not compilation_ok:
+        if not is_successful:
             logger.error('%s: cant compile java files')
 
         return self._inspect_compiled(path)
@@ -54,7 +54,7 @@ class SpotbugsInspector(BaseInspector):
         if path.is_file():
             file_paths = [path]
         else:
-            file_paths = get_all_file_paths_in_dir(path)
+            file_paths = get_all_file_system_items(path)
 
         java_file_paths = [file_path for file_path in file_paths if file_path.suffix == '.java']
         file_path_counter = Counter(java_file_paths)

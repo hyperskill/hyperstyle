@@ -25,10 +25,7 @@ def run_inspector(path: Path,
 def inspect_in_parallel(path: Path,
                         config: ApplicationConfig,
                         inspectors: List[BaseInspector]) -> List[BaseIssue]:
-    inspectors = filter(
-        lambda inspector: inspector.inspector_type not in config.disabled_inspectors,
-        inspectors
-    )
+    inspectors = filter(lambda i: i.inspector_type not in config.disabled_inspectors, inspectors)
 
     if config.n_cpu == 1:
         issues = []

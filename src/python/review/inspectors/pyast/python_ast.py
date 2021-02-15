@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from src.python.review.common import language
-from src.python.review.common.file_system import get_all_file_paths_in_dir
+from src.python.review.common.file_system import get_all_file_system_items
 from src.python.review.common.language import Language
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
@@ -113,9 +113,9 @@ class PythonAstInspector(BaseInspector):
         if path.is_file():
             path_to_files = [path]
         else:
-            path_to_files = get_all_file_paths_in_dir(path)
+            path_to_files = get_all_file_system_items(path)
 
-        path_to_files = language.filter_paths(path_to_files, Language.PYTHON)
+        path_to_files = language.filter_paths_by_language(path_to_files, Language.PYTHON)
 
         metrics = []
         for path_to_file in path_to_files:

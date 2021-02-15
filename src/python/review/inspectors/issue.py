@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -22,6 +23,36 @@ class IssueType(Enum):
     COHESION = 'COHESION'
     CLASS_RESPONSE = 'CLASS_RESPONSE'
     METHOD_NUMBER = 'METHOD_NUMBER'
+
+
+# Keys in results dictionary
+class IssueData(Enum):
+    # Base fields
+    FILE_PATH = 'file_path'
+    LINE_NUMBER = 'line_no'
+    COLUMN_NUMBER = 'column_no'
+    ORIGIN_ClASS = 'origin_class'
+    INSPECTOR_TYPE = 'inspector_type'
+
+    # Additional fields
+    ISSUE_TYPE = 'type'
+    DESCRIPTION = 'description'
+
+    LINE_LEN = 'line_len'
+    FUNCTION_LEN = 'func_len'
+    BOOL_EXPR_LEN = 'bool_expr_len'
+    CYCLOMATIC_COMPLEXITY = 'cc_value'
+
+    @classmethod
+    def get_base_issue_data_dict(cls, file_path: Union[str, Path], inspector_type: InspectorType, line_number: int = 1,
+                                 column_number: int = 1, origin_class: str = '') -> Dict[str, Any]:
+        return {
+            cls.FILE_PATH.value: file_path,
+            cls.LINE_NUMBER.value: line_number,
+            cls.COLUMN_NUMBER.value: column_number,
+            cls.ORIGIN_ClASS.value: origin_class,
+            cls.INSPECTOR_TYPE.value: inspector_type
+        }
 
 
 @dataclass(frozen=True, eq=True)
