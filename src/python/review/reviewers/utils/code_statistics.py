@@ -50,12 +50,8 @@ class CodeStatistics:
 
 
 def __get_total_lines(path: Path) -> int:
-    lines = get_content_from_file(path, to_strip_nl=False)
-    total_lines = 0
-    for line in lines:
-        if not __is_empty(line) and not __is_comment(line):
-            total_lines += 1
-    return total_lines
+    lines = get_content_from_file(path, to_strip_nl=False).splitlines()
+    return len(list(filter(lambda line: not __is_empty(line) and not __is_comment(line), lines)))
 
 
 def __is_empty(line: str) -> bool:

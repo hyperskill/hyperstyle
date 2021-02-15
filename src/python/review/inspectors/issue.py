@@ -1,3 +1,4 @@
+import abc
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -68,72 +69,111 @@ class BaseIssue:
     type: IssueType
 
 
+class Measurable(abc.ABC):
+    @abc.abstractmethod
+    def measure(self) -> int:
+        pass
+
+
 @dataclass(frozen=True)
 class CodeIssue(BaseIssue):
     pass
 
 
 @dataclass(frozen=True)
-class BoolExprLenIssue(BaseIssue):
+class BoolExprLenIssue(BaseIssue, Measurable):
     bool_expr_len: int
     type = IssueType.BOOL_EXPR_LEN
 
+    def measure(self) -> int:
+        return self.bool_expr_len
+
 
 @dataclass(frozen=True)
-class FuncLenIssue(BaseIssue):
+class FuncLenIssue(BaseIssue, Measurable):
     func_len: int
     type = IssueType.FUNC_LEN
 
+    def measure(self) -> int:
+        return self.func_len
+
 
 @dataclass(frozen=True)
-class LineLenIssue(BaseIssue):
+class LineLenIssue(BaseIssue, Measurable):
     line_len: int
     type = IssueType.LINE_LEN
 
+    def measure(self) -> int:
+        return self.line_len
+
 
 @dataclass(frozen=True)
-class CyclomaticComplexityIssue(BaseIssue):
+class CyclomaticComplexityIssue(BaseIssue, Measurable):
     cc_value: int
     type = IssueType.CYCLOMATIC_COMPLEXITY
 
+    def measure(self) -> int:
+        return self.cc_value
+
 
 @dataclass(frozen=True)
-class InheritanceIssue(BaseIssue):
+class InheritanceIssue(BaseIssue, Measurable):
     inheritance_tree_depth: int
     type = IssueType.INHERITANCE_DEPTH
 
+    def measure(self) -> int:
+        return self.inheritance_tree_depth
+
 
 @dataclass(frozen=True)
-class ChildrenNumberIssue(BaseIssue):
+class ChildrenNumberIssue(BaseIssue, Measurable):
     children_number: int
     type = IssueType.CHILDREN_NUMBER
 
+    def measure(self) -> int:
+        return self.children_number
+
 
 @dataclass(frozen=True)
-class WeightedMethodIssue(BaseIssue):
+class WeightedMethodIssue(BaseIssue, Measurable):
     weighted_method: int
     type = IssueType.WEIGHTED_METHOD
 
+    def measure(self) -> int:
+        return self.weighted_method
+
 
 @dataclass(frozen=True)
-class CouplingIssue(BaseIssue):
+class CouplingIssue(BaseIssue, Measurable):
     class_objects_coupling: int
     type = IssueType.COUPLING
 
+    def measure(self) -> int:
+        return self.class_objects_coupling
+
 
 @dataclass(frozen=True)
-class CohesionIssue(BaseIssue):
+class CohesionIssue(BaseIssue, Measurable):
     cohesion_lack: int
     type = IssueType.COHESION
 
+    def measure(self) -> int:
+        return self.cohesion_lack
+
 
 @dataclass(frozen=True)
-class ClassResponseIssue(BaseIssue):
+class ClassResponseIssue(BaseIssue, Measurable):
     class_response: int
     type = IssueType.CLASS_RESPONSE
 
+    def measure(self) -> int:
+        return self.class_response
+
 
 @dataclass(frozen=True)
-class MethodNumberIssue(BaseIssue):
+class MethodNumberIssue(BaseIssue, Measurable):
     method_number: int
     type = IssueType.METHOD_NUMBER
+
+    def measure(self) -> int:
+        return self.method_number

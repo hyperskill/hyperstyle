@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from src.python.review.common.language import Language
-from src.python.review.inspectors.issue import BaseIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import LANGUAGE_TO_COUPLING_RULE_CONFIG
@@ -12,60 +12,37 @@ from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_ME
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
 
 
-def filter_low_metric_issues(issues: List[BaseIssue],
-                             language: Language) -> List[BaseIssue]:
-    filtered_issues = []
+def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:
+    return {
+        IssueType.CYCLOMATIC_COMPLEXITY: LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[language].cc_value_moderate,
+        IssueType.FUNC_LEN: LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG[language].func_len_bad,
+        IssueType.BOOL_EXPR_LEN: LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG[language].bool_expr_len_good,
+        IssueType.INHERITANCE_DEPTH: LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG[language].depth_bad,
+        IssueType.METHOD_NUMBER: LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language].method_number_good,
+        IssueType.COUPLING: LANGUAGE_TO_COUPLING_RULE_CONFIG[language].coupling_moderate,
+        IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
+        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good
+    }
 
-    func_len_rule_config = LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG[language]
-    boolean_expression_rule_config = LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG[language]
-    cyclomatic_complexity_rule_config = LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[language]
-    inheritance_depth_rule_config = LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG[language]
-    method_number_rule_config = LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language]
-    coupling_rule_config = LANGUAGE_TO_COUPLING_RULE_CONFIG[language]
-    response_rule_config = LANGUAGE_TO_RESPONSE_RULE_CONFIG[language]
-    weighted_methods_rule_config = LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language]
 
-    # TODO make an abstraction for extraction the value
-    for issue in issues:
-        if (issue.type == IssueType.CYCLOMATIC_COMPLEXITY
-                and issue.cc_value <= cyclomatic_complexity_rule_config.cc_value_moderate):
-            continue
+def __more_than_low_measure(issue: BaseIssue, issue_type_to_low_measure_dict: Dict[IssueType, int]) -> bool:
+    issue_type = issue.type
+    if isinstance(issue, Measurable) and issue.measure() <= issue_type_to_low_measure_dict.get(issue_type, -1):
+        return False
+    return True
 
-        if (issue.type == IssueType.FUNC_LEN
-                and issue.func_len <= func_len_rule_config.func_len_bad):
-            continue
 
-        if (issue.type == IssueType.BOOL_EXPR_LEN
-                and issue.bool_expr_len <= boolean_expression_rule_config.bool_expr_len_good):
-            continue
+def filter_low_measure_issues(issues: List[BaseIssue],
+                              language: Language) -> List[BaseIssue]:
+    issue_type_to_low_measure_dict = __get_issue_type_to_low_measure_dict(language)
 
-        if (issue.type == IssueType.INHERITANCE_DEPTH
-                and issue.inheritance_tree_depth <= inheritance_depth_rule_config.depth_bad):
-            continue
+    # Disable this types of issue, requires further investigation.
+    ignored_issues = [IssueType.COHESION, IssueType.CHILDREN_NUMBER]
 
-        if (issue.type == IssueType.METHOD_NUMBER
-                and issue.method_number <= method_number_rule_config.method_number_good):
-            continue
-
-        if (issue.type == IssueType.CLASS_RESPONSE
-                and issue.class_response <= response_rule_config.response_good):
-            continue
-
-        if (issue.type == IssueType.WEIGHTED_METHOD
-                and issue.weighted_method <= weighted_methods_rule_config.weighted_methods_good):
-            continue
-
-        if (issue.type == IssueType.COUPLING
-                and issue.class_objects_coupling <= coupling_rule_config.coupling_moderate):
-            continue
-
-        # Disable this types of issue, requires further investigation.
-        if (issue.type == IssueType.COHESION or issue.type == IssueType.CHILDREN_NUMBER):
-            continue
-
-        filtered_issues.append(issue)
-
-    return filtered_issues
+    return list(filter(
+        lambda issue: issue.type not in ignored_issues and __more_than_low_measure(issue,
+                                                                                   issue_type_to_low_measure_dict),
+        issues))
 
 
 def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
