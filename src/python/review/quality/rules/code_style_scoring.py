@@ -64,6 +64,7 @@ class CodeStyleRule(Rule):
         self.quality_type = None
         self.next_level_delta = 0
 
+    # TODO: refactor
     def apply(self, n_code_style_lines, n_code_style, total_lines):
         self.total_lines = total_lines
         self.n_code_style_lines = n_code_style_lines

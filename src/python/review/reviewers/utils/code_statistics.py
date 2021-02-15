@@ -1,36 +1,69 @@
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
+from src.python.review.common.file_system import get_content_from_file
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 
 
 @dataclass
 class CodeStatistics:
-    n_code_style_issues: int
     n_best_practices_issue: int
     n_error_prone_issues: int
-    max_bool_expr_len: int
-    max_func_len: int
     n_line_len: int
-    max_cyclomatic_complexity: int
-    inheritance_depth: int
-    class_response: int
-    coupling: int
-    weighted_method_complexities: int
+
     method_number: int
-    total_lines: int
+
+    max_cyclomatic_complexity: int
+    max_func_len: int
+    max_bool_expr_len: int
+
     code_style_lines: int
+    inheritance_depth: int
+    coupling: int
+    class_response: int
+    weighted_method_complexities: int
+
+    n_code_style_issues: int
+    total_lines: int
+
+    @property
+    def issue_type_to_statistics_dict(self) -> Dict[IssueType, int]:
+        return {
+            IssueType.BEST_PRACTICES: self.n_best_practices_issue,
+            IssueType.ERROR_PRONE: self.n_error_prone_issues,
+            IssueType.LINE_LEN: self.n_line_len,
+
+            IssueType.METHOD_NUMBER: self.method_number,
+
+            IssueType.CYCLOMATIC_COMPLEXITY: self.max_cyclomatic_complexity,
+            IssueType.FUNC_LEN: self.max_func_len,
+            IssueType.BOOL_EXPR_LEN: self.max_bool_expr_len,
+
+            IssueType.CODE_STYLE: self.code_style_lines,
+            IssueType.INHERITANCE_DEPTH: self.inheritance_depth,
+            IssueType.COUPLING: self.coupling,
+            IssueType.CLASS_RESPONSE: self.class_response,
+            IssueType.WEIGHTED_METHOD: self.weighted_method_complexities
+        }
 
 
-def get_total_lines(path):
-    lines = open(str(path), 'r').readlines()
+def __get_total_lines(path: Path) -> int:
+    lines = get_content_from_file(path, to_strip_nl=False)
     total_lines = 0
     for line in lines:
-        if len(line.strip()) > 0 and not line.strip().startswith(('#', '//')):
+        if not __is_empty(line) and not __is_comment(line):
             total_lines += 1
     return total_lines
+
+
+def __is_empty(line: str) -> bool:
+    return len(line.strip()) == 0
+
+
+def __is_comment(line: str) -> bool:
+    return line.strip().startswith(('#', '//'))
 
 
 def get_code_style_lines(issues: List[BaseIssue]) -> int:
@@ -85,18 +118,18 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
     )
 
     return CodeStatistics(
-        issue_type_counter[IssueType.CODE_STYLE],
-        issue_type_counter[IssueType.BEST_PRACTICES],
-        issue_type_counter[IssueType.ERROR_PRONE],
-        max(bool_expr_lens, default=0),
-        max(func_lens, default=0),
-        issue_type_counter[IssueType.LINE_LEN],
-        max(cyclomatic_complexities, default=0),
-        max(inheritance_depths, default=0),
-        max(class_responses, default=0),
-        max(couplings, default=0),
-        max(weighted_method_complexities, default=0),
-        max(method_numbers, default=0),
-        get_total_lines(path),
-        get_code_style_lines(issues)
+        n_code_style_issues=issue_type_counter[IssueType.CODE_STYLE],
+        n_best_practices_issue=issue_type_counter[IssueType.BEST_PRACTICES],
+        n_error_prone_issues=issue_type_counter[IssueType.ERROR_PRONE],
+        max_bool_expr_len=max(bool_expr_lens, default=0),
+        max_func_len=max(func_lens, default=0),
+        n_line_len=issue_type_counter[IssueType.LINE_LEN],
+        max_cyclomatic_complexity=max(cyclomatic_complexities, default=0),
+        inheritance_depth=max(inheritance_depths, default=0),
+        class_response=max(class_responses, default=0),
+        coupling=max(couplings, default=0),
+        weighted_method_complexities=max(weighted_method_complexities, default=0),
+        method_number=max(method_numbers, default=0),
+        total_lines=__get_total_lines(path),
+        code_style_lines=get_code_style_lines(issues)
     )
