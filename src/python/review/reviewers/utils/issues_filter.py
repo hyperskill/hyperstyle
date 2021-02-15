@@ -1,4 +1,5 @@
-from typing import Dict, List
+from collections import defaultdict
+from typing import Dict, List, Tuple
 
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
@@ -45,11 +46,24 @@ def filter_low_measure_issues(issues: List[BaseIssue],
         issues))
 
 
+FilePath = str
+LinesNumber = int
+Inspector = str
+GroupedIssues = Dict[FilePath, Dict[LinesNumber, Dict[Inspector, Dict[IssueType, List[BaseIssue]]]]]
+
+
+def __init_grouped_issues() -> GroupedIssues:
+    return defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: []))))
+
+
 def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
     """
-    Skipping duplicate issues using heuristic rules
+    Skipping duplicate issues using heuristic rules:
+
+    For each line's number try to count issues with unique type for each unique inspector and select the best one.
+    The inspector with the biggest number of issues for each type will be chosen.
     """
-    grouped_issues = group_issues_by_file_line_inspector_and_type(issues)
+    grouped_issues = group_issues(issues)
 
     selected_issues = []
     for _, issues_in_file in grouped_issues.items():
@@ -62,42 +76,50 @@ def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
                 selected_issues.extend(all_issues)
             # conflicts -> take issues found by a more informative inspector
             elif len(issues_in_line) > 1:
-                inspectors_by_types = {}
+                default_inspector = 'UNKNOWN'
+                # By default for each <IssueType> we add the tuple (inspector: 'UNKNOWN', issue_type_freq: -1)
+                inspectors_by_types: Dict[IssueType, Tuple[Inspector, int]] = defaultdict(
+                    lambda: (default_inspector, -1))
                 for inspector, issues_by_types in issues_in_line.items():
+                    # Handle all possible issue types
                     for issue_type in IssueType:
-                        count = len(issues_by_types.get(issue_type, []))
-                        if count == 0:
+                        issue_type_freq = len(issues_by_types.get(issue_type, []))
+                        # This <issue_type> was not find by the <inspector>
+                        if issue_type_freq == 0:
                             continue
-                        if issue_type not in inspectors_by_types:
-                            inspectors_by_types[issue_type] = ('UNKNOWN', -1)
-                        if count > inspectors_by_types[issue_type][1]:
-                            inspectors_by_types[issue_type] = (inspector, count)
+                        max_issue_type_freq = inspectors_by_types[issue_type][1]
+                        # Current inspector has more issues with type <issue_type> than previous ones
+                        if issue_type_freq > max_issue_type_freq:
+                            inspectors_by_types[issue_type] = (inspector, issue_type_freq)
 
-                for issue_type, inspector in inspectors_by_types.items():
-                    selected_issues.extend(issues_in_line[inspector[0]][issue_type])
+                for issue_type, inspector_to_freq in inspectors_by_types.items():
+                    inspector = inspector_to_freq[0]
+                    if inspector != default_inspector:
+                        selected_issues.extend(issues_in_line[inspector][issue_type])
 
     return selected_issues
 
 
-def group_issues_by_file_line_inspector_and_type(issues: List[BaseIssue]) -> dict:
-    grouped_issues: Dict[str, Dict[int, Dict[str, Dict[IssueType, List[BaseIssue]]]]] = {}
+def group_issues(issues: List[BaseIssue]) -> GroupedIssues:
+    """
+    Group issues according to the following structure:
+    - FILE_PATH:
+        - LINES_NUMBER:
+            - INSPECTOR:
+                - ISSUE_TYPE:
+                    [ISSUES]
+
+    We will consider each file to find potential duplicates:
+    if one line number in the file contains several same issues which were found by different inspectors,
+    we will try to find the best one. See <filter_duplicate_issues> function.
+    """
+    grouped_issues: GroupedIssues = __init_grouped_issues()
 
     for issue in issues:
         file_path = str(issue.file_path)
-        if file_path not in grouped_issues:
-            grouped_issues[file_path] = {}
-
         line_no = issue.line_no
-        if line_no not in grouped_issues[file_path]:
-            grouped_issues[file_path][line_no] = {}
-
         inspector_name = str(issue.inspector_type)
-        if inspector_name not in grouped_issues[file_path][line_no]:
-            grouped_issues[file_path][line_no][inspector_name] = {}
-
         issue_type = issue.type
-        if issue_type not in grouped_issues[file_path][line_no][inspector_name]:
-            grouped_issues[file_path][line_no][inspector_name][issue_type] = []
 
         grouped_issues[file_path][line_no][inspector_name][issue_type].append(issue)
 
