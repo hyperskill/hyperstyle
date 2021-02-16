@@ -1,7 +1,8 @@
-from typing import Dict, List
+from collections import defaultdict
+from typing import Dict, List, Tuple
 
 from src.python.review.common.language import Language
-from src.python.review.inspectors.issue import BaseIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import LANGUAGE_TO_COUPLING_RULE_CONFIG
@@ -12,67 +13,57 @@ from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_ME
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
 
 
-def filter_low_metric_issues(issues: List[BaseIssue],
-                             language: Language) -> List[BaseIssue]:
-    filtered_issues = []
+def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:
+    return {
+        IssueType.CYCLOMATIC_COMPLEXITY: LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[language].cc_value_moderate,
+        IssueType.FUNC_LEN: LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG[language].func_len_bad,
+        IssueType.BOOL_EXPR_LEN: LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG[language].bool_expr_len_good,
+        IssueType.INHERITANCE_DEPTH: LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG[language].depth_bad,
+        IssueType.METHOD_NUMBER: LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language].method_number_good,
+        IssueType.COUPLING: LANGUAGE_TO_COUPLING_RULE_CONFIG[language].coupling_moderate,
+        IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
+        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good
+    }
 
-    func_len_rule_config = LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG[language]
-    boolean_expression_rule_config = LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG[language]
-    cyclomatic_complexity_rule_config = LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[language]
-    inheritance_depth_rule_config = LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG[language]
-    method_number_rule_config = LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language]
-    coupling_rule_config = LANGUAGE_TO_COUPLING_RULE_CONFIG[language]
-    response_rule_config = LANGUAGE_TO_RESPONSE_RULE_CONFIG[language]
-    weighted_methods_rule_config = LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language]
 
-    # TODO make an abstraction for extraction the value
-    for issue in issues:
-        if (issue.type == IssueType.CYCLOMATIC_COMPLEXITY
-                and issue.cc_value <= cyclomatic_complexity_rule_config.cc_value_moderate):
-            continue
+def __more_than_low_measure(issue: BaseIssue, issue_type_to_low_measure_dict: Dict[IssueType, int]) -> bool:
+    issue_type = issue.type
+    if isinstance(issue, Measurable) and issue.measure() <= issue_type_to_low_measure_dict.get(issue_type, -1):
+        return False
+    return True
 
-        if (issue.type == IssueType.FUNC_LEN
-                and issue.func_len <= func_len_rule_config.func_len_bad):
-            continue
 
-        if (issue.type == IssueType.BOOL_EXPR_LEN
-                and issue.bool_expr_len <= boolean_expression_rule_config.bool_expr_len_good):
-            continue
+def filter_low_measure_issues(issues: List[BaseIssue],
+                              language: Language) -> List[BaseIssue]:
+    issue_type_to_low_measure_dict = __get_issue_type_to_low_measure_dict(language)
 
-        if (issue.type == IssueType.INHERITANCE_DEPTH
-                and issue.inheritance_tree_depth <= inheritance_depth_rule_config.depth_bad):
-            continue
+    # Disable this types of issue, requires further investigation.
+    ignored_issues = [IssueType.COHESION, IssueType.CHILDREN_NUMBER]
 
-        if (issue.type == IssueType.METHOD_NUMBER
-                and issue.method_number <= method_number_rule_config.method_number_good):
-            continue
+    return list(filter(
+        lambda issue: issue.type not in ignored_issues and __more_than_low_measure(issue,
+                                                                                   issue_type_to_low_measure_dict),
+        issues))
 
-        if (issue.type == IssueType.CLASS_RESPONSE
-                and issue.class_response <= response_rule_config.response_good):
-            continue
 
-        if (issue.type == IssueType.WEIGHTED_METHOD
-                and issue.weighted_method <= weighted_methods_rule_config.weighted_methods_good):
-            continue
+FilePath = str
+LinesNumber = int
+Inspector = str
+GroupedIssues = Dict[FilePath, Dict[LinesNumber, Dict[Inspector, Dict[IssueType, List[BaseIssue]]]]]
 
-        if (issue.type == IssueType.COUPLING
-                and issue.class_objects_coupling <= coupling_rule_config.coupling_moderate):
-            continue
 
-        # Disable this types of issue, requires further investigation.
-        if (issue.type == IssueType.COHESION or issue.type == IssueType.CHILDREN_NUMBER):
-            continue
-
-        filtered_issues.append(issue)
-
-    return filtered_issues
+def __init_grouped_issues() -> GroupedIssues:
+    return defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: []))))
 
 
 def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
     """
-    Skipping duplicate issues using heuristic rules
+    Skipping duplicate issues using heuristic rules:
+
+    For each line's number try to count issues with unique type for each unique inspector and select the best one.
+    The inspector with the biggest number of issues for each type will be chosen.
     """
-    grouped_issues = group_issues_by_file_line_inspector_and_type(issues)
+    grouped_issues = group_issues(issues)
 
     selected_issues = []
     for _, issues_in_file in grouped_issues.items():
@@ -85,42 +76,50 @@ def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
                 selected_issues.extend(all_issues)
             # conflicts -> take issues found by a more informative inspector
             elif len(issues_in_line) > 1:
-                inspectors_by_types = {}
+                default_inspector = 'UNKNOWN'
+                # By default for each <IssueType> we add the tuple (inspector: 'UNKNOWN', issue_type_freq: -1)
+                inspectors_by_types: Dict[IssueType, Tuple[Inspector, int]] = defaultdict(
+                    lambda: (default_inspector, -1))
                 for inspector, issues_by_types in issues_in_line.items():
+                    # Handle all possible issue types
                     for issue_type in IssueType:
-                        count = len(issues_by_types.get(issue_type, []))
-                        if count == 0:
+                        issue_type_freq = len(issues_by_types.get(issue_type, []))
+                        # This <issue_type> was not find by the <inspector>
+                        if issue_type_freq == 0:
                             continue
-                        if issue_type not in inspectors_by_types:
-                            inspectors_by_types[issue_type] = ('UNKNOWN', -1)
-                        if count > inspectors_by_types[issue_type][1]:
-                            inspectors_by_types[issue_type] = (inspector, count)
+                        max_issue_type_freq = inspectors_by_types[issue_type][1]
+                        # Current inspector has more issues with type <issue_type> than previous ones
+                        if issue_type_freq > max_issue_type_freq:
+                            inspectors_by_types[issue_type] = (inspector, issue_type_freq)
 
-                for issue_type, inspector in inspectors_by_types.items():
-                    selected_issues.extend(issues_in_line[inspector[0]][issue_type])
+                for issue_type, inspector_to_freq in inspectors_by_types.items():
+                    inspector = inspector_to_freq[0]
+                    if inspector != default_inspector:
+                        selected_issues.extend(issues_in_line[inspector][issue_type])
 
     return selected_issues
 
 
-def group_issues_by_file_line_inspector_and_type(issues: List[BaseIssue]) -> dict:
-    grouped_issues: Dict[str, Dict[int, Dict[str, Dict[IssueType, List[BaseIssue]]]]] = {}
+def group_issues(issues: List[BaseIssue]) -> GroupedIssues:
+    """
+    Group issues according to the following structure:
+    - FILE_PATH:
+        - LINES_NUMBER:
+            - INSPECTOR:
+                - ISSUE_TYPE:
+                    [ISSUES]
+
+    We will consider each file to find potential duplicates:
+    if one line number in the file contains several same issues which were found by different inspectors,
+    we will try to find the best one. See <filter_duplicate_issues> function.
+    """
+    grouped_issues: GroupedIssues = __init_grouped_issues()
 
     for issue in issues:
         file_path = str(issue.file_path)
-        if file_path not in grouped_issues:
-            grouped_issues[file_path] = {}
-
         line_no = issue.line_no
-        if line_no not in grouped_issues[file_path]:
-            grouped_issues[file_path][line_no] = {}
-
         inspector_name = str(issue.inspector_type)
-        if inspector_name not in grouped_issues[file_path][line_no]:
-            grouped_issues[file_path][line_no][inspector_name] = {}
-
         issue_type = issue.type
-        if issue_type not in grouped_issues[file_path][line_no][inspector_name]:
-            grouped_issues[file_path][line_no][inspector_name][issue_type] = []
 
         grouped_issues[file_path][line_no][inspector_name][issue_type].append(issue)
 

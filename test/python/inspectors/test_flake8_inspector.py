@@ -3,7 +3,7 @@ import pytest
 from src.python.review.common.language import Language
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from src.python.review.inspectors.issue import IssueType
-from src.python.review.reviewers.utils.issues_filter import filter_low_metric_issues
+from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 from test.python.inspectors import PYTHON_DATA_FOLDER
 from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
@@ -38,7 +38,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
     path_to_file = PYTHON_DATA_FOLDER / file_name
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
-        issues = filter_low_metric_issues(issues, Language.PYTHON)
+        issues = filter_low_measure_issues(issues, Language.PYTHON)
 
         assert len(issues) == n_issues
 

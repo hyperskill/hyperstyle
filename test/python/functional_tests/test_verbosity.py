@@ -18,9 +18,9 @@ def test_disable_logs_text(local_command: LocalCommandBuilder):
     output = process.stdout.decode()
     output = output.lower()
 
-    assert 'debug' not in output
-    assert 'info' not in output
-    assert 'error' not in output
+    assert ' debug ' not in output
+    assert ' info ' not in output
+    assert ' error ' not in output
 
 
 def test_disable_logs_json(local_command: LocalCommandBuilder):
@@ -54,4 +54,4 @@ def test_enable_all_logs(local_command: LocalCommandBuilder):
     output = process.stdout.decode()
     output = output.lower()
 
-    assert 'debug' in output
+    assert ' debug ' in output

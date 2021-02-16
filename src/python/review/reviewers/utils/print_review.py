@@ -8,8 +8,7 @@ from src.python.review.reviewers.review_result import ReviewResult
 
 def print_review_result_as_text(review_result: ReviewResult,
                                 path: Path) -> None:
-    heading = f'Review of {str(path)} ({len(review_result.all_issues)} violations)'
-    print()
+    heading = f'\nReview of {str(path)} ({len(review_result.all_issues)} violations)'
     print(heading)
 
     if len(review_result.all_issues) == 0:

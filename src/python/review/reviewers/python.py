@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import List
 
 from src.python.review.application_config import ApplicationConfig
-from src.python.review.common.file_system import get_all_subdirs
+from src.python.review.common.file_system import get_all_file_system_items, FileSystemItem
 from src.python.review.common.language import Language
 from src.python.review.reviewers.common import perform_language_review
 from src.python.review.reviewers.review_result import ReviewResult
@@ -24,7 +24,7 @@ def perform_python_review(metadata: Metadata, config: ApplicationConfig) -> Revi
 
 def create_init_scripts_in_subdirs(path: Path) -> List[Path]:
     created_file_paths = []
-    for subdir in get_all_subdirs(path):
+    for subdir in get_all_file_system_items(path, item_type=FileSystemItem.SUBDIR):
         init_file_path = subdir / '__init__.py'
         if not init_file_path.is_file():
             init_file_path.touch()

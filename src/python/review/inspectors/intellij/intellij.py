@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 from xml.etree import ElementTree
 
-from src.python.review.common.file_system import get_all_file_paths_in_dir, new_temp_dir
+from src.python.review.common.file_system import get_all_file_system_items, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
@@ -71,7 +71,7 @@ class IntelliJInspector(BaseInspector):
             file_paths = [path]
         elif path.is_dir():
             root_path = path
-            file_paths = get_all_file_paths_in_dir(root_path)
+            file_paths = get_all_file_system_items(root_path)
         else:
             raise ValueError
 
@@ -113,7 +113,7 @@ class IntelliJInspector(BaseInspector):
     def parse(cls, out_dir_path: Path,
               path_in_project_to_origin_path: Dict[Path, Path]) -> List[BaseIssue]:
         out_file_paths = [
-            file_path for file_path in get_all_file_paths_in_dir(out_dir_path)
+            file_path for file_path in get_all_file_system_items(out_dir_path)
             if file_path.suffix.endswith('.xml') and not file_path.name.startswith('.')
         ]
 

@@ -29,6 +29,7 @@ class LineLengthRule(Rule):
         self.config = config
         self.rule_type = IssueType.LINE_LEN
 
+    # TODO: refactor
     def apply(self, n_line_len, n_lines):
         self.ratio = n_line_len / max(n_lines, 1)
         self.n_line_len = n_line_len

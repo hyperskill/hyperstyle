@@ -5,7 +5,7 @@ from typing import List
 logger = logging.getLogger(__name__)
 
 
-def run_in_subprocess_return_code(command: List[str]) -> (int, str):
+def run_in_subprocess(command: List[str]) -> str:
     process = subprocess.run(
         command,
         stdout=subprocess.PIPE,
@@ -20,8 +20,4 @@ def run_in_subprocess_return_code(command: List[str]) -> (int, str):
     if stderr:
         logger.debug('%s\'s stderr:\n%s' % (command[0], stderr))
 
-    return process.returncode, stdout
-
-
-def run_in_subprocess(command: List[str]) -> str:
-    return run_in_subprocess_return_code(command)[1]
+    return stdout

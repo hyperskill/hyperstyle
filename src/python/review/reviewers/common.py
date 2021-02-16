@@ -16,7 +16,7 @@ from src.python.review.quality.evaluate_quality import evaluate_quality
 from src.python.review.quality.model import Quality
 from src.python.review.reviewers.review_result import FileReviewResult, ReviewResult
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
-from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_metric_issues
+from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
 from src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata
 
 LANGUAGE_TO_INSPECTORS = {
@@ -47,7 +47,7 @@ def perform_language_review(metadata: Metadata,
 
     issues = inspect_in_parallel(metadata.path, config, inspectors)
     if issues:
-        issues = filter_low_metric_issues(issues, language)
+        issues = filter_low_measure_issues(issues, language)
 
         if not config.allow_duplicates:
             issues = filter_duplicate_issues(issues)
