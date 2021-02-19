@@ -32,13 +32,13 @@ class LocalCommandBuilder:
             command.extend(['-d', ','.join(self.disable)])
 
         if self.allow_duplicates:
-            command.append('--allow_duplicates')
+            command.append('--allow-duplicates')
 
         if self.language_version is not None:
-            command.extend(['--language_version', self.language_version])
+            command.extend(['--language-version', self.language_version])
 
         if self.new_format:
-            command.append('--new_format')
+            command.append('--new-format')
 
         command.extend([
             '--n_cpu', str(self.n_cpu),

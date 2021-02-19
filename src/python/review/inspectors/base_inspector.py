@@ -27,8 +27,8 @@ class BaseInspector(abc.ABC):
     @property
     @abc.abstractmethod
     def inspector_type(self) -> InspectorType:
-        raise NotImplementedError(f'inspector_type property not implemented yet')
+        raise NotImplementedError('inspector_type property not implemented yet')
 
     @abc.abstractmethod
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
-        raise NotImplementedError(f'inspect method not implemented yet')
+        raise NotImplementedError('inspect method not implemented yet')

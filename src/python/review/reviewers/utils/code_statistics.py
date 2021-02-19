@@ -70,7 +70,7 @@ def get_code_style_lines(issues: List[BaseIssue]) -> int:
 
 def __get_max_measure_by_issue_type(issue_type: IssueType, issues: List[BaseIssue]) -> int:
     return max(map(
-        lambda issue: issue.measure,
+        lambda issue: issue.measure(),
         filter(lambda issue: issue.type == issue_type, issues)
     ), default=0)
 

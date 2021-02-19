@@ -74,17 +74,19 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=parse_disabled_inspectors,
                         default=set())
 
-    parser.add_argument('--allow_duplicates', action='store_true',
+    parser.add_argument('--allow-duplicates', action='store_true',
                         help='Allow duplicate issues found by different linters. '
                              'By default, duplicates are skipped.')
 
-    parser.add_argument('--language_version',
+    # TODO: deprecated argument: language_version. Delete after several realises.
+    parser.add_argument('--language_version', '--language-version',
                         help='Specify the language version for JAVA inspectors.',
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
 
-    parser.add_argument('--n_cpu',
+    # TODO: deprecated argument: --n_cpu. Delete after several realises.
+    parser.add_argument('--n_cpu', '--n-cpu',
                         help='Specify number of cpu that can be used to run inspectors',
                         default=1,
                         type=positive_int)
@@ -94,22 +96,22 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Path to file or directory to inspect.')
 
     parser.add_argument('-f', '--format',
-                        default=OutputFormat.JSON,
+                        default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
                         help='The output format. Default is JSON.')
 
-    parser.add_argument('-s', '--start_line',
+    parser.add_argument('-s', '--start-line',
                         default=1,
                         type=positive_int,
                         help='The first line to be analyzed. It starts from 1.')
 
-    parser.add_argument('-e', '--end_line',
+    parser.add_argument('-e', '--end-line',
                         default=None,
                         type=positive_int,
                         help='The end line to be analyzed or None.')
 
-    parser.add_argument('--new_format',
+    parser.add_argument('--new-format',
                         action='store_true',
                         help='The argument determines whether the tool '
                              'should use the new format')
@@ -140,8 +142,7 @@ def main() -> int:
         max_n_cpu = os.cpu_count()
         if n_cpu > max_n_cpu:
             n_cpu = max_n_cpu
-            logger.warning(f'Number of available cpu is {max_n_cpu}, '
-                           f'but {n_cpu} was passed')
+            logger.warning('Number of available cpu is %s, but %s was passed', max_n_cpu, n_cpu)
 
         start_line = args.start_line
         if start_line < 1:

@@ -93,13 +93,13 @@ Argument | Description
 **&#8209;h**, **&#8209;&#8209;help**      |  show the help message and exit.
 **&#8209;v**, **&#8209;&#8209;verbosity** |  choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).
 **&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/). Example: `-d pylint,flake8`.
-**&#8209;&#8209;allow_duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
-**&#8209;&#8209;language_version**        |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`.
-**&#8209;&#8209;n_cpu**                   |  specify number of _cpu_ that can be used to run inspectors
+**&#8209;&#8209;allow-duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
+**&#8209;&#8209;language-version**, **&#8209;&#8209;language_version**  |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`. **Note**: **&#8209;&#8209;language_version** is deprecated. Will be deleted in the future.
+**&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**  |  specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.
 **&#8209;f**, **&#8209;&#8209;format**    |  the output format. Available values: `json`, `text`. Default value is `json`.
-**&#8209;s**, **&#8209;&#8209;start_line**|  the first line to be analyzed. By default it starts from `1`.
-**&#8209;e**, **&#8209;&#8209;end_line**  |  the end line to be analyzed. The default value is `None`, which meant to handle file by the end.
-**&#8209;&#8209;new_format**              |  the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.
+**&#8209;s**, **&#8209;&#8209;start-line**|  the first line to be analyzed. By default it starts from `1`.
+**&#8209;e**, **&#8209;&#8209;end-line**  |  the end line to be analyzed. The default value is `None`, which meant to handle file by the end.
+**&#8209;&#8209;new-format**              |  the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.
 
 The output examples:
 
