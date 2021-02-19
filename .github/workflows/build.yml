@@ -25,10 +25,9 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide.
-        # TODO: Delete W503 from ignore after refactoring and change max-complexity into 10
-        flake8 . --count --exit-zero --max-complexity=15 --max-line-length=127 --ignore=I201,I101,I100,R504,A003,I202,SC200,E800,W505,SC100,E402,R504,W503 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+        # TODO: change max-complexity into 10 after refactoring
+        flake8 . --count --max-complexity=10 --max-line-length=120 --max-doc-length=120 --ignore=I201,I202,I101,I100,R504,A003,E800,SC200,SC100,E402 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
     - name: Set up Eslint
       run: |
         npm install eslint --save-dev

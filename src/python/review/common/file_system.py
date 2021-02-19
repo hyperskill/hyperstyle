@@ -78,7 +78,8 @@ def get_file_line(path: Path, line_number: int):
     ).strip()
 
 
-def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING.value, to_strip_nl: bool = True) -> str:
+def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING.value,
+                          to_strip_nl: bool = True) -> str:
     with open(file_path, 'r', encoding=encoding) as f:
         content = f.read()
         return content if not to_strip_nl else content.rstrip('\n')

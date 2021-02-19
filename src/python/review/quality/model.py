@@ -4,7 +4,6 @@ from functools import total_ordering
 from typing import List
 
 from src.python.review.inspectors.issue import IssueType
-from src.python.review.reviewers.utils.code_statistics import CodeStatistics
 
 
 @total_ordering
@@ -44,11 +43,11 @@ class Quality:
 
     @property
     def quality_type(self) -> QualityType:
-        return min([rule.quality_type for rule in self.rules], default=QualityType.EXCELLENT)
+        return min(map(lambda rule: rule.quality_type, self.rules), default=QualityType.EXCELLENT)
 
     @property
     def next_quality_type(self) -> QualityType:
-        return min([rule.next_level_type for rule in self.rules], default=QualityType.EXCELLENT)
+        return min(map(lambda rule: rule.next_level_type, self.rules), default=QualityType.EXCELLENT)
 
     # TODO@nbirillo: why rule.quality_type == quality_type for next level????
     @property
