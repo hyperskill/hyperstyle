@@ -78,14 +78,14 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Allow duplicate issues found by different linters. '
                              'By default, duplicates are skipped.')
 
-    # TODO: deprecated argument: language_version. Delete after several realises.
+    # TODO: deprecated argument: language_version. Delete after several releases.
     parser.add_argument('--language_version', '--language-version',
                         help='Specify the language version for JAVA inspectors.',
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
 
-    # TODO: deprecated argument: --n_cpu. Delete after several realises.
+    # TODO: deprecated argument: --n_cpu. Delete after several releases.
     parser.add_argument('--n_cpu', '--n-cpu',
                         help='Specify number of cpu that can be used to run inspectors',
                         default=1,
