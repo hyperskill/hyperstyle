@@ -1,4 +1,4 @@
-from other import do_smth_useless
+from other import do_something_useless
 
 if __name__ == '__main__':
-    do_smth_useless()
+    do_something_useless()

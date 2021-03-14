@@ -1,5 +1,5 @@
 import itertools
 import functools
-from functools import partialmethod
+from math import ceil
 
-print(partialmethod)
+print(ceil(0.1))

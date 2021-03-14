@@ -17,10 +17,10 @@ up_col = [elements[0], elements[3], elements[6]]
 mid_col = [elements[1], elements[4], elements[7]]
 down_col = [elements[2], elements[5], elements[8]]
 
-diagonal1 = [elements[0], elements[4], elements[8]]
-diagonal2 = [elements[2], elements[4], elements[6]]
+diagonal_1 = [elements[0], elements[4], elements[8]]
+diagonal_2 = [elements[2], elements[4], elements[6]]
 
-full_field = [up_row, up_col, mid_row, mid_col, down_row, down_col, diagonal1, diagonal2]
+full_field = [up_row, up_col, mid_row, mid_col, down_row, down_col, diagonal_1, diagonal_2]
 
 x_win = ['X', 'X', 'X']
 o_win = ['O', 'O', 'O']

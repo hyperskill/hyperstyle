@@ -34,7 +34,7 @@ class Flake8Inspector(BaseInspector):
 
     @classmethod
     def parse(cls, output: str) -> List[BaseIssue]:
-        row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]\d{3}):(.*)$', re.M)
+        row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
         cc_description_re = re.compile(r"'(.+)' is too complex \((\d+)\)")
 
         issues: List[BaseIssue] = []
