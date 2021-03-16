@@ -79,16 +79,18 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
 def test_parse():
     file_name = 'test.py'
     output = ('test.py:1:11:W602:test 1\n'
-              'test.py:2:12:E703:test 2')
+              'test.py:2:12:E703:test 2\n'
+              'test.py:3:13:SC200:test 3')
 
     issues = Flake8Inspector.parse(output)
 
     assert all(str(issue.file_path) == file_name for issue in issues)
-    assert [issue.line_no for issue in issues] == [1, 2]
-    assert [issue.column_no for issue in issues] == [11, 12]
-    assert [issue.description for issue in issues] == ['test 1', 'test 2']
+    assert [issue.line_no for issue in issues] == [1, 2, 3]
+    assert [issue.column_no for issue in issues] == [11, 12, 13]
+    assert [issue.description for issue in issues] == ['test 1', 'test 2', 'test 3']
     assert [issue.type for issue in issues] == [IssueType.CODE_STYLE,
-                                                IssueType.CODE_STYLE]
+                                                IssueType.CODE_STYLE,
+                                                IssueType.BEST_PRACTICES]
 
 
 def test_choose_issue_type():
