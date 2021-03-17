@@ -13,9 +13,9 @@ dict(((1, 2),))  # {1: 2}
 
 sum([x ** 2 for x in range(10)])  # sum(x ** 2 for x in range(10))
 
-dct = dict()   # we allow this
-lst = list()   # we allow this
-tpl = tuple()  # we allow this
+test_dict = dict()   # we allow this
+test_list = list()   # we allow this
+test_tuple = tuple()  # we allow this
 
 list([0 for _ in range(10)])
 

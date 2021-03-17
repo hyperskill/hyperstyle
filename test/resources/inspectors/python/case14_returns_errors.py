@@ -1,22 +1,22 @@
-def f1(y):
+def f_1(y):
     if not y:
         return
     return None  # error!
 
 
-def f2(y):
+def f_2(y):
     if not y:
         return  # error!
     return 1
 
 
-def f3(y):
+def f_3(y):
     if not y:
         return  # error!
     return 1
 
 
-def f4():
+def f_4():
     a = 1
     # some code that not using `a`
     print('test')
