@@ -49,7 +49,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case2_boolean_expressions.py', IssuesTestInfo(n_code_style=1,
                                                     n_best_practices=4,
                                                     n_error_prone=1,
-                                                    n_cc=7,
+                                                    n_cc=8,
                                                     n_other_complexity=2)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=2)),
     ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5)),
