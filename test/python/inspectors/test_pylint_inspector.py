@@ -9,7 +9,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case0_spaces.py', 3),
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 3),
-    ('case3_redefining_builtin.py', 1),
+    ('case3_redefining_builtin.py', 2),
     ('case4_naming.py', 3),
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 4),
