@@ -3,8 +3,13 @@ import ast
 import pytest
 
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.pyast.python_ast import BoolExpressionLensGatherer, FunctionLensGatherer, \
-    PythonAstInspector
+
+from src.python.review.inspectors.pyast.python_ast import (
+    BoolExpressionLensGatherer,
+    FunctionLensGatherer,
+    PythonAstInspector,
+)
+
 from test.python.inspectors import PYTHON_DATA_FOLDER, PYTHON_AST_DATA_FOLDER
 from test.python.inspectors.conftest import use_file_metadata
 

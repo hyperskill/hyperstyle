@@ -1,3 +1,5 @@
+import textwrap
+
 import pytest
 
 from src.python.review.inspectors.issue import IssueType
@@ -46,8 +48,11 @@ def test_file_with_issues(file_name: str, n_issues: int):
 
 def test_parse():
     file_name = 'test.py'
-    output = 'test.py:1:11:R0123:test 1\n' \
-             'test.py:2:12:C1444:test 2'
+    output = """\
+        test.py:1:11:R0123:test 1
+        test.py:2:12:C1444:test 2
+    """
+    output = textwrap.dedent(output)
 
     issues = PylintInspector.parse(output)
 

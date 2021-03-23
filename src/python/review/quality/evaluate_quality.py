@@ -4,25 +4,38 @@ from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.quality.model import Quality, Rule
 from src.python.review.quality.rules.best_practices_scoring import (
-    BestPracticesRule, LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG
+    BestPracticesRule,
+    LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG,
 )
-from src.python.review.quality.rules.boolean_length_scoring import BooleanExpressionRule, \
-    LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
+from src.python.review.quality.rules.boolean_length_scoring import (
+    BooleanExpressionRule,
+    LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG,
+)
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG, ResponseRule
 from src.python.review.quality.rules.code_style_scoring import CodeStyleRule, LANGUAGE_TO_CODE_STYLE_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import CouplingRule, LANGUAGE_TO_COUPLING_RULE_CONFIG
-from src.python.review.quality.rules.cyclomatic_complexity_scoring import CyclomaticComplexityRule, \
-    LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG
+from src.python.review.quality.rules.cyclomatic_complexity_scoring import (
+    CyclomaticComplexityRule,
+    LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG,
+)
 from src.python.review.quality.rules.error_prone_scoring import ErrorProneRule, LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG
-from src.python.review.quality.rules.function_length_scoring import FunctionLengthRule, \
-    LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG
-from src.python.review.quality.rules.inheritance_depth_scoring import InheritanceDepthRule, \
-    LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG
+from src.python.review.quality.rules.function_length_scoring import (
+    FunctionLengthRule,
+    LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG,
+)
+from src.python.review.quality.rules.inheritance_depth_scoring import (
+    InheritanceDepthRule,
+    LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG,
+)
 from src.python.review.quality.rules.line_len_scoring import LANGUAGE_TO_LINE_LENGTH_RULE_CONFIG, LineLengthRule
-from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG, \
-    MethodNumberRule
-from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG, \
-    WeightedMethodsRule
+from src.python.review.quality.rules.method_number_scoring import (
+    LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG,
+    MethodNumberRule,
+)
+from src.python.review.quality.rules.weighted_methods_scoring import (
+    LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG,
+    WeightedMethodsRule,
+)
 from src.python.review.reviewers.utils.code_statistics import CodeStatistics
 
 
