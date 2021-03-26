@@ -99,6 +99,7 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'B': IssueType.ERROR_PRONE,  # flake8-bugbear
     'A': IssueType.ERROR_PRONE,  # flake8-builtins
     'R': IssueType.ERROR_PRONE,  # flake8-return
+    'P': IssueType.ERROR_PRONE,  # flake8-format-string
 
     'E': IssueType.CODE_STYLE,  # standard flake8
     'W': IssueType.CODE_STYLE,  # standard flake8

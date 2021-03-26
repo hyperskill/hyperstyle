@@ -41,3 +41,11 @@ ignore=W291,  # trailing whitespaces
        WPS527, # Require tuples as arguments for frozenset.
        # WPS: OOP
        WPS602, # Forbid @staticmethod decorator.
+       # flake8-string-format
+       P101, # format string does contain unindexed parameters
+       P102, # docstring does contain unindexed parameters
+       P103, # other string does contain unindexed parameters
+       F522, # unused named arguments. TODO: Collision with "P302"
+       F523, # unused positional arguments. TODO: Collision with "P301"
+       F524, # missing argument. TODO: Collision with "P201" and "P202"
+       F525, # mixing automatic and manual numbering. TODO: Collision with "P205"

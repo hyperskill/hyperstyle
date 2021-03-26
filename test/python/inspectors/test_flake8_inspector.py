@@ -29,6 +29,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
     ('case31_line_break.py', 11),
+    ('case32_string_format.py', 34),
 ]
 
 
@@ -68,6 +69,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case31_line_break.py', IssuesTestInfo(n_best_practices=1,
                                             n_code_style=10,
                                             n_cc=1)),
+    ('case32_string_format.py', IssuesTestInfo(n_error_prone=28, n_other_complexity=6)),
 ]
 
 
