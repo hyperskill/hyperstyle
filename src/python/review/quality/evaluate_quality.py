@@ -37,6 +37,10 @@ from src.python.review.quality.rules.weighted_methods_scoring import (
     WeightedMethodsRule,
 )
 from src.python.review.reviewers.utils.code_statistics import CodeStatistics
+from src.python.review.quality.rules.cohesion_scoring import (
+    LANGUAGE_TO_COHESION_RULE_CONFIG,
+    CohesionRule,
+)
 
 
 def __get_available_rules(language: Language) -> List[Rule]:
@@ -50,7 +54,8 @@ def __get_available_rules(language: Language) -> List[Rule]:
         MethodNumberRule(LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language]),
         CouplingRule(LANGUAGE_TO_COUPLING_RULE_CONFIG[language]),
         ResponseRule(LANGUAGE_TO_RESPONSE_RULE_CONFIG[language]),
-        WeightedMethodsRule(LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language])
+        WeightedMethodsRule(LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language]),
+        CohesionRule(LANGUAGE_TO_COHESION_RULE_CONFIG[language]),
     ]
 
 

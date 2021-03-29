@@ -21,6 +21,7 @@ wps-light==0.15.2
 flake8-broken-line==0.3.0
 flake8-string-format==0.3.0
 flake8-commas==2.0.0
+cohesion==1.0.0
 
 # extra libraries and frameworks
 django==3.0.8

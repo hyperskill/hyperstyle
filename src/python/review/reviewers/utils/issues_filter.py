@@ -11,6 +11,7 @@ from src.python.review.quality.rules.function_length_scoring import LANGUAGE_TO_
 from src.python.review.quality.rules.inheritance_depth_scoring import LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG
 from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
+from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
 
 
 def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:
@@ -22,7 +23,8 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
         IssueType.METHOD_NUMBER: LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language].method_number_good,
         IssueType.COUPLING: LANGUAGE_TO_COUPLING_RULE_CONFIG[language].coupling_moderate,
         IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
-        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good
+        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good,
+        IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_bad,
     }
 
 
@@ -38,7 +40,7 @@ def filter_low_measure_issues(issues: List[BaseIssue],
     issue_type_to_low_measure_dict = __get_issue_type_to_low_measure_dict(language)
 
     # Disable this types of issue, requires further investigation.
-    ignored_issues = [IssueType.COHESION, IssueType.CHILDREN_NUMBER]
+    ignored_issues = [IssueType.CHILDREN_NUMBER]
 
     return list(filter(
         lambda issue: issue.type not in ignored_issues and __more_than_low_measure(issue,

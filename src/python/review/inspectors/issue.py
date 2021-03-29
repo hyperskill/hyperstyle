@@ -43,6 +43,7 @@ class IssueData(Enum):
     FUNCTION_LEN = 'func_len'
     BOOL_EXPR_LEN = 'bool_expr_len'
     CYCLOMATIC_COMPLEXITY = 'cc_value'
+    COHESION_LACK = 'cohesion_lack'
 
     @classmethod
     def get_base_issue_data_dict(cls, file_path: Union[str, Path], inspector_type: InspectorType, line_number: int = 1,
