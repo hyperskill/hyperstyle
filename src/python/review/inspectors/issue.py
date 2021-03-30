@@ -1,12 +1,13 @@
 import abc
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Dict, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
 
 
+@unique
 class IssueType(Enum):
     CODE_STYLE = 'CODE_STYLE'
     BEST_PRACTICES = 'BEST_PRACTICES'
@@ -27,6 +28,7 @@ class IssueType(Enum):
 
 
 # Keys in results dictionary
+@unique
 class IssueData(Enum):
     # Base fields
     FILE_PATH = 'file_path'
@@ -45,8 +47,12 @@ class IssueData(Enum):
     CYCLOMATIC_COMPLEXITY = 'cc_value'
 
     @classmethod
-    def get_base_issue_data_dict(cls, file_path: Union[str, Path], inspector_type: InspectorType, line_number: int = 1,
-                                 column_number: int = 1, origin_class: str = '') -> Dict[str, Any]:
+    def get_base_issue_data_dict(cls,
+                                 file_path: Union[str, Path],
+                                 inspector_type: InspectorType,
+                                 line_number: int = 1,
+                                 column_number: int = 1,
+                                 origin_class: str = '') -> Dict[str, Any]:
         return {
             cls.FILE_PATH.value: file_path,
             cls.LINE_NUMBER.value: line_number,

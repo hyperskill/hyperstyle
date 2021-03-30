@@ -45,8 +45,11 @@ class Flake8Inspector(BaseInspector):
             file_path = Path(groups[0])
             line_no = int(groups[1])
 
-            issue_data = IssueData.get_base_issue_data_dict(file_path, cls.inspector_type, line_number=line_no,
-                                                            column_number=int(groups[2]) if int(groups[2]) > 0 else 1,
+            column_number = int(groups[2]) if int(groups[2]) > 0 else 1
+            issue_data = IssueData.get_base_issue_data_dict(file_path,
+                                                            cls.inspector_type,
+                                                            line_number=line_no,
+                                                            column_number=column_number,
                                                             origin_class=origin_class)
             if cc_match is not None:
                 issue_data['description'] = get_cyclomatic_complexity_tip()
