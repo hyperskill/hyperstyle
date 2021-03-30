@@ -62,3 +62,4 @@ noc
 nom
 wmc
 multiline
+sqrt
