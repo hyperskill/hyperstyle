@@ -31,6 +31,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case31_line_break.py', 11),
     ('case32_string_format.py', 34),
     ('case33_commas.py', 14),
+    ('case34_cohesion.py', 1),
 ]
 
 
@@ -72,6 +73,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
                                             n_cc=1)),
     ('case32_string_format.py', IssuesTestInfo(n_error_prone=28, n_other_complexity=6)),
     ('case33_commas.py', IssuesTestInfo(n_code_style=14, n_cc=4)),
+    ('case34_cohesion.py', IssuesTestInfo(n_cc=6, n_cohesion=2)),
 ]
 
 
