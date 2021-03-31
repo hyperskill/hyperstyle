@@ -1,5 +1,5 @@
 **Issues**:
-[#ALT-](https://vyahhi.myjetbrains.com/youtrack/issue/ALT-)
+[Issue#](https://github.com/hyperskill/hyperstyle/issues/#)
 
 **Description**:
 
