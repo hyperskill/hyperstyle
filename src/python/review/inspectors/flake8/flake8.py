@@ -27,7 +27,7 @@ class Flake8Inspector(BaseInspector):
             f'--format={FORMAT}',
             f'--config={PATH_FLAKE8_CONFIG}',
             '--max-complexity', '0',
-            path
+            path,
         ]
         output = run_in_subprocess(command)
         return cls.parse(output)
@@ -66,11 +66,17 @@ class Flake8Inspector(BaseInspector):
 
     @staticmethod
     def choose_issue_type(code: str) -> IssueType:
+        # Handling individual codes
         if code in CODE_TO_ISSUE_TYPE:
             return CODE_TO_ISSUE_TYPE[code]
 
-        code_prefix = re.match(r'^([a-z]+)\d+$', code, re.IGNORECASE).group(1)
-        issue_type = CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix)
+        regex_match = re.match(r'^([A-Z]+)(\d)\d*$', code, re.IGNORECASE)
+        code_prefix = regex_match.group(1)
+        first_code_number = regex_match.group(2)
+
+        # Handling other issues
+        issue_type = (CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix + first_code_number)
+                      or CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix))
         if not issue_type:
             logger.warning(f'flake8: {code} - unknown error code')
             return IssueType.BEST_PRACTICES
