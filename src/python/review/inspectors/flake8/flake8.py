@@ -72,8 +72,8 @@ class Flake8Inspector(BaseInspector):
         first_code_number = regex_match.group(2)
 
         # Handling other issues
-        issue_type = (CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix + first_code_number) or
-                      CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix))
+        issue_type = (CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix + first_code_number)
+                      or CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix))
         if not issue_type:
             logger.warning(f'flake8: {code} - unknown error code')
             return IssueType.BEST_PRACTICES
