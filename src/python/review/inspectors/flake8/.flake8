@@ -13,3 +13,31 @@ ignore=W291,  # trailing whitespaces
        E301, E302, E303, E304, E305,  # problem with stepik templates
        E402,  # module level import not at top of file
        I100,  # Import statements are in the wrong order
+       # WPS: Naming
+       WPS110, # Forbid blacklisted variable names.
+       WPS111, # Forbid short variable or module names.
+       WPS112, # Forbid private name pattern.
+       WPS114, # Forbid names with underscored numbers pattern.
+       WPS125, # Forbid variable or module names which shadow builtin names. TODO: Collision with flake8-builtins
+       # WPS: Consistency
+       WPS303, # Forbid underscores in numbers.
+       WPS305, # Forbid f strings.
+       WPS306, # Forbid writing classes without base classes.
+       WPS318, # Forbid extra indentation. TODO: Collision with standard flake8 indentation check
+       WPS323, # Forbid % formatting on strings.
+       WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
+       WPS335, # Forbid wrong for loop iter targets.
+       WPS358, # Forbid using float zeros: 0.0.
+       WPS362, # Forbid assignment to a subscript slice.
+       # WPS: Best practices
+       WPS404, # Forbid complex defaults. TODO: Collision with "B006"
+       WPS420, # Forbid some python keywords.
+       WPS421, # Forbid calling some built-in functions.(e.g., print)
+       WPS429, # Forbid multiple assignments on the same line.
+       WPS430, # Forbid nested functions.
+       WPS431, # Forbid nested classes.
+       WPS435, # Forbid multiplying lists.
+       # WPS: Refactoring
+       WPS527, # Require tuples as arguments for frozenset.
+       # WPS: OOP
+       WPS602, # Forbid @staticmethod decorator.
