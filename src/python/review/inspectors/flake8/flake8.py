@@ -5,11 +5,7 @@ from typing import List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
-from src.python.review.inspectors.flake8.issue_types import (
-    CODE_PREFIX_TO_ISSUE_TYPE,
-    CODE_TO_ISSUE_TYPE,
-    WPS_RANGE_TO_ISSUE_TYPE,
-)
+from src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, CodeIssue, CyclomaticComplexityIssue, IssueType, IssueData
 from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
@@ -71,18 +67,13 @@ class Flake8Inspector(BaseInspector):
         if code in CODE_TO_ISSUE_TYPE:
             return CODE_TO_ISSUE_TYPE[code]
 
-        regex_match = re.match(r'^([a-z]+)(\d+)$', code, re.IGNORECASE)
+        regex_match = re.match(r'^([A-Z]+)(\d)\d*$', code, re.IGNORECASE)
         code_prefix = regex_match.group(1)
-
-        # Handling WPS issues
-        if code_prefix == "WPS":
-            code_number = int(regex_match.group(2))
-            for wps_range, issue_type in WPS_RANGE_TO_ISSUE_TYPE.items():
-                if code_number in wps_range:
-                    return issue_type
+        first_code_number = regex_match.group(2)
 
         # Handling other issues
-        issue_type = CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix)
+        issue_type = (CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix + first_code_number) or
+                      CODE_PREFIX_TO_ISSUE_TYPE.get(code_prefix))
         if not issue_type:
             logger.warning(f'flake8: {code} - unknown error code')
             return IssueType.BEST_PRACTICES

@@ -83,15 +83,6 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     "WPS614": IssueType.ERROR_PRONE,  # Forbids descriptors in regular functions.
 }
 
-WPS_RANGE_TO_ISSUE_TYPE: Dict[range, IssueType] = {
-    range(100, 200): IssueType.CODE_STYLE,  # WPS type: Naming
-    range(200, 300): IssueType.COMPLEXITY,  # WPS type: Complexity
-    range(300, 400): IssueType.BEST_PRACTICES,  # WPS type: Consistency
-    range(400, 500): IssueType.BEST_PRACTICES,  # WPS type: Best practices
-    range(500, 600): IssueType.BEST_PRACTICES,  # WPS type: Refactoring
-    range(600, 700): IssueType.BEST_PRACTICES,  # WPS type: OOP
-}
-
 CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'B': IssueType.ERROR_PRONE,  # flake8-bugbear
     'A': IssueType.ERROR_PRONE,  # flake8-builtins
@@ -105,4 +96,11 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'F': IssueType.BEST_PRACTICES,  # standard flake8
     'C': IssueType.BEST_PRACTICES,  # flake8-comprehensions
     'SC': IssueType.BEST_PRACTICES,  # flake8-spellcheck
+
+    'WPS1': IssueType.CODE_STYLE,  # WPS type: Naming
+    'WPS2': IssueType.COMPLEXITY,  # WPS type: Complexity
+    'WPS3': IssueType.BEST_PRACTICES,  # WPS type: Consistency
+    'WPS4': IssueType.BEST_PRACTICES,  # WPS type: Best practices
+    'WPS5': IssueType.BEST_PRACTICES,  # WPS type: Refactoring
+    'WPS6': IssueType.BEST_PRACTICES,  # WPS type: OOP
 }
