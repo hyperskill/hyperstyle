@@ -24,6 +24,7 @@ class IssueType(Enum):
     COHESION = 'COHESION'
     CLASS_RESPONSE = 'CLASS_RESPONSE'
     METHOD_NUMBER = 'METHOD_NUMBER'
+    MAINTAINABILITY = 'MAINTAINABILITY'
 
 
 # Keys in results dictionary
@@ -44,6 +45,7 @@ class IssueData(Enum):
     BOOL_EXPR_LEN = 'bool_expr_len'
     CYCLOMATIC_COMPLEXITY = 'cc_value'
     COHESION_LACK = 'cohesion_lack'
+    MAINTAINABILITY_LACK = 'maintainability_lack'
 
     @classmethod
     def get_base_issue_data_dict(cls, file_path: Union[str, Path], inspector_type: InspectorType, line_number: int = 1,
@@ -178,3 +180,12 @@ class MethodNumberIssue(BaseIssue, Measurable):
 
     def measure(self) -> int:
         return self.method_number
+
+
+@dataclass(frozen=True)
+class MaintainabilityLackIssue(BaseIssue, Measurable):
+    maintainability_lack: int
+    type = IssueType.MAINTAINABILITY
+
+    def measure(self) -> int:
+        return self.maintainability_lack

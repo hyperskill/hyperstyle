@@ -41,6 +41,10 @@ from src.python.review.quality.rules.cohesion_scoring import (
     LANGUAGE_TO_COHESION_RULE_CONFIG,
     CohesionRule,
 )
+from src.python.review.quality.rules.maintainability_scoring import (
+    LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG,
+    MaintainabilityRule,
+)
 
 
 def __get_available_rules(language: Language) -> List[Rule]:
@@ -56,6 +60,7 @@ def __get_available_rules(language: Language) -> List[Rule]:
         ResponseRule(LANGUAGE_TO_RESPONSE_RULE_CONFIG[language]),
         WeightedMethodsRule(LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language]),
         CohesionRule(LANGUAGE_TO_COHESION_RULE_CONFIG[language]),
+        MaintainabilityRule(LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG[language]),
     ]
 
 

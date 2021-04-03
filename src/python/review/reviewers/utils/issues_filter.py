@@ -12,6 +12,7 @@ from src.python.review.quality.rules.inheritance_depth_scoring import LANGUAGE_T
 from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
 from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
+from src.python.review.quality.rules.maintainability_scoring import LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG
 
 
 def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:
@@ -25,6 +26,9 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
         IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
         IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good,
         IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_bad,
+        IssueType.MAINTAINABILITY: LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG[
+            language
+        ].maintainability_lack_good
     }
 
 

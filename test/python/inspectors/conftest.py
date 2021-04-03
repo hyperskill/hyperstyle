@@ -74,6 +74,7 @@ class IssuesTestInfo:
     n_bool_expr_len: int = 0
     n_other_complexity: int = 0
     n_cohesion: int = 0
+    n_maintainability: int = 0
 
 
 def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
@@ -88,6 +89,7 @@ def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
         n_bool_expr_len=counter[IssueType.BOOL_EXPR_LEN],
         n_other_complexity=counter[IssueType.COMPLEXITY],
         n_cohesion=counter[IssueType.COHESION],
+        n_maintainability=counter[IssueType.MAINTAINABILITY]
     )
 
 
