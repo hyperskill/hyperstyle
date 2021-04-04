@@ -28,7 +28,7 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
         IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_bad,
         IssueType.MAINTAINABILITY: LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG[
             language
-        ].maintainability_lack_good
+        ].maintainability_lack_good,
     }
 
 

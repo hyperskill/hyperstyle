@@ -18,12 +18,12 @@ class RadonInspector(BaseInspector):
             "radon", "mi",
             "--max", "F",
             "--show",
-            path
+            path,
         ]
 
         hal_command = [
             "radon", "hal",
-            path
+            path,
         ]
 
         mi_output = run_in_subprocess(mi_command)

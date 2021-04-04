@@ -72,7 +72,7 @@ def test_choose_issue_type():
         IssueType.BEST_PRACTICES,
         IssueType.BEST_PRACTICES,
         IssueType.CODE_STYLE,
-        IssueType.ERROR_PRONE
+        IssueType.ERROR_PRONE,
     ]
 
     issue_types = list(

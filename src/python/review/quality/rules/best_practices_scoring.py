@@ -16,7 +16,7 @@ class BestPracticesRuleConfig:
 common_best_practices_rule_config = BestPracticesRuleConfig(
     n_best_practices_moderate=3,
     n_best_practices_good=1,
-    n_files=1
+    n_files=1,
 )
 
 LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG = {
@@ -59,7 +59,7 @@ class BestPracticesRule(Rule):
         config = BestPracticesRuleConfig(
             min(self.config.n_best_practices_moderate, other.config.n_best_practices_moderate),
             min(self.config.n_best_practices_good, other.config.n_best_practices_good),
-            n_files=self.config.n_files + other.config.n_files
+            n_files=self.config.n_files + other.config.n_files,
         )
         result_rule = BestPracticesRule(config)
         result_rule.apply(self.n_best_practices + other.n_best_practices)

@@ -74,7 +74,7 @@ def create_directory(directory: str) -> None:
 def get_file_line(path: Path, line_number: int):
     return linecache.getline(
         str(path),
-        line_number
+        line_number,
     ).strip()
 
 

@@ -51,7 +51,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': 'class_objects_coupling',
         'lcom': 'cohesion_lack',
         'rfc': 'class_response',
-        'nom': 'method_number'
+        'nom': 'method_number',
     }
 
     metric_name_to_description = {
@@ -61,7 +61,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': get_class_coupling_tip(),
         'lcom': get_cohesion_tip(),
         'rfc': get_class_response_tip(),
-        'nom': get_method_number_tip()
+        'nom': get_method_number_tip(),
     }
 
     metric_name_to_issue_type = {
@@ -71,7 +71,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': IssueType.COUPLING,
         'lcom': IssueType.COHESION,
         'rfc': IssueType.CLASS_RESPONSE,
-        'nom': IssueType.METHOD_NUMBER
+        'nom': IssueType.METHOD_NUMBER,
     }
 
     @classmethod
@@ -81,7 +81,7 @@ class SpringlintInspector(BaseInspector):
             PATH_SPRINGLINT_JAR,
             '--output', str(output_path),
             '-otype', 'html',
-            '--project', str(path)
+            '--project', str(path),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
@@ -137,7 +137,7 @@ class SpringlintInspector(BaseInspector):
                 origin_class=smell['name'],
                 inspector_type=cls.inspector_type,
                 type=IssueType.ARCHITECTURE,
-                description=smell['description']
+                description=smell['description'],
             ) for smell in file_smell['smells']])
 
         return issues

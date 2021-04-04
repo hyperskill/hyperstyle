@@ -14,7 +14,7 @@ class CohesionRuleConfig:
 
 common_cohesion_rule_config = CohesionRuleConfig(
     cohesion_lack_bad=50,
-    cohesion_lack_moderate=30
+    cohesion_lack_moderate=30,
 )
 
 LANGUAGE_TO_COHESION_RULE_CONFIG = {

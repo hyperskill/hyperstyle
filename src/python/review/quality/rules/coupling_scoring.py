@@ -14,7 +14,7 @@ class CouplingRuleConfig:
 
 common_coupling_rule_config = CouplingRuleConfig(
     coupling_bad=30,
-    coupling_moderate=20
+    coupling_moderate=20,
 )
 
 LANGUAGE_TO_COUPLING_RULE_CONFIG = {
@@ -52,7 +52,7 @@ class CouplingRule(Rule):
     def merge(self, other: 'CouplingRule') -> 'CouplingRule':
         config = CouplingRuleConfig(
             min(self.config.coupling_bad, other.config.coupling_bad),
-            min(self.config.coupling_moderate, other.config.coupling_moderate)
+            min(self.config.coupling_moderate, other.config.coupling_moderate),
         )
         result_rule = CouplingRule(config)
         result_rule.apply(max(self.coupling, other.coupling))

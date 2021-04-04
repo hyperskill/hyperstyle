@@ -111,7 +111,7 @@ def test_choose_issue_type():
     expected_issue_types = [
         IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
         IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
-        IssueType.CODE_STYLE
+        IssueType.CODE_STYLE,
     ]
 
     issue_types = list(map(Flake8Inspector.choose_issue_type, error_codes))
