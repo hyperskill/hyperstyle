@@ -1,4 +1,5 @@
 import pytest
+from textwrap import dedent
 
 from src.python.review.common.language import Language
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
@@ -12,11 +13,11 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 8),
     ('case3_redefining_builtin.py', 2),
-    ('case4_naming.py', 10),
+    ('case4_naming.py', 11),
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 3),
     ('case8_good_class.py', 0),
-    ('case7_empty_lines.py', 0),
+    ('case7_empty_lines.py', 2),
     ('case10_unused_variable_in_loop.py', 1),
     ('case13_complex_logic.py', 12),
     ('case13_complex_logic_2.py', 3),
@@ -28,6 +29,10 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
+    ('case31_line_break.py', 11),
+    ('case32_string_format.py', 34),
+    ('case33_commas.py', 14),
+    ('case34_cohesion.py', 1),
 ]
 
 
@@ -52,11 +57,11 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
                                                     n_cc=8,
                                                     n_other_complexity=2)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=2)),
-    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5)),
+    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5, n_cohesion=1)),
     ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
                                                  n_cc=1)),
-    ('case8_good_class.py', IssuesTestInfo(n_cc=1)),
-    ('case7_empty_lines.py', IssuesTestInfo(n_cc=5)),
+    ('case8_good_class.py', IssuesTestInfo(n_cc=1, n_cohesion=1)),
+    ('case7_empty_lines.py', IssuesTestInfo(n_cc=5, n_cohesion=2)),
     ('case10_unused_variable_in_loop.py', IssuesTestInfo(n_best_practices=1,
                                                          n_cc=1)),
     ('case13_complex_logic.py', IssuesTestInfo(n_cc=5, n_other_complexity=10)),
@@ -64,6 +69,12 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case14_returns_errors.py', IssuesTestInfo(n_best_practices=1,
                                                 n_error_prone=3,
                                                 n_cc=4)),
+    ('case31_line_break.py', IssuesTestInfo(n_best_practices=1,
+                                            n_code_style=10,
+                                            n_cc=1)),
+    ('case32_string_format.py', IssuesTestInfo(n_error_prone=28, n_other_complexity=6)),
+    ('case33_commas.py', IssuesTestInfo(n_code_style=14, n_cc=4)),
+    ('case34_cohesion.py', IssuesTestInfo(n_cc=6, n_cohesion=2)),
 ]
 
 
@@ -81,9 +92,12 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
 
 def test_parse():
     file_name = 'test.py'
-    output = ('test.py:1:11:W602:test 1\n'
-              'test.py:2:12:E703:test 2\n'
-              'test.py:3:13:SC200:test 3')
+    output = f"""\
+        {file_name}:1:11:W602:test 1
+        {file_name}:2:12:E703:test 2
+        {file_name}:3:13:SC200:test 3
+    """
+    output = dedent(output)
 
     issues = Flake8Inspector.parse(output)
 

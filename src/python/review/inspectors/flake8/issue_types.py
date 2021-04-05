@@ -16,6 +16,17 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # builtin naming
     'A003': IssueType.BEST_PRACTICES,
 
+    # flake8-broken-line
+    'N400': IssueType.CODE_STYLE,
+
+    # flake8-commas
+    "C812": IssueType.CODE_STYLE,
+    "C813": IssueType.CODE_STYLE,
+    "C815": IssueType.CODE_STYLE,
+    "C816": IssueType.CODE_STYLE,
+    "C818": IssueType.CODE_STYLE,
+    "C819": IssueType.CODE_STYLE,
+
     # WPS: Naming
     "WPS117": IssueType.CODE_STYLE,  # Forbid naming variables self, cls, or mcs.
     "WPS125": IssueType.ERROR_PRONE,  # Forbid variable or module names which shadow builtin names.
@@ -87,6 +98,7 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'B': IssueType.ERROR_PRONE,  # flake8-bugbear
     'A': IssueType.ERROR_PRONE,  # flake8-builtins
     'R': IssueType.ERROR_PRONE,  # flake8-return
+    'P': IssueType.ERROR_PRONE,  # flake8-format-string
 
     'E': IssueType.CODE_STYLE,  # standard flake8
     'W': IssueType.CODE_STYLE,  # standard flake8
