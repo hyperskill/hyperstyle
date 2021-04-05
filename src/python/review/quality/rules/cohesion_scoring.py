@@ -13,6 +13,9 @@ class CohesionRuleConfig:
     cohesion_lack_good: int
 
 
+# TODO: Need testing
+# Cohesion plugin by default only shows issues where cohesion is less than 50%.
+# Therefore cohesion_lack_bad = 50. The other levels are set in steps of 20%.
 common_cohesion_rule_config = CohesionRuleConfig(
     cohesion_lack_bad=50,
     cohesion_lack_moderate=30,
