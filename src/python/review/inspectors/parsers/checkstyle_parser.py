@@ -6,10 +6,24 @@ from xml.etree import ElementTree
 
 from src.python.review.common.file_system import get_content_from_file
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, BoolExprLenIssue, CodeIssue, CyclomaticComplexityIssue, \
-    FuncLenIssue, IssueType, LineLenIssue, IssueData
-from src.python.review.inspectors.tips import get_bool_expr_len_tip, get_cyclomatic_complexity_tip, get_func_len_tip, \
-    get_line_len_tip
+
+from src.python.review.inspectors.issue import (
+    BaseIssue,
+    BoolExprLenIssue,
+    CodeIssue,
+    CyclomaticComplexityIssue,
+    FuncLenIssue,
+    IssueType,
+    LineLenIssue,
+    IssueData,
+)
+
+from src.python.review.inspectors.tips import (
+    get_bool_expr_len_tip,
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+)
 
 logger = logging.getLogger(__name__)
 
