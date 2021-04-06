@@ -2,23 +2,26 @@ import linecache
 import os
 import tempfile
 from contextlib import contextmanager
-from enum import Enum
+from enum import Enum, unique
 from pathlib import Path
 from typing import List, Union, Callable
 
 
+@unique
 class FileSystemItem(Enum):
     PATH = 0
     SUBDIR = 1
     FILE = 2
 
 
+@unique
 class Encoding(Enum):
     ISO_ENCODING = 'ISO-8859-1'
     UTF_ENCODING = 'utf-8'
 
 
 # Make sure all extensions (except an empty one) have a dot
+@unique
 class Extension(Enum):
     EMPTY = ''
     PY = '.py'

@@ -21,18 +21,8 @@ class RadonInspector(BaseInspector):
             path,
         ]
 
-        hal_command = [
-            "radon", "hal",
-            path,
-        ]
-
         mi_output = run_in_subprocess(mi_command)
-        mi_issues = cls.mi_parse(mi_output)
-
-        hal_output = run_in_subprocess(hal_command)
-        hal_issues = cls.hal_parse(hal_output)
-
-        return mi_issues + hal_issues
+        return cls.mi_parse(mi_output)
 
     @classmethod
     def mi_parse(cls, mi_output: str) -> List[BaseIssue]:
@@ -68,8 +58,3 @@ class RadonInspector(BaseInspector):
         :return: lack of maintainability.
         """
         return floor(100 - maintainability_index)
-
-    # TODO: add Halstead complexity
-    @classmethod
-    def hal_parse(cls, hal_output: str) -> List[BaseIssue]:
-        return []

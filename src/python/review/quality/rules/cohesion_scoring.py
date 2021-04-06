@@ -10,11 +10,16 @@ from src.python.review.quality.model import Rule, QualityType
 class CohesionRuleConfig:
     cohesion_lack_bad: int
     cohesion_lack_moderate: int
+    cohesion_lack_good: int
 
 
+# TODO: Need testing
+# Cohesion plugin by default only shows issues where cohesion is less than 50%.
+# Therefore cohesion_lack_bad = 50. The other levels are set in steps of 20%.
 common_cohesion_rule_config = CohesionRuleConfig(
     cohesion_lack_bad=50,
     cohesion_lack_moderate=30,
+    cohesion_lack_good=10,
 )
 
 LANGUAGE_TO_COHESION_RULE_CONFIG = {
@@ -39,6 +44,9 @@ class CohesionRule(Rule):
         elif cohesion_lack > self.config.cohesion_lack_moderate:
             self.quality_type = QualityType.MODERATE
             self.next_level_delta = cohesion_lack - self.config.cohesion_lack_moderate
+        elif cohesion_lack > self.config.cohesion_lack_good:
+            self.quality_type = QualityType.GOOD
+            self.next_level_delta = cohesion_lack - self.config.cohesion_lack_good
         else:
             self.quality_type = QualityType.EXCELLENT
             self.next_level_delta = 0
@@ -47,12 +55,15 @@ class CohesionRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
             return QualityType.MODERATE
+        elif self.quality_type == QualityType.MODERATE:
+            return QualityType.GOOD
         return QualityType.EXCELLENT
 
     def merge(self, other: 'CohesionRule') -> 'CohesionRule':
         config = CohesionRuleConfig(
             min(self.config.cohesion_lack_bad, other.config.cohesion_lack_bad),
             min(self.config.cohesion_lack_moderate, other.config.cohesion_lack_moderate),
+            min(self.config.cohesion_lack_good, other.config.cohesion_lack_good),
         )
         result_rule = CohesionRule(config)
         result_rule.apply(max(self.cohesion_lack, other.cohesion_lack))

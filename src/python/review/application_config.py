@@ -25,4 +25,4 @@ class LanguageVersion(Enum):
 
     @classmethod
     def values(cls) -> List[str]:
-        return [member.value for _, member in LanguageVersion.__members__.items()]
+        return [member.value for member in cls.__members__.values()]

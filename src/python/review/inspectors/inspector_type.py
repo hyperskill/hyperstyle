@@ -27,18 +27,18 @@ class InspectorType(Enum):
     def available_values(cls) -> List[str]:
         return [
             # Python language
-            InspectorType.PYLINT.value,
-            InspectorType.FLAKE8.value,
-            InspectorType.PYTHON_AST.value,
-            InspectorType.RADON.value,
+            cls.PYLINT.value,
+            cls.FLAKE8.value,
+            cls.PYTHON_AST.value,
+            cls.RADON.value,
 
             # Java language
-            InspectorType.PMD.value,
-            InspectorType.CHECKSTYLE.value,
+            cls.PMD.value,
+            cls.CHECKSTYLE.value,
 
             # Kotlin language
-            InspectorType.DETEKT.value,
+            cls.DETEKT.value,
 
             # JavaScript language
-            InspectorType.ESLINT.value,
+            cls.ESLINT.value,
         ]

@@ -13,6 +13,12 @@ class MaintainabilityRuleConfig:
     maintainability_lack_bad: int
 
 
+# TODO: Need testing
+# In Radon, the maintainability index is ranked as follows:
+# 20-100: Very high
+# 10-19: Medium
+# 0-9: Extremely low
+# Therefore, maintainability_lack_bad = 90, and maintainability_lack_moderate = 80.
 common_maintainability_rule_config = MaintainabilityRuleConfig(
     maintainability_lack_good=50,
     maintainability_lack_moderate=80,
