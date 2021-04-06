@@ -9,7 +9,6 @@ from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.flake8.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
-    WPS_RANGE_TO_ISSUE_TYPE,
 )
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import (
