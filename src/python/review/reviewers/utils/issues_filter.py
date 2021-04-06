@@ -25,7 +25,7 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
         IssueType.COUPLING: LANGUAGE_TO_COUPLING_RULE_CONFIG[language].coupling_moderate,
         IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
         IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good,
-        IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_bad,
+        IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_good,
         IssueType.MAINTAINABILITY: LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG[
             language
         ].maintainability_lack_good

@@ -1,4 +1,5 @@
 import pytest
+from textwrap import dedent
 
 from src.python.review.common.language import Language
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
@@ -16,7 +17,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 3),
     ('case8_good_class.py', 0),
-    ('case7_empty_lines.py', 1),
+    ('case7_empty_lines.py', 2),
     ('case10_unused_variable_in_loop.py', 1),
     ('case13_complex_logic.py', 12),
     ('case13_complex_logic_2.py', 3),
@@ -91,9 +92,12 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
 
 def test_parse():
     file_name = 'test.py'
-    output = ('test.py:1:11:W602:test 1\n'
-              'test.py:2:12:E703:test 2\n'
-              'test.py:3:13:SC200:test 3')
+    output = f"""\
+        {file_name}:1:11:W602:test 1
+        {file_name}:2:12:E703:test 2
+        {file_name}:3:13:SC200:test 3
+    """
+    output = dedent(output)
 
     issues = Flake8Inspector.parse(output)
 
