@@ -31,7 +31,7 @@ class InspectorType(Enum):
             cls.FLAKE8.value,
             cls.PYTHON_AST.value,
             cls.RADON.value,
-          
+
             # Java language
             cls.PMD.value,
             cls.CHECKSTYLE.value,
