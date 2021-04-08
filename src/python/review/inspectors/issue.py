@@ -61,7 +61,7 @@ class IssueData(Enum):
             cls.LINE_NUMBER.value: line_number,
             cls.COLUMN_NUMBER.value: column_number,
             cls.ORIGIN_ClASS.value: origin_class,
-            cls.INSPECTOR_TYPE.value: inspector_type
+            cls.INSPECTOR_TYPE.value: inspector_type,
         }
 
 

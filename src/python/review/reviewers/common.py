@@ -38,7 +38,7 @@ LANGUAGE_TO_INSPECTORS = {
     ],
     Language.JS: [
         ESLintInspector(),
-    ]
+    ],
 }
 
 
@@ -78,12 +78,12 @@ def perform_language_review(metadata: Metadata,
         file_review_results.append(FileReviewResult(
             file_metadata.path,
             issues,
-            quality
+            quality,
         ))
 
     return ReviewResult(
         file_review_results,
-        general_quality
+        general_quality,
     )
 
 

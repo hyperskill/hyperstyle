@@ -10,7 +10,7 @@ def test_disable_works(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     output = process.stdout.decode()
 
@@ -20,7 +20,7 @@ def test_disable_works(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     output = process.stdout.decode()
 

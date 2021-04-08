@@ -11,7 +11,7 @@ def test_exit_code_zero(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
 
     assert process.returncode == 0
@@ -24,7 +24,7 @@ def test_exit_code_one(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
 
     assert process.returncode == 1
@@ -37,7 +37,7 @@ def test_exit_code_two(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
 
     assert process.returncode == 2

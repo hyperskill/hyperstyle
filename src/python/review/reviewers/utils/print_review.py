@@ -24,7 +24,7 @@ def print_review_result_as_text(review_result: ReviewResult,
             for issue in sorted_issues:
                 line_text = linecache.getline(
                     str(issue.file_path),
-                    issue.line_no
+                    issue.line_no,
                 ).strip()
 
                 print(f'{issue.line_no} : '
@@ -80,7 +80,7 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
             'file_name': str(file_review_result.file_path),
             'quality': {
                 'code': quality_value,
-                'text': f'Code quality (beta): {quality_value}'
+                'text': f'Code quality (beta): {quality_value}',
             },
             'issues': [],
         }
@@ -106,7 +106,7 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
             'code': quality_value,
             'text': f'Code quality (beta): {quality_value}',
         },
-        'file_review_results': file_review_result_jsons
+        'file_review_results': file_review_result_jsons,
     }
 
     print(json.dumps(output_json))

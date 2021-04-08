@@ -13,7 +13,7 @@ class LineLengthRuleConfig:
 
 common_line_length_rule_config = LineLengthRuleConfig(
     n_line_len_bad=0.05,
-    n_line_len_good=0.035
+    n_line_len_good=0.035,
 )
 
 LANGUAGE_TO_LINE_LENGTH_RULE_CONFIG = {
@@ -54,7 +54,7 @@ class LineLengthRule(Rule):
     def merge(self, other: 'LineLengthRule') -> 'LineLengthRule':
         config = LineLengthRuleConfig(
             min(self.config.n_line_len_bad, other.config.n_line_len_bad),
-            min(self.config.n_line_len_good, other.config.n_line_len_good)
+            min(self.config.n_line_len_good, other.config.n_line_len_good),
         )
         result_rule = LineLengthRule(config)
         result_rule.apply(self.n_line_len + other.n_line_len, self.n_lines + other.n_lines)

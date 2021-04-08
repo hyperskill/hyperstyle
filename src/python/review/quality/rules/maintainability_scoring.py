@@ -66,7 +66,7 @@ class MaintainabilityRule(Rule):
         config = MaintainabilityRuleConfig(
             min(self.config.maintainability_lack_bad, other.config.maintainability_lack_bad),
             min(self.config.maintainability_lack_moderate, other.config.maintainability_lack_moderate),
-            min(self.config.maintainability_lack_good, other.config.maintainability_lack_good)
+            min(self.config.maintainability_lack_good, other.config.maintainability_lack_good),
         )
         result_rule = MaintainabilityRule(config)
         result_rule.apply(max(self.maintainability_lack, other.maintainability_lack))

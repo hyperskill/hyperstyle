@@ -155,7 +155,7 @@ def main() -> int:
 
         inspectors_config = {
             'language_version': LanguageVersion(args.language_version) if args.language_version is not None else None,
-            'n_cpu': n_cpu
+            'n_cpu': n_cpu,
         }
 
         config = ApplicationConfig(
