@@ -5,7 +5,7 @@ import sys
 import traceback
 from enum import Enum, unique
 from pathlib import Path
-from typing import Set, List
+from typing import List, Set
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -13,7 +13,6 @@ sys.path.append('../../..')
 from src.python.review.application_config import ApplicationConfig, LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.logging_config import logging_config
-
 from src.python.review.reviewers.perform_review import (
     OutputFormat,
     PathNotExists,

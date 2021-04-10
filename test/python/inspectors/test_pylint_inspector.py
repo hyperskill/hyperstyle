@@ -1,10 +1,10 @@
 import textwrap
+from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
-
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.inspectors.pylint.pylint import PylintInspector
-from test.python.inspectors import PYTHON_DATA_FOLDER
+
 from .conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [

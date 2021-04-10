@@ -3,7 +3,7 @@ from typing import Optional
 
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import IssueType
-from src.python.review.quality.model import Rule, QualityType
+from src.python.review.quality.model import QualityType, Rule
 
 
 @dataclass

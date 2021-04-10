@@ -4,9 +4,9 @@ from typing import List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
+from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueData, IssueType, MaintainabilityLackIssue
-from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 from src.python.review.inspectors.tips import get_maintainability_index_tip
 
 
