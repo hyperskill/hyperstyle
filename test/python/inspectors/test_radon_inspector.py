@@ -8,6 +8,7 @@ from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 from test.python.inspectors import PYTHON_DATA_FOLDER
 from test.python.inspectors.conftest import use_file_metadata
+from src.python.review.inspectors.tips import get_maintainability_index_tip
 
 FILE_NAMES_AND_N_ISSUES = [
     ("case13_complex_logic.py", 1),
@@ -42,7 +43,7 @@ def test_mi_parse():
     assert all(str(issue.file_path) == file_name for issue in issues)
     assert [issue.line_no for issue in issues] == [1, 1, 1]
     assert [issue.column_no for issue in issues] == [1, 1, 1]
-    assert [issue.description for issue in issues] == ["", "", ""]
+    assert [issue.description for issue in issues] == [get_maintainability_index_tip()] * 3
     assert [issue.type for issue in issues] == [
         IssueType.MAINTAINABILITY,
         IssueType.MAINTAINABILITY,
