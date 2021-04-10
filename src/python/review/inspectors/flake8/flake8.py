@@ -1,5 +1,4 @@
 import logging
-import math
 import re
 from pathlib import Path
 from typing import List
@@ -71,7 +70,7 @@ class Flake8Inspector(BaseInspector):
             elif cohesion_match is not None:  # flake8-cohesion
                 issue_data[IssueData.DESCRIPTION.value] = description  # TODO: Add tip
                 issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
-                    float(cohesion_match.group(1))
+                    float(cohesion_match.group(1)),
                 )
                 issue_data[IssueData.ISSUE_TYPE.value] = IssueType.COHESION
                 issues.append(CohesionIssue(**issue_data))
