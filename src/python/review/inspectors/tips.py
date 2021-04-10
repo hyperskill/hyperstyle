@@ -84,3 +84,8 @@ def get_method_number_tip() -> str:
         'The file has too many methods inside and is complicated to understand. '
         'Consider its decomposition to smaller classes.'
     )
+
+
+# TODO: Need to improve the tip.
+def get_maintainability_index_tip() -> str:
+    return 'The maintainability index is too low.'
