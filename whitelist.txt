@@ -54,6 +54,7 @@ unlink
 utils
 param
 params
+changelog
 # Springlint issues
 cbo
 dit
