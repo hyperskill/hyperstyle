@@ -55,6 +55,24 @@ utils
 param
 params
 changelog
+multiline
+sqrt
+WPS
+OOP
+mccabe
+mcs
+dicts
+misrefactored
+src
+textwrap
+dedent
+maintainabilities
+parsers
+fs
+KTS
+nl
+splitext
+dirname
 # Springlint issues
 cbo
 dit
@@ -62,5 +80,3 @@ lcom
 noc
 nom
 wmc
-multiline
-sqrt
