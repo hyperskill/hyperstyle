@@ -13,17 +13,17 @@ class FunctionLengthRuleConfig:
 
 LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG = {
     Language.JAVA: FunctionLengthRuleConfig(
-        func_len_bad=69
+        func_len_bad=69,
     ),
     Language.KOTLIN: FunctionLengthRuleConfig(
-        func_len_bad=69
+        func_len_bad=69,
     ),
     Language.PYTHON: FunctionLengthRuleConfig(
-        func_len_bad=49
+        func_len_bad=49,
     ),
     Language.JS: FunctionLengthRuleConfig(
-        func_len_bad=69
-    )
+        func_len_bad=69,
+    ),
 }
 
 
@@ -48,7 +48,7 @@ class FunctionLengthRule(Rule):
 
     def merge(self, other: 'FunctionLengthRule') -> 'FunctionLengthRule':
         config = FunctionLengthRuleConfig(
-            min(self.config.func_len_bad, other.config.func_len_bad)
+            min(self.config.func_len_bad, other.config.func_len_bad),
         )
         result_rule = FunctionLengthRule(config)
         result_rule.apply(max(self.func_len, other.func_len))

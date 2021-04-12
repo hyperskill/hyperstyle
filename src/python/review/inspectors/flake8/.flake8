@@ -50,5 +50,4 @@ ignore=W291,  # trailing whitespaces
        F524, # missing argument. TODO: Collision with "P201" and "P202"
        F525, # mixing automatic and manual numbering. TODO: Collision with "P205"
        # flake8-commas
-       C814, # missing trailing comma in Python 
-       
+       C814, # missing trailing comma in Python 2

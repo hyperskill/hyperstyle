@@ -13,7 +13,7 @@ def test_disable_logs_text(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     output = process.stdout.decode()
     output = output.lower()
@@ -33,7 +33,7 @@ def test_disable_logs_json(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
 
     output = process.stdout.decode()
@@ -49,7 +49,7 @@ def test_enable_all_logs(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     output = process.stdout.decode()
     output = output.lower()

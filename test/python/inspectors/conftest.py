@@ -31,16 +31,16 @@ def branch_info_response() -> Dict[str, Any]:
                 'reachability': 1,
             },
             'canCreateReview': {
-                'isAllowed': True
+                'isAllowed': True,
             },
             'stats': {
                 'parentBranch': 'bar',
                 'commitsAhead': 0,
-                'commitsBehind': 0
+                'commitsBehind': 0,
             },
             'mergeInfo': {},
-            'isPullRequest': False
-        }
+            'isPullRequest': False,
+        },
     }
 
 
@@ -52,15 +52,15 @@ def ownership_summary_response() -> Dict[str, Any]:
                 {
                     'filePath': '/foo.py',
                     'state': 0,
-                    'userId': None
+                    'userId': None,
                 },
                 {
                     'filePath': '/bar/baz.py',
                     'state': 0,
-                    'userId': None
-                }
-            ]
-        }
+                    'userId': None,
+                },
+            ],
+        },
     }
 
 
@@ -74,6 +74,7 @@ class IssuesTestInfo:
     n_bool_expr_len: int = 0
     n_other_complexity: int = 0
     n_cohesion: int = 0
+    n_maintainability: int = 0
 
 
 def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
@@ -88,6 +89,7 @@ def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
         n_bool_expr_len=counter[IssueType.BOOL_EXPR_LEN],
         n_other_complexity=counter[IssueType.COMPLEXITY],
         n_cohesion=counter[IssueType.COHESION],
+        n_maintainability=counter[IssueType.MAINTAINABILITY],
     )
 
 
