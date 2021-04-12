@@ -3,13 +3,12 @@ import logging
 import re
 from pathlib import Path
 from shutil import copy
-from typing import AnyStr, List, Optional, Dict, Any
+from typing import Any, AnyStr, Dict, List, Optional
 
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-
 from src.python.review.inspectors.issue import (
     BaseIssue,
     ChildrenNumberIssue,
@@ -18,12 +17,11 @@ from src.python.review.inspectors.issue import (
     CohesionIssue,
     CouplingIssue,
     InheritanceIssue,
+    IssueData,
     IssueType,
     MethodNumberIssue,
     WeightedMethodIssue,
-    IssueData,
 )
-
 from src.python.review.inspectors.tips import (
     get_child_number_tip,
     get_class_coupling_tip,

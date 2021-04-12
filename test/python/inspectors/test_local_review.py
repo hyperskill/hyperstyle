@@ -1,13 +1,12 @@
 import json
 from collections import namedtuple
+from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
-
 from src.python.review.application_config import ApplicationConfig
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.quality.model import QualityType
 from src.python.review.reviewers.perform_review import OutputFormat, PathNotExists, perform_and_print_review
-from test.python.inspectors import PYTHON_DATA_FOLDER
 
 Args = namedtuple('Args', [
     'path',

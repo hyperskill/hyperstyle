@@ -1,11 +1,10 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from test.python import TEST_DATA_FOLDER
 from typing import List, Optional
 
 import pytest
-
 from src.python import MAIN_FOLDER
-from test.python import TEST_DATA_FOLDER
 
 DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
 

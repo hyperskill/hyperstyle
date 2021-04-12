@@ -1,14 +1,13 @@
+from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 from textwrap import dedent
 
 import pytest
-
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.inspectors.radon.radon import RadonInspector
-from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-from test.python.inspectors import PYTHON_DATA_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
 from src.python.review.inspectors.tips import get_maintainability_index_tip
+from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAMES_AND_N_ISSUES = [
     ("case13_complex_logic.py", 1),

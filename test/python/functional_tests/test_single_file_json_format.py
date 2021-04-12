@@ -1,9 +1,8 @@
 import json
 import subprocess
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 from jsonschema import validate
-
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 schema = {
     'type': 'object',
