@@ -1,5 +1,4 @@
 import logging
-import math
 import re
 from pathlib import Path
 from typing import List
@@ -17,6 +16,7 @@ from src.python.review.inspectors.issue import (
     CohesionIssue,
 )
 from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
+from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,9 @@ class Flake8Inspector(BaseInspector):
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif cohesion_match is not None:  # flake8-cohesion
                 issue_data[IssueData.DESCRIPTION.value] = description  # TODO: Add tip
-                issue_data[IssueData.COHESION_LACK.value] = cls.__get_cohesion_lack(float(cohesion_match.group(1)))
+                issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
+                    float(cohesion_match.group(1)),
+                )
                 issue_data[IssueData.ISSUE_TYPE.value] = IssueType.COHESION
                 issues.append(CohesionIssue(**issue_data))
             else:
@@ -98,14 +100,3 @@ class Flake8Inspector(BaseInspector):
             return IssueType.BEST_PRACTICES
 
         return issue_type
-
-    @staticmethod
-    def __get_cohesion_lack(cohesion_percentage: float) -> int:
-        """
-        Converts cohesion percentage to lack of cohesion.
-        Calculated by the formula: floor(100 - cohesion_percentage).
-
-        :param cohesion_percentage: cohesion set as a percentage.
-        :return: lack of cohesion
-        """
-        return math.floor(100 - cohesion_percentage)

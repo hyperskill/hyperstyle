@@ -45,22 +45,22 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Operating System :: OS Independent'
+        'Operating System :: OS Independent',
     ],
     keywords='code review',
     python_requires='>=3.8, <4',
     install_requires=['upsourceapi'],
     packages=find_packages(exclude=[
         '*.unit_tests', '*.unit_tests.*', 'unit_tests.*', 'unit_tests',
-        '*.functional_tests', '*.functional_tests.*', 'functional_tests.*', 'functional_tests'
+        '*.functional_tests', '*.functional_tests.*', 'functional_tests.*', 'functional_tests',
     ]),
     zip_safe=False,
     package_data={
-        '': get_inspectors_additional_files()
+        '': get_inspectors_additional_files(),
     },
     entry_points={
         'console_scripts': [
-            'review=review.run_tool:main'
-        ]
-    }
+            'review=review.run_tool:main',
+        ],
+    },
 )

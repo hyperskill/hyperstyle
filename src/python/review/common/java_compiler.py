@@ -18,7 +18,7 @@ def javac(javac_args: Union[str, Path]) -> bool:
         output_bytes: bytes = subprocess.check_output(
             f'javac {javac_args}',
             shell=True,
-            stderr=subprocess.STDOUT
+            stderr=subprocess.STDOUT,
         )
         output_str = str(output_bytes, Encoding.UTF_ENCODING.value)
 

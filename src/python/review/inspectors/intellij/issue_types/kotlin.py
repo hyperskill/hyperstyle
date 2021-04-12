@@ -378,5 +378,5 @@ ISSUE_CLASS_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     '\'when\' that can be simplified by introducing an argument':
         IssueType.CODE_STYLE,
 
-    'Annotator': IssueType.ERROR_PRONE
+    'Annotator': IssueType.ERROR_PRONE,
 }

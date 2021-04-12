@@ -20,7 +20,7 @@ class QualityType(Enum):
             QualityType.BAD: 0,
             QualityType.MODERATE: 1,
             QualityType.GOOD: 2,
-            QualityType.EXCELLENT: 3
+            QualityType.EXCELLENT: 3,
         }
 
         return order[self] < order[other]
@@ -81,12 +81,11 @@ class Quality:
         message_deltas_part = ''
 
         if self.quality_type != QualityType.EXCELLENT:
-            message_next_level_part = textwrap.dedent(
-                f"""\
-                    Next level: {self.next_quality_type.value}
-                    Next level requirements:
-                """
-            )
+            message_next_level_part = f"""\
+                Next level: {self.next_quality_type.value}
+                Next level requirements:
+            """
+            message_next_level_part = textwrap.dedent(message_next_level_part)
 
             for rule in self.next_level_requirements:
                 message_deltas_part += f'{rule.rule_type.value}: {rule.next_level_delta}\n'

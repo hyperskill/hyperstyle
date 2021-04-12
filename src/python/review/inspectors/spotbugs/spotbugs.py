@@ -30,7 +30,7 @@ class SpotbugsInspector(BaseInspector):
             PATH_SPOTBUGS_EXCLUDE,
             '-textui',
             '-medium',
-            str(path)
+            str(path),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
@@ -100,5 +100,5 @@ class SpotbugsInspector(BaseInspector):
             type=IssueType.ERROR_PRONE,
             origin_class=issue_class,
             description=short_desc,
-            inspector_type=cls.inspector_type
+            inspector_type=cls.inspector_type,
         )

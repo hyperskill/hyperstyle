@@ -43,7 +43,7 @@ class LocalCommandBuilder:
         command.extend([
             '--n_cpu', str(self.n_cpu),
             '-f', self.format,
-            str(self.path)
+            str(self.path),
         ])
 
         if self.start_line is not None:

@@ -35,7 +35,7 @@ class CheckstyleInspector(BaseInspector):
             r'Boolean expression complexity is (\d+)',
 
         'LineLengthCheck':
-            r'Line is longer than \d+ characters \(found (\d+)\)'
+            r'Line is longer than \d+ characters \(found (\d+)\)',
     }
 
     @classmethod
@@ -43,7 +43,7 @@ class CheckstyleInspector(BaseInspector):
         return [
             'java', '-jar', PATH_TOOLS_CHECKSTYLE_JAR,
             '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
-            '-f', 'xml', '-o', output_path, str(path)
+            '-f', 'xml', '-o', output_path, str(path),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:

@@ -12,7 +12,7 @@ class ErrorProneRuleConfig:
 
 
 common_error_prone_rule_config = ErrorProneRuleConfig(
-    n_error_prone_bad=0
+    n_error_prone_bad=0,
 )
 
 LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG = {

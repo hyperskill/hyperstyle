@@ -6,30 +6,30 @@ from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 EXPECTED_JSON = {
     'quality': {
         'code': 'EXCELLENT',
-        'text': 'Code quality (beta): EXCELLENT'
+        'text': 'Code quality (beta): EXCELLENT',
     },
     'file_review_results': [
         {
             'file_name': '__init__.py',
             'quality': {
                 'code': 'EXCELLENT',
-                'text': 'Code quality (beta): EXCELLENT'
+                'text': 'Code quality (beta): EXCELLENT',
             },
-            'issues': []
+            'issues': [],
         },
         {
             'file_name': 'one.py',
             'quality': {
                 'code': 'EXCELLENT',
-                'text': 'Code quality (beta): EXCELLENT'
+                'text': 'Code quality (beta): EXCELLENT',
             },
-            'issues': []
+            'issues': [],
         },
         {
             'file_name': 'other.py',
             'quality': {
                 'code': 'GOOD',
-                'text': 'Code quality (beta): GOOD'
+                'text': 'Code quality (beta): GOOD',
             },
             'issues': [
                 {
@@ -38,7 +38,7 @@ EXPECTED_JSON = {
                     'line': 'a = 1',
                     'line_number': 2,
                     'column_number': 5,
-                    'category': 'BEST_PRACTICES'
+                    'category': 'BEST_PRACTICES',
                 },
                 {
                     'code': 'W0612',
@@ -46,7 +46,7 @@ EXPECTED_JSON = {
                     'line': 'b = 2',
                     'line_number': 3,
                     'column_number': 5,
-                    'category': 'BEST_PRACTICES'
+                    'category': 'BEST_PRACTICES',
                 },
                 {
                     'code': 'W0612',
@@ -54,11 +54,11 @@ EXPECTED_JSON = {
                     'line': 'c = 3',
                     'line_number': 4,
                     'column_number': 5,
-                    'category': 'BEST_PRACTICES'
-                }
-            ]
+                    'category': 'BEST_PRACTICES',
+                },
+            ],
         },
-    ]
+    ],
 }
 
 
@@ -73,7 +73,7 @@ def test_json_format(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     stdout = process.stdout.decode()
     print(stdout)
