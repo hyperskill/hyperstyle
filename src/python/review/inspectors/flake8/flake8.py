@@ -17,7 +17,6 @@ from src.python.review.inspectors.issue import (
     IssueType,
 )
 from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
-from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 
 logger = logging.getLogger(__name__)
 
