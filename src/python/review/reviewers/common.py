@@ -8,7 +8,6 @@ from src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspect
 from src.python.review.inspectors.detekt.detekt import DetektInspector
 from src.python.review.inspectors.eslint.eslint import ESLintInspector
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.inspectors.pmd.pmd import PMDInspector
 from src.python.review.inspectors.pyast.python_ast import PythonAstInspector
