@@ -108,7 +108,7 @@ def main() -> int:
             ))
 
         with pd.ExcelWriter(args.data_path, engine='openpyxl', mode='a') as writer:
-            report.to_excel(writer, sheet_name='Inspection results', index=False)
+            report.to_excel(writer, sheet_name='inspection_results', index=False)
         return 0
 
     except FileNotFoundError:
