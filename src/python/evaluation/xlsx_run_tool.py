@@ -79,12 +79,12 @@ def main() -> int:
 
             if lang == 'java8' or lang == 'java11':
                 results = run_in_subprocess([
-                    'python3', args.tool_path, file.name, '--language_version', lang])
+                    'python3', args.tool_path, temp_file_path, '--language_version', lang])
 
             else:
-                results = run_in_subprocess(['python3', args.tool_path, file.name])
+                results = run_in_subprocess(['python3', args.tool_path, temp_file_path])
 
-            os.remove(file.name)
+            os.remove(temp_file_path)
 
             # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
             regex_match = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
