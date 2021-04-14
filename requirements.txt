@@ -1,4 +1,4 @@
-setuptools~=47.3.2
+setuptools~=47.3.1
 
 # python code analysis tools
 pylint==2.5.3
@@ -29,6 +29,4 @@ django==3.0.8
 requests==2.24.0
 argparse~=1.4.0
 pandas~=1.2.3
-pytest~=5.4.3
 openpyxl~=3.0.7
-jsonschema~=3.2.0
