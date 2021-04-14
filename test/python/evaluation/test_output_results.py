@@ -24,7 +24,7 @@ def test_correct_output(test_file: str, target_file: str, output_type: str,
 
     subprocess.run(eval_command_builder.build())
 
-    test_dataframe = pd.read_excel(XLSX_DATA_FOLDER / test_file, sheet_name='Inspection results')
+    test_dataframe = pd.read_excel(XLSX_DATA_FOLDER / test_file, sheet_name='inspection_results')
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=output_type)
 
     remove_sheet_with_results(XLSX_DATA_FOLDER / test_file)
