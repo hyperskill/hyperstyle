@@ -4,7 +4,6 @@ import os
 import pandas as pd
 import re
 import sys
-import tempfile
 import traceback
 
 from pathlib import Path
@@ -70,17 +69,13 @@ def main() -> int:
     try:
         args = parser.parse_args()
         dataframe = pd.read_excel(args.data_path)
+        temp_dir_path = MAIN_FOLDER.parent / 'evaluation/temporary_files'
 
         for lang, code in zip(dataframe['lang'], dataframe['code']):
-            file = tempfile.NamedTemporaryFile(
-                dir=(MAIN_FOLDER.parent / 'evaluation/temporary_files'),
-                suffix=lang_suffixes[lang],
-                delete=False, mode="w",
-            )
+            temp_file_path = os.path.join(temp_dir_path, ('file.' + lang_suffixes[lang]))
 
-            file = open(file.name, "w")
-            file.writelines(code)
-            file.close()
+            with open(temp_file_path, 'w') as file:
+                file.writelines(code)
 
             if lang == 'java8' or lang == 'java11':
                 results = run_in_subprocess([
@@ -89,7 +84,7 @@ def main() -> int:
             else:
                 results = run_in_subprocess(['python3', args.tool_path, file.name])
 
-            os.unlink(file.name)
+            os.remove(file.name)
 
             # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
             regex_match = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
