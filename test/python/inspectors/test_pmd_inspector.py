@@ -1,7 +1,8 @@
-import pytest
-
-from src.python.review.inspectors.pmd.pmd import PMDInspector
 from test.python.inspectors import JAVA_DATA_FOLDER
+
+import pytest
+from src.python.review.inspectors.pmd.pmd import PMDInspector
+
 from .conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
