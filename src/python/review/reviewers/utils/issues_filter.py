@@ -5,14 +5,14 @@ from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
+from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import LANGUAGE_TO_COUPLING_RULE_CONFIG
 from src.python.review.quality.rules.cyclomatic_complexity_scoring import LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG
 from src.python.review.quality.rules.function_length_scoring import LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG
 from src.python.review.quality.rules.inheritance_depth_scoring import LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG
+from src.python.review.quality.rules.maintainability_scoring import LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG
 from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
-from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
-from src.python.review.quality.rules.maintainability_scoring import LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG
 
 
 def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:

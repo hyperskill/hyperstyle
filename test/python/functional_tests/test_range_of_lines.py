@@ -1,9 +1,8 @@
 import json
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 import pytest
-
 from src.python.review.common.subprocess_runner import run_in_subprocess
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 PATH_TO_FILE = DATA_PATH / 'lines_range' / 'code_with_multiple_issues.py'
 
@@ -14,23 +13,23 @@ EXPECTED_JSON = {
     },
     'issues': [{
         'category': 'CODE_STYLE',
-        'code': 'C0326',
+        'code': 'E225',
         'column_number': 2,
         'line': 'a=10',
         'line_number': 1,
-        'text': 'Exactly one space required around assignment'},
+        'text': 'missing whitespace around operator'},
         {'category': 'CODE_STYLE',
-         'code': 'C0326',
+         'code': 'E225',
          'column_number': 2,
          'line': 'b=20',
          'line_number': 2,
-         'text': 'Exactly one space required around assignment'},
+         'text': 'missing whitespace around operator'},
         {'category': 'CODE_STYLE',
-         'code': 'C0326',
+         'code': 'E225',
          'column_number': 2,
          'line': 'c=a + b',
          'line_number': 4,
-         'text': 'Exactly one space required around assignment',
+         'text': 'missing whitespace around operator',
          },
     ],
 }
@@ -80,8 +79,8 @@ def test_range_filter_when_start_line_is_not_first(
             'code': 'MODERATE',
             'text': 'Code quality (beta): MODERATE'},
         'issues': [{
-            'code': 'C0326',
-            'text': 'Exactly one space required around assignment',
+            'code': 'E225',
+            'text': 'missing whitespace around operator',
             'line': 'c=a + b',
             'line_number': 4,
             'column_number': 2,
@@ -148,8 +147,8 @@ def test_range_filter_when_end_line_is_first(
             'text': 'Code quality (beta): MODERATE',
         },
         'issues': [{
-            'code': 'C0326',
-            'text': 'Exactly one space required around assignment',
+            'code': 'E225',
+            'text': 'missing whitespace around operator',
             'line': 'a=10',
             'line_number': 1,
             'column_number': 2,
@@ -214,15 +213,15 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
             'text': 'Code quality (beta): BAD',
         },
         'issues': [{
-            'code': 'C0326',
-            'text': 'Exactly one space required around assignment',
+            'code': 'E225',
+            'text': 'missing whitespace around operator',
             'line': 'b=20',
             'line_number': 2,
             'column_number': 2,
             'category': 'CODE_STYLE',
         }, {
-            'code': 'C0326',
-            'text': 'Exactly one space required around assignment',
+            'code': 'E225',
+            'text': 'missing whitespace around operator',
             'line': 'c=a + b',
             'line_number': 4,
             'column_number': 2,

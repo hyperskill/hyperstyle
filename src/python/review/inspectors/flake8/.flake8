@@ -1,5 +1,8 @@
 [flake8]
 disable_noqa=True
+
+dictionaries=en_US,python,technical,django
+
 ignore=W291,  # trailing whitespaces
        W292,  # no newline at end of file
        W293,  # blank line contains whitespaces

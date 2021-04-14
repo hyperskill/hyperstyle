@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
-
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.reviewers.utils.metadata_exploration import explore_file, FileMetadata

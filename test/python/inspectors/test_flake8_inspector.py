@@ -1,12 +1,12 @@
-import pytest
+from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 from textwrap import dedent
 
+import pytest
 from src.python.review.common.language import Language
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-from test.python.inspectors import PYTHON_DATA_FOLDER
-from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ('case0_spaces.py', 5),
@@ -25,7 +25,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case14_returns_errors.py', 4),
     ('case16_comments.py', 0),
     ('case17_dangerous_default_value.py', 1),
-    ('case18_comprehensions.py', 10),
+    ('case18_comprehensions.py', 9),
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),

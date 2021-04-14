@@ -13,6 +13,10 @@ from src.python.review.quality.rules.boolean_length_scoring import (
 )
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG, ResponseRule
 from src.python.review.quality.rules.code_style_scoring import CodeStyleRule, LANGUAGE_TO_CODE_STYLE_RULE_CONFIG
+from src.python.review.quality.rules.cohesion_scoring import (
+    CohesionRule,
+    LANGUAGE_TO_COHESION_RULE_CONFIG,
+)
 from src.python.review.quality.rules.coupling_scoring import CouplingRule, LANGUAGE_TO_COUPLING_RULE_CONFIG
 from src.python.review.quality.rules.cyclomatic_complexity_scoring import (
     CyclomaticComplexityRule,
@@ -28,6 +32,10 @@ from src.python.review.quality.rules.inheritance_depth_scoring import (
     LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG,
 )
 from src.python.review.quality.rules.line_len_scoring import LANGUAGE_TO_LINE_LENGTH_RULE_CONFIG, LineLengthRule
+from src.python.review.quality.rules.maintainability_scoring import (
+    LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG,
+    MaintainabilityRule,
+)
 from src.python.review.quality.rules.method_number_scoring import (
     LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG,
     MethodNumberRule,
@@ -37,14 +45,6 @@ from src.python.review.quality.rules.weighted_methods_scoring import (
     WeightedMethodsRule,
 )
 from src.python.review.reviewers.utils.code_statistics import CodeStatistics
-from src.python.review.quality.rules.cohesion_scoring import (
-    LANGUAGE_TO_COHESION_RULE_CONFIG,
-    CohesionRule,
-)
-from src.python.review.quality.rules.maintainability_scoring import (
-    LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG,
-    MaintainabilityRule,
-)
 
 
 def __get_available_rules(language: Language) -> List[Rule]:

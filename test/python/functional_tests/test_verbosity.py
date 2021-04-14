@@ -1,6 +1,5 @@
 import json
 import subprocess
-
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
