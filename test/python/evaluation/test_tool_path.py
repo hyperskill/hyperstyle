@@ -1,8 +1,8 @@
+import os
 import subprocess
-
-from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.conftest import EvalLocalCommandBuilder, BrokenLocalCommandBuilder
-from test.python.evaluation.support_scripts.clear_up import remove_sheet_with_results
+import time
+from test.python.evaluation import RESULTS_DIR_PATH, XLSX_DATA_FOLDER
+from test.python.evaluation.conftest import BrokenLocalCommandBuilder, EvalLocalCommandBuilder
 
 
 def test_correct_tool_path(eval_command_builder: EvalLocalCommandBuilder):
@@ -15,8 +15,11 @@ def test_correct_tool_path(eval_command_builder: EvalLocalCommandBuilder):
         stdout=subprocess.PIPE,
     )
 
-    remove_sheet_with_results(file_path)
     assert process.returncode == 0
+    # wait before deleting file and directory as they appear with a delay
+    time.sleep(180)
+    os.remove(RESULTS_DIR_PATH / 'results.xlsx')
+    os.rmdir(RESULTS_DIR_PATH)
 
 
 def test_incorrect_tool_path(broken_command_builder: BrokenLocalCommandBuilder):
@@ -29,4 +32,4 @@ def test_incorrect_tool_path(broken_command_builder: BrokenLocalCommandBuilder):
         stdout=subprocess.PIPE,
     )
 
-    assert process.returncode == 2
+    assert process.returncode == 1

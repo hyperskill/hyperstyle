@@ -1,11 +1,10 @@
-import pytest
 import string
 import subprocess
-
-from src.python.evaluation import ScriptStructureRule
-
 from test.python.evaluation import XLSX_DATA_FOLDER
 from test.python.evaluation.conftest import EvalLocalCommandBuilder
+
+import pytest
+from src.python.evaluation import ScriptStructureRule
 
 FILE_NAMES = [
     'test_wrong_column_name.xlsx',

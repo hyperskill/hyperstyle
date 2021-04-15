@@ -1,5 +1,4 @@
 import subprocess
-
 from test.python.evaluation import XLSX_DATA_FOLDER
 from test.python.evaluation.conftest import EvalLocalCommandBuilder
 

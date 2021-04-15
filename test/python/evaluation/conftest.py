@@ -1,9 +1,8 @@
-import pytest
-
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
+import pytest
 from src.python import MAIN_FOLDER
 
 
@@ -34,7 +33,7 @@ class BrokenLocalCommandBuilder:
 
     def build(self) -> List[str]:
         assert self.path is not None
-        command = ['python3', '-t', self.tool_path, str(self.path)]
+        command = ['python3', str(self.path), '-t', self.tool_path]
         return command
 
 
