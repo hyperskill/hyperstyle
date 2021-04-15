@@ -63,3 +63,13 @@ nom
 wmc
 multiline
 sqrt
+hyperstyle
+XLSX
+Eval
+eval
+src
+openpyxl
+dataframe
+writelines
+dedent
+rmdir
