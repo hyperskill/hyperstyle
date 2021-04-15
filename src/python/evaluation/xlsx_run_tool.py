@@ -14,10 +14,10 @@ import pandas as pd
 from openpyxl import Workbook
 from src.python import MAIN_FOLDER
 from src.python.evaluation import ScriptStructureRule
-from src.python.evaluation.support_functions import create_folder, remove_sheet
+from src.python.evaluation.evaluation_config import ApplicationConfig
+from src.python.evaluation.support_functions import remove_sheet
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.reviewers.perform_review import OutputFormat
-from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 
@@ -33,11 +33,6 @@ def configure_arguments(parser: argparse.ArgumentParser) -> NoReturn:
                         default=Path('src/python/review/run_tool.py').absolute(),
                         type=lambda value: Path(value).absolute(),
                         help='Path to script to run on files.')
-
-    parser.add_argument('--n_cpu', '--n-cpu',
-                        help='Specify number of cpu that can be used to run inspectors.',
-                        default=1,
-                        type=positive_int)
 
     parser.add_argument('--traceback', '--traceback',
                         help='If True – grades are substituted with the full inspector feedback.',
@@ -66,7 +61,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> NoReturn:
                              'More details on output format options in README.md')
 
 
-def main() -> int:
+def create_dataframe(config) -> pd.DataFrame:
     report = pd.DataFrame(
         {
             "language": [],
@@ -75,58 +70,56 @@ def main() -> int:
         },
     )
 
+    dataframe = pd.read_excel(config.get_data_path())
+
+    temp_dir_path = MAIN_FOLDER.parent / 'evaluation/temporary_files'
     lang_suffixes = {'python3': '.py', 'java8': '.java', 'java11': '.java', 'kotlin': '.kt'}
 
+    for lang, code in zip(dataframe['lang'], dataframe['code']):
+        temp_file_path = os.path.join(temp_dir_path, ('file' + lang_suffixes[lang]))
+
+        with open(temp_file_path, 'w') as file:
+            file.writelines(code)
+
+        command = config.build_command(temp_file_path, lang)
+        results = run_in_subprocess(command)
+        os.remove(temp_file_path)
+
+        # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
+        regex_match = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
+
+        output = regex_match
+        if config.get_traceback():
+            output = results
+
+        report = report.append(pd.DataFrame(
+            {
+                "language": [lang],
+                "code": [code],
+                "grade": [output],
+            },
+        ))
+
+    return report
+
+
+def main() -> int:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
 
     try:
         args = parser.parse_args()
-        dataframe = pd.read_excel(args.data_path)
-        temp_dir_path = MAIN_FOLDER.parent / 'evaluation/temporary_files'
-
-        for lang, code in zip(dataframe['lang'], dataframe['code']):
-            temp_file_path = os.path.join(temp_dir_path, ('file' + lang_suffixes[lang]))
-
-            with open(temp_file_path, 'w') as file:
-                file.writelines(code)
-
-            if lang == 'java8' or lang == 'java11':
-                results = run_in_subprocess([
-                    'python3', args.tool_path, temp_file_path, '--language_version', lang])
-
-            else:
-                results = run_in_subprocess(['python3', args.tool_path, temp_file_path])
-
-            os.remove(temp_file_path)
-
-            # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
-            regex_match = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
-
-            output = regex_match
-            if args.traceback:
-                output = results
-
-            report = report.append(pd.DataFrame(
-                {
-                    "language": [lang],
-                    "code": [code],
-                    "grade": [output],
-                },
-            ))
-
-        folder_path = args.folder_path
-
-        if folder_path is None:
-            folder_path = MAIN_FOLDER.parent / 'evaluation/results'
-            create_folder(folder_path)
+        config = ApplicationConfig(args)
 
         workbook = Workbook()
-        workbook_path = Path(folder_path) / args.file_name
+        workbook_path = config.get_file_path()
         workbook.save(workbook_path)
 
+        results = create_dataframe(config)
+        print(results, workbook_path)
+
         with pd.ExcelWriter(workbook_path, engine='openpyxl', mode='a') as writer:
-            report.to_excel(writer, sheet_name='inspection_results', index=False)
+            results.to_excel(writer, sheet_name='inspection_results', index=False)
 
         # remove empty sheet that was initially created with the workbook
         remove_sheet(workbook_path, 'Sheet')
