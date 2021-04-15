@@ -1,37 +1,38 @@
 import argparse
 import logging.config
 import os
-import pandas as pd
 import re
 import sys
 import traceback
-
 from pathlib import Path
 from typing import NoReturn
 
 sys.path.append('')
 sys.path.append('../../..')
 
+import pandas as pd
+from openpyxl import Workbook
 from src.python import MAIN_FOLDER
 from src.python.evaluation import ScriptStructureRule
+from src.python.evaluation.support_functions import create_folder, remove_sheet
 from src.python.review.common.subprocess_runner import run_in_subprocess
-from src.python.review.run_tool import positive_int
 from src.python.review.reviewers.perform_review import OutputFormat
+from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> NoReturn:
+    parser.add_argument('data_path',
+                        type=lambda value: Path(value).absolute(),
+                        help='Local XLSX-file path. '
+                             'Your XLSX-file must include column-names: \"code\" and \"lang. '
+                             'Acceptable values for \"lang\" column are: python3, java8, java11, kotlin.')
+
     parser.add_argument('-t', '--tool_path',
                         default=Path('src/python/review/run_tool.py').absolute(),
                         type=lambda value: Path(value).absolute(),
                         help='Path to script to run on files.')
-
-    parser.add_argument('data_path',
-                        type=lambda value: Path(value).absolute(),
-                        help="Local XLSX-file path. "
-                             "Your XLSX-file must include column-names: \"code\" and \"lang. "
-                             "Acceptable values for \"lang\" column are: python3, java8, java11, kotlin.")
 
     parser.add_argument('--n_cpu', '--n-cpu',
                         help='Specify number of cpu that can be used to run inspectors.',
@@ -42,6 +43,19 @@ def configure_arguments(parser: argparse.ArgumentParser) -> NoReturn:
                         help='If True – grades are substituted with the full inspector feedback.',
                         default=False,
                         type=bool)
+
+    parser.add_argument('--folder_path', '--folder_path',
+                        help='An absolute path to the folder where file with evaluation results'
+                             'will be stored.'
+                             'Default is \"hyperstyle/src/python/evaluation/results\"',
+                        default=None,
+                        type=str)
+
+    parser.add_argument('--file_name', '--file_name',
+                        help='Filename for that will be created to store inspection results.'
+                             'Default is \"results.xlsx\"',
+                        default='results.xlsx',
+                        type=str)
 
     parser.add_argument('-f', '--format',
                         default=OutputFormat.JSON.value,
@@ -72,7 +86,7 @@ def main() -> int:
         temp_dir_path = MAIN_FOLDER.parent / 'evaluation/temporary_files'
 
         for lang, code in zip(dataframe['lang'], dataframe['code']):
-            temp_file_path = os.path.join(temp_dir_path, ('file.' + lang_suffixes[lang]))
+            temp_file_path = os.path.join(temp_dir_path, ('file' + lang_suffixes[lang]))
 
             with open(temp_file_path, 'w') as file:
                 file.writelines(code)
@@ -89,10 +103,9 @@ def main() -> int:
             # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
             regex_match = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
 
+            output = regex_match
             if args.traceback:
                 output = results
-            else:
-                output = regex_match
 
             report = report.append(pd.DataFrame(
                 {
@@ -102,8 +115,22 @@ def main() -> int:
                 },
             ))
 
-        with pd.ExcelWriter(args.data_path, engine='openpyxl', mode='a') as writer:
+        folder_path = args.folder_path
+
+        if folder_path is None:
+            folder_path = MAIN_FOLDER.parent / 'evaluation/results'
+            create_folder(folder_path)
+
+        workbook = Workbook()
+        workbook_path = Path(folder_path) / args.file_name
+        workbook.save(workbook_path)
+
+        with pd.ExcelWriter(workbook_path, engine='openpyxl', mode='a') as writer:
             report.to_excel(writer, sheet_name='inspection_results', index=False)
+
+        # remove empty sheet that was initially created with the workbook
+        remove_sheet(workbook_path, 'Sheet')
+
         return 0
 
     except FileNotFoundError:
