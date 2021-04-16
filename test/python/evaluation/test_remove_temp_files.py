@@ -16,4 +16,4 @@ def test_temp_files_remove():
     config = ApplicationConfig(args)
     create_dataframe(config)
     temporary_files = get_all_file_system_items(MAIN_FOLDER.parent / 'evaluation/temporary_files')
-    assert temporary_files == []
+    assert temporary_files == [MAIN_FOLDER.parent / 'evaluation/temporary_files/.gitkeep']
