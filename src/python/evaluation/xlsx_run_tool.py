@@ -78,6 +78,12 @@ def create_dataframe(config) -> pd.DataFrame:
     for lang, code in zip(dataframe['lang'], dataframe['code']):
         temp_file_path = os.path.join(temp_dir_path, ('file' + lang_suffixes[lang]))
 
+        try:
+            assert os.path.exists(temp_file_path)
+        except AssertionError:
+            logger.exception('Path does not exist.')
+            return 2
+
         with open(temp_file_path, 'w+') as file:
             file.writelines(code)
 
