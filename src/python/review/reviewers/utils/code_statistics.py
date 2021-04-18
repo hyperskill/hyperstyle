@@ -1,7 +1,7 @@
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 from src.python.review.common.file_system import get_content_from_file
 from src.python.review.inspectors.issue import BaseIssue, IssueType

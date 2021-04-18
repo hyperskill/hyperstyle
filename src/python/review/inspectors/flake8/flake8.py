@@ -5,18 +5,18 @@ from typing import List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
+from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 from src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import (
     BaseIssue,
     CodeIssue,
-    CyclomaticComplexityIssue,
-    IssueType,
-    IssueData,
     CohesionIssue,
+    CyclomaticComplexityIssue,
+    IssueData,
+    IssueType,
 )
 from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
-from src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
 
 logger = logging.getLogger(__name__)
 
