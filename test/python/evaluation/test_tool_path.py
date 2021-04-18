@@ -1,7 +1,7 @@
 import subprocess
 from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.testing_config import get_parser
 from test.python.evaluation.conftest import BrokenLocalCommandBuilder
+from test.python.evaluation.testing_config import get_parser
 
 from src.python import MAIN_FOLDER
 from src.python.evaluation.evaluation_config import ApplicationConfig
