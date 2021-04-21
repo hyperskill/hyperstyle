@@ -1,33 +1,36 @@
 from pathlib import Path
+from typing import List, Union
 
-from src.python import MAIN_FOLDER
-from src.python.evaluation.support_functions import create_folder
+from src.python.common.tool_arguments import RunToolArguments
+from src.python.evaluation.common.util import EvaluationProcessNames
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import create_directory
 
 
-class ApplicationConfig:
+class EvaluationConfig:
     def __init__(self, args):
-        self.tool_path = args.tool_path
-        self.output_format = args.format
-        self.data_path = args.data_path
-        self.traceback = args.traceback
-        self.folder_path = args.folder_path
-        self.file_name = args.file_name
+        self.tool_path: Union[str, Path] = args.tool_path
+        self.output_format: str = args.format
+        self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
+        self.traceback: bool = args.traceback
+        self.output_folder_path: Union[str, Path] = args.output_folder_path
+        self.output_file_name: str = args.output_file_name
 
-    def build_command(self, file_path, lang):
-        command = ['python3', self.tool_path, file_path, '-f', self.output_format]
-        if lang == 'java8' or lang == 'java11':
-            command.extend(['--language_version', lang])
+    def build_command(self, inspected_file_path: Union[str, Path], lang: str,
+                      run_tool_arguments=RunToolArguments) -> List[str]:
+
+        command = [LanguageVersion.PYTHON_3.value,
+                   self.tool_path,
+                   inspected_file_path,
+                   run_tool_arguments.FORMAT.value.short_name, self.output_format]
+
+        if lang == LanguageVersion.JAVA_8.value or lang == LanguageVersion.JAVA_11.value:
+            command.extend([run_tool_arguments.LANG_VERSION.value.short_name, lang])
         return command
 
-    def get_data_path(self):
-        return self.data_path
-
-    def get_traceback(self):
-        return self.traceback
-
-    def get_file_path(self):
-        if self.folder_path is None:
-            self.folder_path = MAIN_FOLDER.parent / 'evaluation/results'
-            create_folder(self.folder_path)
-
-        return Path(self.folder_path) / self.file_name
+    def get_file_path(self) -> Path:
+        if self.output_folder_path is None:
+            self.output_folder_path = (
+                Path(self.xlsx_file_path).parent.parent / EvaluationProcessNames.RESULTS.value)
+            create_directory(self.output_folder_path)
+        return Path(self.output_folder_path) / self.output_file_name
