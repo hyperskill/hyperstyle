@@ -4,7 +4,7 @@ from test.python.evaluation import XLSX_DATA_FOLDER
 from test.python.evaluation.conftest import EvalLocalCommandBuilder
 
 import pytest
-from src.python.evaluation import ScriptStructureRule
+from src.python.evaluation.common.util import script_structure_rule
 
 FILE_NAMES = [
     'test_wrong_column_name.xlsx',
@@ -31,4 +31,4 @@ def test_wrong_column(file_name: str, eval_command_builder: EvalLocalCommandBuil
     )
 
     assert process.returncode == 2
-    assert compare(process.stderr) == compare(ScriptStructureRule) + '%'
+    assert compare(process.stderr) == compare(script_structure_rule) + '%'
