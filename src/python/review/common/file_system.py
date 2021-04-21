@@ -4,7 +4,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import List, Union, Callable
+from typing import Callable, List, Union
 
 
 @unique

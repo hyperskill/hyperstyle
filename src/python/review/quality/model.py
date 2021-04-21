@@ -50,7 +50,7 @@ class Quality:
     def next_quality_type(self) -> QualityType:
         return min(map(lambda rule: rule.next_level_type, self.rules), default=QualityType.EXCELLENT)
 
-    # TODO@nbirillo: why rule.quality_type == quality_type for next level????
+    # TODO: why rule.quality_type == quality_type for next level????
     @property
     def next_level_requirements(self) -> List[Rule]:
         quality_type = self.quality_type

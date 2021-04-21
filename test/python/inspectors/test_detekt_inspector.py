@@ -1,10 +1,10 @@
-import pytest
+from test.python.inspectors import KOTLIN_DATA_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 
+import pytest
 from src.python.review.common.language import Language
 from src.python.review.inspectors.detekt.detekt import DetektInspector
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-from test.python.inspectors import KOTLIN_DATA_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ('case0_good_program.kt', 0),

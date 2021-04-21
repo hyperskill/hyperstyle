@@ -1,5 +1,9 @@
 import argparse
+<<<<<<< HEAD
 import enum
+=======
+
+>>>>>>> ab62d8a2ed55fab219de28b30526dd13764085a4
 from src.python.review.reviewers.perform_review import OutputFormat
 from src.python.evaluation.common.util import EvaluationProcessNames
 
