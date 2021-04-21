@@ -1,8 +1,8 @@
 import argparse
 import enum
 
-from src.python.review.reviewers.perform_review import OutputFormat
 from src.python.evaluation.common.util import EvaluationProcessNames
+from src.python.review.reviewers.perform_review import OutputFormat
 
 
 def get_parser(run_tool_arguments: enum.EnumMeta) -> argparse.ArgumentParser:
