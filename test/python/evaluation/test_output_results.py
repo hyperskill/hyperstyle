@@ -1,3 +1,4 @@
+import logging.config
 from test.python.evaluation import TARGET_XLSX_DATA_FOLDER, XLSX_DATA_FOLDER
 from test.python.evaluation.testing_config import get_parser
 from typing import Union
@@ -16,6 +17,8 @@ FILE_NAMES = [
     ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', 'True'),
 ]
 
+logger = logging.getLogger(__name__)
+
 
 @pytest.mark.parametrize(('test_file', 'target_file', 'output_type'), FILE_NAMES)
 def test_correct_output(test_file: str, target_file: str, output_type: Union[bool, str]):
@@ -33,4 +36,7 @@ def test_correct_output(test_file: str, target_file: str, output_type: Union[boo
         sheet_name = 'traceback'
 
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
-    assert test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
+    try:
+        assert test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
+    except Exception:
+        logger.exception(f'{test_dataframe} is not equal to {test_dataframe}')
