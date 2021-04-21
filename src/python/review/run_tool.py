@@ -1,11 +1,11 @@
 import argparse
+import enum
 import logging.config
 import os
 import sys
 import traceback
-from enum import Enum, unique
 from pathlib import Path
-from typing import Set, List
+from typing import Set
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -13,7 +13,6 @@ sys.path.append('../../..')
 from src.python.review.application_config import ApplicationConfig, LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.logging_config import logging_config
-
 from src.python.review.reviewers.perform_review import (
     OutputFormat,
     PathNotExists,
@@ -21,22 +20,9 @@ from src.python.review.reviewers.perform_review import (
     UnsupportedLanguage,
 )
 
+from src.python.common.tool_arguments import RunToolArguments, VerbosityLevel
+
 logger = logging.getLogger(__name__)
-
-
-@unique
-class VerbosityLevel(Enum):
-    """
-    Same meaning as the logging level. Should be used in command-line args.
-    """
-    DEBUG = '3'
-    INFO = '2'
-    ERROR = '1'
-    DISABLE = '0'
-
-    @classmethod
-    def values(cls) -> List[str]:
-        return [member.value for _, member in VerbosityLevel.__members__.items()]
 
 
 def parse_disabled_inspectors(value: str) -> Set[InspectorType]:
@@ -56,70 +42,66 @@ def positive_int(value: str) -> int:
     return value_int
 
 
-def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('-v', '--verbosity',
-                        help='Choose logging level: '
-                             f'{VerbosityLevel.ERROR.value} - ERROR; '
-                             f'{VerbosityLevel.INFO.value} - INFO; '
-                             f'{VerbosityLevel.DEBUG.value} - DEBUG; '
-                             f'{VerbosityLevel.DISABLE.value} - disable logging; '
-                             'default is 0',
+def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.EnumMeta) -> None:
+    parser.add_argument(tool_arguments.VERBOSITY.value.short_name,
+                        tool_arguments.VERBOSITY.value.long_name,
+                        help=tool_arguments.VERBOSITY.value.description,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
                         type=str)
 
     # Usage example: -d Flake8,Intelli
-    inspectors = [inspector.lower() for inspector in InspectorType.available_values()]
-    example = f'-d {inspectors[0].lower()},{inspectors[1].lower()}'
-
-    parser.add_argument('-d', '--disable',
-                        help='Disable inspectors. '
-                             f'Allowed values: {", ".join(inspectors)}. '
-                             f'Example: {example}',
+    parser.add_argument(tool_arguments.DISABLE.value.short_name,
+                        tool_arguments.DISABLE.value.long_name,
+                        help=tool_arguments.DISABLE.value.description,
                         type=parse_disabled_inspectors,
                         default=set())
 
-    parser.add_argument('--allow-duplicates', action='store_true',
-                        help='Allow duplicate issues found by different linters. '
-                             'By default, duplicates are skipped.')
+    parser.add_argument(tool_arguments.DUPLICATES.value.long_name,
+                        action='store_true',
+                        help=tool_arguments.DUPLICATES.value.description)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
-    parser.add_argument('--language_version', '--language-version',
-                        help='Specify the language version for JAVA inspectors.',
+    parser.add_argument(tool_arguments.LANG_VERSION.value.short_name,
+                        tool_arguments.LANG_VERSION.value.long_name,
+                        help=tool_arguments.LANG_VERSION.value.description,
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
 
     # TODO: deprecated argument: --n_cpu. Delete after several releases.
-    parser.add_argument('--n_cpu', '--n-cpu',
-                        help='Specify number of cpu that can be used to run inspectors',
+    parser.add_argument(tool_arguments.CPU.value.short_name,
+                        tool_arguments.CPU.value.long_name,
+                        help=tool_arguments.CPU.value.description,
                         default=1,
                         type=positive_int)
 
-    parser.add_argument('path',
+    parser.add_argument(tool_arguments.PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help='Path to file or directory to inspect.')
+                        help=tool_arguments.PATH.value.description)
 
-    parser.add_argument('-f', '--format',
+    parser.add_argument(tool_arguments.FORMAT.value.short_name,
+                        tool_arguments.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help='The output format. Default is JSON.')
+                        help=tool_arguments.FORMAT.value.description)
 
-    parser.add_argument('-s', '--start-line',
+    parser.add_argument(tool_arguments.START_LINE.value.short_name,
+                        tool_arguments.START_LINE.value.long_name,
                         default=1,
                         type=positive_int,
-                        help='The first line to be analyzed. It starts from 1.')
+                        help=tool_arguments.START_LINE.value.description)
 
-    parser.add_argument('-e', '--end-line',
+    parser.add_argument(tool_arguments.END_LINE.value.short_name,
+                        tool_arguments.END_LINE.value.long_name,
                         default=None,
                         type=positive_int,
-                        help='The end line to be analyzed or None.')
+                        help=tool_arguments.END_LINE.value.description)
 
-    parser.add_argument('--new-format',
+    parser.add_argument(tool_arguments.NEW_FORMAT.value.long_name,
                         action='store_true',
-                        help='The argument determines whether the tool '
-                             'should use the new format')
+                        help=tool_arguments.NEW_FORMAT.value.description)
 
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
@@ -137,7 +119,7 @@ def configure_logging(verbosity: VerbosityLevel) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    configure_arguments(parser)
+    configure_arguments(parser, RunToolArguments)
 
     try:
         args = parser.parse_args()
