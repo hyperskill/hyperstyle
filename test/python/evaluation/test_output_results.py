@@ -36,7 +36,7 @@ def test_correct_output(test_file: str, target_file: str, output_type: Union[boo
         sheet_name = 'traceback'
 
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
-    try:
-        assert test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
-    except Exception:
+    equality_compression = test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
+    assert equality_compression
+    if not equality_compression:
         logger.exception(f'{test_dataframe} is not equal to {test_dataframe}')
