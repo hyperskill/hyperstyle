@@ -5,12 +5,13 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import List, Set
+from typing import Set
 
 
 sys.path.append('')
 sys.path.append('../../..')
 
+from src.python.common.tool_arguments import RunToolArguments, VerbosityLevel
 from src.python.review.application_config import ApplicationConfig, LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.logging_config import logging_config
@@ -20,8 +21,6 @@ from src.python.review.reviewers.perform_review import (
     perform_and_print_review,
     UnsupportedLanguage,
 )
-
-from src.python.common.tool_arguments import RunToolArguments, VerbosityLevel
 
 logger = logging.getLogger(__name__)
 

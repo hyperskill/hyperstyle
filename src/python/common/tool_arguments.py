@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List, Union
+
 from src.python.review.inspectors.inspector_type import InspectorType
 
 
