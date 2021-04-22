@@ -55,7 +55,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         default=None,
                         type=str)
 
-    parser.add_argument('--output_file_name', '',
+    parser.add_argument('--output_file_name', '--output_file_name',
                         help='Filename for that will be created to store inspection results.'
                              f'Default is "{EvaluationProcessNames.RESULTS_EXT.value}"',
                         default=f'{EvaluationProcessNames.RESULTS_EXT.value}',
