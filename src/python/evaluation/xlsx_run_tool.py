@@ -55,7 +55,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         default=None,
                         type=str)
 
-    parser.add_argument('--output_file_name', '--output_file_name',
+    parser.add_argument('--output_file_name', '',
                         help='Filename for that will be created to store inspection results.'
                              f'Default is "{EvaluationProcessNames.RESULTS_EXT.value}"',
                         default=f'{EvaluationProcessNames.RESULTS_EXT.value}',
@@ -81,43 +81,57 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
     if config.traceback:
         report[EvaluationProcessNames.TRACEBACK.value] = []
 
-    lang_code_dataframe = pd.read_excel(config.xlsx_file_path)
+    try:
+        lang_code_dataframe = pd.read_excel(config.xlsx_file_path)
 
-    for lang, code in zip(lang_code_dataframe[EvaluationProcessNames.LANG.value],
-                          lang_code_dataframe[EvaluationProcessNames.CODE.value]):
+    except FileNotFoundError:
+        logger.error('XLSX-file with the specified name does not exists.')
+        return 2
 
-        with new_temp_dir() as create_temp_dir:
-            temp_dir_path = create_temp_dir
-            lang_extension = LanguageVersion.language_extension()[lang]
-            temp_file_path = os.path.join(temp_dir_path, ('file' + lang_extension))
-            temp_file_path = next(create_file(temp_file_path, code))
+    try:
+        for lang, code in zip(lang_code_dataframe[EvaluationProcessNames.LANG.value],
+                              lang_code_dataframe[EvaluationProcessNames.CODE.value]):
 
-            try:
-                assert os.path.exists(temp_file_path)
-            except AssertionError:
-                logger.exception('Path does not exist.')
-                return 2
+            with new_temp_dir() as create_temp_dir:
+                temp_dir_path = create_temp_dir
+                lang_extension = LanguageVersion.language_extension()[lang]
+                temp_file_path = os.path.join(temp_dir_path, ('file' + lang_extension))
+                temp_file_path = next(create_file(temp_file_path, code))
 
-            command = config.build_command(temp_file_path, lang)
-            results = run_in_subprocess(command)
-            os.remove(temp_file_path)
-            temp_dir_path.rmdir()
+                try:
+                    assert os.path.exists(temp_file_path)
+                except AssertionError:
+                    logger.exception('Path does not exist.')
+                    return 2
 
-        # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
-        grades = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
+                command = config.build_command(temp_file_path, lang)
+                results = run_in_subprocess(command)
+                os.remove(temp_file_path)
+                temp_dir_path.rmdir()
+                # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
+                grades = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
+                output_row_values = [lang, code, grades]
+                column_indices = [EvaluationProcessNames.LANGUAGE.value,
+                                  EvaluationProcessNames.CODE.value,
+                                  EvaluationProcessNames.GRADE.value]
 
-        output_row_values = [lang, code, grades]
-        column_indices = [EvaluationProcessNames.LANGUAGE.value, EvaluationProcessNames.CODE.value,
-                          EvaluationProcessNames.GRADE.value]
+                if config.traceback:
+                    output_row_values.append(results)
+                    column_indices.append(EvaluationProcessNames.TRACEBACK.value)
 
-        if config.traceback:
-            output_row_values.append(results)
-            column_indices.append(EvaluationProcessNames.TRACEBACK.value)
+                new_file_report_row = pd.Series(data=output_row_values, index=column_indices)
+                report = report.append(new_file_report_row, ignore_index=True)
 
-        new_file_report_row = pd.Series(data=output_row_values, index=column_indices)
-        report = report.append(new_file_report_row, ignore_index=True)
+        return report
 
-    return report
+    except KeyError:
+        logger.error(script_structure_rule)
+        return 2
+
+    except Exception:
+        traceback.print_exc()
+        logger.exception('An unexpected error.')
+        return 2
 
 
 def main() -> int:
