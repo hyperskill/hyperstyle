@@ -12,9 +12,9 @@ def get_parser(run_tool_arguments: enum.EnumMeta, n_args=2) -> argparse.Argument
     parser.add_argument(run_tool_arguments.FORMAT.value.short_name,
                         run_tool_arguments.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value)
+    parser.add_argument('--output_file_name', '--output_file_name',
+                        default=EvaluationProcessNames.RESULTS_EXT.value)
     if n_args > 2:
-        parser.add_argument('--output_file_name', '--output_file_name',
-                            default=EvaluationProcessNames.RESULTS_EXT.value)
         parser.add_argument('--traceback', '--traceback', default=False)
 
         if n_args == 5:
