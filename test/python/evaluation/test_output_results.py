@@ -13,22 +13,24 @@ from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.xlsx_run_tool import create_dataframe
 
 FILE_NAMES = [
-    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),
-    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', 'True'),
-    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False),
-    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', 'True'),
+    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False, 'test1.xlsx'),
+    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', 'True', 'test2.xlsx'),
+    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False, 'test3.xlsx'),
+    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', 'True', 'test4.xlsx'),
 ]
 
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.parametrize(('test_file', 'target_file', 'output_type'), FILE_NAMES)
-def test_correct_output(test_file: str, target_file: str, output_type: Union[bool, str]):
+@pytest.mark.parametrize(('test_file', 'target_file', 'output_type', 'output_file_name'), FILE_NAMES)
+def test_correct_output(test_file: str, target_file: str, output_type: Union[bool, str],
+                        output_file_name: str):
 
     parser = get_parser(RunToolArguments)
     parser.add_argument('-xlsx_file_path', '--xlsx_file_path', default=XLSX_DATA_FOLDER / test_file)
     parser.add_argument('-tool_path', '--tool_path', default=MAIN_FOLDER.parent / 'review/run_tool.py')
     parser.add_argument('--traceback', '--traceback', default=output_type)
+    parser.add_argument('--output_file_name', '--output_file_name', default=output_file_name)
     args = parser.parse_args([])
     config = EvaluationConfig(args)
     test_dataframe = create_dataframe(config)

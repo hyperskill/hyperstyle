@@ -1,10 +1,11 @@
-import string
-import subprocess
 from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.conftest import EvalLocalCommandBuilder
+from test.python.evaluation.testing_config import get_parser
 
 import pytest
-from src.python.evaluation.common.util import script_structure_rule
+from src.python.common.tool_arguments import RunToolArguments
+from src.python.evaluation.evaluation_config import EvaluationConfig
+from src.python.evaluation.xlsx_run_tool import create_dataframe
+
 
 FILE_NAMES = [
     'test_wrong_column_name.xlsx',
@@ -14,21 +15,10 @@ FILE_NAMES = [
 ]
 
 
-def compare(string_error: str):
-    return string_error.translate(string.whitespace + string.punctuation)
-
-
 @pytest.mark.parametrize('file_name', FILE_NAMES)
-def test_wrong_column(file_name: str, eval_command_builder: EvalLocalCommandBuilder):
-    file_path = XLSX_DATA_FOLDER / file_name
-
-    eval_command_builder.path = file_path
-    process = subprocess.run(
-        eval_command_builder.build(),
-        stderr=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        text=True,
-    )
-
-    assert process.returncode == 2
-    assert compare(process.stderr) == compare(script_structure_rule) + '%'
+def test_wrong_column(file_name: str):
+    parser = get_parser(RunToolArguments, n_args=5)
+    parser.add_argument('-xlsx_file_path', '--xlsx_file_path', default=XLSX_DATA_FOLDER / file_name)
+    args = parser.parse_args([])
+    config = EvaluationConfig(args)
+    assert create_dataframe(config) == 2
