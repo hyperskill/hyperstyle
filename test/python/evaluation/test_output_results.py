@@ -5,8 +5,10 @@ from typing import Union
 
 import pandas as pd
 import pytest
+from openpyxl import Workbook
 from src.python import MAIN_FOLDER
 from src.python.common.tool_arguments import RunToolArguments
+from src.python.evaluation.common.xlsx_util import remove_sheet, write_dataframe_to_xlsx_sheet
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.xlsx_run_tool import create_dataframe
 
@@ -30,13 +32,14 @@ def test_correct_output(test_file: str, target_file: str, output_type: Union[boo
     args = parser.parse_args([])
     config = EvaluationConfig(args)
     test_dataframe = create_dataframe(config)
-
+    workbook = Workbook()
+    workbook_path = config.get_file_path()
+    workbook.save(workbook_path)
+    write_dataframe_to_xlsx_sheet(workbook_path, test_dataframe, 'inspection_results', 'openpyxl')
+    remove_sheet(workbook_path, 'Sheet')
     sheet_name = 'grades'
     if output_type:
         sheet_name = 'traceback'
-
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
-    equality_compression = test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
-    assert equality_compression
-    if not equality_compression:
-        logger.exception(f'{test_dataframe} is not equal to {test_dataframe}')
+
+    assert test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
