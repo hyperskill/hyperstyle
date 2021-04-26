@@ -45,7 +45,7 @@ def positive_int(value: str) -> int:
 def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.EnumMeta) -> None:
     parser.add_argument(tool_arguments.VERBOSITY.value.short_name,
                         tool_arguments.VERBOSITY.value.long_name,
-                        help=tool_arguments.VERBOSITY.value.description,
+                        help=tool_arguments.VERBOSITY.value.help,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
                         type=str)
@@ -53,55 +53,55 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
     # Usage example: -d Flake8,Intelli
     parser.add_argument(tool_arguments.DISABLE.value.short_name,
                         tool_arguments.DISABLE.value.long_name,
-                        help=tool_arguments.DISABLE.value.description,
+                        help=tool_arguments.DISABLE.value.help,
                         type=parse_disabled_inspectors,
                         default=set())
 
     parser.add_argument(tool_arguments.DUPLICATES.value.long_name,
                         action='store_true',
-                        help=tool_arguments.DUPLICATES.value.description)
+                        help=tool_arguments.DUPLICATES.value.help)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
-    parser.add_argument(tool_arguments.LANG_VERSION.value.short_name,
+    parser.add_argument('--language_version',
                         tool_arguments.LANG_VERSION.value.long_name,
-                        help=tool_arguments.LANG_VERSION.value.description,
+                        help=tool_arguments.LANG_VERSION.value.help,
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
 
     # TODO: deprecated argument: --n_cpu. Delete after several releases.
-    parser.add_argument(tool_arguments.CPU.value.short_name,
+    parser.add_argument('--n_cpu',
                         tool_arguments.CPU.value.long_name,
-                        help=tool_arguments.CPU.value.description,
+                        help=tool_arguments.CPU.value.help,
                         default=1,
                         type=positive_int)
 
     parser.add_argument(tool_arguments.PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=tool_arguments.PATH.value.description)
+                        help=tool_arguments.PATH.value.help)
 
     parser.add_argument(tool_arguments.FORMAT.value.short_name,
                         tool_arguments.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=tool_arguments.FORMAT.value.description)
+                        help=tool_arguments.FORMAT.value.help)
 
     parser.add_argument(tool_arguments.START_LINE.value.short_name,
                         tool_arguments.START_LINE.value.long_name,
                         default=1,
                         type=positive_int,
-                        help=tool_arguments.START_LINE.value.description)
+                        help=tool_arguments.START_LINE.value.help)
 
     parser.add_argument(tool_arguments.END_LINE.value.short_name,
                         tool_arguments.END_LINE.value.long_name,
                         default=None,
                         type=positive_int,
-                        help=tool_arguments.END_LINE.value.description)
+                        help=tool_arguments.END_LINE.value.help)
 
     parser.add_argument(tool_arguments.NEW_FORMAT.value.long_name,
                         action='store_true',
-                        help=tool_arguments.NEW_FORMAT.value.description)
+                        help=tool_arguments.NEW_FORMAT.value.help)
 
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
