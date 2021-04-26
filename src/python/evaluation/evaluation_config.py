@@ -28,14 +28,15 @@ class EvaluationConfig:
                    run_tool_arguments.FORMAT.value.short_name, self.output_format]
 
         if lang == LanguageVersion.JAVA_8.value or lang == LanguageVersion.JAVA_11.value:
-            command.extend([run_tool_arguments.LANG_VERSION.value.short_name, lang])
+            command.extend(['--language_version', lang])
         return command
 
     def get_file_path(self) -> Path:
         if self.output_folder_path is None:
             try:
                 self.output_folder_path = (
-                    Path(self.xlsx_file_path).parent.parent / EvaluationProcessNames.RESULTS.value)
+                    Path(self.xlsx_file_path).parent.parent / EvaluationProcessNames.RESULTS.value
+                )
                 create_directory(self.output_folder_path)
             except FileNotFoundError:
                 logger.error('XLSX-file with the specified name does not exists.')

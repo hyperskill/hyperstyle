@@ -36,18 +36,17 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                              f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
                              f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
 
-    parser.add_argument('-tool_path', '--tool_path',
+    parser.add_argument('-tp', '--tool-path',
                         default=Path('src/python/review/run_tool.py').absolute(),
                         type=lambda value: Path(value).absolute(),
                         help='Path to script to run on files.')
 
-    parser.add_argument('--traceback', '--traceback',
+    parser.add_argument('-tr', '--traceback',
                         help='If True, column with the full inspector feedback will be added '
                              'to the output file with results.',
-                        default=False,
-                        type=bool)
+                        action='store_true')
 
-    parser.add_argument('--output_folder_path', '--output_folder_path',
+    parser.add_argument('-ofp', '--output-folder-path',
                         help='An absolute path to the folder where file with evaluation results'
                              'will be stored.'
                              'Default is the path to a directory, where is the folder with xlsx_file.',
@@ -55,7 +54,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         default=None,
                         type=str)
 
-    parser.add_argument('--output_file_name', '--output_file_name',
+    parser.add_argument('-ofn', '--output-file-name',
                         help='Filename for that will be created to store inspection results.'
                              f'Default is "{EvaluationProcessNames.RESULTS_EXT.value}"',
                         default=f'{EvaluationProcessNames.RESULTS_EXT.value}',
@@ -66,7 +65,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=run_tool_arguments.FORMAT.value.description)
+                        help=run_tool_arguments.FORMAT.value.help)
 
 
 def create_dataframe(config) -> Union[int, pd.DataFrame]:
