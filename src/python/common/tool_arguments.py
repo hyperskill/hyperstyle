@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import List, Union
+from typing import List, Optional
 
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -22,19 +22,18 @@ class VerbosityLevel(Enum):
 
 @dataclass(frozen=True)
 class ArgumentsCharacteristics:
-    short_name: Union[str, None]
+    short_name: Optional[str]
     long_name: str
-    description: str
+    help: str
 
 
 inspectors = [inspector.lower() for inspector in InspectorType.available_values()]
-example = f'-d {inspectors[0].lower()},{inspectors[1].lower()}'
+disabled_inspectors_example = f'-d {inspectors[0].lower()},{inspectors[1].lower()}'
 
 
 @unique
 class RunToolArguments(Enum):
-    VERBOSITY = ArgumentsCharacteristics('-v',
-                                         '--verbosity',
+    VERBOSITY = ArgumentsCharacteristics('-v', '--verbosity',
                                          'Choose logging level: '
                                          f'{VerbosityLevel.ERROR.value} - ERROR; '
                                          f'{VerbosityLevel.INFO.value} - INFO; '
@@ -45,16 +44,16 @@ class RunToolArguments(Enum):
     DISABLE = ArgumentsCharacteristics('-d', '--disable',
                                        'Disable inspectors. '
                                        f'Allowed values: {", ".join(inspectors)}. '
-                                       f'Example: {example}')
+                                       f'Example: {disabled_inspectors_example}')
 
     DUPLICATES = ArgumentsCharacteristics(None, '--allow-duplicates',
                                           'Allow duplicate issues found by different linters. '
                                           'By default, duplicates are skipped.')
 
-    LANG_VERSION = ArgumentsCharacteristics('--language_version', '--language_version',
+    LANG_VERSION = ArgumentsCharacteristics(None, '--language-version',
                                             'Specify the language version for JAVA inspectors.')
 
-    CPU = ArgumentsCharacteristics('--n_cpu', '--n-cpu',
+    CPU = ArgumentsCharacteristics(None, '--n-cpu',
                                    'Specify number of cpu that can be used to run inspectors')
 
     PATH = ArgumentsCharacteristics(None, 'path', 'Path to file or directory to inspect.')
