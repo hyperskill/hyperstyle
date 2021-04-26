@@ -19,7 +19,7 @@ def test_correct_tool_path(run_tool_arguments=RunToolArguments):
 def test_incorrect_tool_path(run_tool_arguments=RunToolArguments):
     parser = get_parser(run_tool_arguments, n_args=4)
     parser.add_argument('-xlsx_file_path', default=XLSX_DATA_FOLDER / 'test_unsorted_order.xlsx')
-    parser.add_argument('-tool_path', '--tool_path', default=MAIN_FOLDER.parent / 'review/incorrect_path.py')
+    parser.add_argument('-tp', '--tool-path', default=MAIN_FOLDER.parent / 'review/incorrect_path.py')
     args = parser.parse_args([])
     config = EvaluationConfig(args)
     assert create_dataframe(config) == 2

@@ -18,7 +18,7 @@ FILE_NAMES = [
 @pytest.mark.parametrize('file_name', FILE_NAMES)
 def test_wrong_column(file_name: str):
     parser = get_parser(RunToolArguments, n_args=5)
-    parser.add_argument('-xlsx_file_path', '--xlsx_file_path', default=XLSX_DATA_FOLDER / file_name)
+    parser.add_argument('-xlsx_file_path', default=XLSX_DATA_FOLDER / file_name)
     args = parser.parse_args([])
     config = EvaluationConfig(args)
     assert create_dataframe(config) == 2

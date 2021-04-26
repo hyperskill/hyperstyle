@@ -8,7 +8,7 @@ from src.python.evaluation.xlsx_run_tool import create_dataframe
 
 def test_incorrect_data_path():
     parser = get_parser(RunToolArguments, n_args=5)
-    parser.add_argument('-xlsx_file_path', '--xlsx_file_path', default=XLSX_DATA_FOLDER / 'do_not_exist.xlsx')
+    parser.add_argument('-xlsx_file_path', default=XLSX_DATA_FOLDER / 'do_not_exist.xlsx')
     args = parser.parse_args([])
     config = EvaluationConfig(args)
     assert create_dataframe(config) == 2
