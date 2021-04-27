@@ -69,3 +69,6 @@ class RunToolArguments(Enum):
     NEW_FORMAT = ArgumentsCharacteristics(None, '--new-format',
                                           'The argument determines whether the tool '
                                           'should use the new format')
+
+    HISTORY = ArgumentsCharacteristics(None, '--history',
+                                       'Json string, which lists issues made earlier.')

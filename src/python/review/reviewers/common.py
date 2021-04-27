@@ -19,6 +19,12 @@ from src.python.review.reviewers.review_result import FileReviewResult, ReviewRe
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
 from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
 from src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata
+from src.python.review.reviewers.utils.penalty import (
+    categorize,
+    get_issue_class_to_penalty,
+    get_penalty_coefficient,
+    get_previous_issues_by_language,
+)
 
 LANGUAGE_TO_INSPECTORS = {
     Language.PYTHON: [
@@ -64,15 +70,21 @@ def perform_language_review(metadata: Metadata,
     for issue in issues:
         file_path_to_issues[issue.file_path].append(issue)
 
+    previous_issues = get_previous_issues_by_language(config.history, language)
+    categorize(previous_issues, issues)
+
+    penalty_coefficient = get_penalty_coefficient(issues, previous_issues)
+    general_quality = Quality([], penalty_coefficient)
+
     file_review_results = []
-    general_quality = Quality([])
     for file_metadata in files_metadata:
         issues = file_path_to_issues[file_metadata.path]
         code_statistics = gather_code_statistics(issues, file_metadata.path)
         code_statistics.total_lines = min(code_statistics.total_lines,
                                           get_range_lines(config.start_line, config.end_line))
+        penalty_coefficient = get_penalty_coefficient(issues, previous_issues)
 
-        quality = evaluate_quality(code_statistics, language)
+        quality = evaluate_quality(code_statistics, language, penalty_coefficient)
         general_quality = general_quality.merge(quality)
 
         file_review_results.append(FileReviewResult(
@@ -81,9 +93,12 @@ def perform_language_review(metadata: Metadata,
             quality,
         ))
 
+    issue_class_to_penalty_coefficient = get_issue_class_to_penalty(previous_issues)
+
     return ReviewResult(
         file_review_results,
         general_quality,
+        issue_class_to_penalty_coefficient,
     )
 
 

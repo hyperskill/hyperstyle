@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.quality.model import Quality
@@ -17,6 +17,7 @@ class FileReviewResult:
 class ReviewResult:
     file_review_results: List[FileReviewResult]
     general_quality: Quality
+    issue_class_to_penalty_coefficient: Dict[str, int]
 
     @property
     def all_issues(self) -> List[BaseIssue]:
