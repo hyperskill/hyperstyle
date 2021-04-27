@@ -103,7 +103,7 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
             line_text = get_file_line(issue.file_path, issue.line_no)
 
             penalty_influence = 0
-            quality_without_penalty = review_result.general_quality.quality_type.value
+            quality_without_penalty = file_review_result.quality.quality_type.value
             if quality_with_penalty != quality_without_penalty:
                 penalty_influence = get_penalty_influence(
                     # issue penalty coefficient
