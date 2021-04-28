@@ -5,7 +5,7 @@ from functools import total_ordering
 from typing import List
 
 from src.python.review.inspectors.issue import IssueType
-from src.python.review.reviewers.utils.penalty import get_penalty
+from src.python.review.reviewers.utils.penalty import get_penalty_score
 
 
 @total_ordering
@@ -54,7 +54,7 @@ class Quality:
     @property
     def quality_with_penalty(self) -> QualityType:
         numbered_quality_type = self.quality_type.to_number()
-        numbered_quality_type -= get_penalty(self.penalty_coefficient)
+        numbered_quality_type -= get_penalty_score(self.penalty_coefficient)
 
         if numbered_quality_type <= 0:
             return QualityType.BAD

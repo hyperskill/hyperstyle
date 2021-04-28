@@ -1,5 +1,5 @@
-import dataclasses
 import json
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Set
 
 from src.python.review.common.language import Language
@@ -26,7 +26,7 @@ ISSUE_TYPE_TO_PENALTY_COEFFICIENT = {
 }
 
 
-@dataclasses.dataclass
+@dataclass
 class PenaltyConfig:
     one_level_penalty: int
     two_level_penalty: int
@@ -40,7 +40,7 @@ common_penalty_rule = PenaltyConfig(
 )
 
 
-@dataclasses.dataclass
+@dataclass
 class PreviousIssue:
     origin_class: str
     quantity: int
@@ -110,7 +110,7 @@ def get_penalty_coefficient(current_issues: List[BaseIssue], previous_issues: Li
     return penalty_coefficient
 
 
-def get_penalty_influence(issue_penalty_coefficient: int, total_penalty_coefficient: int) -> int:
+def get_issue_influence_on_penalty(issue_penalty_coefficient: int, total_penalty_coefficient: int) -> int:
     """
     Calculates the influence of the issue on the penalty.
 
@@ -120,9 +120,9 @@ def get_penalty_influence(issue_penalty_coefficient: int, total_penalty_coeffici
     return int(issue_penalty_coefficient / total_penalty_coefficient * 100)
 
 
-def get_penalty(penalty_coefficient: int) -> int:
+def get_penalty_score(penalty_coefficient: int) -> int:
     """
-    Calculates the penalty with the penalty coefficient
+    Calculates the penalty score with the penalty coefficient
 
     Returns a number equal to 0, 1, 2 or 3, which describes how many levels the grade should be lowered.
     """

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from src.python.review.common.file_system import get_file_line
 from src.python.review.reviewers.review_result import ReviewResult
-from src.python.review.reviewers.utils.penalty import get_penalty_influence
+from src.python.review.reviewers.utils.penalty import get_issue_influence_on_penalty
 
 
 def print_review_result_as_text(review_result: ReviewResult,
@@ -58,10 +58,10 @@ def print_review_result_as_json(review_result: ReviewResult) -> None:
     for issue in issues:
         line_text = get_file_line(issue.file_path, issue.line_no)
 
-        penalty_influence = 0
+        influence_on_penalty = 0
         quality_without_penalty = review_result.general_quality.quality_type.value
         if quality_with_penalty != quality_without_penalty:
-            penalty_influence = get_penalty_influence(
+            influence_on_penalty = get_issue_influence_on_penalty(
                 # issue penalty coefficient
                 review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0),
                 # total penalty coefficient
@@ -75,7 +75,7 @@ def print_review_result_as_json(review_result: ReviewResult) -> None:
             'line_number': issue.line_no,
             'column_number': issue.column_no,
             'category': issue.type.value,
-            'penalty_influence': penalty_influence,
+            'influence_on_penalty': influence_on_penalty,
         })
 
     print(json.dumps(output_json))
@@ -102,10 +102,10 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
         for issue in file_review_result.issues:
             line_text = get_file_line(issue.file_path, issue.line_no)
 
-            penalty_influence = 0
+            influence_on_penalty = 0
             quality_without_penalty = file_review_result.quality.quality_type.value
             if quality_with_penalty != quality_without_penalty:
-                penalty_influence = get_penalty_influence(
+                influence_on_penalty = get_issue_influence_on_penalty(
                     # issue penalty coefficient
                     review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0),
                     # total penalty coefficient
@@ -119,7 +119,7 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
                 'line_number': issue.line_no,
                 'column_number': issue.column_no,
                 'category': issue.type.value,
-                'penalty_influence': penalty_influence,
+                'influence_on_penalty': influence_on_penalty,
             })
 
     quality_with_penalty = review_result.general_quality.quality_with_penalty.value
