@@ -81,6 +81,7 @@ openpyxl
 dataframe
 writelines
 rmdir
+df
 # Springlint issues
 cbo
 dit
