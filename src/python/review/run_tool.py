@@ -11,7 +11,7 @@ from typing import Set
 sys.path.append('')
 sys.path.append('../../..')
 
-from src.python.common.tool_arguments import RunToolArguments, VerbosityLevel
+from src.python.common.tool_arguments import RunToolArgument, VerbosityLevel
 from src.python.review.application_config import ApplicationConfig, LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.logging_config import logging_config
@@ -45,7 +45,7 @@ def positive_int(value: str) -> int:
 def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.EnumMeta) -> None:
     parser.add_argument(tool_arguments.VERBOSITY.value.short_name,
                         tool_arguments.VERBOSITY.value.long_name,
-                        help=tool_arguments.VERBOSITY.value.help,
+                        help=tool_arguments.VERBOSITY.value.description,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
                         type=str)
@@ -53,18 +53,18 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
     # Usage example: -d Flake8,Intelli
     parser.add_argument(tool_arguments.DISABLE.value.short_name,
                         tool_arguments.DISABLE.value.long_name,
-                        help=tool_arguments.DISABLE.value.help,
+                        help=tool_arguments.DISABLE.value.description,
                         type=parse_disabled_inspectors,
                         default=set())
 
     parser.add_argument(tool_arguments.DUPLICATES.value.long_name,
                         action='store_true',
-                        help=tool_arguments.DUPLICATES.value.help)
+                        help=tool_arguments.DUPLICATES.value.description)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
     parser.add_argument('--language_version',
                         tool_arguments.LANG_VERSION.value.long_name,
-                        help=tool_arguments.LANG_VERSION.value.help,
+                        help=tool_arguments.LANG_VERSION.value.description,
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
@@ -72,36 +72,36 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
     # TODO: deprecated argument: --n_cpu. Delete after several releases.
     parser.add_argument('--n_cpu',
                         tool_arguments.CPU.value.long_name,
-                        help=tool_arguments.CPU.value.help,
+                        help=tool_arguments.CPU.value.description,
                         default=1,
                         type=positive_int)
 
     parser.add_argument(tool_arguments.PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=tool_arguments.PATH.value.help)
+                        help=tool_arguments.PATH.value.description)
 
     parser.add_argument(tool_arguments.FORMAT.value.short_name,
                         tool_arguments.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=tool_arguments.FORMAT.value.help)
+                        help=tool_arguments.FORMAT.value.description)
 
     parser.add_argument(tool_arguments.START_LINE.value.short_name,
                         tool_arguments.START_LINE.value.long_name,
                         default=1,
                         type=positive_int,
-                        help=tool_arguments.START_LINE.value.help)
+                        help=tool_arguments.START_LINE.value.description)
 
     parser.add_argument(tool_arguments.END_LINE.value.short_name,
                         tool_arguments.END_LINE.value.long_name,
                         default=None,
                         type=positive_int,
-                        help=tool_arguments.END_LINE.value.help)
+                        help=tool_arguments.END_LINE.value.description)
 
     parser.add_argument(tool_arguments.NEW_FORMAT.value.long_name,
                         action='store_true',
-                        help=tool_arguments.NEW_FORMAT.value.help)
+                        help=tool_arguments.NEW_FORMAT.value.description)
 
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
@@ -119,7 +119,7 @@ def configure_logging(verbosity: VerbosityLevel) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    configure_arguments(parser, RunToolArguments)
+    configure_arguments(parser, RunToolArgument)
 
     try:
         args = parser.parse_args()

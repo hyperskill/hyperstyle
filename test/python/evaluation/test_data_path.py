@@ -1,14 +1,14 @@
 from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.testing_config import get_parser
+from test.python.evaluation.testing_config import get_testing_arguments
 
-from src.python.common.tool_arguments import RunToolArguments
+import pytest
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.xlsx_run_tool import create_dataframe
 
 
 def test_incorrect_data_path():
-    parser = get_parser(RunToolArguments, n_args=5)
-    parser.add_argument('-xlsx_file_path', default=XLSX_DATA_FOLDER / 'do_not_exist.xlsx')
-    args = parser.parse_args([])
-    config = EvaluationConfig(args)
-    assert create_dataframe(config) == 2
+    with pytest.raises(FileNotFoundError):
+        testing_arguments_dict = get_testing_arguments(n_args=5)
+        testing_arguments_dict['xlsx_file_path'] = XLSX_DATA_FOLDER / 'do_not_exist.xlsx'
+        config = EvaluationConfig(testing_arguments_dict)
+        assert create_dataframe(config)
