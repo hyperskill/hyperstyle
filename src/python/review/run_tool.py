@@ -105,7 +105,7 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
                         help=tool_arguments.NEW_FORMAT.value.description)
 
     parser.add_argument(tool_arguments.HISTORY.value.long_name,
-                        help=tool_arguments.HISTORY.value.help,
+                        help=tool_arguments.HISTORY.value.description,
                         type=str)
 
 
