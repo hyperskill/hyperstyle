@@ -3,26 +3,39 @@ from pathlib import Path
 from typing import NoReturn, Union
 
 import pandas as pd
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 
 logger = logging.getLogger(__name__)
 
 
-def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, not_exist_ok=True) -> NoReturn:
+def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_error=False) -> NoReturn:
     try:
         workbook = load_workbook(workbook_path)
         workbook.remove(workbook[sheet_name])
         workbook.save(workbook_path)
-    except KeyError:
-        # if not_exist_ok=True – do not raise KeyError if sheet does not exist
-        if not_exist_ok:
-            pass
+
+    except KeyError as e:
+        message = f'Sheet with specified name: {sheet_name} does not exist.'
+        if to_raise_error:
+            logger.exception(message)
+            raise e
         else:
-            logger.exception(f'Sheet with specified name: {sheet_name} does not exist.')
+            logger.info(message)
 
 
-def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], context_dataframe: pd.DataFrame,
-                                  sheet_name: str, engine: str, mode='a', index=False):
+def create_and_get_workbook_path(config) -> Path:
+    workbook = Workbook()
+    workbook_path = config.get_output_file_path()
+    workbook.save(workbook_path)
+    return workbook_path
 
-    with pd.ExcelWriter(xlsx_file_path, engine=engine, mode=mode) as writer:
-        context_dataframe.to_excel(writer, sheet_name=sheet_name, index=index)
+
+def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame,
+                                  sheet_name: str, mode='a', index=False):
+    """
+    mode: str Available values are {'w', 'a'}. File mode to use (write or append).
+    index: bool Write row names.
+    """
+
+    with pd.ExcelWriter(xlsx_file_path, mode=mode) as writer:
+        df.to_excel(writer, sheet_name=sheet_name, index=index)

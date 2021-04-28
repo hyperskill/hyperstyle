@@ -29,6 +29,7 @@ class Extension(Enum):
     KT = '.kt'
     JS = '.js'
     KTS = '.kts'
+    XLSX = '.xlsx'
 
 
 ItemCondition = Callable[[str], bool]

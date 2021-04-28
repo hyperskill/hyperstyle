@@ -28,5 +28,3 @@ radon==4.5.0
 django==3.2
 requests==2.25.1
 argparse==1.4.0
-pandas==1.2.3
-openpyxl==3.0.7

@@ -12,10 +12,13 @@ sys.path.append('')
 sys.path.append('../../..')
 
 import pandas as pd
-from openpyxl import Workbook
-from src.python.common.tool_arguments import RunToolArguments
-from src.python.evaluation.common.util import EvaluationProcessNames, script_structure_rule
-from src.python.evaluation.common.xlsx_util import remove_sheet, write_dataframe_to_xlsx_sheet
+from src.python.common.tool_arguments import RunToolArgument
+from src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
+from src.python.evaluation.common.xlsx_util import (
+    create_and_get_workbook_path,
+    remove_sheet,
+    write_dataframe_to_xlsx_sheet,
+)
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import create_file, new_temp_dir
@@ -30,9 +33,9 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         type=lambda value: Path(value).absolute(),
                         help='Local XLSX-file path. '
                              'Your XLSX-file must include column-names: '
-                             f'"{EvaluationProcessNames.CODE.value}" and '
-                             f'"{EvaluationProcessNames.LANG.value}". Acceptable values for '
-                             f'"{EvaluationProcessNames.LANG.value}" column are: '
+                             f'"{ColumnName.CODE.value}" and '
+                             f'"{ColumnName.LANG.value}". Acceptable values for '
+                             f'"{ColumnName.LANG.value}" column are: '
                              f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
                              f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
 
@@ -56,8 +59,8 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
 
     parser.add_argument('-ofn', '--output-file-name',
                         help='Filename for that will be created to store inspection results.'
-                             f'Default is "{EvaluationProcessNames.RESULTS_EXT.value}"',
-                        default=f'{EvaluationProcessNames.RESULTS_EXT.value}',
+                             f'Default is "{EvaluationArgument.RESULT_FILE_NAME_EXT.value}"',
+                        default=f'{EvaluationArgument.RESULT_FILE_NAME_EXT.value}',
                         type=str)
 
     parser.add_argument(run_tool_arguments.FORMAT.value.short_name,
@@ -65,31 +68,33 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=run_tool_arguments.FORMAT.value.help)
+                        help=f'{run_tool_arguments.FORMAT.value.description}'
+                             f'Use this argument when {EvaluationArgument.TRACEBACK.value} argument'
+                             'is enabled argument will not be used otherwise.')
 
 
 def create_dataframe(config) -> Union[int, pd.DataFrame]:
     report = pd.DataFrame(
         {
-            EvaluationProcessNames.LANGUAGE.value: [],
-            EvaluationProcessNames.CODE.value: [],
-            EvaluationProcessNames.GRADE.value: [],
+            ColumnName.LANGUAGE.value: [],
+            ColumnName.CODE.value: [],
+            ColumnName.GRADE.value: [],
         },
     )
 
     if config.traceback:
-        report[EvaluationProcessNames.TRACEBACK.value] = []
+        report[EvaluationArgument.TRACEBACK.value] = []
 
     try:
         lang_code_dataframe = pd.read_excel(config.xlsx_file_path)
 
     except FileNotFoundError:
         logger.error('XLSX-file with the specified name does not exists.')
-        return 2
+        raise FileNotFoundError
 
     try:
-        for lang, code in zip(lang_code_dataframe[EvaluationProcessNames.LANG.value],
-                              lang_code_dataframe[EvaluationProcessNames.CODE.value]):
+        for lang, code in zip(lang_code_dataframe[ColumnName.LANG.value],
+                              lang_code_dataframe[ColumnName.CODE.value]):
 
             with new_temp_dir() as create_temp_dir:
                 temp_dir_path = create_temp_dir
@@ -101,7 +106,7 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
                     assert os.path.exists(temp_file_path)
                 except AssertionError:
                     logger.exception('Path does not exist.')
-                    return 2
+                    raise AssertionError
 
                 command = config.build_command(temp_file_path, lang)
                 results = run_in_subprocess(command)
@@ -110,13 +115,13 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
                 # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
                 grades = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
                 output_row_values = [lang, code, grades]
-                column_indices = [EvaluationProcessNames.LANGUAGE.value,
-                                  EvaluationProcessNames.CODE.value,
-                                  EvaluationProcessNames.GRADE.value]
+                column_indices = [ColumnName.LANGUAGE.value,
+                                  ColumnName.CODE.value,
+                                  ColumnName.GRADE.value]
 
                 if config.traceback:
                     output_row_values.append(results)
-                    column_indices.append(EvaluationProcessNames.TRACEBACK.value)
+                    column_indices.append(EvaluationArgument.TRACEBACK.value)
 
                 new_file_report_row = pd.Series(data=output_row_values, index=column_indices)
                 report = report.append(new_file_report_row, ignore_index=True)
@@ -125,29 +130,24 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
 
     except KeyError:
         logger.error(script_structure_rule)
-        return 2
+        raise KeyError
 
     except Exception:
         traceback.print_exc()
         logger.exception('An unexpected error.')
-        return 2
+        raise Exception
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    configure_arguments(parser, RunToolArguments)
+    configure_arguments(parser, RunToolArgument)
 
     try:
         args = parser.parse_args()
         config = EvaluationConfig(args)
-
-        workbook = Workbook()
-        workbook_path = config.get_file_path()
-        workbook.save(workbook_path)
-
+        workbook_path = create_and_get_workbook_path(config)
         results = create_dataframe(config)
-
-        write_dataframe_to_xlsx_sheet(workbook_path, results, 'inspection_results', 'openpyxl')
+        write_dataframe_to_xlsx_sheet(workbook_path, results, 'inspection_results')
         # remove empty sheet that was initially created with the workbook
         remove_sheet(workbook_path, 'Sheet')
         return 0

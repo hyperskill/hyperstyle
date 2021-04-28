@@ -1,8 +1,7 @@
 from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.testing_config import get_parser
+from test.python.evaluation.testing_config import get_testing_arguments
 
 import pytest
-from src.python.common.tool_arguments import RunToolArguments
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.xlsx_run_tool import create_dataframe
 
@@ -17,8 +16,8 @@ FILE_NAMES = [
 
 @pytest.mark.parametrize('file_name', FILE_NAMES)
 def test_wrong_column(file_name: str):
-    parser = get_parser(RunToolArguments, n_args=5)
-    parser.add_argument('-xlsx_file_path', default=XLSX_DATA_FOLDER / file_name)
-    args = parser.parse_args([])
-    config = EvaluationConfig(args)
-    assert create_dataframe(config) == 2
+    with pytest.raises(KeyError):
+        testing_arguments_dict = get_testing_arguments(n_args=5)
+        testing_arguments_dict['xlsx_file_path'] = XLSX_DATA_FOLDER / file_name
+        config = EvaluationConfig(testing_arguments_dict)
+        assert create_dataframe(config)
