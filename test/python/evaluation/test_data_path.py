@@ -8,7 +8,7 @@ from src.python.evaluation.xlsx_run_tool import create_dataframe
 
 def test_incorrect_data_path():
     with pytest.raises(FileNotFoundError):
-        testing_arguments_dict = get_testing_arguments(n_args=5)
-        testing_arguments_dict['xlsx_file_path'] = XLSX_DATA_FOLDER / 'do_not_exist.xlsx'
+        testing_arguments_dict = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
+        testing_arguments_dict.xlsx_file_path = XLSX_DATA_FOLDER / 'do_not_exist.xlsx'
         config = EvaluationConfig(testing_arguments_dict)
         assert create_dataframe(config)

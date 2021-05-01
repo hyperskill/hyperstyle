@@ -79,6 +79,7 @@ Simply clone the repository and run the following commands:
 
 1. `pip install -r requirements.txt`
 2. `pip install -r requirements-test.txt` for tests
+3. `pip install -r requirements-evaluation.txt` for evaluation
 
 ## Usage
 
