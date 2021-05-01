@@ -58,15 +58,13 @@ def print_review_result_as_json(review_result: ReviewResult) -> None:
     for issue in issues:
         line_text = get_file_line(issue.file_path, issue.line_no)
 
-        influence_on_penalty = 0
         quality_without_penalty = review_result.general_quality.quality_type.value
-        if quality_with_penalty != quality_without_penalty:
-            influence_on_penalty = get_issue_influence_on_penalty(
-                # issue penalty coefficient
-                review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0),
-                # total penalty coefficient
-                review_result.general_quality.penalty_coefficient,
-            )
+        issue_penalty_coefficient = review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0)
+        total_penalty_coefficient = review_result.general_quality.penalty_coefficient
+
+        influence_on_penalty = get_issue_influence_on_penalty(
+            quality_with_penalty, quality_without_penalty, issue_penalty_coefficient, total_penalty_coefficient,
+        )
 
         output_json['issues'].append({
             'code': issue.origin_class,
@@ -102,15 +100,13 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
         for issue in file_review_result.issues:
             line_text = get_file_line(issue.file_path, issue.line_no)
 
-            influence_on_penalty = 0
             quality_without_penalty = file_review_result.quality.quality_type.value
-            if quality_with_penalty != quality_without_penalty:
-                influence_on_penalty = get_issue_influence_on_penalty(
-                    # issue penalty coefficient
-                    review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0),
-                    # total penalty coefficient
-                    file_review_result.quality.penalty_coefficient,
-                )
+            issue_penalty_coefficient = review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0)
+            total_penalty_coefficient = file_review_result.quality.penalty_coefficient
+
+            influence_on_penalty = get_issue_influence_on_penalty(
+                quality_with_penalty, quality_without_penalty, issue_penalty_coefficient, total_penalty_coefficient,
+            )
 
             file_review_result_json['issues'].append({
                 'code': issue.origin_class,

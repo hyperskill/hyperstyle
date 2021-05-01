@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Set
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 
+# TODO: need testing
 ISSUE_TYPE_TO_PENALTY_COEFFICIENT = {
     IssueType.COHESION: 1,
     IssueType.COUPLING: 1,
@@ -43,7 +44,7 @@ common_penalty_rule = PenaltyConfig(
 @dataclass
 class PreviousIssue:
     origin_class: str
-    quantity: int
+    number: int
     category: IssueType = None
 
 
@@ -80,14 +81,14 @@ def get_issue_class_to_penalty(issues: List[PreviousIssue]) -> Dict[str, int]:
     For each issue, the corresponding penalty coefficient is calculated.
     """
     return {
-        issue.origin_class: ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.quantity
+        issue.origin_class: ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
         for issue in issues
     }
 
 
 def get_penalizing_classes(current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]) -> Set[str]:
     """
-    Returns issues that should be penalized.
+    Returns issues that should be penalized. We penalize for those issues that were there before, but repeated again.
     """
     current_classes = set(map(lambda issue: issue.origin_class, current_issues))
     previous_classes = set(map(lambda issue: issue.origin_class, previous_issues))
@@ -97,7 +98,10 @@ def get_penalizing_classes(current_issues: List[BaseIssue], previous_issues: Lis
 
 def get_penalty_coefficient(current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]) -> int:
     """
-    Calculates the final penalty coefficient.
+    To calculate the penalty coefficient we use those issues that occurred earlier and repeated again.
+    Such issues will be called penalizing issues. For each penalizing issue, we calculate a number equal to
+    the number of times this issue was repeated earlier multiplied by the coefficient of the category to
+    which the issue belongs. These numbers are added together to get the penalty coefficient.
     """
 
     penalizing_classes = get_penalizing_classes(current_issues, previous_issues)
@@ -105,19 +109,24 @@ def get_penalty_coefficient(current_issues: List[BaseIssue], previous_issues: Li
 
     penalty_coefficient = 0
     for issue in penalizing_issues:
-        penalty_coefficient += issue.quantity * ISSUE_TYPE_TO_PENALTY_COEFFICIENT[issue.category]
+        penalty_coefficient += issue.number * ISSUE_TYPE_TO_PENALTY_COEFFICIENT[issue.category]
 
     return penalty_coefficient
 
 
-def get_issue_influence_on_penalty(issue_penalty_coefficient: int, total_penalty_coefficient: int) -> int:
+def get_issue_influence_on_penalty(quality_with_penalty: str, quality_without_penalty: str,
+                                   issue_penalty_coefficient: int, total_penalty_coefficient: int) -> int:
     """
     Calculates the influence of the issue on the penalty.
 
     Returns a number in the range from 0 to 100.
     """
 
-    return int(issue_penalty_coefficient / total_penalty_coefficient * 100)
+    influence_on_penalty = 0
+    if quality_with_penalty != quality_without_penalty:
+        influence_on_penalty = int(issue_penalty_coefficient / total_penalty_coefficient * 100)
+
+    return influence_on_penalty
 
 
 def get_penalty_score(penalty_coefficient: int) -> int:
@@ -127,11 +136,13 @@ def get_penalty_score(penalty_coefficient: int) -> int:
     Returns a number equal to 0, 1, 2 or 3, which describes how many levels the grade should be lowered.
     """
 
+    penalty_score = 3
+
     if penalty_coefficient < common_penalty_rule.one_level_penalty:
-        return 0
+        penalty_score = 0
     elif penalty_coefficient < common_penalty_rule.two_level_penalty:
-        return 1
+        penalty_score = 1
     elif penalty_coefficient < common_penalty_rule.three_level_penalty:
-        return 2
-    else:
-        return 3
+        penalty_score = 2
+
+    return penalty_score
