@@ -74,4 +74,5 @@ class RunToolArgument(Enum):
                                'should use the new format')
 
     HISTORY = ArgumentsInfo(None, '--history',
-                            'Json string, which lists issues made earlier.')
+                            'Json string, which contains lists of issues in the previous submissions '
+                            'for other tasks for one user.')
