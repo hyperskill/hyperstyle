@@ -88,9 +88,9 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
     try:
         lang_code_dataframe = pd.read_excel(config.xlsx_file_path)
 
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         logger.error('XLSX-file with the specified name does not exists.')
-        raise FileNotFoundError
+        raise e
 
     try:
         for lang, code in zip(lang_code_dataframe[ColumnName.LANG.value],
@@ -98,15 +98,15 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
 
             with new_temp_dir() as create_temp_dir:
                 temp_dir_path = create_temp_dir
-                lang_extension = LanguageVersion.language_extension()[lang]
+                lang_extension = LanguageVersion.language_by_extension(lang)
                 temp_file_path = os.path.join(temp_dir_path, ('file' + lang_extension))
                 temp_file_path = next(create_file(temp_file_path, code))
 
                 try:
                     assert os.path.exists(temp_file_path)
-                except AssertionError:
+                except AssertionError as e:
                     logger.exception('Path does not exist.')
-                    raise AssertionError
+                    raise e
 
                 command = config.build_command(temp_file_path, lang)
                 results = run_in_subprocess(command)
@@ -128,14 +128,14 @@ def create_dataframe(config) -> Union[int, pd.DataFrame]:
 
         return report
 
-    except KeyError:
+    except KeyError as e:
         logger.error(script_structure_rule)
-        raise KeyError
+        raise e
 
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
         logger.exception('An unexpected error.')
-        raise Exception
+        raise e
 
 
 def main() -> int:
