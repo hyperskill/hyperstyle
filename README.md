@@ -103,7 +103,7 @@ Argument | Description
 **&#8209;s**, **&#8209;&#8209;start-line**|  the first line to be analyzed. By default it starts from `1`.
 **&#8209;e**, **&#8209;&#8209;end-line**  |  the end line to be analyzed. The default value is `None`, which meant to handle file by the end.
 **&#8209;&#8209;new-format**              |  the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.
-**&#8209;&#8209;history**                 |  JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"quantity\": 20}, {\"origin_class\": \"WPS314\", \"quantity\": 3}]}"`
+**&#8209;&#8209;history**                 |  JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"number\": 20}, {\"origin_class\": \"WPS314\", \"number\": 3}]}"`
 
 The output examples:
 
@@ -124,7 +124,8 @@ The output examples:
       "line": "<the code line>",
       "line_number": 54,
       "column_number": 0,
-      "category": "FUNC_LEN"
+      "category": "FUNC_LEN",
+      "influence_on_penalty": 0 
     },
     ...
   ]
@@ -153,7 +154,8 @@ The output examples:
           "line": "<the code line>",
           "line_number": 174,
           "column_number": 12,
-          "category": "BEST_PRACTICES"
+          "category": "BEST_PRACTICES",
+          "influence_on_penalty": 0 
         },
         ...
       ]
