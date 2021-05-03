@@ -27,3 +27,4 @@ radon==4.5.0
 # extra libraries and frameworks
 django==3.2
 requests==2.25.1
+argparse==1.4.0

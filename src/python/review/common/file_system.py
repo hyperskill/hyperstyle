@@ -29,6 +29,7 @@ class Extension(Enum):
     KT = '.kt'
     JS = '.js'
     KTS = '.kts'
+    XLSX = '.xlsx'
 
 
 ItemCondition = Callable[[str], bool]
@@ -66,8 +67,9 @@ def create_file(file_path: Union[str, Path], content: str):
     file_path = Path(file_path)
 
     create_directory(os.path.dirname(file_path))
-    with open(file_path, 'w') as f:
-        f.write(content)
+    with open(file_path, 'w+') as f:
+        f.writelines(content)
+        yield Path(file_path)
 
 
 def create_directory(directory: str) -> None:

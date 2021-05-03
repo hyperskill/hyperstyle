@@ -73,6 +73,16 @@ KTS
 nl
 splitext
 dirname
+hyperstyle
+XLSX
+Eval
+eval
+openpyxl
+dataframe
+writelines
+rmdir
+df
+unique
 # Springlint issues
 cbo
 dit
@@ -80,3 +90,4 @@ lcom
 noc
 nom
 wmc
+util
