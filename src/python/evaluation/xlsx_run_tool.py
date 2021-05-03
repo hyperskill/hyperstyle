@@ -5,6 +5,7 @@ import re
 import sys
 import traceback
 from pathlib import Path
+from typing import Type
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -26,7 +27,7 @@ from src.python.review.reviewers.perform_review import OutputFormat
 logger = logging.getLogger(__name__)
 
 
-def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: RunToolArgument) -> None:
+def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Type[RunToolArgument]) -> None:
     parser.add_argument('xlsx_file_path',
                         type=lambda value: Path(value).absolute(),
                         help='Local XLSX-file path. '
@@ -71,7 +72,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Run
                              'is enabled argument will not be used otherwise.')
 
 
-def create_dataframe(config) -> pd.DataFrame:
+def create_dataframe(config: EvaluationConfig) -> pd.DataFrame:
     report = pd.DataFrame(
         {
             ColumnName.LANGUAGE.value: [],

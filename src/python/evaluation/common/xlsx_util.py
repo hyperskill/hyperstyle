@@ -31,8 +31,8 @@ def create_and_get_workbook_path(config: EvaluationConfig) -> Path:
     return workbook_path
 
 
-def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame,
-                                  sheet_name: str, mode='a', to_write_row_names=False) -> None:
+def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame, sheet_name: str,
+                                  mode: str = 'a', to_write_row_names: bool = False) -> None:
     """
     mode: str Available values are {'w', 'a'}. File mode to use (write or append).
     to_write_row_names: bool Write row names.
