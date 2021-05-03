@@ -18,7 +18,7 @@ class VerbosityLevel(Enum):
 
     @classmethod
     def values(cls) -> List[str]:
-        return [member.value for _, member in VerbosityLevel.__members__.items()]
+        return [member.value for member in VerbosityLevel.__members__.values()]
 
 
 @dataclass(frozen=True)
