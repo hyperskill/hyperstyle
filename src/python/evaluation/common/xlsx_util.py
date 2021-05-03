@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 E = TypeVar('E', bound=EvaluationConfig)
 
 
-def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_error=False) -> NoReturn:
+def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_error=False) -> None:
     try:
         workbook = load_workbook(workbook_path)
         workbook.remove(workbook[sheet_name])
