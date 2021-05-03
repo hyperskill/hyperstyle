@@ -4,6 +4,7 @@ from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
 
 
+@unique
 class ColumnName(Enum):
     CODE = "code"
     LANG = "lang"
