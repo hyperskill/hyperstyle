@@ -21,7 +21,7 @@ class PylintInspector(BaseInspector):
     supported_issue_types = (
         IssueType.CODE_STYLE,
         IssueType.BEST_PRACTICES,
-        IssueType.ERROR_PRONE
+        IssueType.ERROR_PRONE,
     )
 
     @classmethod
@@ -31,7 +31,7 @@ class PylintInspector(BaseInspector):
             '--load-plugins', 'pylint_django',
             f'--rcfile={PATH_PYLINT_CONFIG}',
             f'--msg-template={MSG_TEMPLATE}',
-            str(path)
+            str(path),
         ]
 
         output = run_in_subprocess(command)
@@ -70,7 +70,7 @@ class PylintInspector(BaseInspector):
                 origin_class=origin_class,
                 description=description,
                 inspector_type=cls.inspector_type,
-                type=issue_type
+                type=issue_type,
             ))
 
         return issues

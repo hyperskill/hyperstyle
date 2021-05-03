@@ -16,13 +16,13 @@ class BooleanExpressionRuleConfig:
 common_boolean_expression_rule_config = BooleanExpressionRuleConfig(
     bool_expr_len_bad=10,
     bool_expr_len_moderate=7,
-    bool_expr_len_good=5
+    bool_expr_len_good=5,
 )
 
 java_boolean_expression_rule_config = BooleanExpressionRuleConfig(
     bool_expr_len_bad=8,
     bool_expr_len_moderate=6,
-    bool_expr_len_good=4
+    bool_expr_len_good=4,
 )
 
 LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG = {
@@ -66,7 +66,7 @@ class BooleanExpressionRule(Rule):
         config = BooleanExpressionRuleConfig(
             min(self.config.bool_expr_len_bad, other.config.bool_expr_len_bad),
             min(self.config.bool_expr_len_moderate, other.config.bool_expr_len_moderate),
-            min(self.config.bool_expr_len_good, other.config.bool_expr_len_good)
+            min(self.config.bool_expr_len_good, other.config.bool_expr_len_good),
         )
         result_rule = BooleanExpressionRule(config)
         result_rule.apply(max(self.bool_expr_len, other.bool_expr_len))

@@ -1,10 +1,10 @@
-import pytest
+from test.python.inspectors import JAVA_DATA_FOLDER
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
+import pytest
 from src.python.review.common.language import Language
 from src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-from test.python.inspectors import JAVA_DATA_FOLDER
-from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ('test_simple_valid_program.java', 0),

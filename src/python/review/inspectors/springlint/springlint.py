@@ -3,17 +3,34 @@ import logging
 import re
 from pathlib import Path
 from shutil import copy
-from typing import AnyStr, List, Optional, Dict, Any
+from typing import Any, AnyStr, Dict, List, Optional
 
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, ChildrenNumberIssue, ClassResponseIssue, CodeIssue, \
-    CohesionIssue, \
-    CouplingIssue, InheritanceIssue, IssueType, MethodNumberIssue, WeightedMethodIssue, IssueData
-from src.python.review.inspectors.tips import get_child_number_tip, get_class_coupling_tip, get_class_response_tip, \
-    get_cohesion_tip, get_inheritance_depth_tip, get_method_number_tip, get_weighted_method_tip
+from src.python.review.inspectors.issue import (
+    BaseIssue,
+    ChildrenNumberIssue,
+    ClassResponseIssue,
+    CodeIssue,
+    CohesionIssue,
+    CouplingIssue,
+    InheritanceIssue,
+    IssueData,
+    IssueType,
+    MethodNumberIssue,
+    WeightedMethodIssue,
+)
+from src.python.review.inspectors.tips import (
+    get_child_number_tip,
+    get_class_coupling_tip,
+    get_class_response_tip,
+    get_cohesion_tip,
+    get_inheritance_depth_tip,
+    get_method_number_tip,
+    get_weighted_method_tip,
+)
 
 PATH_TOOLS_SPRINGLINT_FILES = Path(__file__).parent / 'files'
 PATH_SPRINGLINT_JAR = PATH_TOOLS_SPRINGLINT_FILES / 'springlint-0.6.jar'
@@ -32,7 +49,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': 'class_objects_coupling',
         'lcom': 'cohesion_lack',
         'rfc': 'class_response',
-        'nom': 'method_number'
+        'nom': 'method_number',
     }
 
     metric_name_to_description = {
@@ -42,7 +59,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': get_class_coupling_tip(),
         'lcom': get_cohesion_tip(),
         'rfc': get_class_response_tip(),
-        'nom': get_method_number_tip()
+        'nom': get_method_number_tip(),
     }
 
     metric_name_to_issue_type = {
@@ -52,7 +69,7 @@ class SpringlintInspector(BaseInspector):
         'cbo': IssueType.COUPLING,
         'lcom': IssueType.COHESION,
         'rfc': IssueType.CLASS_RESPONSE,
-        'nom': IssueType.METHOD_NUMBER
+        'nom': IssueType.METHOD_NUMBER,
     }
 
     @classmethod
@@ -62,7 +79,7 @@ class SpringlintInspector(BaseInspector):
             PATH_SPRINGLINT_JAR,
             '--output', str(output_path),
             '-otype', 'html',
-            '--project', str(path)
+            '--project', str(path),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
@@ -118,7 +135,7 @@ class SpringlintInspector(BaseInspector):
                 origin_class=smell['name'],
                 inspector_type=cls.inspector_type,
                 type=IssueType.ARCHITECTURE,
-                description=smell['description']
+                description=smell['description'],
             ) for smell in file_smell['smells']])
 
         return issues

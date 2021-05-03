@@ -1,4 +1,7 @@
 a = int(input())
 b = int(input())
-list = list(filter(lambda x: x % 3 == 0, range(a, b + 1)))
+
+range = range(a, b + 1)
+
+list = list(filter(lambda x: x % 3 == 0, range))
 print(sum(list) / len(list))

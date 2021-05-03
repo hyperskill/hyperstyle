@@ -44,7 +44,7 @@ def test_out_of_range_issues_when_the_same_borders() -> None:
     first_line_issues = [
         create_code_issue_by_line(1),
         create_code_issue_by_line(1),
-        create_code_issue_by_line(1)
+        create_code_issue_by_line(1),
     ]
 
     assert filter_out_of_range_issues(first_line_issues,

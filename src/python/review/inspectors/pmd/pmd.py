@@ -37,7 +37,7 @@ class PMDInspector(BaseInspector):
             '-language', 'java',
             '-version', java_version.value,
             '-f', 'csv', '-r', str(output_path),
-            '-t', str(n_cpu)
+            '-t', str(n_cpu),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:

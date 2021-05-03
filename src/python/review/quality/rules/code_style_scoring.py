@@ -19,7 +19,7 @@ java_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_moderate=0.17,
     n_code_style_good=0,
     n_code_style_lines_bad=10,
-    language=Language.JAVA
+    language=Language.JAVA,
 )
 
 python_code_style_rule_config = CodeStyleRuleConfig(
@@ -27,7 +27,7 @@ python_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_moderate=0.17,
     n_code_style_good=0,
     n_code_style_lines_bad=5,
-    language=Language.PYTHON
+    language=Language.PYTHON,
 )
 
 kotlin_code_style_rule_config = CodeStyleRuleConfig(
@@ -35,7 +35,7 @@ kotlin_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_moderate=0.07,
     n_code_style_good=0,
     n_code_style_lines_bad=10,
-    language=Language.KOTLIN
+    language=Language.KOTLIN,
 )
 
 js_code_style_rule_config = CodeStyleRuleConfig(
@@ -43,7 +43,7 @@ js_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_moderate=0.17,
     n_code_style_good=0,
     n_code_style_lines_bad=10,
-    language=Language.JAVA
+    language=Language.JAVA,
 )
 
 LANGUAGE_TO_CODE_STYLE_RULE_CONFIG = {

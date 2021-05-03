@@ -40,7 +40,7 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
             origin_class=BOOL_EXPR_LEN_ORIGIN_CLASS,
             inspector_type=self._inspector_type,
             bool_expr_len=length,
-            type=IssueType.BOOL_EXPR_LEN
+            type=IssueType.BOOL_EXPR_LEN,
         ))
 
 
@@ -58,7 +58,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
     def visit(self, node):
         if isinstance(self._previous_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             func_length = self._find_func_len(
-                self._previous_node.lineno, node.lineno
+                self._previous_node.lineno, node.lineno,
             )
 
             self._function_lens.append(FuncLenIssue(
@@ -69,7 +69,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=IssueType.FUNC_LEN
+                type=IssueType.FUNC_LEN,
             ))
 
         self._previous_node = node
@@ -80,7 +80,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
     def function_lens(self) -> List[FuncLenIssue]:
         if isinstance(self._previous_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             func_length = self._find_func_len(
-                self._previous_node.lineno, self._n_lines + 1
+                self._previous_node.lineno, self._n_lines + 1,
             )
 
             self._function_lens.append(FuncLenIssue(
@@ -91,7 +91,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=IssueType.FUNC_LEN
+                type=IssueType.FUNC_LEN,
             ))
 
         self._previous_node = None
@@ -125,13 +125,13 @@ class PythonAstInspector(BaseInspector):
             bool_gatherer = BoolExpressionLensGatherer(path_to_file, cls.inspector_type)
             bool_gatherer.visit(tree)
             metrics.extend(
-                bool_gatherer.bool_expression_lens
+                bool_gatherer.bool_expression_lens,
             )
 
             func_gatherer = FunctionLensGatherer(file_content, path_to_file, cls.inspector_type)
             func_gatherer.visit(tree)
             metrics.extend(
-                func_gatherer.function_lens
+                func_gatherer.function_lens,
             )
 
         return metrics

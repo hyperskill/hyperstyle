@@ -13,7 +13,7 @@ class myclass:
         print('hello 1')
 
     def my_fun(self, QQ):
-        print('hello 2' + QQ)
+        print('hello 2 {}'.format(QQ))
 
     @classmethod
     def test_fun(first):

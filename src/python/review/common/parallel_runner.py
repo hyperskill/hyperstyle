@@ -37,7 +37,7 @@ def inspect_in_parallel(path: Path,
     with multiprocessing.Pool(config.n_cpu) as pool:
         issues = pool.map(
             functools.partial(run_inspector, path, config),
-            inspectors
+            inspectors,
         )
 
     return list(itertools.chain(*issues))

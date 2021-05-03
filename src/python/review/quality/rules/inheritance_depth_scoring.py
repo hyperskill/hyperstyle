@@ -12,7 +12,7 @@ class InheritanceDepthRuleConfig:
 
 
 common_inheritance_depth_rule_config = InheritanceDepthRuleConfig(
-    depth_bad=3
+    depth_bad=3,
 )
 
 LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG = {

@@ -8,6 +8,7 @@ class InspectorType(Enum):
     PYLINT = 'PYLINT'
     PYTHON_AST = 'PYTHON_AST'
     FLAKE8 = 'FLAKE8'
+    RADON = 'RADON'
 
     # Java language
     PMD = 'PMD'
@@ -29,6 +30,7 @@ class InspectorType(Enum):
             cls.PYLINT.value,
             cls.FLAKE8.value,
             cls.PYTHON_AST.value,
+            cls.RADON.value,
 
             # Java language
             cls.PMD.value,

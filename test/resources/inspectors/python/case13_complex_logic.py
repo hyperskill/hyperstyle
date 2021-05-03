@@ -8,16 +8,22 @@ def max_of_three(a, b, c):
     return a
 
 
+FEW_UNITS_NUMBER = 9
+PACK_UNITS_NUMBER = 49
+HORDE_UNITS_NUMBER = 499
+SWARM_UNITS_NUMBER = 999
+
+
 def army_of_units(count):
     if count < 1:
         print("no army")
-    elif count <= 9:
+    elif count <= FEW_UNITS_NUMBER:
         print('few')
-    elif count <= 49:
+    elif count <= PACK_UNITS_NUMBER:
         print('pack')
-    elif count <= 499:
+    elif count <= HORDE_UNITS_NUMBER:
         print("horde")
-    elif count <= 999:
+    elif count <= SWARM_UNITS_NUMBER:
         print('swarm')
     else:
         print('legion')
@@ -65,60 +71,38 @@ def determine_strange_quark(spin, charge):
         print("Higgs boson Boson")
 
 
+SHEEP_PRICE = 6769
+COW_PRICE = 3848
+PIG_PRICE = 1296
+GOAT_PRICE = 678
+DOG_PRICE = 137
+CHICKEN_PRICE = 23
+
+
 def buy_animal(money):
-    if money >= 6769:
-        print(str(money // 6769) + " sheep")
-    elif money >= 3848:
+    if money >= SHEEP_PRICE:
+        number_of_sheep = money // SHEEP_PRICE
+        print(f"{number_of_sheep} sheep")
+    elif money >= COW_PRICE:
         print("1 cow")
-    elif money >= 1296:
-        if money // 1296 == 1:
+    elif money >= PIG_PRICE:
+        if money // PIG_PRICE == 1:
             print("1 pig")
         else:
             print("2 pigs")
-    elif money >= 678:
+    elif money >= GOAT_PRICE:
         print("1 goat")
-    elif money >= 137:
-        if money // 137 == 1:
+    elif money >= DOG_PRICE:
+        if money // DOG_PRICE == 1:
             print("1 dog")
         else:
-            print(str(money // 137) + " dogs")
-    elif money >= 23:
-        if money // 23 == 1:
+            number_of_dogs = money // DOG_PRICE
+            print(f"{number_of_dogs} dogs")
+    elif money >= CHICKEN_PRICE:
+        if money // CHICKEN_PRICE == 1:
             print("1 chicken")
         else:
-            print(str(money // 23) + " chickens")
+            number_of_chickens = money // CHICKEN_PRICE
+            print(f"{number_of_chickens} chickens")
     else:
         print("None")
-
-
-def fun_with_complex_logic(a, b, c):
-    d = 0
-    if a > 10:
-        d = 30
-    elif a < 100:
-        d = 50
-    elif a == 300 and b == 40:
-        for i in range(9):
-            a += i
-    elif a == 200:
-        if b > 300 and c < 50:
-            d = 400
-        else:
-            d = 800
-    elif a == 2400:
-        if b > 500 and c < 50:
-            d = 400
-        else:
-            d = 800
-    elif a == 1000:
-        if b == 900:
-            if c == 1000:
-                d = 10000
-            else:
-                d = 900
-        elif c == 300:
-            d = 1000
-        elif a + b == 400:
-            d = 400
-    print(d)
-    return d

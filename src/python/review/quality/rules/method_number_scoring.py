@@ -16,7 +16,7 @@ class MethodNumberRuleConfig:
 common_method_number_rule_config = MethodNumberRuleConfig(
     method_number_bad=32,
     method_number_moderate=24,
-    method_number_good=20
+    method_number_good=20,
 )
 
 LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG = {
@@ -60,7 +60,7 @@ class MethodNumberRule(Rule):
         config = MethodNumberRuleConfig(
             min(self.config.method_number_bad, other.config.method_number_bad),
             min(self.config.method_number_moderate, other.config.method_number_moderate),
-            min(self.config.method_number_good, other.config.method_number_good)
+            min(self.config.method_number_good, other.config.method_number_good),
         )
         result_rule = MethodNumberRule(config)
         result_rule.apply(max(self.method_number, other.method_number))

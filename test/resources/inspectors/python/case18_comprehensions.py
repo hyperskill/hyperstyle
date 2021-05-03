@@ -11,7 +11,7 @@ tuple([])  # ()
 
 dict(((1, 2),))  # {1: 2}
 
-sum([x ** 2 for x in range(10)])  # sum(x ** 2 for x in range(10))
+sum([x ** 2 for x in range(10)])  # we allow this since flake8-comprehension 3.4.0 (see its changelog)
 
 test_dict = dict()   # we allow this
 test_list = list()   # we allow this

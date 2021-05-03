@@ -5,10 +5,12 @@ from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
+from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import LANGUAGE_TO_COUPLING_RULE_CONFIG
 from src.python.review.quality.rules.cyclomatic_complexity_scoring import LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG
 from src.python.review.quality.rules.function_length_scoring import LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG
 from src.python.review.quality.rules.inheritance_depth_scoring import LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG
+from src.python.review.quality.rules.maintainability_scoring import LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG
 from src.python.review.quality.rules.method_number_scoring import LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG
 from src.python.review.quality.rules.weighted_methods_scoring import LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG
 
@@ -22,7 +24,11 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
         IssueType.METHOD_NUMBER: LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG[language].method_number_good,
         IssueType.COUPLING: LANGUAGE_TO_COUPLING_RULE_CONFIG[language].coupling_moderate,
         IssueType.CLASS_RESPONSE: LANGUAGE_TO_RESPONSE_RULE_CONFIG[language].response_good,
-        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good
+        IssueType.WEIGHTED_METHOD: LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG[language].weighted_methods_good,
+        IssueType.COHESION: LANGUAGE_TO_COHESION_RULE_CONFIG[language].cohesion_lack_good,
+        IssueType.MAINTAINABILITY: LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG[
+            language
+        ].maintainability_lack_good,
     }
 
 
@@ -38,7 +44,7 @@ def filter_low_measure_issues(issues: List[BaseIssue],
     issue_type_to_low_measure_dict = __get_issue_type_to_low_measure_dict(language)
 
     # Disable this types of issue, requires further investigation.
-    ignored_issues = [IssueType.COHESION, IssueType.CHILDREN_NUMBER]
+    ignored_issues = [IssueType.CHILDREN_NUMBER]
 
     return list(filter(
         lambda issue: issue.type not in ignored_issues and __more_than_low_measure(issue,

@@ -1,6 +1,7 @@
+from test.python.inspectors import SPRING_DATA_FOLDER
+
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.inspectors.springlint.springlint import SpringlintInspector
-from test.python.inspectors import SPRING_DATA_FOLDER
 
 
 def test_controller_with_smells():

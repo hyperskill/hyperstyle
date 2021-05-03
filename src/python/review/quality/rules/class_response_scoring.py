@@ -14,7 +14,7 @@ class ResponseRuleConfig:
 
 common_response_rule_config = ResponseRuleConfig(
     response_moderate=69,
-    response_good=59
+    response_good=59,
 )
 
 LANGUAGE_TO_RESPONSE_RULE_CONFIG = {
@@ -52,7 +52,7 @@ class ResponseRule(Rule):
     def merge(self, other: 'ResponseRule') -> 'ResponseRule':
         config = ResponseRuleConfig(
             min(self.config.response_moderate, other.config.response_moderate),
-            min(self.config.response_good, other.config.response_good)
+            min(self.config.response_good, other.config.response_good),
         )
         result_rule = ResponseRule(config)
         result_rule.apply(max(self.response, other.response))

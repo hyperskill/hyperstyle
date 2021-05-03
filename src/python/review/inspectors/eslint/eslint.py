@@ -17,7 +17,7 @@ class ESLintInspector(BaseInspector):
 
     origin_class_to_pattern = {
         'complexity':
-            r'complexity of (\d+)'
+            r'complexity of (\d+)',
     }
 
     @classmethod

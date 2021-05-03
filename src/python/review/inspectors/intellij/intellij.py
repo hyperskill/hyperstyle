@@ -48,7 +48,7 @@ class IntelliJInspector(BaseInspector):
     def create_command(output_dir_path) -> List[Union[str, Path]]:
         return [
             INTELLIJ_INSPECTOR_EXECUTABLE, INTELLIJ_INSPECTOR_PROJECT,
-            INTELLIJ_INSPECTOR_SETTINGS, output_dir_path, '-v2'
+            INTELLIJ_INSPECTOR_SETTINGS, output_dir_path, '-v2',
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
@@ -134,8 +134,8 @@ class IntelliJInspector(BaseInspector):
                         file_path = Path(
                             text.replace(
                                 'file://$PROJECT_DIR$',
-                                str(INTELLIJ_INSPECTOR_PROJECT)
-                            )
+                                str(INTELLIJ_INSPECTOR_PROJECT),
+                            ),
                         )
                     elif tag == 'line':
                         line_no = int(text)
@@ -160,7 +160,7 @@ class IntelliJInspector(BaseInspector):
                             description=description,
                             origin_class=issue_class,
                             inspector_type=cls.inspector_type,
-                            type=issue_type
+                            type=issue_type,
                         ))
 
         return issues
