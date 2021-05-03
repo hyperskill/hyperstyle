@@ -36,7 +36,7 @@ class EvaluationConfig:
                     Path(self.xlsx_file_path).parent.parent / EvaluationArgument.RESULT_FILE_NAME.value
                 )
                 create_directory(self.output_folder_path)
-            except FileNotFoundError:
+            except FileNotFoundError as e:
                 logger.error('XLSX-file with the specified name does not exists.')
-                raise FileNotFoundError
+                raise e
         return Path(self.output_folder_path) / self.output_file_name
