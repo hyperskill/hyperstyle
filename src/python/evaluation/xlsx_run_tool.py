@@ -27,7 +27,7 @@ from src.python.review.reviewers.perform_review import OutputFormat
 logger = logging.getLogger(__name__)
 
 
-def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enum.EnumMeta) -> None:
+def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: RunToolArgument) -> None:
     parser.add_argument('xlsx_file_path',
                         type=lambda value: Path(value).absolute(),
                         help='Local XLSX-file path. '
