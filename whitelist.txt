@@ -82,6 +82,7 @@ dataframe
 writelines
 rmdir
 df
+unique
 # Springlint issues
 cbo
 dit

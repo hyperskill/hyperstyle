@@ -73,7 +73,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: enu
                              'is enabled argument will not be used otherwise.')
 
 
-def create_dataframe(config) -> Union[int, pd.DataFrame]:
+def create_dataframe(config) -> pd.DataFrame:
     report = pd.DataFrame(
         {
             ColumnName.LANGUAGE.value: [],
