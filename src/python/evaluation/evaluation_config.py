@@ -12,21 +12,12 @@ logger = logging.getLogger(__name__)
 
 class EvaluationConfig:
     def __init__(self, args):
-        # Pass dictionary when run tests
-        if isinstance(args, dict):
-            self.tool_path: Union[str, Path] = args['tool_path']
-            self.output_format: str = args['format']
-            self.xlsx_file_path: Union[str, Path] = args['xlsx_file_path']
-            self.traceback: bool = args['traceback']
-            self.output_folder_path: Union[str, Path] = args['output_folder_path']
-            self.output_file_name: str = args['output_file_name']
-        else:
-            self.tool_path: Union[str, Path] = args.tool_path
-            self.output_format: str = args.format
-            self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
-            self.traceback: bool = args.traceback
-            self.output_folder_path: Union[str, Path] = args.output_folder_path
-            self.output_file_name: str = args.output_file_name
+        self.tool_path: Union[str, Path] = args.tool_path
+        self.output_format: str = args.format
+        self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
+        self.traceback: bool = args.traceback
+        self.output_folder_path: Union[str, Path] = args.output_folder_path
+        self.output_file_name: str = args.output_file_name
 
     def build_command(self, inspected_file_path: Union[str, Path], lang: str) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,
