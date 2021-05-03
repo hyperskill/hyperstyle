@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, unique
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
