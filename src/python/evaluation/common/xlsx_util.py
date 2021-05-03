@@ -9,7 +9,7 @@ from src.python.evaluation.evaluation_config import EvaluationConfig
 logger = logging.getLogger(__name__)
 
 
-def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_error=False) -> None:
+def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_error: bool = False) -> None:
     try:
         workbook = load_workbook(workbook_path)
         workbook.remove(workbook[sheet_name])
