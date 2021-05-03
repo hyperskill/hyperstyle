@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class EvaluationConfig:
     def __init__(self, args):
         # Pass dictionary when run tests
-        if type(args) == dict:
+        if isinstance(args, dict):
             self.tool_path: Union[str, Path] = args['tool_path']
             self.output_format: str = args['format']
             self.xlsx_file_path: Union[str, Path] = args['xlsx_file_path']
