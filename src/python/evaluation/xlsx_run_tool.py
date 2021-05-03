@@ -1,5 +1,4 @@
 import argparse
-import enum
 import logging.config
 import os
 import re
