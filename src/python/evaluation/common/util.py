@@ -12,6 +12,7 @@ class ColumnName(Enum):
     GRADE = "grade"
 
 
+@unique
 class EvaluationArgument(Enum):
     TRACEBACK = "traceback"
     RESULT_FILE_NAME = "results"
