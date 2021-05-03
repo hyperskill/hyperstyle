@@ -6,7 +6,6 @@ import re
 import sys
 import traceback
 from pathlib import Path
-from typing import NoReturn, Union
 
 sys.path.append('')
 sys.path.append('../../..')
