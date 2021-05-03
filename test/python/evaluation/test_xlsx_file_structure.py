@@ -17,7 +17,7 @@ FILE_NAMES = [
 @pytest.mark.parametrize('file_name', FILE_NAMES)
 def test_wrong_column(file_name: str):
     with pytest.raises(KeyError):
-        testing_arguments_dict = get_testing_arguments(n_args=5)
-        testing_arguments_dict['xlsx_file_path'] = XLSX_DATA_FOLDER / file_name
+        testing_arguments_dict = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
+        testing_arguments_dict.xlsx_file_path = XLSX_DATA_FOLDER / file_name
         config = EvaluationConfig(testing_arguments_dict)
         assert create_dataframe(config)

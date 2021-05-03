@@ -1,4 +1,5 @@
 import logging.config
+from argparse import Namespace
 from pathlib import Path
 from typing import List, Union
 
@@ -11,22 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 class EvaluationConfig:
-    def __init__(self, args):
-        # Pass dictionary when run tests
-        if type(args) == dict:
-            self.tool_path: Union[str, Path] = args['tool_path']
-            self.output_format: str = args['format']
-            self.xlsx_file_path: Union[str, Path] = args['xlsx_file_path']
-            self.traceback: bool = args['traceback']
-            self.output_folder_path: Union[str, Path] = args['output_folder_path']
-            self.output_file_name: str = args['output_file_name']
-        else:
-            self.tool_path: Union[str, Path] = args.tool_path
-            self.output_format: str = args.format
-            self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
-            self.traceback: bool = args.traceback
-            self.output_folder_path: Union[str, Path] = args.output_folder_path
-            self.output_file_name: str = args.output_file_name
+    def __init__(self, args: Namespace):
+        self.tool_path: Union[str, Path] = args.tool_path
+        self.output_format: str = args.format
+        self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
+        self.traceback: bool = args.traceback
+        self.output_folder_path: Union[str, Path] = args.output_folder_path
+        self.output_file_name: str = args.output_file_name
 
     def build_command(self, inspected_file_path: Union[str, Path], lang: str) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,
@@ -45,7 +37,7 @@ class EvaluationConfig:
                     Path(self.xlsx_file_path).parent.parent / EvaluationArgument.RESULT_FILE_NAME.value
                 )
                 create_directory(self.output_folder_path)
-            except FileNotFoundError:
+            except FileNotFoundError as e:
                 logger.error('XLSX-file with the specified name does not exists.')
-                raise FileNotFoundError
+                raise e
         return Path(self.output_folder_path) / self.output_file_name

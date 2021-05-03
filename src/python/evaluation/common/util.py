@@ -1,9 +1,10 @@
-from enum import Enum
+from enum import Enum, unique
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
 
 
+@unique
 class ColumnName(Enum):
     CODE = "code"
     LANG = "lang"
@@ -11,6 +12,7 @@ class ColumnName(Enum):
     GRADE = "grade"
 
 
+@unique
 class EvaluationArgument(Enum):
     TRACEBACK = "traceback"
     RESULT_FILE_NAME = "results"

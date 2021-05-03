@@ -3,7 +3,6 @@ from test.python.evaluation.testing_config import get_testing_arguments
 
 import pandas as pd
 import pytest
-from src.python import MAIN_FOLDER
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.xlsx_run_tool import create_dataframe
 
@@ -18,10 +17,9 @@ FILE_NAMES = [
 @pytest.mark.parametrize(('test_file', 'target_file', 'output_type'), FILE_NAMES)
 def test_correct_output(test_file: str, target_file: str, output_type: bool):
 
-    testing_arguments_dict = get_testing_arguments()
-    testing_arguments_dict['xlsx_file_path'] = XLSX_DATA_FOLDER / test_file
-    testing_arguments_dict['tool_path'] = MAIN_FOLDER.parent / 'review/run_tool.py'
-    testing_arguments_dict['traceback'] = output_type
+    testing_arguments_dict = get_testing_arguments(to_add_tool_path=True)
+    testing_arguments_dict.xlsx_file_path = XLSX_DATA_FOLDER / test_file
+    testing_arguments_dict.traceback = output_type
 
     config = EvaluationConfig(testing_arguments_dict)
     test_dataframe = create_dataframe(config)
