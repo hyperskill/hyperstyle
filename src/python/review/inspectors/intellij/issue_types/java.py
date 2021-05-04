@@ -1217,7 +1217,7 @@ ISSUE_CLASS_TO_ISSUE_TYPE: Dict[str, IssueType] = {
         IssueType.ERROR_PRONE,
     'Covariant \'equals()\'':
         IssueType.ERROR_PRONE,
-    'Duplicated delimiters in java.util.StringTokenizer':
+    'Duplicated delimiters in java.common.StringTokenizer':
         IssueType.ERROR_PRONE,
     'Empty class initializer':
         IssueType.ERROR_PRONE,
@@ -1531,7 +1531,7 @@ ISSUE_CLASS_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'Non thread-safe static field access':
         IssueType.ERROR_PRONE,
     '\'notify()\' or \'notifyAll()\' called on '
-    '\'java.util.concurrent.locks.Condition\' object':
+    '\'java.common.concurrent.locks.Condition\' object':
         IssueType.ERROR_PRONE,
     '\'notify()\' or \'notifyAll()\' without corresponding state change':
         IssueType.ERROR_PRONE,
@@ -1567,7 +1567,7 @@ ISSUE_CLASS_TO_ISSUE_TYPE: Dict[str, IssueType] = {
         IssueType.ERROR_PRONE,
     'Volatile array field':
         IssueType.ERROR_PRONE,
-    '\'wait()\' called on \'java.util.concurrent.locks.Condition\' object':
+    '\'wait()\' called on \'java.common.concurrent.locks.Condition\' object':
         IssueType.ERROR_PRONE,
     '\'wait()\' not in loop':
         IssueType.ERROR_PRONE,
