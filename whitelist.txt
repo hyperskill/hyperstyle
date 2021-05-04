@@ -91,3 +91,5 @@ noc
 nom
 wmc
 util
+tmp
+Namespace
