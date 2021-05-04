@@ -1,10 +1,11 @@
 import json
 import linecache
 from pathlib import Path
+from typing import Any, Dict
 
 from src.python.review.common.file_system import get_file_line
+from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.reviewers.review_result import ReviewResult
-from src.python.review.reviewers.utils.penalty import get_issue_influence_on_penalty
 
 
 def print_review_result_as_text(review_result: ReviewResult,
@@ -49,32 +50,19 @@ def print_review_result_as_json(review_result: ReviewResult) -> None:
 
     issues.sort(key=lambda issue: issue.line_no)
 
-    quality_with_penalty = review_result.general_quality.quality_with_penalty.value
+    quality_without_penalty = review_result.general_quality.quality_type
+    quality_with_penalty = review_result.general_punisher.get_quality_with_penalty(quality_without_penalty)
     output_json = {'quality': {
-        'code': quality_with_penalty,
-        'text': f'Code quality (beta): {quality_with_penalty}',
+        'code': quality_with_penalty.value,
+        'text': f'Code quality (beta): {quality_with_penalty.value}',
     }, 'issues': []}
 
     for issue in issues:
-        line_text = get_file_line(issue.file_path, issue.line_no)
+        influence_on_penalty = 0
+        if quality_with_penalty != quality_without_penalty:
+            influence_on_penalty = review_result.general_punisher.get_issue_influence_on_penalty(issue.origin_class)
 
-        quality_without_penalty = review_result.general_quality.quality_type.value
-        issue_penalty_coefficient = review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0)
-        total_penalty_coefficient = review_result.general_quality.penalty_coefficient
-
-        influence_on_penalty = get_issue_influence_on_penalty(
-            quality_with_penalty, quality_without_penalty, issue_penalty_coefficient, total_penalty_coefficient,
-        )
-
-        output_json['issues'].append({
-            'code': issue.origin_class,
-            'text': issue.description,
-            'line': line_text,
-            'line_number': issue.line_no,
-            'column_number': issue.column_no,
-            'category': issue.type.value,
-            'influence_on_penalty': influence_on_penalty,
-        })
+        output_json['issues'].append(convert_issue_to_json(issue, influence_on_penalty))
 
     print(json.dumps(output_json))
 
@@ -85,12 +73,13 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
     review_result.file_review_results.sort(key=lambda result: result.file_path)
 
     for file_review_result in review_result.file_review_results:
-        quality_with_penalty = file_review_result.quality.quality_with_penalty.value
+        quality_without_penalty = file_review_result.quality.quality_type
+        quality_with_penalty = file_review_result.punisher.get_quality_with_penalty(quality_without_penalty)
         file_review_result_json = {
             'file_name': str(file_review_result.file_path),
             'quality': {
-                'code': quality_with_penalty,
-                'text': f'Code quality (beta): {quality_with_penalty}',
+                'code': quality_with_penalty.value,
+                'text': f'Code quality (beta): {quality_with_penalty.value}',
             },
             'issues': [],
         }
@@ -98,34 +87,35 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
         file_review_result_jsons.append(file_review_result_json)
 
         for issue in file_review_result.issues:
-            line_text = get_file_line(issue.file_path, issue.line_no)
+            influence_on_penalty = 0
+            if quality_with_penalty != quality_without_penalty:
+                influence_on_penalty = file_review_result.punisher.get_issue_influence_on_penalty(issue.origin_class)
 
-            quality_without_penalty = file_review_result.quality.quality_type.value
-            issue_penalty_coefficient = review_result.issue_class_to_penalty_coefficient.get(issue.origin_class, 0)
-            total_penalty_coefficient = file_review_result.quality.penalty_coefficient
+            file_review_result_json['issues'].append(convert_issue_to_json(issue, influence_on_penalty))
 
-            influence_on_penalty = get_issue_influence_on_penalty(
-                quality_with_penalty, quality_without_penalty, issue_penalty_coefficient, total_penalty_coefficient,
-            )
-
-            file_review_result_json['issues'].append({
-                'code': issue.origin_class,
-                'text': issue.description,
-                'line': line_text,
-                'line_number': issue.line_no,
-                'column_number': issue.column_no,
-                'category': issue.type.value,
-                'influence_on_penalty': influence_on_penalty,
-            })
-
-    quality_with_penalty = review_result.general_quality.quality_with_penalty.value
+    quality_without_penalty = review_result.general_quality.quality_type
+    quality_with_penalty = review_result.general_punisher.get_quality_with_penalty(quality_without_penalty)
 
     output_json = {
         'quality': {
-            'code': quality_with_penalty,
-            'text': f'Code quality (beta): {quality_with_penalty}',
+            'code': quality_with_penalty.value,
+            'text': f'Code quality (beta): {quality_with_penalty.value}',
         },
         'file_review_results': file_review_result_jsons,
     }
 
     print(json.dumps(output_json))
+
+
+def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int) -> Dict[str, Any]:
+    line_text = get_file_line(issue.file_path, issue.line_no)
+
+    return {
+        'code': issue.origin_class,
+        'text': issue.description,
+        'line': line_text,
+        'line_number': issue.line_no,
+        'column_number': issue.column_no,
+        'category': issue.type.value,
+        'influence_on_penalty': influence_on_penalty,
+    }
