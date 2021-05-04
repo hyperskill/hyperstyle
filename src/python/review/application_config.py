@@ -15,7 +15,7 @@ class ApplicationConfig:
     start_line: int = 1
     end_line: Optional[int] = None
     new_format: bool = False
-    history: str = None
+    history: Optional[str] = None
 
 
 @unique
