@@ -177,7 +177,7 @@ class Punisher:
             if current_issues:
                 issue_coefficient = ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
                 normalized_issue_coefficient = issue_coefficient / (self._penalty_coefficient + len(current_issues))
-                influence = normalized_issue_coefficient / self._normalized_penalty_coefficient  # calculate influence
+                influence = normalized_issue_coefficient / self._normalized_penalty_coefficient
 
             result[issue.origin_class] = influence
 
