@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import List, Optional, Set, Dict, Type
+from typing import Dict, List, Optional, Set
 
 from src.python.review.common.file_system import Extension
 from src.python.review.inspectors.inspector_type import InspectorType

@@ -20,7 +20,7 @@ from src.python.evaluation.common.xlsx_util import (
 )
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_file, new_temp_dir
+from src.python.review.common.file_system import create_file
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.reviewers.perform_review import OutputFormat
 
@@ -106,8 +106,8 @@ def create_dataframe(config: EvaluationConfig) -> pd.DataFrame:
 
             # Tool does not work correctly with tmp files from <tempfile> module on macOS
             # thus we create a real file in the file system
-            tmp_file_path = config.xlsx_file_path.parent.absolute() / \
-                            f'inspected_code{get_language(lang).extension_by_language().value}'
+            extension = get_language(lang).extension_by_language().value
+            tmp_file_path = config.xlsx_file_path.parent.absolute() / f'inspected_code{extension}'
             temp_file = next(create_file(tmp_file_path, code))
 
             command = config.build_command(temp_file, lang)

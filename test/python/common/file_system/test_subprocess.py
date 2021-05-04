@@ -1,18 +1,17 @@
 import os
 from pathlib import Path
-
-import pytest
-
-from src.python.evaluation.evaluation_config import EvaluationConfig
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import get_content_from_file, new_temp_file, Extension, create_file
-from src.python.review.common.subprocess_runner import run_in_subprocess
 from test.python.common import FILE_SYSTEM_DATA_FOLDER
 from test.python.evaluation.testing_config import get_testing_arguments
 
+import pytest
+from src.python.evaluation.evaluation_config import EvaluationConfig
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import create_file, get_content_from_file
+from src.python.review.common.subprocess_runner import run_in_subprocess
+
 INPUT_DATA = [
     ('in_1.java', LanguageVersion.JAVA_11),
-    ('in_2.py', LanguageVersion.PYTHON_3)
+    ('in_2.py', LanguageVersion.PYTHON_3),
 ]
 
 
