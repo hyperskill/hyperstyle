@@ -5,7 +5,6 @@ from functools import total_ordering
 from typing import List
 
 from src.python.review.inspectors.issue import IssueType
-from src.python.review.reviewers.utils.penalty import get_penalty_score
 
 
 @total_ordering
@@ -43,27 +42,12 @@ class Rule(abc.ABC):
 
 
 class Quality:
-    def __init__(self, rules: List[Rule], penalty_coefficient: int = 0):
+    def __init__(self, rules: List[Rule]):
         self.rules = rules
-        self.penalty_coefficient = penalty_coefficient
 
     @property
     def quality_type(self) -> QualityType:
         return min(map(lambda rule: rule.quality_type, self.rules), default=QualityType.EXCELLENT)
-
-    @property
-    def quality_with_penalty(self) -> QualityType:
-        numbered_quality_type = self.quality_type.to_number()
-        numbered_quality_type -= get_penalty_score(self.penalty_coefficient)
-
-        if numbered_quality_type <= 0:
-            return QualityType.BAD
-        elif numbered_quality_type == 1:
-            return QualityType.MODERATE
-        elif numbered_quality_type == 2:
-            return QualityType.GOOD
-        else:
-            return QualityType.EXCELLENT
 
     @property
     def next_quality_type(self) -> QualityType:
@@ -92,7 +76,7 @@ class Quality:
         for rule_type in set(other_type_to_rule).difference(common_rule_types):
             result_rules.append(other_type_to_rule[rule_type])
 
-        return Quality(result_rules, self.penalty_coefficient)
+        return Quality(result_rules)
 
     def __str__(self):
         message_head_part = f'Code quality (beta): {self.quality_type.value}\n'

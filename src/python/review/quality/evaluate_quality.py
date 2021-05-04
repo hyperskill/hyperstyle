@@ -64,7 +64,7 @@ def __get_available_rules(language: Language) -> List[Rule]:
     ]
 
 
-def evaluate_quality(statistics: CodeStatistics, language: Language, penalty_coefficient: int = 0) -> Quality:
+def evaluate_quality(statistics: CodeStatistics, language: Language) -> Quality:
     rule_statistics = statistics.issue_type_to_statistics_dict
 
     rules = __get_available_rules(language)
@@ -81,4 +81,4 @@ def evaluate_quality(statistics: CodeStatistics, language: Language, penalty_coe
     line_len_rule.apply(rule_statistics[IssueType.LINE_LEN], statistics.total_lines)
     rules.append(line_len_rule)
 
-    return Quality(rules, penalty_coefficient)
+    return Quality(rules)
