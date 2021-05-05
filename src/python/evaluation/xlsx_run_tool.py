@@ -20,7 +20,7 @@ from src.python.evaluation.common.xlsx_util import (
 )
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_file, new_temp_dir
+from src.python.review.common.file_system import create_file
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.reviewers.perform_review import OutputFormat
 
@@ -72,6 +72,15 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Typ
                              'is enabled argument will not be used otherwise.')
 
 
+def get_language(lang_key: str) -> LanguageVersion:
+    try:
+        return LanguageVersion(lang_key)
+    except ValueError as e:
+        logger.error(script_structure_rule)
+        # We should raise KeyError since it is incorrect value for key in a column
+        raise KeyError(e)
+
+
 def create_dataframe(config: EvaluationConfig) -> pd.DataFrame:
     report = pd.DataFrame(
         {
@@ -95,35 +104,29 @@ def create_dataframe(config: EvaluationConfig) -> pd.DataFrame:
         for lang, code in zip(lang_code_dataframe[ColumnName.LANG.value],
                               lang_code_dataframe[ColumnName.CODE.value]):
 
-            with new_temp_dir() as create_temp_dir:
-                temp_dir_path = create_temp_dir
-                lang_extension = LanguageVersion.language_by_extension(lang)
-                temp_file_path = os.path.join(temp_dir_path, ('file' + lang_extension))
-                temp_file_path = next(create_file(temp_file_path, code))
+            # Tool does not work correctly with tmp files from <tempfile> module on macOS
+            # thus we create a real file in the file system
+            extension = get_language(lang).extension_by_language().value
+            tmp_file_path = config.xlsx_file_path.parent.absolute() / f'inspected_code{extension}'
+            temp_file = next(create_file(tmp_file_path, code))
 
-                try:
-                    assert os.path.exists(temp_file_path)
-                except AssertionError as e:
-                    logger.exception('Path does not exist.')
-                    raise e
+            command = config.build_command(temp_file, lang)
+            results = run_in_subprocess(command)
+            os.remove(temp_file)
 
-                command = config.build_command(temp_file_path, lang)
-                results = run_in_subprocess(command)
-                os.remove(temp_file_path)
-                temp_dir_path.rmdir()
-                # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
-                grades = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
-                output_row_values = [lang, code, grades]
-                column_indices = [ColumnName.LANGUAGE.value,
-                                  ColumnName.CODE.value,
-                                  ColumnName.GRADE.value]
+            # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
+            grades = re.match(r'^.*{"code":\s"([A-Z]+)"', results).group(1)
+            output_row_values = [lang, code, grades]
+            column_indices = [ColumnName.LANGUAGE.value,
+                              ColumnName.CODE.value,
+                              ColumnName.GRADE.value]
 
-                if config.traceback:
-                    output_row_values.append(results)
-                    column_indices.append(EvaluationArgument.TRACEBACK.value)
+            if config.traceback:
+                output_row_values.append(results)
+                column_indices.append(EvaluationArgument.TRACEBACK.value)
 
-                new_file_report_row = pd.Series(data=output_row_values, index=column_indices)
-                report = report.append(new_file_report_row, ignore_index=True)
+            new_file_report_row = pd.Series(data=output_row_values, index=column_indices)
+            report = report.append(new_file_report_row, ignore_index=True)
 
         return report
 

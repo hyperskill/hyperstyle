@@ -38,6 +38,7 @@ EXPECTED_JSON = {
                     'line_number': 2,
                     'column_number': 5,
                     'category': 'BEST_PRACTICES',
+                    'influence_on_penalty': 0,
                 },
                 {
                     'code': 'W0612',
@@ -46,6 +47,7 @@ EXPECTED_JSON = {
                     'line_number': 3,
                     'column_number': 5,
                     'category': 'BEST_PRACTICES',
+                    'influence_on_penalty': 0,
                 },
                 {
                     'code': 'W0612',
@@ -54,6 +56,7 @@ EXPECTED_JSON = {
                     'line_number': 4,
                     'column_number': 5,
                     'category': 'BEST_PRACTICES',
+                    'influence_on_penalty': 0,
                 },
             ],
         },

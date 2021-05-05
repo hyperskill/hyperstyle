@@ -15,15 +15,18 @@ class QualityType(Enum):
     GOOD = 'GOOD'
     EXCELLENT = 'EXCELLENT'
 
-    def __le__(self, other: 'QualityType') -> bool:
-        order = {
+    def to_number(self) -> int:
+        type_to_number = {
             QualityType.BAD: 0,
             QualityType.MODERATE: 1,
             QualityType.GOOD: 2,
             QualityType.EXCELLENT: 3,
         }
 
-        return order[self] < order[other]
+        return type_to_number.get(self, 3)
+
+    def __le__(self, other: 'QualityType') -> bool:
+        return self.to_number() < other.to_number()
 
 
 class Rule(abc.ABC):

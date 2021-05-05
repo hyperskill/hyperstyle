@@ -83,6 +83,7 @@ writelines
 rmdir
 df
 unique
+Punisher
 # Springlint issues
 cbo
 dit
@@ -91,3 +92,5 @@ noc
 nom
 wmc
 util
+tmp
+Namespace

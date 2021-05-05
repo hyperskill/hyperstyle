@@ -17,19 +17,22 @@ EXPECTED_JSON = {
         'column_number': 2,
         'line': 'a=10',
         'line_number': 1,
-        'text': 'missing whitespace around operator'},
+        'text': 'missing whitespace around operator',
+        'influence_on_penalty': 0},
         {'category': 'CODE_STYLE',
          'code': 'E225',
          'column_number': 2,
          'line': 'b=20',
          'line_number': 2,
-         'text': 'missing whitespace around operator'},
+         'text': 'missing whitespace around operator',
+         'influence_on_penalty': 0},
         {'category': 'CODE_STYLE',
          'code': 'E225',
          'column_number': 2,
          'line': 'c=a + b',
          'line_number': 4,
          'text': 'missing whitespace around operator',
+         'influence_on_penalty': 0,
          },
     ],
 }
@@ -85,6 +88,7 @@ def test_range_filter_when_start_line_is_not_first(
             'line_number': 4,
             'column_number': 2,
             'category': 'CODE_STYLE',
+            'influence_on_penalty': 0,
         }],
     }
 
@@ -153,6 +157,7 @@ def test_range_filter_when_end_line_is_first(
             'line_number': 1,
             'column_number': 2,
             'category': 'CODE_STYLE',
+            'influence_on_penalty': 0,
         }],
     }
 
@@ -219,6 +224,7 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
             'line_number': 2,
             'column_number': 2,
             'category': 'CODE_STYLE',
+            'influence_on_penalty': 0,
         }, {
             'code': 'E225',
             'text': 'missing whitespace around operator',
@@ -226,6 +232,7 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
             'line_number': 4,
             'column_number': 2,
             'category': 'CODE_STYLE',
+            'influence_on_penalty': 0,
         }],
     }
 

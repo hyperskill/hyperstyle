@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import List, Optional, Set
+from typing import Dict, List, Optional, Set
 
 from src.python.review.common.file_system import Extension
 from src.python.review.inspectors.inspector_type import InspectorType
@@ -15,6 +15,7 @@ class ApplicationConfig:
     start_line: int = 1
     end_line: Optional[int] = None
     new_format: bool = False
+    history: Optional[str] = None
 
 
 @unique
@@ -31,14 +32,13 @@ class LanguageVersion(Enum):
         return [member.value for member in cls.__members__.values()]
 
     @classmethod
-    def language_to_extension_dict(cls) -> dict:
-        return {cls.PYTHON_3.value: Extension.PY.value,
-                cls.JAVA_7.value: Extension.JAVA.value,
-                cls.JAVA_8.value: Extension.JAVA.value,
-                cls.JAVA_9.value: Extension.JAVA.value,
-                cls.JAVA_11.value: Extension.JAVA.value,
-                cls.KOTLIN.value: Extension.KT.value}
+    def language_to_extension_dict(cls) -> Dict['LanguageVersion', Extension]:
+        return {cls.PYTHON_3: Extension.PY,
+                cls.JAVA_7: Extension.JAVA,
+                cls.JAVA_8: Extension.JAVA,
+                cls.JAVA_9: Extension.JAVA,
+                cls.JAVA_11: Extension.JAVA,
+                cls.KOTLIN: Extension.KT}
 
-    @classmethod
-    def language_by_extension(cls, lang: str) -> str:
-        return cls.language_to_extension_dict()[lang]
+    def extension_by_language(self) -> Extension:
+        return self.language_to_extension_dict()[self]

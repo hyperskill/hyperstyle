@@ -4,6 +4,7 @@ import logging.config
 import os
 import sys
 import traceback
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Set
 
@@ -103,6 +104,10 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
                         action='store_true',
                         help=tool_arguments.NEW_FORMAT.value.description)
 
+    parser.add_argument(tool_arguments.HISTORY.value.long_name,
+                        help=tool_arguments.HISTORY.value.description,
+                        type=str)
+
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
     if verbosity is VerbosityLevel.ERROR:
@@ -146,6 +151,7 @@ def main() -> int:
             start_line=start_line,
             end_line=args.end_line,
             new_format=args.new_format,
+            history=args.history,
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)
@@ -153,12 +159,19 @@ def main() -> int:
             return 0
 
         return 1
+
     except PathNotExists:
         logger.error('Path not exists')
         return 2
+
     except UnsupportedLanguage:
         logger.error('Unsupported language. Supported ones are Java, Kotlin, Python')
         return 2
+
+    except JSONDecodeError:
+        logger.error('Incorrect JSON')
+        return 2
+
     except Exception:
         traceback.print_exc()
         logger.exception('An unexpected error')

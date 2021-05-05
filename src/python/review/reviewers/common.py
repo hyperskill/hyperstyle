@@ -15,6 +15,7 @@ from src.python.review.inspectors.pylint.pylint import PylintInspector
 from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.quality.evaluate_quality import evaluate_quality
 from src.python.review.quality.model import Quality
+from src.python.review.quality.penalty import categorize, get_previous_issues_by_language, Punisher
 from src.python.review.reviewers.review_result import FileReviewResult, ReviewResult
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
 from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
@@ -64,14 +65,20 @@ def perform_language_review(metadata: Metadata,
     for issue in issues:
         file_path_to_issues[issue.file_path].append(issue)
 
-    file_review_results = []
+    previous_issues = get_previous_issues_by_language(config.history, language)
+    categorize(previous_issues, issues)
+
+    general_punisher = Punisher(issues, previous_issues)
     general_quality = Quality([])
+
+    file_review_results = []
     for file_metadata in files_metadata:
         issues = file_path_to_issues[file_metadata.path]
         code_statistics = gather_code_statistics(issues, file_metadata.path)
         code_statistics.total_lines = min(code_statistics.total_lines,
                                           get_range_lines(config.start_line, config.end_line))
 
+        punisher = Punisher(issues, previous_issues)
         quality = evaluate_quality(code_statistics, language)
         general_quality = general_quality.merge(quality)
 
@@ -79,11 +86,13 @@ def perform_language_review(metadata: Metadata,
             file_metadata.path,
             issues,
             quality,
+            punisher,
         ))
 
     return ReviewResult(
         file_review_results,
         general_quality,
+        general_punisher,
     )
 
 

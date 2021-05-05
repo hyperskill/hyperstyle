@@ -4,7 +4,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Union
+from typing import Callable, List, Tuple, Union
 
 
 @unique
@@ -59,6 +59,10 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
 def new_temp_dir() -> Path:
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
+
+
+def new_temp_file(suffix: Extension = Extension.EMPTY) -> Tuple[str, str]:
+    yield tempfile.mkstemp(suffix=suffix.value)
 
 
 # File should contain the full path and its extension.
