@@ -12,8 +12,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case2_valid_program.kt', 0),
     ('case3_todo.kt', 0),
     ('case4_semicolons.kt', 6),
-    # 2 about * imports, 1 about incorrect order and 1 about an unused import
-    ('case5_imports.kt', 4),
+    ('case5_imports.kt', 3),
     ('case6_missing_spaces.kt', 6),
     ('case8_needless_blank_line.kt', 3),
     ('case9_braces.kt', 3),
@@ -24,8 +23,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case16_redundant_unit.kt', 1),
     ('case18_redundant_braces.kt', 3),
     ('case20_cyclomatic_complexity.kt', 0),
-    # 1 - about arguments, 1 - about * import
-    ('case22_too_many_arguments.kt', 2),
+    ('case22_too_many_arguments.kt', 1),
     ('case23_bad_range_performance.kt', 3),
     ('case24_duplicate_when_bug.kt', 1),
     ('case25_unreachable_code.kt', 3),
