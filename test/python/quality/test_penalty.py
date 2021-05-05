@@ -98,7 +98,7 @@ PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
 def test_get_normalized_penalty_coefficient(penalty_coefficient: float,
                                             current_issues: List[BaseIssue],
                                             normalized_penalty_coefficient):
-    punisher._penalty_coefficient = 8
+    punisher._penalty_coefficient = penalty_coefficient
 
     actual = punisher._get_normalized_penalty_coefficient(current_issues)
 
