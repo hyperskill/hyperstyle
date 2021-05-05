@@ -1,10 +1,15 @@
 from pathlib import Path
+from typing import List, Set
+
+import pytest
 
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
 
-current_issues = [
+punisher = Punisher([], [])
+
+CURRENT_ISSUES = [
     BaseIssue(
         file_path=Path("."),
         line_no=1,
@@ -25,103 +30,76 @@ current_issues = [
     ),
 ]
 
-punisher = Punisher([], [])
+PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES = [
+    ([], [], set()),
+    ([], CURRENT_ISSUES, set()),
+    ([PreviousIssue("WPS301", 50), PreviousIssue("SC200", 10)], [], set()),
+    ([PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, set()),
+    ([PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, {"SC200"}),
+    ([PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], CURRENT_ISSUES, {"SC200", "W0108"}),
+]
 
 
-def test_get_penalizing_classes_empty_previous_issues_empty_current_issues():
-    actual = punisher._get_penalizing_classes([], [])
-
-    assert actual == set()
-
-
-def test_get_penalizing_classes_empty_current_issues():
-    actual = punisher._get_penalizing_classes(current_issues, [])
-
-    assert actual == set()
-
-
-def test_get_penalizing_classes_empty_previous_issues():
-    previous_issues = [PreviousIssue("WPS301", 50), PreviousIssue("SC200", 10)]
-
-    actual = punisher._get_penalizing_classes([], previous_issues)
-    assert actual == set()
-
-
-def test_get_penalizing_classes_empty_intersection():
-    previous_issues = [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)]
-
+@pytest.mark.parametrize(('previous_issues', 'current_issues', 'expected_penalizing_classes'),
+                         PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES)
+def test_get_penalizing_classes(previous_issues: List[PreviousIssue],
+                                current_issues: List[BaseIssue],
+                                expected_penalizing_classes: Set[str]):
     actual = punisher._get_penalizing_classes(current_issues, previous_issues)
-    assert actual == set()
+
+    assert actual == expected_penalizing_classes
 
 
-def test_get_penalizing_classes_non_empty_intersection_1():
-    previous_issues = [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)]
-
-    actual = punisher._get_penalizing_classes(current_issues, previous_issues)
-    assert actual == {"SC200"}
-
-
-def test_get_penalizing_classes_non_empty_intersection_2():
-    previous_issues = [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)]
-
-    actual = punisher._get_penalizing_classes(current_issues, previous_issues)
-    assert actual == {"SC200", "W0108"}
+PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES = [
+    ([], [], []),
+    ([], CURRENT_ISSUES, []),
+    ([PreviousIssue("WPS412", 50), PreviousIssue("WPS412", 10)], [], [None, None]),
+    ([PreviousIssue("WPS412", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, [None, None]),
+    ([PreviousIssue("SC200", 50), PreviousIssue("WPS312", 10)], CURRENT_ISSUES, [IssueType.BEST_PRACTICES, None]),
+    ([PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], CURRENT_ISSUES,
+     [IssueType.BEST_PRACTICES, IssueType.CODE_STYLE]),
+]
 
 
-def test_get_penalizing_classes_categorize_different_issues():
-    previous_issues = [PreviousIssue("WPS412", 50), PreviousIssue("WPS412", 10)]
-
+@pytest.mark.parametrize(('previous_issues', 'current_issues', 'expected_categories'),
+                         PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES)
+def test_categorize(previous_issues: List[PreviousIssue],
+                    current_issues: List[BaseIssue],
+                    expected_categories: List[IssueType]):
     categorize(previous_issues, current_issues)
 
-    for issue in previous_issues:
-        assert issue.category is None
+    for issue, expected_category in zip(previous_issues, expected_categories):
+        assert issue.category == expected_category
 
 
-def test_get_penalizing_classes_same_issues_1():
-    previous_issues = [PreviousIssue("SC200", 50), PreviousIssue("WPS312", 10)]
-
-    categorize(previous_issues, current_issues)
-
-    assert previous_issues[0].category == IssueType.BEST_PRACTICES
-    assert previous_issues[1].category is None
+ISSUE_CLASS_EXPECTED_INFLUENCE = [
+    ("SC200", 63),
+    ("Q146", 0)
+]
 
 
-def test_get_penalizing_classes_same_issues_2():
-    previous_issues = [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)]
-
-    categorize(previous_issues, current_issues)
-
-    assert previous_issues[0].category == IssueType.BEST_PRACTICES
-    assert previous_issues[1].category == IssueType.CODE_STYLE
-
-
-def test_get_issue_influence_on_penalty_repeated_issue():
+@pytest.mark.parametrize(('issue_class', 'expected_influence'), ISSUE_CLASS_EXPECTED_INFLUENCE)
+def test_get_issue_influence_on_penalty(issue_class: str, expected_influence: int):
     punisher._issue_class_to_influence = {"SC200": 0.636, "WPS312": 0.1225}
 
-    actual = punisher.get_issue_influence_on_penalty("SC200")
+    actual = punisher.get_issue_influence_on_penalty(issue_class)
 
-    assert actual == 63
-
-
-def test_get_issue_influence_on_penalty_not_repeater_issue():
-    punisher._issue_class_to_influence = {"SC200": 0.636, "WPS312": 0.1225}
-
-    actual = punisher.get_issue_influence_on_penalty("Q146")
-
-    assert actual == 0
+    assert actual == expected_influence
 
 
-def test_get_normalized_penalty_coefficient_empty_current_issues():
-    punisher._penalty_coefficient = 8
-
-    actual = punisher._get_normalized_penalty_coefficient([])
-
-    assert actual == 0
+PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
+    (8, [], 0),
+    (8, CURRENT_ISSUES, 0.8)
+]
 
 
-def test_get_normalized_penalty_coefficient_non_empty_current_issues():
+@pytest.mark.parametrize(('penalty_coefficient', 'current_issues', 'normalized_penalty_coefficient'),
+                         PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT)
+def test_get_normalized_penalty_coefficient(penalty_coefficient: float,
+                                            current_issues: List[BaseIssue],
+                                            normalized_penalty_coefficient):
     punisher._penalty_coefficient = 8
 
     actual = punisher._get_normalized_penalty_coefficient(current_issues)
 
-    assert actual == 0.8
+    assert actual == normalized_penalty_coefficient
