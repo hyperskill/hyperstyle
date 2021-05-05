@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List, Set
 
 import pytest
-
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
@@ -74,7 +73,7 @@ def test_categorize(previous_issues: List[PreviousIssue],
 
 ISSUE_CLASS_EXPECTED_INFLUENCE = [
     ("SC200", 63),
-    ("Q146", 0)
+    ("Q146", 0),
 ]
 
 
@@ -89,7 +88,7 @@ def test_get_issue_influence_on_penalty(issue_class: str, expected_influence: in
 
 PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
     (8, [], 0),
-    (8, CURRENT_ISSUES, 0.8)
+    (8, CURRENT_ISSUES, 0.8),
 ]
 
 
