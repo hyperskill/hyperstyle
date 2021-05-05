@@ -23,7 +23,7 @@ class QualityType(Enum):
             QualityType.EXCELLENT: 3,
         }
 
-        return type_to_number.get(self, QualityType.EXCELLENT)
+        return type_to_number.get(self, 3)
 
     def __le__(self, other: 'QualityType') -> bool:
         return self.to_number() < other.to_number()
