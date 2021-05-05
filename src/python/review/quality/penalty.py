@@ -79,6 +79,12 @@ def categorize(previous_issues: List[PreviousIssue], current_issues: List[BaseIs
 
 
 class Punisher:
+    """
+    Punisher with the list of previous issues and current issues allows you to use the 'get_quality_with_penalty'
+    function to get quality including the penalty for previous issues and use the 'get_issue_influence_on_penalty'
+    function to get the influence of an issues on reducing the quality score.
+    """
+
     _penalty_coefficient: float
     _normalized_penalty_coefficient: float
     _issue_class_to_influence: Dict[str, float]
