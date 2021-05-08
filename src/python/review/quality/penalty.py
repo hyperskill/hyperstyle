@@ -8,23 +8,23 @@ from src.python.review.quality.model import QualityType
 
 # TODO: need testing
 ISSUE_TYPE_TO_PENALTY_COEFFICIENT = {
-    IssueType.COHESION: 1,
-    IssueType.COUPLING: 1,
-    IssueType.FUNC_LEN: 1,
+    IssueType.COHESION: 0.6,
+    IssueType.COUPLING: 0.6,
+    IssueType.FUNC_LEN: 0.6,
     IssueType.LINE_LEN: 1,
-    IssueType.ARCHITECTURE: 1,
-    IssueType.BEST_PRACTICES: 1,
-    IssueType.BOOL_EXPR_LEN: 1,
-    IssueType.CHILDREN_NUMBER: 1,
-    IssueType.CLASS_RESPONSE: 1,
+    IssueType.ARCHITECTURE: 1,  # TODO: Change the coefficient when the tool can find this type of issues
+    IssueType.BEST_PRACTICES: 0.9,
+    IssueType.BOOL_EXPR_LEN: 0.6,
+    IssueType.CHILDREN_NUMBER: 0.2,
+    IssueType.CLASS_RESPONSE: 0.2,
     IssueType.CODE_STYLE: 1,
-    IssueType.COMPLEXITY: 1,
-    IssueType.CYCLOMATIC_COMPLEXITY: 1,
-    IssueType.ERROR_PRONE: 1,
-    IssueType.INHERITANCE_DEPTH: 1,
-    IssueType.MAINTAINABILITY: 1,
-    IssueType.METHOD_NUMBER: 1,
-    IssueType.WEIGHTED_METHOD: 1,
+    IssueType.COMPLEXITY: 0.5,
+    IssueType.CYCLOMATIC_COMPLEXITY: 0.7,
+    IssueType.ERROR_PRONE: 0.6,
+    IssueType.INHERITANCE_DEPTH: 0.2,
+    IssueType.MAINTAINABILITY: 0.3,
+    IssueType.METHOD_NUMBER: 0.2,
+    IssueType.WEIGHTED_METHOD: 0.2,
 }
 
 
@@ -172,18 +172,20 @@ class Punisher:
                                       current_issues: List[BaseIssue],
                                       previous_issues: List[PreviousIssue]) -> Dict[str, float]:
         """
-        For each issue, the corresponding influence on penalty is calculated.
+        For each issue to be penalized, the corresponding influence on penalty is calculated.
+
         To do this, for each issue we count its penalty coefficient, normalize it,
         and divide the resulting number by the total normalized penalty coefficient.
         """
 
+        penalizing_classes = self._get_penalizing_classes(current_issues, previous_issues)
+        penalizing_issues = list(filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues))
+
         result = {}
-        for issue in previous_issues:
-            influence = 0
-            if current_issues:
-                issue_coefficient = ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
-                normalized_issue_coefficient = issue_coefficient / (self._penalty_coefficient + len(current_issues))
-                influence = normalized_issue_coefficient / self._normalized_penalty_coefficient
+        for issue in penalizing_issues:
+            issue_coefficient = ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
+            normalized_issue_coefficient = issue_coefficient / (self._penalty_coefficient + len(current_issues))
+            influence = normalized_issue_coefficient / self._normalized_penalty_coefficient
 
             result[issue.origin_class] = influence
 
