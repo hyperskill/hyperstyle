@@ -52,8 +52,8 @@ def test_get_penalizing_classes(previous_issues: List[PreviousIssue],
 PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES = [
     ([], [], []),
     ([], CURRENT_ISSUES, []),
-    ([PreviousIssue("WPS412", 50), PreviousIssue("WPS412", 10)], [], [None, None]),
-    ([PreviousIssue("WPS412", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, [None, None]),
+    ([PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], [], [None, None]),
+    ([PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, [None, None]),
     ([PreviousIssue("SC200", 50), PreviousIssue("WPS312", 10)], CURRENT_ISSUES, [IssueType.BEST_PRACTICES, None]),
     ([PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], CURRENT_ISSUES,
      [IssueType.BEST_PRACTICES, IssueType.CODE_STYLE]),
@@ -102,3 +102,55 @@ def test_get_normalized_penalty_coefficient(penalty_coefficient: float,
     actual = punisher._get_normalized_penalty_coefficient(current_issues)
 
     assert actual == normalized_penalty_coefficient
+
+
+CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT = [
+    ([], [], 0),
+    (CURRENT_ISSUES, [], 0),
+    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS123", 10)], 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS123", 10)], 45),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 45 + 10),
+]
+
+
+@pytest.mark.parametrize(('current_issues', 'previous_issues', 'expected_coefficient'),
+                         CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT)
+def test_get_penalty_coefficient(current_issues: List[BaseIssue],
+                                 previous_issues: List[PreviousIssue],
+                                 expected_coefficient: float):
+    categorize(previous_issues, current_issues)
+    actual = punisher._get_penalty_coefficient(current_issues, previous_issues)
+
+    assert actual == expected_coefficient
+
+
+CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE = [
+    ([], [], 'WPS312', 0),
+    (CURRENT_ISSUES, [], 'WPS312', 0),
+    (CURRENT_ISSUES, [], 'SC200', 0),
+    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS312', 0),
+    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS312', 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'SC200', 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'SC200', 100),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'WPS412', 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'WPS301', 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'SC200', 81),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'W0108', 18),
+]
+
+
+@pytest.mark.parametrize(('current_issues', 'previous_issues', 'issue_class', 'expected_influence'),
+                         CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE)
+def test_get_issue_class_to_influence(current_issues: List[BaseIssue],
+                                      previous_issues: List[PreviousIssue],
+                                      issue_class: str,
+                                      expected_influence: int):
+    categorize(previous_issues, current_issues)
+    punisher = Punisher(current_issues, previous_issues)
+    actual = punisher.get_issue_influence_on_penalty(issue_class)
+
+    assert actual == expected_influence
