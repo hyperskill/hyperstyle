@@ -16,11 +16,12 @@ class ColumnName(Enum):
 class EvaluationArgument(Enum):
     TRACEBACK = "traceback"
     RESULT_FILE_NAME = "results"
-    RESULT_FILE_NAME_EXT = f"{RESULT_FILE_NAME}{Extension.XLSX.value}"
+    RESULT_FILE_NAME_XLSX = f"{RESULT_FILE_NAME}{Extension.XLSX.value}"
+    RESULT_FILE_NAME_CSV = f"{RESULT_FILE_NAME}{Extension.CSV.value}"
 
 
 script_structure_rule = ("Please, make sure your XLSX-file matches following script standards: \n"
-                         "1. Your XLSX-file should have 2 obligatory columns named:"
+                         "1. Your XLSX-file or CSV-file should have 2 obligatory columns named:"
                          f"'{ColumnName.CODE.value}' & '{ColumnName.LANG.value}'. \n"
                          f"'{ColumnName.CODE.value}' column -- relates to the code-sample. \n"
                          f"'{ColumnName.LANG.value}' column -- relates to the language of a "

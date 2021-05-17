@@ -30,6 +30,13 @@ class Extension(Enum):
     JS = '.js'
     KTS = '.kts'
     XLSX = '.xlsx'
+    CSV = '.csv'
+
+    # Not empty extensions are returned with a dot, for example, '.txt'
+    # If file has no extensions, an empty one ('') is returned
+    @classmethod
+    def get_extension_from_file(cls, file: str) -> 'Extension':
+        return Extension(os.path.splitext(file)[1])
 
 
 ItemCondition = Callable[[str], bool]
