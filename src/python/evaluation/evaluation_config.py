@@ -6,7 +6,8 @@ from typing import List, Union
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import EvaluationArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_directory, Extension
+from src.python.review.common.file_system import create_directory, Extension, get_restricted_extension, \
+    get_parent_folder
 
 logger = logging.getLogger(__name__)
 
@@ -19,17 +20,7 @@ class EvaluationConfig:
         self.traceback: bool = args.traceback
         self.output_folder_path: Union[str, Path] = args.output_folder_path
         self.output_file_name: str = args.output_file_name
-        self.extension: Extension = self.__get_extension()
-
-    def __get_extension(self) -> Extension:
-        if self.solutions_file_path is None:
-            return Extension.EMPTY
-        ext = Extension.get_extension_from_file(self.solutions_file_path)
-        available_values = [Extension.XLSX, Extension.CSV]
-        if ext not in available_values:
-            raise ValueError(f'Invalid extension. '
-                             f'Available values are: {list(map(lambda e: e.value, available_values))}.')
-        return ext
+        self.extension: Extension = get_restricted_extension(self.solutions_file_path, [Extension.XLSX, Extension.CSV])
 
     def build_command(self, inspected_file_path: Union[str, Path], lang: str) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,
@@ -44,9 +35,7 @@ class EvaluationConfig:
     def get_output_file_path(self) -> Path:
         if self.output_folder_path is None:
             try:
-                self.output_folder_path = (
-                        Path(self.solutions_file_path).parent.parent / EvaluationArgument.RESULT_FILE_NAME.value
-                )
+                self.output_folder_path = get_parent_folder(Path(self.solutions_file_path))
                 create_directory(self.output_folder_path)
             except FileNotFoundError as e:
                 logger.error('XLSX-file or CSV-file with the specified name does not exists.')

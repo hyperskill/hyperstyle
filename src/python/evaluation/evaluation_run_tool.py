@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Type
 
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -16,7 +17,7 @@ import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
 from src.python.evaluation.common.xlsx_util import (
-    create_and_get_workbook_path,
+    create_workbook,
     remove_sheet,
     write_dataframe_to_xlsx_sheet,
 )
@@ -29,16 +30,10 @@ from src.python.review.reviewers.perform_review import OutputFormat
 logger = logging.getLogger(__name__)
 
 
-def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Type[RunToolArgument]) -> None:
-    parser.add_argument('solutions_file_path',
+def configure_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(RunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help='Local XLSX-file or CSV-file path. '
-                             'Your file must include column-names: '
-                             f'"{ColumnName.CODE.value}" and '
-                             f'"{ColumnName.LANG.value}". Acceptable values for '
-                             f'"{ColumnName.LANG.value}" column are: '
-                             f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
-                             f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
+                        help=RunToolArgument.SOLUTIONS_FILE_PATH.value.description)
 
     parser.add_argument('-tp', '--tool-path',
                         default=Path('src/python/review/run_tool.py').absolute(),
@@ -54,7 +49,7 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Typ
                         help='An absolute path to the folder where file with evaluation results'
                              'will be stored.'
                              'Default is the path to a directory, where is the folder with xlsx or csv file.',
-                        # if None default path will be specified based on xlsx_file_path.
+                        # if None default path will be specified based on solutions_file_path.
                         default=None,
                         type=str)
 
@@ -64,12 +59,12 @@ def configure_arguments(parser: argparse.ArgumentParser, run_tool_arguments: Typ
                         default=f'{EvaluationArgument.RESULT_FILE_NAME_XLSX.value}',
                         type=str)
 
-    parser.add_argument(run_tool_arguments.FORMAT.value.short_name,
-                        run_tool_arguments.FORMAT.value.long_name,
+    parser.add_argument(RunToolArgument.FORMAT.value.short_name,
+                        RunToolArgument.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=f'{run_tool_arguments.FORMAT.value.description}'
+                        help=f'{RunToolArgument.FORMAT.value.description}'
                              f'Use this argument when {EvaluationArgument.TRACEBACK.value} argument'
                              'is enabled argument will not be used otherwise.')
 
@@ -135,39 +130,16 @@ def inspect_solutions_df(config: EvaluationConfig, inspect_solutions_df: pd.Data
         raise e
 
 
-def get_solutions_df(config: EvaluationConfig) -> pd.DataFrame:
-    try:
-        if config.extension == Extension.XLSX:
-            lang_code_dataframe = pd.read_excel(config.solutions_file_path)
-        else:
-            lang_code_dataframe = pd.read_csv(config.solutions_file_path)
-    except FileNotFoundError as e:
-        logger.error('XLSX-file or CSV-file with the specified name does not exists.')
-        raise e
-
-    return lang_code_dataframe
-
-
-def write_df_to_file(df: pd.DataFrame, config: EvaluationConfig) -> None:
-    if config.extension == Extension.CSV:
-        write_dataframe_to_csv(config.get_output_file_path(), df)
-    elif config.extension == Extension.XLSX:
-        workbook_path = create_and_get_workbook_path(config)
-        write_dataframe_to_xlsx_sheet(workbook_path, df, 'inspection_results')
-        # remove empty sheet that was initially created with the workbook
-        remove_sheet(workbook_path, 'Sheet')
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
-    configure_arguments(parser, RunToolArgument)
+    configure_arguments(parser)
 
     try:
         args = parser.parse_args()
         config = EvaluationConfig(args)
-        lang_code_dataframe = get_solutions_df(config)
+        lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
         results = inspect_solutions_df(config, lang_code_dataframe)
-        write_df_to_file(results, config)
+        write_df_to_file(results, config.get_output_file_path(), config.extension)
         return 0
 
     except FileNotFoundError:

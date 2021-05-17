@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List, Optional
 
+from src.python.evaluation.common.util import ColumnName
 from src.python.review.application_config import LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -76,3 +77,12 @@ class RunToolArgument(Enum):
     HISTORY = ArgumentsInfo(None, '--history',
                             'Json string, which contains lists of issues in the previous submissions '
                             'for other tasks for one user.')
+
+    SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
+                                        'Local XLSX-file or CSV-file path. '
+                                        'Your file must include column-names: '
+                                        f'"{ColumnName.CODE.value}" and '
+                                        f'"{ColumnName.LANG.value}". Acceptable values for '
+                                        f'"{ColumnName.LANG.value}" column are: '
+                                        f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
+                                        f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')

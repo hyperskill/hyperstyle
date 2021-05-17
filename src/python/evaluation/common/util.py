@@ -33,3 +33,4 @@ script_structure_rule = ("Please, make sure your XLSX-file matches following scr
                          f"Acceptable language-names are: {LanguageVersion.PYTHON_3.value}, "
                          f"{LanguageVersion.JAVA_8.value} ,"
                          f"{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.")
+

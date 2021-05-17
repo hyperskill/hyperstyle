@@ -4,7 +4,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Tuple, Union
+from typing import Callable, List, Tuple, Union, Optional
 
 
 @unique
@@ -83,7 +83,7 @@ def create_file(file_path: Union[str, Path], content: str):
         yield Path(file_path)
 
 
-def create_directory(directory: str) -> None:
+def create_directory(directory: Union[str, Path]) -> None:
     os.makedirs(directory, exist_ok=True)
 
 
@@ -105,3 +105,31 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
 # If file has no extensions, an empty one ('') is returned
 def get_extension_from_file(file: Path) -> Extension:
     return Extension(os.path.splitext(file)[1])
+
+
+def get_restricted_extension(file_path: Optional[Union[str, Path]] = None, available_values: List[Extension] = None) -> Extension:
+    if file_path is None:
+        return Extension.EMPTY
+    ext = Extension.get_extension_from_file(file_path)
+    if available_values is not None and ext not in available_values:
+        raise ValueError(f'Invalid extension. '
+                         f'Available values are: {list(map(lambda e: e.value, available_values))}.')
+    return ext
+
+
+def remove_slash(path: str) -> str:
+    return path.rstrip('/')
+
+
+def add_slash(path: str) -> str:
+    if not path.endswith('/'):
+        path += '/'
+    return path
+
+
+def get_parent_folder(path: Path, to_add_slash: bool = False) -> Path:
+    path = remove_slash(str(path))
+    parent_folder = '/'.join(path.split('/')[:-1])
+    if to_add_slash:
+        parent_folder = add_slash(parent_folder)
+    return Path(parent_folder)
