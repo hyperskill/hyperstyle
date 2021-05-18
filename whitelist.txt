@@ -94,3 +94,6 @@ wmc
 util
 tmp
 Namespace
+pandarallel
+isin
+loc

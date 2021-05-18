@@ -30,6 +30,6 @@ Argument | Description
 --- | ---
 |**&#8209;f**, **&#8209;&#8209;format**| The output format. Available values: `json`, `text`. The default value is `json` . Use this argument when `traceback` is enabled, otherwise it will not be used.|
 |**&#8209;tp**, **&#8209;&#8209;tool_path**| Path to run-tool. Default is `src/python/review/run_tool.py` .|
-|**&#8209;tr**, **&#8209;&#8209;traceback**| To include a column with errors traceback into an output file. Default is `False`.|
-|**&#8209;ofp**, **&#8209;&#8209;output_folder_path**| An explicit folder path to store file with results. Default is a parent directory of a folder with xlsx-file sent for inspection. |
+|**&#8209;&#8209;traceback**| To include a column with errors traceback into an output file. Default is `False`.|
+|**&#8209;ofp**, **&#8209;&#8209;output_folder_path**| An explicit folder path to store file with results. Default is a parent directory of a folder with xlsx-file or csv-file sent for inspection. |
 |**&#8209;ofn**, **&#8209;&#8209;output_file_name**| A name of an output file where evaluation results will be stored. Default is `results.xlsx` or `results.csv`.|

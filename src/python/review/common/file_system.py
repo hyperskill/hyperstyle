@@ -4,7 +4,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Tuple, Union, Optional
+from typing import Callable, List, Optional, Tuple, Union
 
 
 @unique
@@ -107,7 +107,8 @@ def get_extension_from_file(file: Path) -> Extension:
     return Extension(os.path.splitext(file)[1])
 
 
-def get_restricted_extension(file_path: Optional[Union[str, Path]] = None, available_values: List[Extension] = None) -> Extension:
+def get_restricted_extension(file_path: Optional[Union[str, Path]] = None,
+                             available_values: List[Extension] = None) -> Extension:
     if file_path is None:
         return Extension.EMPTY
     ext = Extension.get_extension_from_file(file_path)

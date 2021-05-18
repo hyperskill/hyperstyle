@@ -1,12 +1,11 @@
 import logging
 from pathlib import Path
-from typing import List, Union, Set
+from typing import Set, Union
 
 import pandas as pd
-
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.common.xlsx_util import create_workbook, write_dataframe_to_xlsx_sheet, remove_sheet
+from src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
 
@@ -16,6 +15,10 @@ logger = logging.getLogger(__name__)
 def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],
                           column: str = ColumnName.LANG.value) -> pd.DataFrame:
     return df.loc[df[column].isin(set(map(lambda l: l.value, languages)))]
+
+
+def drop_duplicates(df: pd.DataFrame, column: str = ColumnName.CODE.value) -> pd.DataFrame:
+    return df.drop_duplicates(column, keep='last')
 
 
 def get_solutions_df(ext: Extension, file_path: Union[str, Path]) -> pd.DataFrame:

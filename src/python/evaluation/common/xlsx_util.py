@@ -4,7 +4,6 @@ from typing import Union
 
 import pandas as pd
 from openpyxl import load_workbook, Workbook
-from src.python.evaluation.evaluation_config import EvaluationConfig
 
 logger = logging.getLogger(__name__)
 

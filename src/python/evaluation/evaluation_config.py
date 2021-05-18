@@ -1,13 +1,17 @@
 import logging.config
 from argparse import Namespace
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
 
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import EvaluationArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_directory, Extension, get_restricted_extension, \
-    get_parent_folder
+from src.python.review.common.file_system import (
+    create_directory,
+    Extension,
+    get_parent_folder,
+    get_restricted_extension,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +23,14 @@ class EvaluationConfig:
         self.solutions_file_path: Union[str, Path] = args.solutions_file_path
         self.traceback: bool = args.traceback
         self.output_folder_path: Union[str, Path] = args.output_folder_path
-        self.output_file_name: str = args.output_file_name
         self.extension: Extension = get_restricted_extension(self.solutions_file_path, [Extension.XLSX, Extension.CSV])
+        self.__init_output_file_name(args.output_file_name)
+
+    def __init_output_file_name(self, output_file_name: Optional[str]):
+        if output_file_name is None:
+            self.output_file_name = f'{EvaluationArgument.RESULT_FILE_NAME.value}{self.extension.value}'
+        else:
+            self.output_file_name = output_file_name
 
     def build_command(self, inspected_file_path: Union[str, Path], lang: str) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,

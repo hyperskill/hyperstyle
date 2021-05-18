@@ -10,12 +10,13 @@ class ColumnName(Enum):
     LANG = "lang"
     LANGUAGE = "language"
     GRADE = "grade"
+    ID = "id"
 
 
 @unique
 class EvaluationArgument(Enum):
     TRACEBACK = "traceback"
-    RESULT_FILE_NAME = "results"
+    RESULT_FILE_NAME = "evaluation_results"
     RESULT_FILE_NAME_XLSX = f"{RESULT_FILE_NAME}{Extension.XLSX.value}"
     RESULT_FILE_NAME_CSV = f"{RESULT_FILE_NAME}{Extension.CSV.value}"
 
@@ -33,4 +34,3 @@ script_structure_rule = ("Please, make sure your XLSX-file matches following scr
                          f"Acceptable language-names are: {LanguageVersion.PYTHON_3.value}, "
                          f"{LanguageVersion.JAVA_8.value} ,"
                          f"{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.")
-

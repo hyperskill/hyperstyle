@@ -1,12 +1,11 @@
 import argparse
-import enum
 import logging.config
 import os
 import sys
 import traceback
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Set, Type
+from typing import Set
 
 sys.path.append('')
 sys.path.append('../../..')

@@ -4,7 +4,7 @@ from test.python.evaluation.testing_config import get_testing_arguments
 import pandas as pd
 import pytest
 from src.python.evaluation.evaluation_config import EvaluationConfig
-from src.python.evaluation.evaluation_run_tool import inspect_solutions_df, get_solutions_df
+from src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 
 FILE_NAMES = [
     ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),
@@ -22,7 +22,7 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
     testing_arguments_dict.traceback = output_type
 
     config = EvaluationConfig(testing_arguments_dict)
-    lang_code_dataframe = get_solutions_df(config)
+    lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
     test_dataframe = inspect_solutions_df(config, lang_code_dataframe)
 
     sheet_name = 'grades'
@@ -30,4 +30,4 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
         sheet_name = 'traceback'
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
 
-    assert test_dataframe.reset_index(drop=True).equals(target_dataframe.reset_index(drop=True))
+    assert target_dataframe.reset_index(drop=True).equals(test_dataframe.reset_index(drop=True))
