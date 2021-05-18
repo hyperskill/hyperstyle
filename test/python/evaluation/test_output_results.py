@@ -1,3 +1,4 @@
+from test.python.common_util import equal_df
 from test.python.evaluation import TARGET_XLSX_DATA_FOLDER, XLSX_DATA_FOLDER
 from test.python.evaluation.testing_config import get_testing_arguments
 
@@ -30,4 +31,4 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
         sheet_name = 'traceback'
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
 
-    assert target_dataframe.reset_index(drop=True).equals(test_dataframe.reset_index(drop=True))
+    assert equal_df(target_dataframe, test_dataframe)

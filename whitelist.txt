@@ -98,3 +98,4 @@ pandarallel
 isin
 loc
 uniq
+fullmatch

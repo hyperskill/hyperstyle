@@ -1,5 +1,6 @@
 import linecache
 import os
+import re
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
@@ -59,6 +60,35 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
             if item_condition(item):
                 items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
     return items
+
+
+def match_condition(regex: str) -> ItemCondition:
+    def does_name_match(name: str) -> bool:
+        return re.fullmatch(regex, name) is not None
+    return does_name_match
+
+
+# For getting name of the last folder or file
+# For example, returns 'folder' for both 'path/data/folder' and 'path/data/folder/'
+def get_name_from_path(path: str, with_extension: bool = True) -> str:
+    head, tail = os.path.split(path)
+    # Tail can be empty if '/' is at the end of the path
+    file_name = tail or os.path.basename(head)
+    if not with_extension:
+        file_name = os.path.splitext(file_name)[0]
+    elif get_extension_from_file(Path(file_name)) == Extension.EMPTY:
+        raise ValueError('Cannot get file name with extension, because the passed path does not contain it')
+    return file_name
+
+
+def pair_in_and_out_files(in_files: List[Path], out_files: List[Path]) -> List[Tuple[Path, Path]]:
+    pairs = []
+    for in_file in in_files:
+        out_file = Path(re.sub(r'in(?=[^in]*$)', 'out', str(in_file)))
+        if out_file not in out_files:
+            raise ValueError(f'List of out files does not contain a file for {in_file}')
+        pairs.append((in_file, out_file))
+    return pairs
 
 
 # TODO: Need testing
