@@ -7,7 +7,7 @@ from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import Extension
+from src.python.review.common.file_system import Extension, get_restricted_extension
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +32,11 @@ def get_solutions_df(ext: Extension, file_path: Union[str, Path]) -> pd.DataFram
         raise e
 
     return lang_code_dataframe
+
+
+def get_solutions_df_by_file_path(path: Path) -> pd.DataFrame:
+    ext = get_restricted_extension(path, [Extension.XLSX, Extension.CSV])
+    return get_solutions_df(ext, path)
 
 
 def write_df_to_file(df: pd.DataFrame, output_file_path: Path, extension: Extension) -> None:

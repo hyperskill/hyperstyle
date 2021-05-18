@@ -1,6 +1,5 @@
 import argparse
 import logging
-import sys
 from pathlib import Path
 from typing import Set
 
@@ -41,28 +40,21 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         action='store_true')
 
 
-# TODO: add readme
-def main() -> int:
-    try:
-        parser = argparse.ArgumentParser()
-        configure_arguments(parser)
-        args = parser.parse_args()
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    configure_arguments(parser)
+    args = parser.parse_args()
 
-        solutions_file_path = args.solutions_file_path
-        ext = get_restricted_extension(solutions_file_path, [Extension.XLSX, Extension.CSV])
-        solutions_df = get_solutions_df(ext, args.solutions_file_path)
+    solutions_file_path = args.solutions_file_path
+    ext = get_restricted_extension(solutions_file_path, [Extension.XLSX, Extension.CSV])
+    solutions_df = get_solutions_df(ext, solutions_file_path)
 
-        filtered_df = filter_df_by_language(solutions_df, args.languages)
-        if args.duplicates:
-            filtered_df = drop_duplicates(filtered_df)
-        output_path = get_parent_folder(Path(solutions_file_path))
-        write_df_to_file(filtered_df, output_path / f'filtered_solutions{ext.value}', ext)
-        return 0
-
-    except Exception:
-        logger.exception('An unexpected error.')
-        return 2
+    filtered_df = filter_df_by_language(solutions_df, args.languages)
+    if args.duplicates:
+        filtered_df = drop_duplicates(filtered_df)
+    output_path = get_parent_folder(Path(solutions_file_path))
+    write_df_to_file(filtered_df, output_path / f'filtered_solutions{ext.value}', ext)
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()

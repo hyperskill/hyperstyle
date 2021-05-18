@@ -1,6 +1,6 @@
 # Hyperstyle evaluation
 
-This tool allows running the `Hyperstyle` tool on a xlsx or csv table to get code quality for all code fragments. 
+This tool allows running the `Hyperstyle` tool on a `xlsx` or `csv` table to get code quality for all code fragments. 
 Please, note that your input file should consist of at least 2 obligatory columns to run the tool on its code fragments:
 
 - `code`
@@ -8,13 +8,13 @@ Please, note that your input file should consist of at least 2 obligatory column
 
 Possible values for column `lang` are: `python3`, `kotlin`, `java8`, `java11`.
 
-Output file is a new `xlsx` or `csv` file with 3 columns:
-- `code`
-- `lang`
+Output file is a new `xlsx` or `csv` file with the all columns from the input file and two additional ones:
 - `grade`
+- `traceback` (optional)
+
 Grade assessment is conducted by [`run_tool.py`](https://github.com/hyperskill/hyperstyle/blob/main/README.md) with default arguments. 
   Avaliable values for column  `grade` are: BAD, MODERATE, GOOD, EXCELLENT. 
-  It is also possible add fourth column: `traceback` to get full inspectors feedback on each code fragment. 
+  `traceback` column stores full inspectors feedback on each code fragment. 
   More details on enabling traceback column in **Optional Arguments** table.
 
 ## Usage
@@ -23,7 +23,7 @@ Run the [evaluation_run_tool.py](evaluation_run_tool.py) with the arguments from
 
 Required arguments:
 
-`solutions_file_path` — path to xlsx-file with code samples to inspect.
+`solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
 
 Optional arguments:
 Argument | Description
