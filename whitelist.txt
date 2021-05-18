@@ -94,3 +94,14 @@ wmc
 util
 tmp
 Namespace
+dataset
+qodana
+listdir
+numpy
+concat
+loc
+copytree
+iterrows
+nrows
+groupby
+getuid
