@@ -25,27 +25,41 @@ logging.basicConfig(level=logging.INFO)
 
 
 def configure_arguments(parser: ArgumentParser) -> None:
-    parser.add_argument("dataset_path", type=lambda value: Path(value).absolute(), help="Path to dataset")  # TODO
-
     parser.add_argument(
-        "inspections_output",
+        "dataset_path",
         type=lambda value: Path(value).absolute(),
-        help="The path where the id of the inspections will be saved",
+        help=f"Dataset path. The dataset must contain at least three columns: 'id', 'code' and 'lang', where 'id' "
+             f"is a unique solution number, 'lang' is the language in which the code is written in the 'code' column. "
+             f"The 'lang' must belong to one of the following values: {LanguageVersion.values()}. "
+             f"If 'lang' is not equal to any of the values, the row will be skipped.",
     )
 
-    parser.add_argument("-c", "--config", type=lambda value: Path(value).absolute(), help="Path to qodana.yaml")  # TODO
+    parser.add_argument(
+        "inspections_output_path",
+        type=lambda value: Path(value).absolute(),
+        help="Path where id of all found inspections will be saved.",
+    )
 
-    parser.add_argument("-l", "--limit", type=positive_int, help="dataset head limit. ONLY FOR DEBUG")  # TODO
+    parser.add_argument("-c", "--config", type=lambda value: Path(value).absolute(), help="Path to qodana.yaml")
 
-    parser.add_argument("-s", "--chunk-size", type=positive_int, help="The size of the chunk")  # TODO
+    parser.add_argument(
+        "-l",
+        "--limit",
+        type=positive_int,
+        help="Allows you to read only the specified number of first rows from the dataset.",
+    )
+
+    parser.add_argument(
+        "-s", "--chunk-size", type=positive_int, help="The number of files that qodana will process at a time.",
+    )
 
     parser.add_argument(
         "-o",
-        "--dataset-output",
+        "--dataset-output-path",
         type=lambda value: Path(value).absolute(),
-        help="The path where the tagged dataset will be saved. "
-             "If not specified, the original dataset will be overwritten",
-    )  # TODO
+        help="The path where the marked dataset will be saved. "
+             "If not specified, the original dataset will be overwritten.",
+    )
 
 
 @dataclass(init=False)
@@ -59,17 +73,14 @@ class InspectionData:
         return self.package
 
 
-IGNORE = [LanguageVersion.KOTLIN.value, LanguageVersion.PYTHON_3.value]
-
-
 class DatasetMarker:
     dataset_path: Path
     config: Optional[Path]
     limit: Optional[int]
     chunk_size: Optional[int]
     inspection_to_id: Dict[str, int]
-    dataset_output: Path
-    inspections_output: Path
+    dataset_output_path: Path
+    inspections_output_path: Path
 
     def __init__(self, args: Namespace):
         self.dataset_path = args.dataset_path
@@ -77,49 +88,51 @@ class DatasetMarker:
         self.limit = args.limit
         self.chunk_size = args.chunk_size
 
-        self.dataset_output = self.dataset_path
-        if args.dataset_output is not None:
-            self.dataset_output = args.dataset_output
+        self.dataset_output_path = self.dataset_path
+        if args.dataset_output_path is not None:
+            self.dataset_output_path = args.dataset_output_path
 
-        self.inspections_output = args.inspections_output
+        self.inspections_output_path = args.inspections_output_path
 
         self.inspection_to_id = {}
 
     def mark(self):
         df = pd.read_csv(self.dataset_path, index_col="id", nrows=self.limit)
 
-        grouped_df = df.groupby("lang")
+        group_by_lang = df.groupby("lang")
         unique_languages = df["lang"].unique()
 
         logger.info(f"Unique languages: {unique_languages}")
 
         groups = []
         for language in unique_languages:
-            lang_df = grouped_df.get_group(language)
+            lang_group = group_by_lang.get_group(language)
 
-            if language in LanguageVersion.values() and language not in IGNORE:
-                logger.info(f"Processing the language: {language}")
-                groups.append(self._mark_language(lang_df, LanguageVersion(language)))
+            if language in LanguageVersion.values():
+                try:
+                    logger.info(f"Processing the language: {language}")
+                    groups.append(self._mark_language(lang_group, LanguageVersion(language)))
+                except NotImplementedError:
+                    logger.warning(f"{language} needs implementation")
+                    groups.append(lang_group)
             else:
                 logger.warning(f"Unknown language: {language}")
-                groups.append(lang_df)
+                groups.append(lang_group)
 
         logger.info("Dataset processing finished")
 
-        result = pd.concat(groups)
+        df = pd.concat(groups)
 
         logger.info("Writing the dataset to a file.")
-        result.to_csv(self.dataset_output)
+        df.to_csv(self.dataset_output_path)
 
         id_to_inspection = {value: index for index, value in self.inspection_to_id.items()}
-        id_to_inspection_df = pd.DataFrame.from_dict(id_to_inspection, "index")
-        id_to_inspection_df.index.name = "id"
-        id_to_inspection_df.columns = ["inspection"]
-        id_to_inspection_df.to_csv(self.inspections_output)
-        print(self.inspection_to_id)
-        print(id_to_inspection)
 
-    def _mark_language(self, df: DataFrame, language: LanguageVersion):
+        id_to_inspection_df = pd.DataFrame.from_dict(id_to_inspection, orient="index", columns=["inspection"])
+        id_to_inspection_df.index.name = "id"
+        id_to_inspection_df.to_csv(self.inspections_output_path)
+
+    def _mark_language(self, df: DataFrame, language: LanguageVersion) -> DataFrame:
         number_of_chunks = 1
         if self.chunk_size is not None:
             number_of_chunks = ceil(df.shape[0] / self.chunk_size)
@@ -157,10 +170,10 @@ class DatasetMarker:
                 self.inspection_to_id[inspection] = len(self.inspection_to_id)
 
             logger.info("Parsing the output of qodana")
-            student_id_to_inspection_ids = self._parse(temp_dir, inspections)
+            solution_id_to_inspection_ids = self._parse(temp_dir, inspections)
             chunk["inspection_ids"] = ""
-            for student_id, inspection_ids in student_id_to_inspection_ids.items():
-                chunk.loc[student_id, "inspection_ids"] = ",".join(map(str, inspection_ids))
+            for solution_id, inspection_ids in solution_id_to_inspection_ids.items():
+                chunk.loc[solution_id, "inspection_ids"] = ",".join(map(str, inspection_ids))
 
     @staticmethod
     def _copy_template(temp_dir: Path, language: LanguageVersion):
@@ -170,12 +183,12 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            shutil.copytree(Path("./project_templates/java"), temp_dir, dirs_exist_ok=True)
+            shutil.copytree(Path("./project_templates/java"), (temp_dir / "project"), dirs_exist_ok=True)
         else:
-            logger.warning(f"{language} is not supported yet")
+            raise NotImplementedError
 
     def _copy_config(self, temp_dir: Path):
-        shutil.copy(self.config, temp_dir)
+        shutil.copy(self.config, (temp_dir / "project"))
 
     @staticmethod
     def _create_main_files(temp_dir: Path, chunk: DataFrame, language: LanguageVersion):
@@ -185,24 +198,25 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            (temp_dir / "results").mkdir()
-            dist_path = temp_dir / "src" / "main" / "java"
+            working_path = temp_dir / "project" / "src" / "main" / "java"
             for index, row in chunk.iterrows():
-                directory = dist_path / f"student{index}"
-                directory.mkdir(parents=True)
-                file_path = directory / "Main.java"
+                src_directory = working_path / f"solution{index}"
+                src_directory.mkdir(parents=True)
+                file_path = src_directory / "Main.java"
                 with open(file_path, "w") as file:
-                    file.write(f"package student{index};\n\n")
+                    file.write(f"package solution{index};\n\n")
                     file.write(row["code"])
         else:
-            logger.warning(f"{language} is not supported yet")
+            raise NotImplementedError
 
     @staticmethod
     def _run_qodana(temp_dir: Path):
+        (temp_dir / "results").mkdir()
+
         docker.run(
             "jetbrains/qodana",
             remove=True,
-            volumes=[(temp_dir, "/data/project/"), ((temp_dir / "results/"), "/data/results/")],
+            volumes=[((temp_dir / "project"), "/data/project/"), ((temp_dir / "results/"), "/data/results/")],
             user=os.getuid(),
         )
 
@@ -218,25 +232,25 @@ class DatasetMarker:
 
     def _parse(self, temp_dir: Path, inspections: set[str]):
         results_dir = temp_dir / "results"
-        package_regex = re.compile(r"student(\d*)")
+        package_regex = re.compile(r"solution(\d*)")
 
-        student_id_to_inspections_ids = defaultdict(list)
+        solution_id_to_inspections_ids = defaultdict(list)
         for inspection in inspections:
             inspection_id = self.inspection_to_id[inspection]
-            file_path = results_dir / f"{inspection}.json"
+            inspection_file_path = results_dir / f"{inspection}.json"
 
-            with open(file_path) as file:
+            with open(inspection_file_path) as file:
                 inspection_json = json.load(file)
 
             problems = inspection_json["problems"]
-            for problem_data in problems:
-                data = InspectionData(**problem_data)
-                student_match = package_regex.match(data.package)
-                if student_match:
-                    student_id = int(student_match.group(1))
-                    student_id_to_inspections_ids[student_id].append(inspection_id)
+            for problem in problems:
+                data = InspectionData(**problem)
+                package_match = package_regex.match(data.package)
+                if package_match:
+                    solution_id = int(package_match.group(1))
+                    solution_id_to_inspections_ids[solution_id].append(inspection_id)
 
-        return student_id_to_inspections_ids
+        return solution_id_to_inspections_ids
 
 
 def main():
@@ -245,8 +259,8 @@ def main():
 
     try:
         args = parser.parse_args()
-        dm = DatasetMarker(args)
-        dm.mark()
+        marker = DatasetMarker(args)
+        marker.mark()
 
     except Exception:
         traceback.print_exc()
