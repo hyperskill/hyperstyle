@@ -72,7 +72,6 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
     return diffs
 
 
-# TODO: add description in readme
 def main() -> None:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
