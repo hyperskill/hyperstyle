@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from typing import Set, Union
 
+import numpy as np
 import pandas as pd
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
@@ -19,6 +20,43 @@ def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],
 
 def drop_duplicates(df: pd.DataFrame, column: str = ColumnName.CODE.value) -> pd.DataFrame:
     return df.drop_duplicates(column, keep='last')
+
+
+# Find all rows and columns where two dataframes are inconsistent.
+# For example:
+#  row  |  column    |
+#  -------------------------
+#  3    | column_1   | True
+#       | column_2   | True
+#  -------------------------
+#  4    | column_1   | True
+#       | column_2   | True
+# means first and second dataframes have different values
+# in column_1 and in column_2 in 3-th and 4-th rows
+def get_inconsistent_positions(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
+    ne_stacked = (first != second).stack()
+    inconsistent_positions = ne_stacked[ne_stacked]
+    inconsistent_positions.index.names = [ColumnName.ROW.value, ColumnName.COLUMN.value]
+    return inconsistent_positions
+
+
+# Create a new dataframe with all items that are different.
+# For example:
+#            |       old   |   new
+#  ---------------------------------
+# row column |             |
+# 3   grade  |  EXCELLENT  | MODERATE
+# 4   grade  |  EXCELLENT  |  BAD
+def get_diffs(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
+    changed = get_inconsistent_positions(first, second)
+
+    difference_locations = np.where(first != second)
+    changed_from = first.values[difference_locations]
+    changed_to = second.values[difference_locations]
+    return pd.DataFrame({
+        ColumnName.OLD.value: changed_from,
+        ColumnName.NEW.value: changed_to},
+        index=changed.index)
 
 
 def get_solutions_df(ext: Extension, file_path: Union[str, Path]) -> pd.DataFrame:

@@ -1,11 +1,12 @@
 import linecache
 import os
+import pickle
 import re
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 
 @unique
@@ -32,6 +33,7 @@ class Extension(Enum):
     KTS = '.kts'
     XLSX = '.xlsx'
     CSV = '.csv'
+    PICKLE = '.pickle'
 
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
@@ -66,6 +68,19 @@ def match_condition(regex: str) -> ItemCondition:
     def does_name_match(name: str) -> bool:
         return re.fullmatch(regex, name) is not None
     return does_name_match
+
+
+def serialize_data_and_write_to_file(path: Path, data: Any) -> None:
+    create_directory(get_parent_folder(path))
+    with open(path, 'wb') as f:
+        p = pickle.Pickler(f)
+        p.dump(data)
+
+
+def deserialize_data_from_file(path: Path) -> Any:
+    with open(path, 'rb') as f:
+        u = pickle.Unpickler(f)
+        return u.load()
 
 
 # For getting name of the last folder or file

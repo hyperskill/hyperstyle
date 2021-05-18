@@ -99,3 +99,8 @@ isin
 loc
 uniq
 fullmatch
+iloc
+dataframes
+numpy
+Pickler
+Unpickler
