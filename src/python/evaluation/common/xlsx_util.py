@@ -4,7 +4,6 @@ from typing import Union
 
 import pandas as pd
 from openpyxl import load_workbook, Workbook
-from src.python.evaluation.evaluation_config import EvaluationConfig
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +23,10 @@ def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_erro
             logger.info(message)
 
 
-def create_and_get_workbook_path(config: EvaluationConfig) -> Path:
+def create_workbook(output_file_path: Path) -> Workbook:
     workbook = Workbook()
-    workbook_path = config.get_output_file_path()
-    workbook.save(workbook_path)
-    return workbook_path
+    workbook.save(output_file_path)
+    return workbook
 
 
 def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame, sheet_name: str,
