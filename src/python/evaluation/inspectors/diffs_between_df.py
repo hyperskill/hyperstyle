@@ -1,20 +1,16 @@
 import argparse
-import json
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import (
-    get_inconsistent_positions, get_solutions_df, get_solutions_df_by_file_path,
+    get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
 from src.python.review.common.file_system import (
     Extension, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
 )
-from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.quality.model import QualityType
-from src.python.review.reviewers.utils.print_review import convert_json_to_issues
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -29,11 +25,6 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=f'{RunToolArgument.SOLUTIONS_FILE_PATH.value.description}'
                              f'\nAll code fragments from this file must be graded '
                              f'(file contains grade and traceback (optional) columns)')
-
-
-def __get_issues(df: pd.DataFrame, row: int) -> List[BaseIssue]:
-    parsed_json = json.loads(df.iloc[row][EvaluationArgument.TRACEBACK.value])['issues']
-    return convert_json_to_issues(parsed_json)
 
 
 # Find difference between two dataframes. Return dict:
@@ -63,8 +54,8 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
             diffs[ColumnName.GRADE.value].append(fragment_id)
         else:
             # Find difference between issues
-            old_issues = __get_issues(old_df, row)
-            new_issues = __get_issues(new_df, row)
+            old_issues = get_issues_by_row(old_df, row)
+            new_issues = get_issues_by_row(new_df, row)
             if len(old_issues) > len(new_issues):
                 raise ValueError(f'New dataframe contains less issues than old for fragment {id}')
             difference = set(set(new_issues) - set(old_issues))

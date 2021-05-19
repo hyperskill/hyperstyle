@@ -1,14 +1,17 @@
+import json
 import logging
 from pathlib import Path
-from typing import Set, Union
+from typing import List, Set, Union
 
 import numpy as np
 import pandas as pd
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from src.python.evaluation.common.util import ColumnName
+from src.python.evaluation.common.util import ColumnName, EvaluationArgument
 from src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension, get_restricted_extension
+from src.python.review.inspectors.issue import BaseIssue
+from src.python.review.reviewers.utils.print_review import convert_json_to_issues
 
 logger = logging.getLogger(__name__)
 
@@ -85,3 +88,12 @@ def write_df_to_file(df: pd.DataFrame, output_file_path: Path, extension: Extens
         write_dataframe_to_xlsx_sheet(output_file_path, df, 'inspection_results')
         # remove empty sheet that was initially created with the workbook
         remove_sheet(output_file_path, 'Sheet')
+
+
+def get_issues_from_json(str_json: str) -> List[BaseIssue]:
+    parsed_json = json.loads(str_json)['issues']
+    return convert_json_to_issues(parsed_json)
+
+
+def get_issues_by_row(df: pd.DataFrame, row: int) -> List[BaseIssue]:
+    return get_issues_from_json(df.iloc[row][EvaluationArgument.TRACEBACK.value])

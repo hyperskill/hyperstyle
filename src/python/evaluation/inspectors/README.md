@@ -159,23 +159,45 @@ Optional arguments:
 Argument | Description
 --- | ---
 |**&#8209;&#8209;categorize**| If True, statistics will be categorized by several categories. By default is disabled.|
+|**&#8209;n**, **&#8209;&#8209;top_n**| The top N items will be printed. Default value is 10.|
+|**&#8209;&#8209;full_stat**| If True, full statistics (with all issues) will be printed. By default is disabled.|
 
 The statistics will be printed into console.
 
-An example of the **uncategorized** statistics:
+The output contains:
+- was found incorrect grades or not;
+- how many fragments has additional issues;
+- how many unique issues was found;
+- top N issues in the format: (issue_key, frequency);
+- short categorized statistics: for each category how many issues were found and how many 
+  fragments have these issues;
+- \[Optional\] full categorized statistics: for each category for each issue how many 
+  fragments have this issue
+
+An example of the printed statistics (without full categorized statistics):
 
 ```json
 SUCCESS! Was not found incorrect grades.
-16 fragments has additional issues
-- WPS440": 16 times
-```
-
-
-An example of the **categorized** statistics:
-
-```json
-SUCCESS! Was not found incorrect grades.
-16 fragments has additional issues
-ERROR_PRONE issues:
-- WPS440": 16 times
+______
+39830 fragments has additional issues
+139 unique issues was found
+______
+Top 10 issues:
+SC200: 64435 times
+WPS432: 17477 times
+WPS221: 10618 times
+WPS336: 4965 times
+H601: 3826 times
+SC100: 2719 times
+WPS319: 2655 times
+WPS317: 2575 times
+WPS515: 1783 times
+WPS503: 1611 times
+______
+CODE_STYLE: 28 issues, 26171 fragments
+BEST_PRACTICES: 76 issues, 88040 fragments
+ERROR_PRONE: 17 issues, 2363 fragments
+COMPLEXITY: 17 issues, 13928 fragments
+COHESION: 1 issues, 3826 fragments
+______
 ```
