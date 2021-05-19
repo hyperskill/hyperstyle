@@ -86,3 +86,6 @@ class RunToolArgument(Enum):
                                         f'"{ColumnName.LANG.value}" column are: '
                                         f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
                                         f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
+
+    DIFFS_FILE_PATH = ArgumentsInfo(None, 'diffs_file_path',
+                                    'Path to a file with serialized diffs that were founded by diffs_between_df.py')
