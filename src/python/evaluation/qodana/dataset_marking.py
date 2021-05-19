@@ -10,12 +10,15 @@ from collections import defaultdict
 from dataclasses import dataclass
 from math import ceil
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
+
+sys.path.append("../../../..")
 
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from python_on_whales import docker
+from src.python.evaluation.common.util import ColumnName
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.run_tool import positive_int
@@ -28,10 +31,12 @@ def configure_arguments(parser: ArgumentParser) -> None:
     parser.add_argument(
         "dataset_path",
         type=lambda value: Path(value).absolute(),
-        help=f"Dataset path. The dataset must contain at least three columns: 'id', 'code' and 'lang', where 'id' "
-             f"is a unique solution number, 'lang' is the language in which the code is written in the 'code' column. "
-             f"The 'lang' must belong to one of the following values: {LanguageVersion.values()}. "
-             f"If 'lang' is not equal to any of the values, the row will be skipped.",
+        help=f"Dataset path. The dataset must contain at least three columns: '{ColumnName.ID.value}', "
+             f"'{ColumnName.CODE.value}' and '{ColumnName.LANG.value}', where '{ColumnName.ID.value}' is a unique "
+             f"solution number, '{ColumnName.LANG.value}' is the language in which the code is written in the "
+             f"'{ColumnName.CODE.value}' column. The '{ColumnName.LANG.value}' must belong to one of the following "
+             f"values: {', '.join(LanguageVersion.values())}. "
+             f"If '{ColumnName.LANG.value}' is not equal to any of the values, the row will be skipped.",
     )
 
     parser.add_argument(
@@ -50,7 +55,10 @@ def configure_arguments(parser: ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        "-s", "--chunk-size", type=positive_int, help="The number of files that qodana will process at a time.",
+        "-s",
+        "--chunk-size",
+        type=positive_int,
+        help="The number of files that qodana will process at a time.",
     )
 
     parser.add_argument(
@@ -97,10 +105,10 @@ class DatasetMarker:
         self.inspection_to_id = {}
 
     def mark(self):
-        df = pd.read_csv(self.dataset_path, index_col="id", nrows=self.limit)
+        df = pd.read_csv(self.dataset_path, index_col=ColumnName.ID.value, nrows=self.limit)
 
-        group_by_lang = df.groupby("lang")
-        unique_languages = df["lang"].unique()
+        group_by_lang = df.groupby(ColumnName.LANG.value)
+        unique_languages = df[ColumnName.LANG.value].unique()
 
         logger.info(f"Unique languages: {unique_languages}")
 
@@ -148,21 +156,24 @@ class DatasetMarker:
 
     def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion):
         with new_temp_dir() as temp_dir:
+            project_dir = temp_dir / "project"
+            results_dir = temp_dir / "results"
+
             logger.info("Copying the template")
-            self._copy_template(temp_dir, language)
+            self._copy_template(project_dir, language)
 
             if self.config:
                 logger.info("Copying the config")
-                self._copy_config(temp_dir)
+                self._copy_config(project_dir)
 
             logger.info("Creating main files")
-            self._create_main_files(temp_dir, chunk, language)
+            self._create_main_files(project_dir, chunk, language)
 
             logger.info("Running qodana")
-            self._run_qodana(temp_dir)
+            self._run_qodana(project_dir, results_dir)
 
             logger.info("Getting unique inspections")
-            inspections = self._get_inspections(temp_dir)
+            inspections = self._get_inspections(results_dir)
             existing_inspections = set(self.inspection_to_id.keys())
             new_inspections = inspections.difference(existing_inspections)
 
@@ -170,59 +181,58 @@ class DatasetMarker:
                 self.inspection_to_id[inspection] = len(self.inspection_to_id)
 
             logger.info("Parsing the output of qodana")
-            solution_id_to_inspection_ids = self._parse(temp_dir, inspections)
+            solution_id_to_inspection_ids = self._parse(results_dir, inspections)
             chunk["inspection_ids"] = ""
             for solution_id, inspection_ids in solution_id_to_inspection_ids.items():
                 chunk.loc[solution_id, "inspection_ids"] = ",".join(map(str, inspection_ids))
 
     @staticmethod
-    def _copy_template(temp_dir: Path, language: LanguageVersion):
+    def _copy_template(project_dir: Path, language: LanguageVersion):
         if (
                 language == LanguageVersion.JAVA_11
                 or language == LanguageVersion.JAVA_9
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            shutil.copytree(Path("./project_templates/java"), (temp_dir / "project"), dirs_exist_ok=True)
+            shutil.copytree(Path("./project_templates/java"), project_dir, dirs_exist_ok=True)
         else:
             raise NotImplementedError
 
-    def _copy_config(self, temp_dir: Path):
-        shutil.copy(self.config, (temp_dir / "project"))
+    def _copy_config(self, project_dir: Path):
+        shutil.copy(self.config, project_dir)
 
     @staticmethod
-    def _create_main_files(temp_dir: Path, chunk: DataFrame, language: LanguageVersion):
+    def _create_main_files(project_dir: Path, chunk: DataFrame, language: LanguageVersion):
         if (
                 language == LanguageVersion.JAVA_11
                 or language == LanguageVersion.JAVA_9
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            working_path = temp_dir / "project" / "src" / "main" / "java"
+            working_dir = project_dir / "src" / "main" / "java"
             for index, row in chunk.iterrows():
-                src_directory = working_path / f"solution{index}"
-                src_directory.mkdir(parents=True)
-                file_path = src_directory / "Main.java"
+                solution_dir = working_dir / f"solution{index}"
+                solution_dir.mkdir(parents=True)
+                file_path = solution_dir / "Main.java"
                 with open(file_path, "w") as file:
                     file.write(f"package solution{index};\n\n")
-                    file.write(row["code"])
+                    file.write(row[ColumnName.CODE.value])
         else:
             raise NotImplementedError
 
     @staticmethod
-    def _run_qodana(temp_dir: Path):
-        (temp_dir / "results").mkdir()
+    def _run_qodana(project_dir: Path, results_dir: Path):
+        results_dir.mkdir()
 
         docker.run(
             "jetbrains/qodana",
             remove=True,
-            volumes=[((temp_dir / "project"), "/data/project/"), ((temp_dir / "results/"), "/data/results/")],
+            volumes=[(project_dir, "/data/project/"), (results_dir, "/data/results/")],
             user=os.getuid(),
         )
 
     @staticmethod
-    def _get_inspections(temp_dir: Path) -> set[str]:
-        results_dir = temp_dir / "results"
+    def _get_inspections(results_dir: Path) -> Set[str]:
         files = os.listdir(results_dir)
 
         file_name_regex = re.compile(r"(\w*).json")
@@ -230,8 +240,7 @@ class DatasetMarker:
 
         return {file_name_regex.match(file).group(1) for file in inspection_files}
 
-    def _parse(self, temp_dir: Path, inspections: set[str]):
-        results_dir = temp_dir / "results"
+    def _parse(self, results_dir: Path, inspections: Set[str]):
         package_regex = re.compile(r"solution(\d*)")
 
         solution_id_to_inspections_ids = defaultdict(list)
