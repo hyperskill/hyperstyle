@@ -6,6 +6,7 @@ from src.python.review.common.file_system import Extension
 
 @unique
 class ColumnName(Enum):
+    ID = "id"
     CODE = "code"
     LANG = "lang"
     LANGUAGE = "language"
