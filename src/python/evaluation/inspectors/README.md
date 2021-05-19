@@ -11,6 +11,8 @@ This module contains _preprocessing_ stage and _analysing_ stage.
 `Analysing` stage includes:
 - [diffs_between_df.py](diffs_between_df.py) allows finding a difference between 
   old and new grades and collect issues that were found in new data
+- [print_inspectors_statistics.py](print_inspectors_statistics.py) allows print statistics 
+  that were found by [diffs_between_df.py](diffs_between_df.py)
 
 ___
 
@@ -137,3 +139,43 @@ An example of the pickle` file is:
 ```
 In the `grade` field are stored fragments ids for which grade was increased in the new data.
 In the `traceback` field for fragments ids are stored set of issues. These issues were found in the new data and were not found in the old data.
+
+___
+
+### Print statistics
+
+[print_inspectors_statistics.py](print_inspectors_statistics.py) allows print statistics 
+  that were calculated by [diffs_between_df.py](diffs_between_df.py)
+
+#### Usage
+
+Run the [print_inspectors_statistics.py](print_inspectors_statistics.py) with the arguments from command line.
+
+Required arguments:
+
+- `diffs_file_path` — path to a `pickle` file, that was calculated by [diffs_between_df.py](diffs_between_df.py).
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;categorize**| If True, statistics will be categorized by several categories. By default is disabled.|
+
+The statistics will be printed into console.
+
+An example of the **uncategorized** statistics:
+
+```json
+SUCCESS! Was not found incorrect grades.
+16 fragments has additional issues
+- WPS440": 16 times
+```
+
+
+An example of the **categorized** statistics:
+
+```json
+SUCCESS! Was not found incorrect grades.
+16 fragments has additional issues
+ERROR_PRONE issues:
+- WPS440": 16 times
+```
