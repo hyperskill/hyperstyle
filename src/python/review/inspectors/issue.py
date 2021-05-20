@@ -66,16 +66,21 @@ class IssueData(Enum):
 
 
 @dataclass(frozen=True, eq=True)
-class BaseIssue:
+class ShortIssue:
+    origin_class: str
+
+    type: IssueType
+
+
+@dataclass(frozen=True, eq=True)
+class BaseIssue(ShortIssue):
+    description: str
+
     file_path: Path
     line_no: int
     column_no: int
 
-    description: str
-    origin_class: str
-
     inspector_type: InspectorType
-    type: IssueType
 
 
 class Measurable(abc.ABC):

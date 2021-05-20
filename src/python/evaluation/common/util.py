@@ -15,6 +15,7 @@ class ColumnName(Enum):
     ROW = 'row'
     OLD = 'old'
     NEW = 'new'
+    IS_PUBLIC = 'is_public'
 
 
 @unique
