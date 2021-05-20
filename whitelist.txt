@@ -107,9 +107,7 @@ Unpickler
 dataset
 qodana
 listdir
-numpy
 concat
-loc
 copytree
 iterrows
 nrows
