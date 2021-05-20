@@ -1,5 +1,4 @@
 import argparse
-import enum
 import logging.config
 import os
 import sys
@@ -7,7 +6,6 @@ import traceback
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Set
-
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -43,69 +41,69 @@ def positive_int(value: str) -> int:
     return value_int
 
 
-def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.EnumMeta) -> None:
-    parser.add_argument(tool_arguments.VERBOSITY.value.short_name,
-                        tool_arguments.VERBOSITY.value.long_name,
-                        help=tool_arguments.VERBOSITY.value.description,
+def configure_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(RunToolArgument.VERBOSITY.value.short_name,
+                        RunToolArgument.VERBOSITY.value.long_name,
+                        help=RunToolArgument.VERBOSITY.value.description,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
                         type=str)
 
     # Usage example: -d Flake8,Intelli
-    parser.add_argument(tool_arguments.DISABLE.value.short_name,
-                        tool_arguments.DISABLE.value.long_name,
-                        help=tool_arguments.DISABLE.value.description,
+    parser.add_argument(RunToolArgument.DISABLE.value.short_name,
+                        RunToolArgument.DISABLE.value.long_name,
+                        help=RunToolArgument.DISABLE.value.description,
                         type=parse_disabled_inspectors,
                         default=set())
 
-    parser.add_argument(tool_arguments.DUPLICATES.value.long_name,
+    parser.add_argument(RunToolArgument.DUPLICATES.value.long_name,
                         action='store_true',
-                        help=tool_arguments.DUPLICATES.value.description)
+                        help=RunToolArgument.DUPLICATES.value.description)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
     parser.add_argument('--language_version',
-                        tool_arguments.LANG_VERSION.value.long_name,
-                        help=tool_arguments.LANG_VERSION.value.description,
+                        RunToolArgument.LANG_VERSION.value.long_name,
+                        help=RunToolArgument.LANG_VERSION.value.description,
                         default=None,
                         choices=LanguageVersion.values(),
                         type=str)
 
     # TODO: deprecated argument: --n_cpu. Delete after several releases.
     parser.add_argument('--n_cpu',
-                        tool_arguments.CPU.value.long_name,
-                        help=tool_arguments.CPU.value.description,
+                        RunToolArgument.CPU.value.long_name,
+                        help=RunToolArgument.CPU.value.description,
                         default=1,
                         type=positive_int)
 
-    parser.add_argument(tool_arguments.PATH.value.long_name,
+    parser.add_argument(RunToolArgument.PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=tool_arguments.PATH.value.description)
+                        help=RunToolArgument.PATH.value.description)
 
-    parser.add_argument(tool_arguments.FORMAT.value.short_name,
-                        tool_arguments.FORMAT.value.long_name,
+    parser.add_argument(RunToolArgument.FORMAT.value.short_name,
+                        RunToolArgument.FORMAT.value.long_name,
                         default=OutputFormat.JSON.value,
                         choices=OutputFormat.values(),
                         type=str,
-                        help=tool_arguments.FORMAT.value.description)
+                        help=RunToolArgument.FORMAT.value.description)
 
-    parser.add_argument(tool_arguments.START_LINE.value.short_name,
-                        tool_arguments.START_LINE.value.long_name,
+    parser.add_argument(RunToolArgument.START_LINE.value.short_name,
+                        RunToolArgument.START_LINE.value.long_name,
                         default=1,
                         type=positive_int,
-                        help=tool_arguments.START_LINE.value.description)
+                        help=RunToolArgument.START_LINE.value.description)
 
-    parser.add_argument(tool_arguments.END_LINE.value.short_name,
-                        tool_arguments.END_LINE.value.long_name,
+    parser.add_argument(RunToolArgument.END_LINE.value.short_name,
+                        RunToolArgument.END_LINE.value.long_name,
                         default=None,
                         type=positive_int,
-                        help=tool_arguments.END_LINE.value.description)
+                        help=RunToolArgument.END_LINE.value.description)
 
-    parser.add_argument(tool_arguments.NEW_FORMAT.value.long_name,
+    parser.add_argument(RunToolArgument.NEW_FORMAT.value.long_name,
                         action='store_true',
-                        help=tool_arguments.NEW_FORMAT.value.description)
+                        help=RunToolArgument.NEW_FORMAT.value.description)
 
-    parser.add_argument(tool_arguments.HISTORY.value.long_name,
-                        help=tool_arguments.HISTORY.value.description,
+    parser.add_argument(RunToolArgument.HISTORY.value.long_name,
+                        help=RunToolArgument.HISTORY.value.description,
                         type=str)
 
 
@@ -124,7 +122,7 @@ def configure_logging(verbosity: VerbosityLevel) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    configure_arguments(parser, RunToolArgument)
+    configure_arguments(parser)
 
     try:
         args = parser.parse_args()
