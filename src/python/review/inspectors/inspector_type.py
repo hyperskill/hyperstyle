@@ -23,6 +23,8 @@ class InspectorType(Enum):
     # JavaScript language
     ESLINT = 'ESLINT'
 
+    UNDEFINED = 'UNDEFINED'
+
     @classmethod
     def available_values(cls) -> List[str]:
         return [

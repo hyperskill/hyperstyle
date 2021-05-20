@@ -94,6 +94,16 @@ wmc
 util
 tmp
 Namespace
+pandarallel
+isin
+loc
+uniq
+fullmatch
+iloc
+dataframes
+numpy
+Pickler
+Unpickler
 dataset
 qodana
 listdir
