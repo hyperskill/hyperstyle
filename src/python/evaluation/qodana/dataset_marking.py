@@ -10,7 +10,9 @@ from collections import defaultdict
 from dataclasses import dataclass
 from math import ceil
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional, Set, List
+
+from src.python.evaluation.qodana.util.qoadana_issue import QodanaIssue
 
 sys.path.append("../../../..")
 
@@ -155,6 +157,21 @@ class DatasetMarker:
         result = pd.concat(chunks)
         return result
 
+    @classmethod
+    def _get_fragment_id_from_fragment_file_path(cls, fragment_file_path: str) -> int:
+        pass
+
+    @classmethod
+    def _parse_inspections_files(cls, inspections_files: List[Path]):
+        for file in inspections_files:
+            issues = json.loads(str(file))['problems']
+            for issue in issues:
+                qodana_issue = QodanaIssue(line=issue['line'], offset=issue['offset'], length=issue['length'],
+                                           highlighted_element=issue['highlighted_element'],
+                                           description=issue['description'])
+            pass
+        pass
+
     def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion):
         with new_temp_dir() as temp_dir:
             project_dir = temp_dir / "project"
@@ -174,7 +191,10 @@ class DatasetMarker:
             self._run_qodana(project_dir, results_dir)
 
             logger.info("Getting unique inspections")
-            inspections = self._get_inspections(results_dir)
+            inspections = self._get_inspections_files(results_dir)
+
+            # Todo: open all jsons and parse inspections
+
             existing_inspections = set(self.inspection_to_id.keys())
             new_inspections = inspections.difference(existing_inspections)
 
@@ -233,13 +253,11 @@ class DatasetMarker:
         )
 
     @staticmethod
-    def _get_inspections(results_dir: Path) -> Set[str]:
+    def _get_inspections_files(results_dir: Path) -> Set[Path]:
         files = os.listdir(results_dir)
 
         file_name_regex = re.compile(r"(\w*).json")
-        inspection_files = filter(lambda file: file_name_regex.match(file), files)
-
-        return {file_name_regex.match(file).group(1) for file in inspection_files}
+        return set(map(lambda f: results_dir / f, filter(lambda file: file_name_regex.match(file), files)))
 
     def _parse(self, results_dir: Path, inspections: Set[str]):
         package_regex = re.compile(r"solution(\d*)")

@@ -3,3 +3,4 @@ pandas==1.2.3
 
 numpy~=1.20.2
 python_on_whales~=0.17.1
+docker
