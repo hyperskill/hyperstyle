@@ -59,6 +59,7 @@ def configure_arguments(parser: ArgumentParser) -> None:
         "--chunk-size",
         type=positive_int,
         help="The number of files that qodana will process at a time.",
+        default=5000,
     )
 
     parser.add_argument(
