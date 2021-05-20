@@ -3,6 +3,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Dict
 
+from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics
 from src.python.review.common.file_system import deserialize_data_from_file
@@ -10,9 +11,9 @@ from src.python.review.inspectors.issue import ShortIssue
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('diffs_file_path',
+    parser.add_argument(RunToolArgument.DIFFS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help='Path to a file with serialized diffs that were founded by diffs_between_df.py')
+                        help=RunToolArgument.DIFFS_FILE_PATH.value.description)
 
     parser.add_argument('--categorize',
                         help='If True, statistics will be categorized by several categories.',
