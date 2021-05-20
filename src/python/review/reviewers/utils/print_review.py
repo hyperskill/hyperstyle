@@ -1,10 +1,12 @@
 import json
 import linecache
+from enum import Enum, unique
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from src.python.review.common.file_system import get_file_line
-from src.python.review.inspectors.issue import BaseIssue
+from src.python.review.inspectors.inspector_type import InspectorType
+from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.reviewers.review_result import ReviewResult
 
 
@@ -107,15 +109,45 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
     print(json.dumps(output_json))
 
 
+@unique
+class IssueJsonFields(Enum):
+    CODE = 'code'
+    TEXT = 'text'
+    LINE = 'line'
+    LINE_NUMBER = 'line_number'
+    COLUMN_NUMBER = 'column_number'
+    CATEGORY = 'category'
+    INFLUENCE_ON_PENALTY = 'influence_on_penalty'
+
+
 def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int) -> Dict[str, Any]:
     line_text = get_file_line(issue.file_path, issue.line_no)
 
     return {
-        'code': issue.origin_class,
-        'text': issue.description,
-        'line': line_text,
-        'line_number': issue.line_no,
-        'column_number': issue.column_no,
-        'category': issue.type.value,
-        'influence_on_penalty': influence_on_penalty,
+        IssueJsonFields.CODE.value: issue.origin_class,
+        IssueJsonFields.TEXT.value: issue.description,
+        IssueJsonFields.LINE.value: line_text,
+        IssueJsonFields.LINE_NUMBER.value: issue.line_no,
+        IssueJsonFields.COLUMN_NUMBER.value: issue.column_no,
+        IssueJsonFields.CATEGORY.value: issue.type.value,
+        IssueJsonFields.INFLUENCE_ON_PENALTY.value: influence_on_penalty,
     }
+
+
+# It works only for old json format
+def convert_json_to_issues(issues_json: List[dict]) -> List[BaseIssue]:
+    issues = []
+    for issue in issues_json:
+        issues.append(
+            BaseIssue(
+                origin_class=issue[IssueJsonFields.CODE.value],
+                description=issue[IssueJsonFields.TEXT.value],
+                line_no=int(issue[IssueJsonFields.LINE_NUMBER.value]),
+                column_no=int(issue[IssueJsonFields.COLUMN_NUMBER.value]),
+                type=IssueType(issue[IssueJsonFields.CATEGORY.value]),
+
+                file_path=Path(),
+                inspector_type=InspectorType.UNDEFINED,
+            ),
+        )
+    return issues

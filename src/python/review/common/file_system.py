@@ -1,10 +1,12 @@
 import linecache
 import os
+import pickle
+import re
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Tuple, Union
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 
 @unique
@@ -30,6 +32,14 @@ class Extension(Enum):
     JS = '.js'
     KTS = '.kts'
     XLSX = '.xlsx'
+    CSV = '.csv'
+    PICKLE = '.pickle'
+
+    # Not empty extensions are returned with a dot, for example, '.txt'
+    # If file has no extensions, an empty one ('') is returned
+    @classmethod
+    def get_extension_from_file(cls, file: str) -> 'Extension':
+        return Extension(os.path.splitext(file)[1])
 
 
 ItemCondition = Callable[[str], bool]
@@ -54,6 +64,48 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
     return items
 
 
+def match_condition(regex: str) -> ItemCondition:
+    def does_name_match(name: str) -> bool:
+        return re.fullmatch(regex, name) is not None
+    return does_name_match
+
+
+def serialize_data_and_write_to_file(path: Path, data: Any) -> None:
+    create_directory(get_parent_folder(path))
+    with open(path, 'wb') as f:
+        p = pickle.Pickler(f)
+        p.dump(data)
+
+
+def deserialize_data_from_file(path: Path) -> Any:
+    with open(path, 'rb') as f:
+        u = pickle.Unpickler(f)
+        return u.load()
+
+
+# For getting name of the last folder or file
+# For example, returns 'folder' for both 'path/data/folder' and 'path/data/folder/'
+def get_name_from_path(path: str, with_extension: bool = True) -> str:
+    head, tail = os.path.split(path)
+    # Tail can be empty if '/' is at the end of the path
+    file_name = tail or os.path.basename(head)
+    if not with_extension:
+        file_name = os.path.splitext(file_name)[0]
+    elif get_extension_from_file(Path(file_name)) == Extension.EMPTY:
+        raise ValueError('Cannot get file name with extension, because the passed path does not contain it')
+    return file_name
+
+
+def pair_in_and_out_files(in_files: List[Path], out_files: List[Path]) -> List[Tuple[Path, Path]]:
+    pairs = []
+    for in_file in in_files:
+        out_file = Path(re.sub(r'in(?=[^in]*$)', 'out', str(in_file)))
+        if out_file not in out_files:
+            raise ValueError(f'List of out files does not contain a file for {in_file}')
+        pairs.append((in_file, out_file))
+    return pairs
+
+
 # TODO: Need testing
 @contextmanager
 def new_temp_dir() -> Path:
@@ -76,7 +128,7 @@ def create_file(file_path: Union[str, Path], content: str):
         yield Path(file_path)
 
 
-def create_directory(directory: str) -> None:
+def create_directory(directory: Union[str, Path]) -> None:
     os.makedirs(directory, exist_ok=True)
 
 
@@ -98,3 +150,32 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
 # If file has no extensions, an empty one ('') is returned
 def get_extension_from_file(file: Path) -> Extension:
     return Extension(os.path.splitext(file)[1])
+
+
+def get_restricted_extension(file_path: Optional[Union[str, Path]] = None,
+                             available_values: List[Extension] = None) -> Extension:
+    if file_path is None:
+        return Extension.EMPTY
+    ext = Extension.get_extension_from_file(file_path)
+    if available_values is not None and ext not in available_values:
+        raise ValueError(f'Invalid extension. '
+                         f'Available values are: {list(map(lambda e: e.value, available_values))}.')
+    return ext
+
+
+def remove_slash(path: str) -> str:
+    return path.rstrip('/')
+
+
+def add_slash(path: str) -> str:
+    if not path.endswith('/'):
+        path += '/'
+    return path
+
+
+def get_parent_folder(path: Path, to_add_slash: bool = False) -> Path:
+    path = remove_slash(str(path))
+    parent_folder = '/'.join(path.split('/')[:-1])
+    if to_add_slash:
+        parent_folder = add_slash(parent_folder)
+    return Path(parent_folder)
