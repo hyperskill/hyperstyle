@@ -3,8 +3,7 @@ from test.python.evaluation.testing_config import get_testing_arguments
 
 import pytest
 from src.python.evaluation.evaluation_config import EvaluationConfig
-from src.python.evaluation.xlsx_run_tool import create_dataframe
-
+from src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 
 FILE_NAMES = [
     'test_wrong_column_name.xlsx',
@@ -18,6 +17,7 @@ FILE_NAMES = [
 def test_wrong_column(file_name: str):
     with pytest.raises(KeyError):
         testing_arguments_dict = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
-        testing_arguments_dict.xlsx_file_path = XLSX_DATA_FOLDER / file_name
+        testing_arguments_dict.solutions_file_path = XLSX_DATA_FOLDER / file_name
         config = EvaluationConfig(testing_arguments_dict)
-        assert create_dataframe(config)
+        lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
+        assert inspect_solutions_df(config, lang_code_dataframe)
