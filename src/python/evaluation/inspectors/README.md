@@ -11,8 +11,10 @@ This module contains _preprocessing_ stage and _analysing_ stage.
 `Analysing` stage includes:
 - [diffs_between_df.py](diffs_between_df.py) allows finding a difference between 
   old and new grades and collect issues that were found in new data
-- [print_inspectors_statistics.py](print_inspectors_statistics.py) allows print statistics 
+- [print_inspectors_statistics.py](print_inspectors_statistics.py) allows printing statistics 
   that were found by [diffs_between_df.py](diffs_between_df.py)
+- [get_worse_public_examples.py](get_worse_public_examples.py) allows getting 
+  top N worse public examples from a dataset. The measure is to count unique new inspections.
 
 ___
 
@@ -201,3 +203,33 @@ COMPLEXITY: 17 issues, 13928 fragments
 COHESION: 1 issues, 3826 fragments
 ______
 ```
+
+---
+
+### Get worse public examples
+
+[get_worse_public_examples.py](get_worse_public_examples.py) allows getting 
+  top N worse public examples from a dataset. The measure is to count unique new inspections.
+
+#### Usage
+
+Run the [get_worse_public_examples.py](get_worse_public_examples.py) with the arguments from command line.
+
+Required arguments:
+
+- `solutions_file_path` — path to xlsx-file or csv-file with graded code samples;
+- `diffs_file_path` — path to a `pickle` file, that was calculated by [diffs_between_df.py](diffs_between_df.py).
+
+Please, note that your `solutions_file_path` file with code fragments should consist of at least 2 obligatory columns:
+
+- `code`,
+- `traceback`,
+- `is_public`,
+- `id`.
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;n**, **&#8209;&#8209;n**| The N worse fragments will be saved.|
+
+The resulting file will be stored in the same folder as the `solutions_file_path` input file.
