@@ -50,6 +50,13 @@ def all_items_condition(name: str) -> bool:
     return True
 
 
+def extension_file_condition(extension: Extension) -> ItemCondition:
+    def has_this_extension(name: str) -> bool:
+        return get_extension_from_file(name) == extension
+
+    return has_this_extension
+
+
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
 def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_items_condition,
@@ -149,7 +156,7 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
 
 # Not empty extensions are returned with a dot, for example, '.txt'
 # If file has no extensions, an empty one ('') is returned
-def get_extension_from_file(file: Path) -> Extension:
+def get_extension_from_file(file: Union[Path, str]) -> Extension:
     return Extension(os.path.splitext(file)[1])
 
 

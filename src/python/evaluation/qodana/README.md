@@ -1,5 +1,6 @@
 # Dataset label
-This script allows you to mark up a dataset using the found [Qodana](https://github.com/JetBrains/Qodana) inspections.
+
+[This](dataset_marking.py) script allows you to mark up a dataset using the found [Qodana](https://github.com/JetBrains/Qodana) inspections.
 
 The dataset must contain at least three columns: `id`, `code` and `lang`, where `id` is a unique solution number, `lang` is the language in which the code is written in the `code` column. The `lang` must belong to one of the following values: `java7`, `java8`, `java9`, `java11`, `python3`, `kotlin`. If `lang` is not equal to any of the values, the row will be skipped.
 
@@ -21,3 +22,40 @@ Run the [dataset_marking.py](dataset_marking.py) with the arguments from command
 | **&#8209;l**, **&#8209;&#8209;limit** | Allows you to read only the specified number of first rows from the dataset. If no limit is specified, the whole dataset will be processed. |
 | **&#8209;s**, **&#8209;&#8209;chunk&#8209;size** | The number of files that Qodana will process at a time. Default is `5000`. |
 | **&#8209;o**, **&#8209;&#8209;dataset&#8209;output&#8209;path** | The path where the marked dataset will be saved. If not specified, the original dataset will be overwritten. |
+
+---
+
+# Postprocessing
+
+The model that imitates Qodana analysis gets input from a dataset in a special format. 
+This module allows preparing datasets that were graded by [dataset_marking.py](dataset_marking.py) script.
+
+Data processing consists of several stages:
+- union several `csv` files that were graded by [dataset_marking.py](dataset_marking.py) script 
+  and filter inspections list if it is necessary;
+- convert `csv` file into a special format.
+
+## Filter inspections
+
+This stage allow you to union several `csv` files that were graded by [dataset_marking.py](dataset_marking.py) script 
+  and filter inspections list if it is necessary.
+
+Please, note that your all input files must be graded by [dataset_marking.py](dataset_marking.py) script 
+and have `inspections` column.
+
+Output file is a new `csv` file with the all columns from the input files.
+
+#### Usage
+
+Run the [filter_inspections.py](filter_inspections.py) with the arguments from command line.
+
+Required arguments:
+
+`dataset_folder` — path to a folder with csv files graded by Qodana. Each file must have `inspections` column.
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;i**, **&#8209;&#8209;inspections**| Set of inspections ids to exclude from the dataset separated by comma. By default all inspections remain. |
+
+The resulting file will be stored in the `dataset_folder`.
