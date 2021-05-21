@@ -22,7 +22,7 @@ from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
-    create_directory, get_content_from_file, get_name_from_path, get_parent_folder, remove_directory,
+    create_directory, get_content_from_file, get_name_from_path, get_parent_folder, remove_directory, remove_slash,
 )
 from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
@@ -225,7 +225,8 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            shutil.copytree(Path("./project_templates/java"), project_dir, dirs_exist_ok=True)
+            shutil.copytree(Path(f"{remove_slash(os.path.dirname(os.path.abspath(__file__)))}/project_templates/java"),
+                            project_dir, dirs_exist_ok=True)
         else:
             raise NotImplementedError
 
