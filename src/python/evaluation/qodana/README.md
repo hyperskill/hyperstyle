@@ -82,3 +82,78 @@ Required arguments:
 `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script.
 
 The resulting file will be stored in the same folder as the input file.
+
+An example of the output file:
+
+```json
+id   |  inspection_id    
+-----|-------------------
+1    |  SystemOutErr   
+2    |  ConstantExpression
+```
+
+___
+
+#### Convert `csv` file into a special format
+
+This block describes what format can be converted csv-file with code samples 
+graded by [dataset_marking.py](dataset_marking.py) script.
+
+We have two different formats:
+- fragment to inspections list;
+- fragment to inspections list with positions.
+
+
+#### Fragment to inspections list
+
+This data representation match code fragments to a list with ids of inspections.
+
+Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+and has `inspections` column.
+
+Output file is a new `csv` file with a new `inspections` column with list with ids of inspections. 
+If the list of inspections for the fragment is empty, then write 0.
+
+#### Usage
+
+Run the [fragment_to_inspections_list.py](fragment_to_inspections_list.py) with the arguments from command line.
+
+Required arguments:
+
+- `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
+- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
+
+The resulting file will be stored in the same folder as the input file.
+
+An example of the input file:
+
+```json
+id   |  code             |  lang         |  inspections
+-----|-------------------|---------------|-----------------
+2    |  "// some code"   |  java11       |  "{""issues"": []}"
+3    |  "// some code"   |  java11       |  "{""issues"": [""{\"... \""problem_id\"": \""SystemOutErr\""}""]}"
+0    |  "// some code"   |  java11       |  "{""issues"": [""{\"...\""problem_id\"": \""ConstantExpression\""}"",""{\"...\""problem_id\"": \""ConstantExpression\""}""]}"
+1    |  "// some code"   |  java11       |  "{""issues"": []}"
+
+```
+
+with the inspections file: 
+
+```json
+id   |  inspection_id    
+-----|-------------------
+1    |  SystemOutErr   
+2    |  ConstantExpression
+```
+
+An example of the output file:
+
+```json
+id   |  code             |  lang         |  inspections
+-----|-------------------|---------------|-----------------
+2    |  "// some code"   |  java11       |  0
+3    |  "// some code"   |  java11       |  1
+0    |  "// some code"   |  java11       |  2,2
+1    |  "// some code"   |  java11       |  0
+
+```

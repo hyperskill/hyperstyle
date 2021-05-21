@@ -1,5 +1,4 @@
 import argparse
-import json
 from pathlib import Path
 from typing import Set
 
@@ -7,18 +6,18 @@ import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from src.python.review.common.file_system import Extension, get_parent_folder
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(RunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
+    parser.add_argument(RunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help='Csv file with solutions. This file must be graded by Qodana.')
+                        help=RunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.description)
 
 
 def __get_inspections_ids(json_issues: str) -> Set[str]:
-    issues_list = list(map(lambda i: QodanaIssue.from_json(i), json.loads(json_issues)[QodanaJsonField.ISSUES.value]))
+    issues_list = QodanaIssue.parse_list_issues_from_json(json_issues)
     return set(map(lambda i: i.problem_id, issues_list))
 
 
