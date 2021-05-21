@@ -42,6 +42,8 @@ class QodanaIssue:
 @unique
 class QodanaColumnName(Enum):
     INSPECTIONS = 'inspections'
+    ID = 'id'
+    INSPECTION_ID = 'inspection_id'
 
 
 @unique
