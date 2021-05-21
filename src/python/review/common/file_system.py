@@ -2,6 +2,7 @@ import linecache
 import os
 import pickle
 import re
+import shutil
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
@@ -165,6 +166,11 @@ def get_restricted_extension(file_path: Optional[Union[str, Path]] = None,
 
 def remove_slash(path: str) -> str:
     return path.rstrip('/')
+
+
+def remove_directory(directory: Union[str, Path]) -> None:
+    if os.path.isdir(directory):
+        shutil.rmtree(directory, ignore_errors=True)
 
 
 def add_slash(path: str) -> str:

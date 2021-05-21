@@ -17,13 +17,14 @@ sys.path.append("../../../..")
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from python_on_whales import docker
+from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
-    get_content_from_file, get_name_from_path, get_parent_folder, new_temp_dir,
+    create_directory, get_content_from_file, get_name_from_path, get_parent_folder, remove_directory,
 )
+from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
@@ -134,13 +135,7 @@ class DatasetMarker:
         df = pd.concat(groups)
 
         logger.info("Writing the dataset to a file.")
-        df.to_csv(self.dataset_output_path)
-        #
-        # id_to_inspection = {value: index for index, value in self.inspection_to_id.items()}
-        #
-        # id_to_inspection_df = pd.DataFrame.from_dict(id_to_inspection, orient="index", columns=["inspection"])
-        # id_to_inspection_df.index.name = "id"
-        # id_to_inspection_df.to_csv(self.inspections_output_path)
+        write_dataframe_to_csv(self.dataset_output_path, df)
 
     def _mark_language(self, df: DataFrame, language: LanguageVersion) -> DataFrame:
         number_of_chunks = 1
@@ -149,10 +144,10 @@ class DatasetMarker:
 
         chunks = np.array_split(df, number_of_chunks)
         labeled_chunks = []
+        # Todo: run this in parallel
         for index, chunk in enumerate(chunks):
             logger.info(f"Processing chunk: {index + 1} / {number_of_chunks}")
-            chunk = self._mark_chunk(chunk, language)
-            labeled_chunks.append(chunk)
+            labeled_chunks.append(self._mark_chunk(chunk, language, index))
 
         logger.info(f"{language} processing finished.")
         result = pd.concat(labeled_chunks)
@@ -176,7 +171,7 @@ class DatasetMarker:
         for file in inspections_files:
             issues = json.loads(get_content_from_file(file))['problems']
             for issue in issues:
-                fragment_id = cls._get_fragment_id_from_fragment_file_path(issue['file'])
+                fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
                 qodana_issue = QodanaIssue(line=issue['line'], offset=issue['offset'], length=issue['length'],
                                            highlighted_element=issue['highlighted_element'],
                                            description=issue['description'], fragment_id=fragment_id,
@@ -184,33 +179,43 @@ class DatasetMarker:
                 id_to_issues[fragment_id].append(qodana_issue)
         return id_to_issues
 
-    def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion) -> pd.DataFrame:
-        with new_temp_dir() as temp_dir:
-            project_dir = temp_dir / "project"
-            results_dir = temp_dir / "results"
+    @classmethod
+    def _to_json(cls, issues: List[QodanaIssue]) -> str:
+        issues_json = {
+            QodanaJsonField.ISSUES.value: list(map(lambda i: i.to_json(), issues)),
+        }
+        return json.dumps(issues_json)
 
-            logger.info("Copying the template")
-            self._copy_template(project_dir, language)
+    def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
+        tmp_file_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
+        create_directory(tmp_file_path)
 
-            if self.config:
-                logger.info("Copying the config")
-                self._copy_config(project_dir)
+        project_dir = tmp_file_path / "project"
+        results_dir = tmp_file_path / "results"
 
-            logger.info("Creating main files")
-            self._create_main_files(project_dir, chunk, language)
+        logger.info("Copying the template")
+        self._copy_template(project_dir, language)
 
-            logger.info("Running qodana")
-            self._run_qodana(project_dir, results_dir)
+        if self.config:
+            logger.info("Copying the config")
+            self._copy_config(project_dir)
 
-            logger.info("Getting inspections")
-            inspections_files = self._get_inspections_files(results_dir)
-            inspections = self._parse_inspections_files(inspections_files)
+        logger.info("Creating main files")
+        self._create_main_files(project_dir, chunk, language)
 
-            logger.info("Write inspections")
-            chunk[QodanaColumnName.INSPECTIONS.value] = chunk.apply(
-                lambda row: inspections.get(row[ColumnName.ID.value], []), axis=1)
+        logger.info("Running qodana")
+        self._run_qodana(project_dir, results_dir)
 
-            return chunk
+        logger.info("Getting inspections")
+        inspections_files = self._get_inspections_files(results_dir)
+        inspections = self._parse_inspections_files(inspections_files)
+
+        logger.info("Write inspections")
+        chunk[QodanaColumnName.INSPECTIONS.value] = chunk.apply(
+            lambda row: self._to_json(inspections.get(row[ColumnName.ID.value], [])), axis=1)
+
+        remove_directory(tmp_file_path)
+        return chunk
 
     @staticmethod
     def _copy_template(project_dir: Path, language: LanguageVersion):
@@ -249,15 +254,9 @@ class DatasetMarker:
     @staticmethod
     def _run_qodana(project_dir: Path, results_dir: Path):
         results_dir.mkdir()
-        try:
-            docker.run(
-                "jetbrains/qodana",
-                remove=True,
-                volumes=[(project_dir, "/data/project/"), (results_dir, "/data/results/")],
-                user=os.getuid(),
-            )
-        except Exception as e:
-            logger.exception(f'Error during qodana running: {e}')
+        command = ['docker', 'run', '--rm', '-v', f'{project_dir}/:/data/project/', '-v',
+                   f'{results_dir}/:/data/results/', 'jetbrains/qodana']
+        run_and_wait(command)
 
     @staticmethod
     def _get_inspections_files(results_dir: Path) -> Set[Path]:
