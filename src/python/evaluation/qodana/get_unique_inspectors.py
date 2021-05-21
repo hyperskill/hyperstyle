@@ -7,32 +7,25 @@ import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from src.python.evaluation.qodana.util.models import QodanaJsonField, QodanaColumnName
-from src.python.review.common.file_system import get_parent_folder, Extension
+from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from src.python.review.common.file_system import Extension, get_parent_folder
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(RunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=f'Csv file with solutions. This file must be graded by Qodana.')
+                        help='Csv file with solutions. This file must be graded by Qodana.')
 
 
 def __get_inspections_ids(json_issues: str) -> Set[str]:
-    issues_list = json.loads(json_issues)[QodanaJsonField.ISSUES.value]
+    issues_list = list(map(lambda i: QodanaIssue.from_json(i), json.loads(json_issues)[QodanaJsonField.ISSUES.value]))
     return set(map(lambda i: i.problem_id, issues_list))
 
 
-def __push_inspections_ids(unique_inspections: Set[str], new_inspections: Set[str]) -> None:
-    unique_inspections.union(new_inspections)
-
-
 def __get_unique_inspections(solutions_df: pd.DataFrame) -> Set[str]:
-    unique_inspections: Set[str] = set()
-    solutions_df.apply(lambda row: __push_inspections_ids(unique_inspections,
-                                                          __get_inspections_ids(
-                                                              row[QodanaColumnName.INSPECTIONS.value]
-                                                          )), axis=1)
-    return unique_inspections
+    inspections = solutions_df.apply(lambda row: __get_inspections_ids(row[QodanaColumnName.INSPECTIONS.value]),
+                                     axis=1)
+    return set.union(*inspections.values)
 
 
 def __create_unique_inspections_df(unique_inspections: Set[str]) -> pd.DataFrame:
@@ -53,7 +46,7 @@ def main() -> None:
 
     inspections_df = __create_unique_inspections_df(__get_unique_inspections(solutions_df))
     output_path = get_parent_folder(Path(solutions_file_path))
-    write_dataframe_to_csv(output_path / f'inspections{Extension.CSV.value}',  inspections_df)
+    write_dataframe_to_csv(output_path / f'inspections{Extension.CSV.value}', inspections_df)
 
 
 if __name__ == '__main__':

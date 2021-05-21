@@ -33,6 +33,7 @@ This module allows preparing datasets that were graded by [dataset_marking.py](d
 Data processing consists of several stages:
 - union several `csv` files that were graded by [dataset_marking.py](dataset_marking.py) script 
   and filter inspections list if it is necessary;
+- get all unique inspections from the dataset;
 - convert `csv` file into a special format.
 
 ## Filter inspections
@@ -59,3 +60,25 @@ Argument | Description
 |**&#8209;i**, **&#8209;&#8209;inspections**| Set of inspections ids to exclude from the dataset separated by comma. By default all inspections remain. |
 
 The resulting file will be stored in the `dataset_folder`.
+
+___
+
+## Get all unique inspections
+
+This stage allow you to get all unique inspections from a `csv` file graded by Qodana. 
+Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+and has `inspections` column.
+
+Output file is a new `csv` file with two columns: `id` and `inspection_id`. 
+`id` is unique number for each inspection, minimal value is 1.
+`inspection_id` is unique Qoadana id for each inspection.
+
+#### Usage
+
+Run the [get_unique_inspectors.py](get_unique_inspectors.py) with the arguments from command line.
+
+Required arguments:
+
+`solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script.
+
+The resulting file will be stored in the same folder as the input file.
