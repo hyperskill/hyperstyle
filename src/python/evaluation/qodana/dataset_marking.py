@@ -157,7 +157,7 @@ class DatasetMarker:
     def _extract_fragment_id(cls, folder_name: str) -> int:
         numbers = re.findall(r'\d+', folder_name)
         if len(numbers) != 1:
-            raise ValueError(f'Can npt extract fragment id from {folder_name}')
+            raise ValueError(f'Can not extract fragment id from {folder_name}')
         return numbers[0]
 
     @classmethod
@@ -187,11 +187,11 @@ class DatasetMarker:
         return json.dumps(issues_json)
 
     def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
-        tmp_file_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
-        create_directory(tmp_file_path)
+        tmp_dir_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
+        create_directory(tmp_dir_path)
 
-        project_dir = tmp_file_path / "project"
-        results_dir = tmp_file_path / "results"
+        project_dir = tmp_dir_path / "project"
+        results_dir = tmp_dir_path / "results"
 
         logger.info("Copying the template")
         self._copy_template(project_dir, language)
@@ -214,7 +214,7 @@ class DatasetMarker:
         chunk[QodanaColumnName.INSPECTIONS.value] = chunk.apply(
             lambda row: self._to_json(inspections.get(row[ColumnName.ID.value], [])), axis=1)
 
-        remove_directory(tmp_file_path)
+        remove_directory(tmp_dir_path)
         return chunk
 
     @staticmethod
@@ -242,12 +242,12 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_7
         ):
             working_dir = project_dir / "src" / "main" / "java"
-            for index, row in chunk.iterrows():
-                solution_dir = working_dir / f"solution{index}"
+            for _, row in chunk.iterrows():
+                solution_dir = working_dir / f"solution{row[ColumnName.ID.value]}"
                 solution_dir.mkdir(parents=True)
                 file_path = solution_dir / "Main.java"
                 with open(file_path, "w") as file:
-                    file.write(f"package solution{index};\n\n")
+                    file.write(f"package solution{row[ColumnName.ID.value]};\n\n")
                     file.write(row[ColumnName.CODE.value])
         else:
             raise NotImplementedError
@@ -255,7 +255,7 @@ class DatasetMarker:
     @staticmethod
     def _run_qodana(project_dir: Path, results_dir: Path):
         results_dir.mkdir()
-        command = ['docker', 'run', '--rm', '-v', f'{project_dir}/:/data/project/', '-v',
+        command = ['docker', 'run', '-u', str(os.getuid()), '--rm', '-v', f'{project_dir}/:/data/project/', '-v',
                    f'{results_dir}/:/data/results/', 'jetbrains/qodana']
         run_and_wait(command)
 
