@@ -2,6 +2,7 @@ import linecache
 import os
 import pickle
 import re
+import shutil
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
@@ -85,7 +86,7 @@ def deserialize_data_from_file(path: Path) -> Any:
 
 # For getting name of the last folder or file
 # For example, returns 'folder' for both 'path/data/folder' and 'path/data/folder/'
-def get_name_from_path(path: str, with_extension: bool = True) -> str:
+def get_name_from_path(path: Union[Path, str], with_extension: bool = True) -> str:
     head, tail = os.path.split(path)
     # Tail can be empty if '/' is at the end of the path
     file_name = tail or os.path.basename(head)
@@ -167,13 +168,18 @@ def remove_slash(path: str) -> str:
     return path.rstrip('/')
 
 
+def remove_directory(directory: Union[str, Path]) -> None:
+    if os.path.isdir(directory):
+        shutil.rmtree(directory, ignore_errors=True)
+
+
 def add_slash(path: str) -> str:
     if not path.endswith('/'):
         path += '/'
     return path
 
 
-def get_parent_folder(path: Path, to_add_slash: bool = False) -> Path:
+def get_parent_folder(path: Union[Path, str], to_add_slash: bool = False) -> Path:
     path = remove_slash(str(path))
     parent_folder = '/'.join(path.split('/')[:-1])
     if to_add_slash:

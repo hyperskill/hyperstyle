@@ -10,17 +10,21 @@ from collections import defaultdict
 from dataclasses import dataclass
 from math import ceil
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 
 sys.path.append("../../../..")
 
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from python_on_whales import docker
+from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
+from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import new_temp_dir
+from src.python.review.common.file_system import (
+    create_directory, get_content_from_file, get_name_from_path, get_parent_folder, remove_directory, remove_slash,
+)
+from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
@@ -103,10 +107,8 @@ class DatasetMarker:
 
         self.inspections_output_path = args.inspections_output_path
 
-        self.inspection_to_id = {}
-
     def mark(self):
-        df = pd.read_csv(self.dataset_path, index_col=ColumnName.ID.value, nrows=self.limit)
+        df = pd.read_csv(self.dataset_path, nrows=self.limit)
 
         group_by_lang = df.groupby(ColumnName.LANG.value)
         unique_languages = df[ColumnName.LANG.value].unique()
@@ -133,13 +135,7 @@ class DatasetMarker:
         df = pd.concat(groups)
 
         logger.info("Writing the dataset to a file.")
-        df.to_csv(self.dataset_output_path)
-
-        id_to_inspection = {value: index for index, value in self.inspection_to_id.items()}
-
-        id_to_inspection_df = pd.DataFrame.from_dict(id_to_inspection, orient="index", columns=["inspection"])
-        id_to_inspection_df.index.name = "id"
-        id_to_inspection_df.to_csv(self.inspections_output_path)
+        write_dataframe_to_csv(self.dataset_output_path, df)
 
     def _mark_language(self, df: DataFrame, language: LanguageVersion) -> DataFrame:
         number_of_chunks = 1
@@ -147,45 +143,79 @@ class DatasetMarker:
             number_of_chunks = ceil(df.shape[0] / self.chunk_size)
 
         chunks = np.array_split(df, number_of_chunks)
+        labeled_chunks = []
+        # Todo: run this in parallel
         for index, chunk in enumerate(chunks):
             logger.info(f"Processing chunk: {index + 1} / {number_of_chunks}")
-            self._mark_chunk(chunk, language)
+            labeled_chunks.append(self._mark_chunk(chunk, language, index))
 
         logger.info(f"{language} processing finished.")
-        result = pd.concat(chunks)
+        result = pd.concat(labeled_chunks)
         return result
 
-    def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion):
-        with new_temp_dir() as temp_dir:
-            project_dir = temp_dir / "project"
-            results_dir = temp_dir / "results"
+    @classmethod
+    def _extract_fragment_id(cls, folder_name: str) -> int:
+        numbers = re.findall(r'\d+', folder_name)
+        if len(numbers) != 1:
+            raise ValueError(f'Can not extract fragment id from {folder_name}')
+        return numbers[0]
 
-            logger.info("Copying the template")
-            self._copy_template(project_dir, language)
+    @classmethod
+    def _get_fragment_id_from_fragment_file_path(cls, fragment_file_path: str) -> int:
+        folder_name = get_name_from_path(get_parent_folder(fragment_file_path), with_extension=False)
+        return cls._extract_fragment_id(folder_name)
 
-            if self.config:
-                logger.info("Copying the config")
-                self._copy_config(project_dir)
+    @classmethod
+    def _parse_inspections_files(cls, inspections_files: Set[Path]) -> Dict[int, List[QodanaIssue]]:
+        id_to_issues: Dict[int, List[QodanaIssue]] = defaultdict(list)
+        for file in inspections_files:
+            issues = json.loads(get_content_from_file(file))['problems']
+            for issue in issues:
+                fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
+                qodana_issue = QodanaIssue(line=issue['line'], offset=issue['offset'], length=issue['length'],
+                                           highlighted_element=issue['highlighted_element'],
+                                           description=issue['description'], fragment_id=fragment_id,
+                                           problem_id=issue['problem_class']['id'])
+                id_to_issues[fragment_id].append(qodana_issue)
+        return id_to_issues
 
-            logger.info("Creating main files")
-            self._create_main_files(project_dir, chunk, language)
+    @classmethod
+    def _to_json(cls, issues: List[QodanaIssue]) -> str:
+        issues_json = {
+            QodanaJsonField.ISSUES.value: list(map(lambda i: i.to_json(), issues)),
+        }
+        return json.dumps(issues_json)
 
-            logger.info("Running qodana")
-            self._run_qodana(project_dir, results_dir)
+    def _mark_chunk(self, chunk: DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
+        tmp_dir_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
+        create_directory(tmp_dir_path)
 
-            logger.info("Getting unique inspections")
-            inspections = self._get_inspections(results_dir)
-            existing_inspections = set(self.inspection_to_id.keys())
-            new_inspections = inspections.difference(existing_inspections)
+        project_dir = tmp_dir_path / "project"
+        results_dir = tmp_dir_path / "results"
 
-            for inspection in new_inspections:
-                self.inspection_to_id[inspection] = len(self.inspection_to_id)
+        logger.info("Copying the template")
+        self._copy_template(project_dir, language)
 
-            logger.info("Parsing the output of qodana")
-            solution_id_to_inspection_ids = self._parse(results_dir, inspections)
-            chunk["inspection_ids"] = ""
-            for solution_id, inspection_ids in solution_id_to_inspection_ids.items():
-                chunk.loc[solution_id, "inspection_ids"] = ",".join(map(str, inspection_ids))
+        if self.config:
+            logger.info("Copying the config")
+            self._copy_config(project_dir)
+
+        logger.info("Creating main files")
+        self._create_main_files(project_dir, chunk, language)
+
+        logger.info("Running qodana")
+        self._run_qodana(project_dir, results_dir)
+
+        logger.info("Getting inspections")
+        inspections_files = self._get_inspections_files(results_dir)
+        inspections = self._parse_inspections_files(inspections_files)
+
+        logger.info("Write inspections")
+        chunk[QodanaColumnName.INSPECTIONS.value] = chunk.apply(
+            lambda row: self._to_json(inspections.get(row[ColumnName.ID.value], [])), axis=1)
+
+        remove_directory(tmp_dir_path)
+        return chunk
 
     @staticmethod
     def _copy_template(project_dir: Path, language: LanguageVersion):
@@ -195,7 +225,8 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_8
                 or language == LanguageVersion.JAVA_7
         ):
-            shutil.copytree(Path("./project_templates/java"), project_dir, dirs_exist_ok=True)
+            shutil.copytree(Path(f"{remove_slash(os.path.dirname(os.path.abspath(__file__)))}/project_templates/java"),
+                            project_dir, dirs_exist_ok=True)
         else:
             raise NotImplementedError
 
@@ -211,12 +242,12 @@ class DatasetMarker:
                 or language == LanguageVersion.JAVA_7
         ):
             working_dir = project_dir / "src" / "main" / "java"
-            for index, row in chunk.iterrows():
-                solution_dir = working_dir / f"solution{index}"
+            for _, row in chunk.iterrows():
+                solution_dir = working_dir / f"solution{row[ColumnName.ID.value]}"
                 solution_dir.mkdir(parents=True)
                 file_path = solution_dir / "Main.java"
                 with open(file_path, "w") as file:
-                    file.write(f"package solution{index};\n\n")
+                    file.write(f"package solution{row[ColumnName.ID.value]};\n\n")
                     file.write(row[ColumnName.CODE.value])
         else:
             raise NotImplementedError
@@ -224,22 +255,16 @@ class DatasetMarker:
     @staticmethod
     def _run_qodana(project_dir: Path, results_dir: Path):
         results_dir.mkdir()
-
-        docker.run(
-            "jetbrains/qodana",
-            remove=True,
-            volumes=[(project_dir, "/data/project/"), (results_dir, "/data/results/")],
-            user=os.getuid(),
-        )
+        command = ['docker', 'run', '-u', str(os.getuid()), '--rm', '-v', f'{project_dir}/:/data/project/', '-v',
+                   f'{results_dir}/:/data/results/', 'jetbrains/qodana']
+        run_and_wait(command)
 
     @staticmethod
-    def _get_inspections(results_dir: Path) -> Set[str]:
+    def _get_inspections_files(results_dir: Path) -> Set[Path]:
         files = os.listdir(results_dir)
 
         file_name_regex = re.compile(r"(\w*).json")
-        inspection_files = filter(lambda file: file_name_regex.match(file), files)
-
-        return {file_name_regex.match(file).group(1) for file in inspection_files}
+        return set(map(lambda f: results_dir / f, filter(lambda file: file_name_regex.match(file), files)))
 
     def _parse(self, results_dir: Path, inspections: Set[str]):
         package_regex = re.compile(r"solution(\d*)")
