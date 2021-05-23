@@ -22,6 +22,7 @@ class EvaluationConfig:
         self.output_format: str = args.format
         self.solutions_file_path: Union[str, Path] = args.solutions_file_path
         self.traceback: bool = args.traceback
+        self.with_history: bool = args.with_history
         self.output_folder_path: Union[str, Path] = args.output_folder_path
         self.extension: Extension = get_restricted_extension(self.solutions_file_path, [Extension.XLSX, Extension.CSV])
         self.__init_output_file_name(args.output_file_name)
@@ -32,11 +33,14 @@ class EvaluationConfig:
         else:
             self.output_file_name = output_file_name
 
-    def build_command(self, inspected_file_path: Union[str, Path], lang: str) -> List[str]:
+    def build_command(self, inspected_file_path: Union[str, Path], lang: str, history: str) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,
                    self.tool_path,
                    inspected_file_path,
                    RunToolArgument.FORMAT.value.short_name, self.output_format]
+
+        if self.with_history is not None:
+            command.extend([RunToolArgument.HISTORY.value.long_name, history])
 
         if lang == LanguageVersion.JAVA_8.value or lang == LanguageVersion.JAVA_11.value:
             command.extend([RunToolArgument.LANG_VERSION.value.long_name, lang])
