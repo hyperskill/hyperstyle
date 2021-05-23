@@ -7,8 +7,8 @@ from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import filter_df_by_condition, get_solutions_df_by_file_path
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.common.file_system import deserialize_data_from_file, Extension, get_parent_folder
-from src.python.review.inspectors.issue import BaseIssue
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -26,7 +26,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         default=10)
 
 
-def __get_new_inspections(fragment_id_to_issues: Dict[int, List[BaseIssue]], fragment_id: int) -> str:
+def __get_new_inspections(fragment_id_to_issues: Dict[int, List[PenaltyIssue]], fragment_id: int) -> str:
     return ','.join(set(map(lambda i: i.origin_class, fragment_id_to_issues.get(fragment_id, []))))
 
 
