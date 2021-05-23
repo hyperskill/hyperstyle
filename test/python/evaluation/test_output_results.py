@@ -21,6 +21,7 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
     testing_arguments_dict = get_testing_arguments(to_add_tool_path=True)
     testing_arguments_dict.solutions_file_path = XLSX_DATA_FOLDER / test_file
     testing_arguments_dict.traceback = output_type
+    testing_arguments_dict.with_history = False
 
     config = EvaluationConfig(testing_arguments_dict)
     lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)

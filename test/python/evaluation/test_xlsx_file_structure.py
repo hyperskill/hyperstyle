@@ -18,6 +18,7 @@ def test_wrong_column(file_name: str):
     with pytest.raises(KeyError):
         testing_arguments_dict = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
         testing_arguments_dict.solutions_file_path = XLSX_DATA_FOLDER / file_name
+        testing_arguments_dict.with_history = False
         config = EvaluationConfig(testing_arguments_dict)
         lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
         assert inspect_solutions_df(config, lang_code_dataframe)
