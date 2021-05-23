@@ -16,6 +16,9 @@ class ColumnName(Enum):
     OLD = 'old'
     NEW = 'new'
     IS_PUBLIC = 'is_public'
+    HISTORY = 'history'
+    USER = 'user'
+    TIME = 'time'
 
 
 @unique
@@ -38,4 +41,5 @@ script_structure_rule = ('Please, make sure your XLSX-file matches following scr
                          'acceptable language-names: \n'
                          f'Acceptable language-names are: {LanguageVersion.PYTHON_3.value}, '
                          f'{LanguageVersion.JAVA_8.value} ,'
-                         f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.')
+                         f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.'
+                         f'4. If you have the --with-history flag, check for the "{ColumnName.HISTORY.value}" column.')
