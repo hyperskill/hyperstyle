@@ -63,6 +63,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                              f'Use this argument when {EvaluationArgument.TRACEBACK.value} argument'
                              'is enabled argument will not be used otherwise.')
 
+    parser.add_argument('--with-history',
+                        help=f'If True, then history will be taken into account when calculating the grade. '
+                             f'In that case, for each fragment, the "{ColumnName.HISTORY.value}" column '
+                             'must contain the history of previous errors.',
+                        action='store_true')
+
 
 def get_language(lang_key: str) -> LanguageVersion:
     try:
@@ -73,14 +79,14 @@ def get_language(lang_key: str) -> LanguageVersion:
         raise KeyError(e)
 
 
-def __inspect_row(lang: str, code: str, fragment_id: int, config: EvaluationConfig) -> str:
+def __inspect_row(lang: str, code: str, fragment_id: int, history: str, config: EvaluationConfig) -> str:
     print(f'current id: {fragment_id}')
     # Tool does not work correctly with tmp files from <tempfile> module on macOS
     # thus we create a real file in the file system
     extension = get_language(lang).extension_by_language().value
     tmp_file_path = config.solutions_file_path.parent.absolute() / f'inspected_code_{fragment_id}{extension}'
     temp_file = next(create_file(tmp_file_path, code))
-    command = config.build_command(temp_file, lang)
+    command = config.build_command(temp_file, lang, history)
     results = run_in_subprocess(command)
     os.remove(temp_file)
     return results
@@ -103,7 +109,9 @@ def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataF
         lang_code_dataframe[EvaluationArgument.TRACEBACK.value] = lang_code_dataframe.parallel_apply(
             lambda row: __inspect_row(row[ColumnName.LANG.value],
                                       row[ColumnName.CODE.value],
-                                      row[ColumnName.ID.value], config), axis=1)
+                                      row[ColumnName.ID.value],
+                                      row[ColumnName.HISTORY.value],
+                                      config), axis=1)
 
         lang_code_dataframe[ColumnName.GRADE.value] = lang_code_dataframe.parallel_apply(
             lambda row: __get_grade_from_traceback(row[EvaluationArgument.TRACEBACK.value]), axis=1)
