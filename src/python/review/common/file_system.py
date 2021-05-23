@@ -35,6 +35,7 @@ class Extension(Enum):
     XLSX = '.xlsx'
     CSV = '.csv'
     PICKLE = '.pickle'
+    JSON = '.json'
 
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
@@ -192,3 +193,11 @@ def get_parent_folder(path: Union[Path, str], to_add_slash: bool = False) -> Pat
     if to_add_slash:
         parent_folder = add_slash(parent_folder)
     return Path(parent_folder)
+
+
+def copy_directory(source: Union[str, Path], destination: Union[str, Path], dirs_exist_ok: bool = True):
+    shutil.copytree(source, destination, dirs_exist_ok=dirs_exist_ok)
+
+
+def copy_file(source: Union[str, Path], destination: Union[str, Path]):
+    shutil.copy(source, destination)
