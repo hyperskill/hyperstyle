@@ -27,13 +27,15 @@ from src.python.review.common.file_system import (
     get_name_from_path,
     get_parent_folder,
     remove_directory,
-    remove_slash,
+    create_file,
 )
 from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+TEMPLATE_FOLDER = Path(os.path.dirname(os.path.abspath(__file__))) / 'resources' / 'project_templates'
 
 
 def configure_arguments(parser: ArgumentParser) -> None:
@@ -46,12 +48,6 @@ def configure_arguments(parser: ArgumentParser) -> None:
              f"'{ColumnName.CODE.value}' column. The '{ColumnName.LANG.value}' must belong to one of the following "
              f"values: {', '.join(LanguageVersion.values())}. "
              f"If '{ColumnName.LANG.value}' is not equal to any of the values, the row will be skipped.",
-    )
-
-    parser.add_argument(
-        'inspections_output_path',
-        type=lambda value: Path(value).absolute(),
-        help='Path where id of all found inspections will be saved.',
     )
 
     parser.add_argument('-c', '--config', type=lambda value: Path(value).absolute(), help='Path to qodana.yaml')
@@ -81,13 +77,17 @@ def configure_arguments(parser: ArgumentParser) -> None:
 
 
 class DatasetLabel:
+    """
+    DatasetLabel allows you to label a dataset using the found Qodana inspections.
+    Accepts dataset_path, config, limit, chunk_size and output_path.
+    """
+
     dataset_path: Path
     config: Optional[Path]
     limit: Optional[int]
     chunk_size: Optional[int]
     inspection_to_id: Dict[str, int]
-    dataset_output_path: Path
-    inspections_output_path: Path
+    output_path: Path
 
     def __init__(self, args: Namespace):
         self.dataset_path = args.dataset_path
@@ -101,9 +101,10 @@ class DatasetLabel:
             dataset_name = get_name_from_path(self.dataset_path)
             self.output_path = output_dir / f'labeled_{dataset_name}'
 
-        self.inspections_output_path = args.inspections_output_path
-
     def label(self) -> None:
+        """
+        Runs Qodana on each row of the dataset and writes the found inspections in the 'inspections' column.
+        """
         dataset = pd.read_csv(self.dataset_path, nrows=self.limit)
 
         group_by_lang = dataset.groupby(ColumnName.LANG.value)
@@ -116,10 +117,13 @@ class DatasetLabel:
             lang_group = group_by_lang.get_group(language)
 
             if language in LanguageVersion.values():
+                # TODO: languages need implementation
                 try:
                     logger.info(f'Processing the language: {language}')
                     groups.append(self._label_language(lang_group, LanguageVersion(language)))
                 except NotImplementedError:
+                    # If we find a language that is in the LanguageVersion,
+                    # but is not supported in this script, we should skip this fragment.
                     logger.warning(f'{language} needs implementation')
                     groups.append(lang_group)
             else:
@@ -131,7 +135,7 @@ class DatasetLabel:
         dataset = pd.concat(groups)
 
         logger.info('Writing the dataset to a file.')
-        write_dataframe_to_csv(self.dataset_output_path, dataset)
+        write_dataframe_to_csv(self.output_path, dataset)
 
     def _label_language(self, df: pd.DataFrame, language: LanguageVersion) -> pd.DataFrame:
         number_of_chunks = 1
@@ -199,7 +203,7 @@ class DatasetLabel:
 
         if self.config:
             logger.info('Copying the config')
-            self._copy_config(project_dir)
+            copy_file(self.config, project_dir)
 
         logger.info('Creating main files')
         self._create_main_files(project_dir, chunk, language)
@@ -222,27 +226,26 @@ class DatasetLabel:
     @staticmethod
     def _copy_template(project_dir: Path, language: LanguageVersion) -> None:
         if language.is_java():
-            source = f'{remove_slash(os.path.dirname(os.path.abspath(__file__)))}/project_templates/java'
-            copy_directory(source, project_dir)
+            java_template = TEMPLATE_FOLDER / "java"
+            copy_directory(java_template, project_dir)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f'{language} needs implementation.')
 
-    def _copy_config(self, project_dir: Path) -> None:
-        copy_file(self.config, project_dir)
-
-    @staticmethod
-    def _create_main_files(project_dir: Path, chunk: pd.DataFrame, language: LanguageVersion) -> None:
+    def _create_main_files(self, project_dir: Path, chunk: pd.DataFrame, language: LanguageVersion) -> None:
         if language.is_java():
             working_dir = project_dir / 'src' / 'main' / 'java'
-            for _, row in chunk.iterrows():
-                solution_dir = working_dir / f'solution{row[ColumnName.ID.value]}'
-                create_directory(solution_dir)
-                file_path = solution_dir / f'Main{Extension.JAVA.value}'
-                with open(file_path, 'w') as file:
-                    file.write(f'package solution{row[ColumnName.ID.value]};\n\n')
-                    file.write(row[ColumnName.CODE.value])
+
+            chunk.apply(
+                lambda row: next(
+                    create_file(
+                        file_path=(working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'),
+                        content=row[ColumnName.CODE.value],
+                    )
+                ),
+                axis=1,
+            )
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f'{language} needs implementation.')
 
     @staticmethod
     def _run_qodana(project_dir: Path, results_dir: Path) -> None:
@@ -260,8 +263,7 @@ class DatasetLabel:
     @staticmethod
     def _get_inspections_files(results_dir: Path) -> Set[Path]:
         files = os.listdir(results_dir)
-
-        file_name_regex = re.compile(r"(\w*).json")
+        file_name_regex = re.compile(r'(\w*).json')
         return set(map(lambda f: results_dir / f, filter(lambda file: file_name_regex.match(file), files)))
 
 
