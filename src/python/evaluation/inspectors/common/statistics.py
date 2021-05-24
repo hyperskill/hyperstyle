@@ -1,5 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
+from statistics import median
 from typing import Dict, List, Tuple
 
 from src.python.review.inspectors.issue import BaseIssue, IssueType, ShortIssue
@@ -84,7 +85,24 @@ class IssuesStatistics:
         return len(self.stat)
 
 
+# Store list of penalty influences for each category
+@dataclass
+class PenaltyInfluenceStatistics:
+    stat: Dict[IssueType, List[float]]
+
+    def __init__(self, issues_stat_dict: Dict[int, List[PenaltyIssue]]):
+        self.stat = defaultdict(list)
+        for _, issues in issues_stat_dict.items():
+            for issue in issues:
+                self.stat[issue.type].append(issue.influence_on_penalty)
+
+    def print_stat(self):
+        for category, issues in self.stat.items():
+            print(f'{category.value} issues: min={min(issues)}, max={max(issues)}, median={median(issues)}')
+
+
 @dataclass(frozen=True)
 class GeneralInspectorsStatistics:
     new_issues_stat: IssuesStatistics
     penalty_issues_stat: IssuesStatistics
+    penalty_influence_stat: PenaltyInfluenceStatistics

@@ -6,7 +6,7 @@ from typing import Dict, List
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
 from src.python.evaluation.inspectors.common.statistics import (
-    GeneralInspectorsStatistics, IssuesStatistics, PenaltyIssue,
+    GeneralInspectorsStatistics, IssuesStatistics, PenaltyInfluenceStatistics, PenaltyIssue,
 )
 from src.python.review.common.file_system import deserialize_data_from_file
 from src.python.review.inspectors.issue import ShortIssue
@@ -52,7 +52,8 @@ def __gather_issues_stat(issues_stat_dict: Dict[int, List[PenaltyIssue]]) -> Iss
 def gather_statistics(diffs_dict: dict) -> GeneralInspectorsStatistics:
     new_issues_stat = __gather_issues_stat(diffs_dict[EvaluationArgument.TRACEBACK.value])
     penalty_issues_stat = __gather_issues_stat(diffs_dict[ColumnName.PENALTY.value])
-    return GeneralInspectorsStatistics(new_issues_stat, penalty_issues_stat)
+    return GeneralInspectorsStatistics(new_issues_stat, penalty_issues_stat,
+                                       PenaltyInfluenceStatistics(diffs_dict[ColumnName.PENALTY.value]))
 
 
 def main() -> None:
@@ -71,7 +72,7 @@ def main() -> None:
     if not has_decreased_grades(diffs):
         print('All grades are equal.')
     else:
-        print(f'Decreased grades was found in the following fragments: {diffs[ColumnName.DECREASED_GRADE.value]}')
+        print(f'Decreased grades was found in {len(diffs[ColumnName.DECREASED_GRADE.value])} fragments')
     print(f'{diffs[ColumnName.USER.value]} unique users was found!')
     print(separator)
 
@@ -83,6 +84,10 @@ def main() -> None:
 
     print('PENALTY INSPECTIONS STATISTICS;')
     statistics.penalty_issues_stat.print_full_statistics(n, args.full_stat, separator)
+    print(separator)
+
+    print('INFLUENCE ON PENALTY STATISTICS;')
+    statistics.penalty_influence_stat.print_stat()
     print(separator)
 
 

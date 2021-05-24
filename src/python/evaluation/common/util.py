@@ -19,6 +19,7 @@ class ColumnName(Enum):
     DECREASED_GRADE = 'decreased_grade'
     PENALTY = 'penalty'
     USER = 'user'
+    HISTORY = 'history'
 
 
 @unique

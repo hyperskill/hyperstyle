@@ -45,6 +45,9 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 # The key <traceback> contains list of new issues for each fragment
 # The key <penalty> contains list of issues with not zero influence_on_penalty coefficient
 def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
+    if ColumnName.HISTORY.value in new_df.columns:
+        del new_df[ColumnName.HISTORY.value]
+    new_df = new_df.reindex(columns=old_df.columns)
     inconsistent_positions = get_inconsistent_positions(old_df, new_df)
     diffs = {
         ColumnName.GRADE.value: [],
@@ -77,6 +80,11 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
             difference = set(set(new_issues) - set(old_issues))
             if len(difference) > 0:
                 diffs[EvaluationArgument.TRACEBACK.value][fragment_id] = difference
+
+            # Find issues with influence_in_penalty > 0
+            penalty = set(filter(lambda i: i.influence_on_penalty > 0, new_issues))
+            if len(penalty) > 0:
+                diffs[ColumnName.PENALTY.value][fragment_id] = penalty
     return diffs
 
 

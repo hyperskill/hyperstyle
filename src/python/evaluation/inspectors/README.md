@@ -200,6 +200,7 @@ The output contains:
     fragments have these issues;
   - \[Optional\] full categorized statistics: for each category for each issue how many 
     fragments have this issue
+- for each category base influence on the penalty statistics: min, max and median values
 
 An example of the printed statistics (without full categorized statistics):
 
@@ -233,6 +234,16 @@ ______
 ______
 PENALTY INSPECTIONS STATISTICS;
 Statistics is empty!
+______
+______
+INFLUENCE ON PENALTY STATISTICS;
+CODE_STYLE issues: min=1, max=100, median=86
+BEST_PRACTICES issues: min=1, max=100, median=98.0
+COMPLEXITY issues: min=1, max=100, median=16.0
+MAINTAINABILITY issues: min=1, max=7, median=2.0
+CYCLOMATIC_COMPLEXITY issues: min=1, max=58, median=11.5
+COHESION issues: min=1, max=100, median=56
+BOOL_EXPR_LEN issues: min=6, max=6, median=6
 ______
 ```
 
