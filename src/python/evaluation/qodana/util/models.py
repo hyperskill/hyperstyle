@@ -49,6 +49,8 @@ class QodanaColumnName(Enum):
     INSPECTIONS = 'inspections'
     ID = 'id'
     INSPECTION_ID = 'inspection_id'
+    COUNT_ALL = 'count_all'
+    COUNT_UNIQUE = 'count_unique'
 
 
 @unique

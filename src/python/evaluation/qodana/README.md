@@ -69,9 +69,11 @@ This stage allow you to get all unique inspections from a `csv` file graded by Q
 Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
 and has `inspections` column.
 
-Output file is a new `csv` file with two columns: `id` and `inspection_id`. 
+Output file is a new `csv` file with four columns: `id`, `inspection_id`, `count_all`, `count_uniq`. 
 `id` is unique number for each inspection, minimal value is 1.
 `inspection_id` is unique Qoadana id for each inspection.
+`count_all` count all fragments where was this inspection (with duplicates).
+`count_uniq` count all fragments where was this inspection (without duplicates).
 
 #### Usage
 
@@ -81,15 +83,20 @@ Required arguments:
 
 `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script.
 
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;uniq**| To count all fragments for each inspection where was this inspection (without duplicates). By default it disabled. |
+
 The resulting file will be stored in the same folder as the input file.
 
 An example of the output file:
 
 ```json
-id   |  inspection_id    
------|-------------------
-1    |  SystemOutErr   
-2    |  ConstantExpression
+id   |  inspection_id      |  count_all   |  count_unique
+-----|---------------------|--------------|--------------
+1    |  SystemOutErr       |    5         |     2
+2    |  ConstantExpression |    1         |     1
 ```
 
 ___
