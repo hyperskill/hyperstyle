@@ -23,7 +23,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def __get_inspections_dict(inspections_path: str) -> Dict[str, int]:
-    inspections_df = pd.read_csv(inspections_path)
+    inspections_df = pd.read_csv(inspections_path,
+                                 usecols=[QodanaColumnName.ID.value, QodanaColumnName.INSPECTION_ID.value])
     inspections_dict = inspections_df.set_index(QodanaColumnName.INSPECTION_ID.value).T.to_dict('list')
     for qodana_id, id_list in inspections_dict.items():
         inspections_dict[qodana_id] = id_list[0]
