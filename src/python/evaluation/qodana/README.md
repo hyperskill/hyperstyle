@@ -93,10 +93,10 @@ The resulting file will be stored in the same folder as the input file.
 An example of the output file:
 
 ```json
-id   |  inspection_id    
------|-------------------
-1    |  SystemOutErr   
-2    |  ConstantExpression
+id   |  inspection_id      |  count_all   |  count_unique
+-----|---------------------|--------------|--------------
+1    |  SystemOutErr       |    5         |     2
+2    |  ConstantExpression |    1         |     1
 ```
 
 ___
