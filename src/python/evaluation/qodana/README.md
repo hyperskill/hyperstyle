@@ -130,6 +130,11 @@ Required arguments:
 - `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
+
 The resulting file will be stored in the same folder as the input file.
 
 An example of the input file:
@@ -141,7 +146,6 @@ id   |  code             |  lang         |  inspections
 3    |  "// some code"   |  java11       |  "{""issues"": [""{\"... \""problem_id\"": \""SystemOutErr\""}""]}"
 0    |  "// some code"   |  java11       |  "{""issues"": [""{\"...\""problem_id\"": \""ConstantExpression\""}"",""{\"...\""problem_id\"": \""ConstantExpression\""}""]}"
 1    |  "// some code"   |  java11       |  "{""issues"": []}"
-
 ```
 
 with the inspections file: 
@@ -162,5 +166,71 @@ id   |  code             |  lang         |  inspections
 3    |  "// some code"   |  java11       |  1
 0    |  "// some code"   |  java11       |  2,2
 1    |  "// some code"   |  java11       |  0
+
+```
+
+---
+
+#### Fragment to inspections list with positions
+
+This data representation match each line in code fragments to a list with ids of inspections in this line.
+
+Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+and has `inspections` column.
+
+Output file is a new `csv` file with a new `inspections` column with list with ids of inspections. 
+If the list of inspections for the fragment is empty, then write 0. 
+Note, that each line in code fragments in the new file is stored in a separate row. 
+All indents as well as blank lines are keeped.
+
+#### Usage
+
+Run the [fragment_to_inspections_list_line_by_line.py](fragment_to_inspections_list_line_by_line.py) with the arguments from command line.
+
+Required arguments:
+
+- `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
+- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
+
+The resulting file will be stored in the same folder as the input file.
+
+An example of the input file:
+
+```json
+id   |  code             |  lang         |  inspections
+-----|-------------------|---------------|-----------------
+2    |  "// some code"   |  java11       |  "{""issues"": []}"
+3    |  "// some code"   |  java11       |  "{""issues"": [""{\"... \""problem_id\"": \""SystemOutErr\""}""]}"
+0    |  "// some code"   |  java11       |  "{""issues"": [""{\"...\""problem_id\"": \""ConstantExpression\""}"",""{\"...\""problem_id\"": \""ConstantExpression\""}""]}"
+1    |  "// some code"   |  java11       |  "{""issues"": []}"
+```
+
+with the inspections file: 
+
+```json
+id   |  inspection_id    
+-----|-------------------
+1    |  SystemOutErr   
+2    |  ConstantExpression
+```
+
+An example of the output file:
+
+```json
+id   |  code                                  |  lang         |  inspections
+-----|----------------------------------------|---------------|-----------------
+2    |  "// first line from code with id 2"   |  java11       |  0
+2    |  "// second line from code with id 2"  |  java11       |  0
+3    |  "// first line from code with id 3"   |  java11       |  1
+3    |  "// second line from code with id 3"  |  java11       |  0
+0    |  "// first line from code with id 0"   |  java11       |  0
+0    |  "// second line from code with id 0"  |  java11       |  2,2
+1    |  "// first line from code with id 1"   |  java11       |  0
+1    |  "// second line from code with id 1"  |  java11       |  0
 
 ```
