@@ -1,7 +1,11 @@
+import argparse
 import json
+from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
+
+from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 
 
@@ -21,10 +25,28 @@ def get_inspections_dict(inspections_path: str) -> Dict[str, int]:
     return inspections_dict
 
 
-def replace_inspections_on_its_ids(issues_list: List[QodanaIssue], inspections_dict: Dict[str, int]) -> str:
+def replace_inspections_on_its_ids(issues_list: List[QodanaIssue], inspections_dict: Dict[str, int],
+                                   to_remove_duplicates: bool) -> str:
     if len(issues_list) == 0:
         inspections = '0'
     else:
-        issues_list.sort(key=lambda x: x.problem_id)
-        inspections = ','.join(str(inspections_dict[i.problem_id]) for i in issues_list)
+        problem_id_list = list(map(lambda i: inspections_dict[i.problem_id], issues_list))
+        if to_remove_duplicates:
+            problem_id_list = list(set(problem_id_list))
+        problem_id_list.sort()
+        inspections = ','.join(str(p) for p in problem_id_list)
     return inspections
+
+
+def configure_model_converter_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(RunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.long_name,
+                        type=lambda value: Path(value).absolute(),
+                        help=RunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.description)
+
+    parser.add_argument(RunToolArgument.QODANA_INSPECTIONS_PATH.value.long_name,
+                        type=lambda value: Path(value).absolute(),
+                        help=RunToolArgument.QODANA_INSPECTIONS_PATH.value.description)
+
+    parser.add_argument(RunToolArgument.QODANA_DUPLICATES.value.long_name,
+                        help=RunToolArgument.QODANA_DUPLICATES.value.description,
+                        action='store_true')

@@ -94,3 +94,5 @@ class RunToolArgument(Enum):
                                                'Csv file with solutions. This file must be graded by Qodana.')
 
     QODANA_INSPECTIONS_PATH = ArgumentsInfo(None, 'inspections_path', 'Path to a CSV file with inspections list.')
+
+    QODANA_DUPLICATES = ArgumentsInfo(None, '--remove-duplicates', 'Remove duplicates around inspections')

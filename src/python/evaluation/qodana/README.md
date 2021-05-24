@@ -130,6 +130,11 @@ Required arguments:
 - `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
+
 The resulting file will be stored in the same folder as the input file.
 
 An example of the input file:
@@ -186,6 +191,11 @@ Required arguments:
 
 - `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
 
 The resulting file will be stored in the same folder as the input file.
 
