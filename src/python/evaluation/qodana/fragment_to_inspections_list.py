@@ -4,8 +4,9 @@ from pathlib import Path
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from src.python.evaluation.qodana.util.util import get_inspections_dict, replace_inspections_on_its_ids, \
-    configure_model_converter_arguments
+from src.python.evaluation.qodana.util.util import (
+    configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
+)
 from src.python.review.common.file_system import Extension, get_parent_folder
 
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value
