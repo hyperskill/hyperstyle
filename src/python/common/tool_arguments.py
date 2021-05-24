@@ -89,3 +89,10 @@ class RunToolArgument(Enum):
 
     DIFFS_FILE_PATH = ArgumentsInfo(None, 'diffs_file_path',
                                     'Path to a file with serialized diffs that were founded by diffs_between_df.py')
+
+    QODANA_SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
+                                               'Csv file with solutions. This file must be graded by Qodana.')
+
+    QODANA_INSPECTIONS_PATH = ArgumentsInfo(None, 'inspections_path', 'Path to a CSV file with inspections list.')
+
+    QODANA_DUPLICATES = ArgumentsInfo(None, '--remove-duplicates', 'Remove duplicates around inspections')

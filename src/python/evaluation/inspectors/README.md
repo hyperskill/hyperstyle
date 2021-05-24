@@ -161,8 +161,8 @@ Optional arguments:
 Argument | Description
 --- | ---
 |**&#8209;&#8209;categorize**| If True, statistics will be categorized by several categories. By default is disabled.|
-|**&#8209;n**, **&#8209;&#8209;top_n**| The top N items will be printed. Default value is 10.|
-|**&#8209;&#8209;full_stat**| If True, full statistics (with all issues) will be printed. By default is disabled.|
+|**&#8209;n**, **&#8209;&#8209;top&#8209;n**| The top N items will be printed. Default value is 10.|
+|**&#8209;&#8209;full&#8209;stat**| If True, full statistics (with all issues) will be printed. By default is disabled.|
 
 The statistics will be printed into console.
 
