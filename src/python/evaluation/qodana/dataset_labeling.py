@@ -22,12 +22,12 @@ from src.python.review.common.file_system import (
     copy_directory,
     copy_file,
     create_directory,
+    create_file,
     Extension,
     get_content_from_file,
     get_name_from_path,
     get_parent_folder,
     remove_directory,
-    create_file,
 )
 from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
@@ -240,7 +240,7 @@ class DatasetLabel:
                     create_file(
                         file_path=(working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'),
                         content=row[ColumnName.CODE.value],
-                    )
+                    ),
                 ),
                 axis=1,
             )
