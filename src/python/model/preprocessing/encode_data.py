@@ -36,6 +36,13 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                              'context for testing and validation. Default is False.',
                         action='store_true')
 
+    parser.add_argument('-n', '--n_lines_to_add',
+                        help='Use only if add_context is enabled. Allows to add n-lines from the same piece of code, '
+                             'before and after each line in the dataset. If there are no lines before or after a line'
+                             'from the same code-sample, special token will be added. Default is 2.',
+                        default=2,
+                        type=int)
+
     parser.add_argument('-ohe', '--one_hot_encoding',
                         help='If True, target column will be represented as one-hot-encoded vector. '
                              'The length of each vector is equal to the unique number of classes. '
@@ -47,7 +54,7 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
     """ transform: ['1, 2', '3'] array([[1, 1, 0], [0, 0, 1]])
     """
     target = df[MarkingArgument.INSPECTIONS.value].to_numpy()
-    tuple_target = [tuple(map(int, label.split_dataset(','))) for label in target]
+    tuple_target = [tuple(map(int, label.split(','))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
         encoded_target = mlb.fit_transform(tuple_target)
@@ -65,51 +72,44 @@ class Context:
         If there are no lines before or / and after a piece of code,
         special tokens are added.
     """
-    def __init__(self, df: pd.DataFrame):
-        self.n_lines_before: int = 2
-        self.n_lines_after: int = 2
+    def __init__(self, df: pd.DataFrame, n_lines: int):
         self.indices = df[MarkingArgument.ID.value].to_numpy()
         self.lines = df[ColumnName.CODE.value]
+        self.n_lines: int = n_lines
         self.df = df
 
     def add_context_to_lines(self) -> pd.DataFrame:
         lines_with_context = []
-        for i, line in enumerate(self.lines):
-            context = self.add_line_before(i, line)
-            context = self.add_line_after(context, i)
+        for current_line_index, current_line in enumerate(self.lines):
+            context = self.add_context_before(current_line_index, current_line)
+            context = self.add_context_after(context, current_line_index)
             lines_with_context.append(context[0])
         lines_with_context = pd.Series(lines_with_context)
         self.df[ColumnName.CODE.value] = lines_with_context
         return self.df
 
-    def add_line_before(self, i: int, line: str) -> List:
-        if i == 0 or self.indices[i - 1] != self.indices[i]:
-            context = [f'{CustomTokens.NOC.value}\n{CustomTokens.NOC.value}\n{line}']
-
-        elif i == 1 or self.indices[i - 2] != self.indices[i]:
-            context = [f'{CustomTokens.NOC.value}\n{self.lines.iloc[i - 1]}\n{line}']
-
-        elif self.indices[i - 1] == self.indices[i] and self.indices[i - 2] == self.indices[i]:
-            context = [f'{self.lines.iloc[i - 2]}\n{self.lines.iloc[i - 1]}\n{line}']
-        else:
-            message = 'Unexpected error while adding lines to the context before target line.'
-            logger.error(message)
-            raise Exception(message)
+    def add_context_before(self, current_line_index: int, current_line: str) -> List:
+        context = ['']
+        for n_line_index in range(current_line_index - self.n_lines, self.n_lines):
+            if n_line_index >= len(self.lines):
+                return context
+            if n_line_index == 0 or self.indices[n_line_index] != self.indices[current_line_index]:
+                context = [context[0] + CustomTokens.NOC.value]
+            else:
+                context = [context[0] + self.lines.iloc[n_line_index]]
+            if n_line_index != self.n_lines - 1:
+                context = [context[0] + '\n']
+        context = [context[0] + current_line]
         return context
 
-    def add_line_after(self, context: List, i: int) -> List:
-        if i == len(self.lines) - 1 or self.indices[i + 1] != self.indices[i]:
-            context = [context[0] + f'\n{CustomTokens.NOC.value}\n{CustomTokens.NOC.value}']
-
-        elif i == len(self.lines) - 2 or self.indices[i + 2] != self.indices[i]:
-            context = [context[0] + f'\n{self.lines.iloc[i + 1]}\n{CustomTokens.NOC.value}']
-
-        elif self.indices[i + 1] == self.indices[i] and self.indices[i + 2] == self.indices[i]:
-            context += [context[0] + f'{self.lines.iloc[i + 1]}\n{self.lines.iloc[i + 2]}']
-        else:
-            message = 'Unexpected error while adding lines to the context after target line.'
-            logger.error(message)
-            raise Exception(message)
+    def add_context_after(self, context: List, current_line_index: int) -> List:
+        for n_line_index in range(current_line_index + 1, self.n_lines + current_line_index + 1):
+            if n_line_index >= len(self.lines) or self.indices[n_line_index] != self.indices[current_line_index]:
+                context = [context[0] + CustomTokens.NOC.value]
+            else:
+                context = [context[0] + self.lines.iloc[n_line_index]]
+            if n_line_index != self.n_lines - 1:
+                context = [context[0] + '\n']
         return context
 
 
@@ -130,11 +130,11 @@ def main() -> None:
 
     if args.one_hot_encoding:
         target = __one_hot_encoding(df)
-        df = df.iloc[:, 0:3]
+        df = df.iloc[:, 0:2]
         df = pd.concat([df, target], axis=1)
 
     if args.add_context:
-        df = Context(df).add_context_to_lines()
+        df = Context(df, args.n_lines_to_add).add_context_to_lines()
 
     write_dataframe_to_csv(output_file_path, df)
 

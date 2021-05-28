@@ -18,7 +18,7 @@ class MarkingArgument(Enum):
 
 @unique
 class CustomTokens(Enum):
-    NOC = ['NOC']  # no context token to add when there are no lines for the context
+    NOC = '[NOC]'  # no context token to add when there are no lines for the context
 
 
 tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
