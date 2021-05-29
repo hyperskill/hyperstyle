@@ -53,8 +53,12 @@ def all_items_condition(name: str) -> bool:
 
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
-def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_items_condition,
-                              item_type: FileSystemItem = FileSystemItem.FILE) -> List[Path]:
+def get_all_file_system_items(
+    root: Path,
+    item_condition: ItemCondition = all_items_condition,
+    item_type: FileSystemItem = FileSystemItem.FILE,
+    without_subdirs: bool = False,
+) -> List[Path]:
     if not root.is_dir():
         raise ValueError(f'The {root} is not a directory')
 
@@ -63,6 +67,10 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
         for item in fs_tuple[item_type.value]:
             if item_condition(item):
                 items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
+
+        if without_subdirs:
+            break
+
     return items
 
 
