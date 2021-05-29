@@ -8,7 +8,7 @@ from argparse import ArgumentParser, Namespace
 from collections import defaultdict
 from math import ceil
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 
 sys.path.append('../../../..')
 
@@ -24,9 +24,11 @@ from src.python.review.common.file_system import (
     create_directory,
     create_file,
     Extension,
+    get_all_file_system_items,
     get_content_from_file,
     get_name_from_path,
     get_parent_folder,
+    match_condition,
     remove_directory,
 )
 from src.python.review.common.subprocess_runner import run_and_wait
@@ -166,7 +168,7 @@ class DatasetLabel:
         return cls._extract_fragment_id(folder_name)
 
     @classmethod
-    def _parse_inspections_files(cls, inspections_files: Set[Path]) -> Dict[int, List[QodanaIssue]]:
+    def _parse_inspections_files(cls, inspections_files: List[Path]) -> Dict[int, List[QodanaIssue]]:
         id_to_issues: Dict[int, List[QodanaIssue]] = defaultdict(list)
         for file in inspections_files:
             issues = json.loads(get_content_from_file(file))['problems']
@@ -261,10 +263,9 @@ class DatasetLabel:
         run_and_wait(command)
 
     @staticmethod
-    def _get_inspections_files(results_dir: Path) -> Set[Path]:
-        files = os.listdir(results_dir)
-        file_name_regex = re.compile(r'(\w*).json')
-        return set(map(lambda f: results_dir / f, filter(lambda file: file_name_regex.match(file), files)))
+    def _get_inspections_files(results_dir: Path) -> List[Path]:
+        condition = match_condition(r'\w*.json')
+        return get_all_file_system_items(results_dir, condition, without_subdirs=True)
 
 
 def main():
