@@ -48,7 +48,7 @@ def configure_arguments(parser: argparse.ArgumentParser, tool_arguments: enum.En
                         help=tool_arguments.VERBOSITY.value.description,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
-                        type=str)
+                        type=int)
 
     # Usage example: -d Flake8,Intelli
     parser.add_argument(tool_arguments.DISABLE.value.short_name,
