@@ -45,7 +45,7 @@ class RadonInspector(BaseInspector):
             maintainability_lack = convert_percentage_of_value_to_lack_of_value(float(groups[1]))
 
             issue_data = IssueData.get_base_issue_data_dict(
-                file_path, cls.inspector_type, origin_class=MAINTAINABILITY_ORIGIN_CLASS
+                file_path, cls.inspector_type, origin_class=MAINTAINABILITY_ORIGIN_CLASS,
             )
             issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
             issue_data[IssueData.MAINTAINABILITY_LACK.value] = maintainability_lack
