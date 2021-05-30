@@ -6,17 +6,17 @@ from src.python.review.common.file_system import Extension
 
 @unique
 class ColumnName(Enum):
-    CODE = "code"
-    LANG = "lang"
-    LANGUAGE = "language"
-    GRADE = "grade"
+    CODE = 'code'
+    LANG = 'lang'
+    LANGUAGE = 'language'
+    GRADE = 'grade'
 
 
 @unique
 class EvaluationArgument(Enum):
-    TRACEBACK = "traceback"
-    RESULT_FILE_NAME = "results"
-    RESULT_FILE_NAME_EXT = f"{RESULT_FILE_NAME}{Extension.XLSX.value}"
+    TRACEBACK = 'traceback'
+    RESULT_FILE_NAME = 'results'
+    RESULT_FILE_NAME_EXT = f'{RESULT_FILE_NAME}{Extension.XLSX.value}'
 
 
 script_structure_rule = ("Please, make sure your XLSX-file matches following script standards: \n"
