@@ -27,8 +27,8 @@ class QodanaDataset(Dataset):
         self.device = device
 
     def __getitem__(self, idx):
-        return {MarkingArgument.INPUT_IDS.value: self.code_encoded[idx].to(self.device),
-                MarkingArgument.LABELS.value: self.target[idx].to(self.device)}
+        return {MarkingArgument.INPUT_IDS.value: self.code_encoded[idx],
+                MarkingArgument.LABELS.value: self.target[idx]}
 
     def __len__(self):
         return len(self.target)
