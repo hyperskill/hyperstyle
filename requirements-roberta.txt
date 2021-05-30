@@ -1,6 +1,6 @@
-numpy~=1.19.2 # tensorflow requires numpy version 1.19.2 or older
+tqdm==4.49.0
 scikit-learn~=0.24.2
-transformers==4.5.1
+transformers==4.6.1
 tokenizers==0.10.2
 torch==1.8.1
-tensorflow==2.4.1
+wandb==0.10.31
