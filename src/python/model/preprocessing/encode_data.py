@@ -2,8 +2,9 @@ import argparse
 import logging
 import sys
 from itertools import chain
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 from typing import List
 
 import pandas as pd

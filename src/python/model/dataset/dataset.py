@@ -2,8 +2,8 @@ import logging
 
 import pandas as pd
 import torch
-from torch.utils.data import Dataset
 from src.python.model.common.util import MarkingArgument
+from torch.utils.data import Dataset
 from transformers import RobertaTokenizer
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class QodanaDataset(Dataset):
         code = list(map(str, df['code']))
         self.target = torch.tensor(df.iloc[:, 2:].values)
         self.code_encoded = tokenizer(
-            code, padding=True, truncation=True, max_length=context_length, return_tensors="pt"
+            code, padding=True, truncation=True, max_length=context_length, return_tensors="pt",
         )[MarkingArgument.INPUT_IDS.value]
         self.device = device
 

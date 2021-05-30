@@ -1,8 +1,8 @@
 import argparse
 import sys
 from pathlib import Path
-import torch
 
+import torch
 from src.python.model.common.metric import Metric
 from src.python.model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
 from src.python.model.dataset.dataset import QodanaDataset
