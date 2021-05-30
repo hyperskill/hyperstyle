@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
