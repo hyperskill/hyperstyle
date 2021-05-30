@@ -8,7 +8,7 @@ import torch
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.model.common.evaluation_config import configure_arguments
 from src.python.model.common.util import MarkingArgument
-from src.python.model.preprocessing.dataset import SimpleDataset
+from src.python.model.dataset.dataset import QodanaDataset
 from src.python.review.common.file_system import Extension
 from torch.utils.data import DataLoader
 from transformers import RobertaForSequenceClassification
@@ -20,14 +20,13 @@ def main():
     args = parser.parse_args()
     if args.output_dir is None:
         args.output_dir = Path(args.dataset_path).parent / f'predictions{Extension.CSV.value}'
-
-    df = pd.read_csv(args.dataset_path)
-    val_dataset = SimpleDataset(df)
-    num_labels = len(val_dataset[0][MarkingArgument.LABELS.value])
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    val_dataset = QodanaDataset(args.dataset_path, args.context_length, device)
+    num_labels = val_dataset[0][1].shape[0]
     eval_dataloader = DataLoader(val_dataset, batch_size=args.batch_size)
     predictions = np.zeros([len(val_dataset), num_labels], dtype=object)
 
-    model = RobertaForSequenceClassification.from_pretrained(args.model_weights, num_labels=num_labels)
+    model = RobertaForSequenceClassification.from_pretrained(args.model_weights, num_labels=num_labels).to(device)
     model.eval()
 
     start_ind = 0
@@ -35,14 +34,14 @@ def main():
         with torch.no_grad():
             ids = batch[MarkingArgument.INPUT_IDS.value].detach()
             logits = model(input_ids=ids).logits
-            logits = logits.sigmoid().detach().numpy()
+            logits = logits.sigmoid().detach().cpu().numpy()
             batch_predictions = (logits > args.threshold).astype(int)
             predictions[start_ind:start_ind + args.batch_size, :num_labels] = batch_predictions
             start_ind += args.batch_size
 
     predictions = pd.DataFrame(predictions, dtype=int)
     predicted_true = 0
-    df = df.iloc[:, 1:]
+    df = pd.read_csv(args.dataset_path).iloc[:, 1:]
     for i in range(num_labels):
         predicted_true += np.sum((
             predictions.iloc[:, i].to_numpy().astype(int) == df.iloc[:, i].to_numpy().astype(int)))

@@ -22,14 +22,14 @@ class MultilabelTrainer(Trainer):
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('--train_dataset_path',
+    parser.add_argument('train_dataset_path',
                         type=str,
                         help=f'Path to the dataset received by either'
                              f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
                              f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
                              f'{Extension.PY.value}script.')
 
-    parser.add_argument('--val_dataset_path',
+    parser.add_argument('val_dataset_path',
                         type=str,
                         help=f'Path to the dataset received by either'
                              f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
@@ -41,6 +41,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the directory where to save model weights. Default is the directory'
                              'where train dataset is.')
+
+    parser.add_argument('-cl', '--context_length',
+                        type=int,
+                        default=40,
+                        help='Sequence length of 1 sample after tokenization, default is 40.')
 
     parser.add_argument('-bs', '--batch_size',
                         type=int,
@@ -101,4 +106,5 @@ class TrainingArgs:
                                  warmup_steps=self.args.warm_up_steps,
                                  seed=MarkingArgument.SEED.value,
                                  load_best_model_at_end=True,
-                                 greater_is_better=True)
+                                 greater_is_better=True,
+                                 report_to=['wandb'])

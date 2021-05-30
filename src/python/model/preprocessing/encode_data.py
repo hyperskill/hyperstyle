@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 from itertools import chain
+import numpy as np
 from pathlib import Path
 from typing import List
 
@@ -54,11 +55,11 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
     """ transform: ['1, 2', '3'] array([[1, 1, 0], [0, 0, 1]])
     """
     target = df[MarkingArgument.INSPECTIONS.value].to_numpy()
-    tuple_target = [tuple(map(int, label.split(','))) for label in target]
+    target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
-        encoded_target = mlb.fit_transform(tuple_target)
-        assert len(list(set(chain.from_iterable(tuple_target)))) == encoded_target.shape[1]
+        encoded_target = mlb.fit_transform(target_list_int)
+        assert len(list(set(chain.from_iterable(target_list_int)))) == encoded_target.shape[1]
         encoded_target = pd.DataFrame(data=encoded_target, columns=range(encoded_target.shape[1]))
         return encoded_target
     except AssertionError as e:
@@ -130,8 +131,7 @@ def main() -> None:
 
     if args.one_hot_encoding:
         target = __one_hot_encoding(df)
-        df = df.iloc[:, 0:2]
-        df = pd.concat([df, target], axis=1)
+        df = pd.concat([df[[ColumnName.ID.value, ColumnName.CODE.value]], target], axis=1)
 
     if args.add_context:
         df = Context(df, args.n_lines_to_add).add_context_to_lines()

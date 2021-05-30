@@ -12,7 +12,7 @@ from src.python.review.common.file_system import create_directory, Extension
 
 def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_path',
+    parser.add_argument('dataset_path',
                         type=str,
                         help=f'Path to the dataset received by either'
                              f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
@@ -48,7 +48,7 @@ def configure_parser() -> argparse.ArgumentParser:
 
 def split_dataset(dataset_path: str, output_folder: str, val_size: float, test_size: float, shuffle: bool):
     df = pd.read_csv(dataset_path)
-    target = df.iloc[:, 3:]
+    target = df.iloc[:, 2:]
     code_bank = df[ColumnName.CODE.value]
 
     code_train, code_test, target_train, target_test = train_test_split(code_bank,
