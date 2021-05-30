@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class EvaluationConfig:
     def __init__(self, args: Namespace):
         self.tool_path: Union[str, Path] = args.tool_path
-        self.output_format: str = args.format
+        self.format: str = args.format
         self.xlsx_file_path: Union[str, Path] = args.xlsx_file_path
         self.traceback: bool = args.traceback
         self.output_folder_path: Union[str, Path] = args.output_folder_path
@@ -24,7 +24,7 @@ class EvaluationConfig:
         command = [LanguageVersion.PYTHON_3.value,
                    self.tool_path,
                    inspected_file_path,
-                   RunToolArgument.FORMAT.value.short_name, self.output_format]
+                   RunToolArgument.FORMAT.value.short_name, self.format]
 
         if lang == LanguageVersion.JAVA_8.value or lang == LanguageVersion.JAVA_11.value:
             command.extend([RunToolArgument.LANG_VERSION.value.long_name, lang])
