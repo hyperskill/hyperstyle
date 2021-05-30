@@ -5,6 +5,7 @@ from pathlib import Path
 import torch
 from src.python.model.common.metric import Metric
 from src.python.model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
+from src.python.model.common.util import MarkingArgument
 from src.python.model.dataset.dataset import QodanaDataset
 from src.python.review.common.file_system import create_directory
 from transformers import RobertaForSequenceClassification
@@ -22,7 +23,7 @@ def main():
     print(f'Steps to be made: {train_steps_to_be_made}, validate each '
           f'{val_steps_to_be_made}th step.')
 
-    num_labels = train_dataset[0][1].shape[0]
+    num_labels = train_dataset[0][MarkingArgument.LABELS.value].shape[0]
     model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=num_labels).to(device)
 
     metrics = Metric(args.threshold)
