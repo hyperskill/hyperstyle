@@ -140,3 +140,5 @@ inplace
 getitem
 idx
 QodanaDataset
+cuda
+f1
