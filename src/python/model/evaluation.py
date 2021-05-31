@@ -43,7 +43,7 @@ def main():
 
     predictions = pd.DataFrame(predictions, columns=range(num_labels), dtype=int)
     true_labels = pd.read_csv(args.test_dataset_path).iloc[:, 1:]
-    metric = Metric(args.threshold)
+    metric = Metric(args.threshold, num_labels)
     print(f"f1_score: {metric.get_f1_score(predictions, true_labels)}")
     write_dataframe_to_csv(args.output_directory_path, predictions)
 
