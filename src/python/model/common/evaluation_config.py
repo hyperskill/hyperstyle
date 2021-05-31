@@ -15,7 +15,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the directory where trained model weights are stored.')
 
-    parser.add_argument('o', '--output_directory_path',
+    parser.add_argument('-o', '--output_directory_path',
                         default=None,
                         type=str,
                         help='Path to the directory where labeled dataset will be saved. Default is the parent folder'
