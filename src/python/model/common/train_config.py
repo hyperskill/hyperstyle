@@ -29,7 +29,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the dataset received by either')
 
-    parser.add_argument('-o', '--output_dir',
+    parser.add_argument('-o', '--output_directory_path',
                         default=None,
                         type=str,
                         help='Path to the directory where to save model weights. Default is the directory'
@@ -90,7 +90,7 @@ class TrainingArgs:
                                  warmup_steps=self.args.warm_up_steps,
                                  weight_decay=self.args.weight_decay,
                                  save_total_limit=self.args.save_limit,
-                                 output_dir=self.args.output_dir,
+                                 output_dir=self.args.output_directory_path,
                                  overwrite_output_dir=True,
                                  load_best_model_at_end=True,
                                  greater_is_better=True,

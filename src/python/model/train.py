@@ -26,9 +26,9 @@ def main():
     model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=num_labels).to(device)
 
     metrics = Metric(args.threshold)
-    if args.output_dir is None:
-        args.output_dir = Path(args.train_dataset_path).parent / MarkingArgument.WEIGHTS.value
-        create_directory(args.output_dir)
+    if args.output_directory_path is None:
+        args.output_directory_path = Path(args.train_dataset_path).parent / MarkingArgument.WEIGHTS.value
+        create_directory(args.output_directory_path)
 
     train_args = TrainingArgs(args)
 
