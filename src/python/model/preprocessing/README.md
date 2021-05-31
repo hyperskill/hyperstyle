@@ -22,10 +22,10 @@ Optional arguments:
 
 Argument | Description
 --- | ---
-|**&#8209;o**, **&#8209;&#8209;output_file_path**| Path to the directory where output file will be created. If not set, output file will be saved in the parent directory of `dataset_path`|
+|**&#8209;o**, **&#8209;&#8209;output_file_path**| Path to the directory where output file will be created. If not set, output file will be saved in the parent directory of `dataset_path`.|
 |**&#8209;ohe**, **&#8209;&#8209;one_hot_encoding**| If `True` target column will be represented as one-hot-encoded vector. The length of each vector is equal to the unique number of classes in dataset. Default is `True`.|
-|**&#8209;c**, **&#8209;&#8209;add_context**| Should be used only when `dataset_path` is `numbered_ids_line_by_line.csv`. If set to `True` each single line will be substituted by a piece of code – the context created from several lines. Default is `False`|
-|**&#8209;n**, **&#8209;&#8209;n_lines_to_add**| Number of lines to attach to the target before and after the single target line. A line is appended only if it matches the same solution. If there are not enough lines in the solution, special token will be appended instead. Default is 2.|
+|**&#8209;c**, **&#8209;&#8209;add_context**| Should be used only when `dataset_path` is a path to `numbered_ids_line_by_line.csv`. If set to `True` each single line will be substituted by a piece of code – the context created from several lines. Default is `False`.|
+|**&#8209;n**, **&#8209;&#8209;n_lines_to_add**| A number of lines to append to the target line before and after it. A line is appended only if it matches the same solution. If there are not enough lines in the solution, special token will be appended instead. Default is 2.|
 
 
 #### Script functionality overview: 
@@ -46,7 +46,7 @@ Optional arguments:
 
 Argument | Description
 --- | ---
-|**&#8209;d**, **&#8209;&#8209;directory_path**| Path to the directory where folders for train, test and validation datasets with the corresponding files will be created. If not set, folders and will be created in the parent directory of `dataset_path`|
-|**&#8209;ts**, **&#8209;&#8209;test_size**| Proportion of test dataset. Available values are float numbers: 0 < n < 1. Default is 0.2.|
-|**&#8209;c**, **&#8209;&#8209;add_context**| Proportion of validation dataset that will be taken from train dataset. Available values are float numbers: 0 < n < 1. Default is 0.3.|
+|**&#8209;o**, **&#8209;&#8209;output_directory_path**| Path to the directory where folders for train, test and validation datasets with the corresponding files will be created. If not set, folders will be created in the parent directory of `dataset_path`.|
+|**&#8209;ts**, **&#8209;&#8209;test_size**| Proportion of test dataset. Available values: 0 < n < 1. Default is 0.2.|
+|**&#8209;c**, **&#8209;&#8209;add_context**| Proportion of validation dataset that will be taken from train dataset. Available values are: 0 < n < 1. Default is 0.3.|
 |**&#8209;sh**, **&#8209;&#8209;shuffle**| If `True` data will be shuffled before split. Default is `True`.|
