@@ -19,16 +19,17 @@ def main():
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
-    if args.output_dir is None:
-        args.output_dir = Path(args.dataset_path).parent / f'predictions{Extension.CSV.value}'
+    if args.output_directory_path is None:
+        args.output_directory_path = Path(args.test_dataset_path).parent / f'predictions{Extension.CSV.value}'
 
-    val_dataset = QodanaDataset(args.dataset_path, args.context_length)
-    num_labels = val_dataset[0][MarkingArgument.LABELS.value].shape[0]
-    eval_dataloader = DataLoader(val_dataset, batch_size=args.batch_size)
-    predictions = np.zeros([len(val_dataset), num_labels], dtype=object)
+    test_dataset = QodanaDataset(args.test_dataset_path, args.context_length)
+    num_labels = test_dataset[0][MarkingArgument.LABELS.value].shape[0]
+    eval_dataloader = DataLoader(test_dataset, batch_size=args.batch_size)
+    predictions = np.zeros([len(test_dataset), num_labels], dtype=object)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = RobertaForSequenceClassification.from_pretrained(args.model_weights, num_labels=num_labels).to(device)
+    model = RobertaForSequenceClassification.from_pretrained(args.model_weights_directory_path,
+                                                             num_labels=num_labels).to(device)
     model.eval()
 
     start_index = 0
@@ -40,11 +41,11 @@ def main():
             predictions[start_index:start_index + args.batch_size, :num_labels] = (logits > args.threshold).astype(int)
             start_index += args.batch_size
 
-    predictions = pd.DataFrame(predictions, dtype=int)
-    true_labels = pd.read_csv(args.dataset_path).iloc[:, 1:]
+    predictions = pd.DataFrame(predictions, columns=range(num_labels), dtype=int)
+    true_labels = pd.read_csv(args.test_dataset_path).iloc[:, 1:]
     metric = Metric(args.threshold)
     print(f"f1_score: {metric.get_f1_score(predictions, true_labels)}")
-    write_dataframe_to_csv(args.output_dir, predictions)
+    write_dataframe_to_csv(args.output_directory_path, predictions)
 
 
 if __name__ == '__main__':

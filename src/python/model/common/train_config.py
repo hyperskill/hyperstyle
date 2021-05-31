@@ -63,7 +63,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-th', '--threshold',
                         type=float,
                         default=0.5,
-                        help='Is used while compute f1-score. If the probability of inspection is greater '
+                        help='Is used to compute predictions. If the probability of inspection is greater '
                              'than threshold, sample will be classified with the inspection. '
                              'Default is 0.5.')
 

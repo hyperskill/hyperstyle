@@ -22,7 +22,7 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('-d', '--directory_path',
                         type=str,
                         default=None,
-                        help=f'Path to the directory where folders for train, test and validation datasets will be '
+                        help='Path to the directory where folders for train, test and validation datasets will be '
                              'created. If not set directories will be created in the parent directory of dataset_path')
 
     parser.add_argument('-ts', '--test_size',
