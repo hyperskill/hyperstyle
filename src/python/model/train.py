@@ -16,19 +16,18 @@ def main():
     configure_arguments(parser)
     args = parser.parse_args()
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    train_dataset = QodanaDataset(args.train_dataset_path, args.context_length, device)
-    val_dataset = QodanaDataset(args.val_dataset_path, args.context_length, device)
+    train_dataset = QodanaDataset(args.train_dataset_path, args.context_length)
+    val_dataset = QodanaDataset(args.val_dataset_path, args.context_length)
     train_steps_to_be_made = len(train_dataset) // args.batch_size
     val_steps_to_be_made = train_steps_to_be_made // 5
-    print(f'Steps to be made: {train_steps_to_be_made}, validate each '
-          f'{val_steps_to_be_made}th step.')
+    print(f'Steps to be made: {train_steps_to_be_made}, validate each {val_steps_to_be_made}th step.')
 
     num_labels = train_dataset[0][MarkingArgument.LABELS.value].shape[0]
     model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=num_labels).to(device)
 
     metrics = Metric(args.threshold)
     if args.output_dir is None:
-        args.output_dir = Path(args.train_dataset_path).parent / "weights"
+        args.output_dir = Path(args.train_dataset_path).parent / MarkingArgument.WEIGHTS.value
         create_directory(args.output_dir)
 
     train_args = TrainingArgs(args)

@@ -15,7 +15,7 @@ class QodanaDataset(Dataset):
         ColumnName.CODE.value is an observation column name in dataset where lines of code are stored
     """
 
-    def __init__(self, data_path: str, context_length: int, device: torch.device):
+    def __init__(self, data_path: str, context_length: int):
         super().__init__()
         df = pd.read_csv(data_path)
         tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
@@ -24,7 +24,6 @@ class QodanaDataset(Dataset):
         self.code_encoded = tokenizer(
             code, padding=True, truncation=True, max_length=context_length, return_tensors="pt",
         )[MarkingArgument.INPUT_IDS.value]
-        self.device = device
 
     def __getitem__(self, idx):
         return {MarkingArgument.INPUT_IDS.value: self.code_encoded[idx],

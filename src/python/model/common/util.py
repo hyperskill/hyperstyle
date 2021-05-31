@@ -10,6 +10,8 @@ class MarkingArgument(Enum):
     LABELS = 'labels'
     DATASET_PATH = 'dataset_path'
     STEPS = 'steps'
+    WEIGHTS = 'weights'
+    WANDB = 'wandb'
     SEED = 42
 
 

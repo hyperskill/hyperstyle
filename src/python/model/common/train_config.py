@@ -90,21 +90,21 @@ class TrainingArgs:
         self.args = args
 
     def get_training_args(self, val_steps_to_be_made):
-        return TrainingArguments(learning_rate=self.args.learning_rate,
-                                 weight_decay=self.args.weight_decay,
-                                 num_train_epochs=self.args.epoch,
+        return TrainingArguments(num_train_epochs=self.args.epoch,
                                  per_device_train_batch_size=self.args.batch_size,
                                  per_device_eval_batch_size=self.args.batch_size,
+                                 learning_rate=self.args.learning_rate,
+                                 warmup_steps=self.args.warm_up_steps,
+                                 weight_decay=self.args.weight_decay,
+                                 save_total_limit=self.args.save_limit,
+                                 output_dir=self.args.output_dir,
+                                 overwrite_output_dir=True,
+                                 load_best_model_at_end=True,
+                                 greater_is_better=True,
                                  save_steps=val_steps_to_be_made,
                                  eval_steps=val_steps_to_be_made,
                                  logging_steps=val_steps_to_be_made,
-                                 save_total_limit=self.args.save_limit,
-                                 overwrite_output_dir=True,
-                                 output_dir=self.args.output_dir,
                                  evaluation_strategy=MarkingArgument.STEPS.value,
                                  logging_strategy=MarkingArgument.STEPS.value,
-                                 warmup_steps=self.args.warm_up_steps,
                                  seed=MarkingArgument.SEED.value,
-                                 load_best_model_at_end=True,
-                                 greater_is_better=True,
-                                 report_to=['wandb'])
+                                 report_to=[MarkingArgument.WANDB.value])
