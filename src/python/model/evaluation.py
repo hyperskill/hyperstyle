@@ -36,7 +36,7 @@ def main():
 
     for batch in eval_dataloader:
         with torch.no_grad():
-            logits = model(input_ids=batch[MarkingArgument.INPUT_IDS.value].detach()).logits
+            logits = model(input_ids=batch[MarkingArgument.INPUT_IDS.value].to(device)).logits
             logits = logits.sigmoid().detach().cpu().numpy()
             predictions[start_index:start_index + args.batch_size, :num_labels] = (logits > args.threshold).astype(int)
             start_index += args.batch_size
