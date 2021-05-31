@@ -114,9 +114,11 @@ An example of the pickle` file is:
 ```json
 {
     grade: [2, 3],
+    decreased_grade: [1],
+    user: 2,
     traceback: {
         1: {
-            BaseIssue(
+            PenaltyIssue(
                 origin_class='C0305',
                 description='Trailing newlines',
                 line_no=15,
@@ -125,7 +127,8 @@ An example of the pickle` file is:
         
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
-            ), BaseIssue(
+                influence_on_penalty=0,
+            ), PenaltyIssue(
                 origin_class='E211',
                 description='whitespace before \'(\'',
                 line_no=1,
@@ -134,13 +137,32 @@ An example of the pickle` file is:
         
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
+                influence_on_penalty=0.6,
             ),
           }
     },
+    penalty: {
+          1: {
+              PenaltyIssue(
+                  origin_class='E211',
+                  description='whitespace before \'(\'',
+                  line_no=1,
+                  column_no=6,
+                  type=IssueType('CODE_STYLE'),
+          
+                  file_path=Path(),
+                  inspector_type=InspectorType.UNDEFINED,
+                  influence_on_penalty=0.6,
+              ),
+            }
+      }
 }
 ```
 In the `grade` field are stored fragments ids for which grade was increased in the new data.
+In the `decreased_grade` field are stored fragments ids for which grade was decreased in the new data.
+In the `user` field are stored count unique users in the new dataset.
 In the `traceback` field for fragments ids are stored set of issues. These issues were found in the new data and were not found in the old data.
+In the `penalty` field for fragments ids are stored set of issues. These issues have not zero `influence_on_penalty` coefficient.
 
 ___
 
@@ -168,21 +190,28 @@ The statistics will be printed into console.
 
 The output contains:
 - was found incorrect grades or not;
-- how many fragments has additional issues;
-- how many unique issues was found;
-- top N issues in the format: (issue_key, frequency);
-- short categorized statistics: for each category how many issues were found and how many 
-  fragments have these issues;
-- \[Optional\] full categorized statistics: for each category for each issue how many 
-  fragments have this issue
+- how many grades have decreased value;
+- how many unique users was found in the new dataset;
+- for new issues and for penalty statistics:
+  - how many fragments has additional issues;
+  - how many unique issues was found;
+  - top N issues in the format: (issue_key, frequency);
+  - short categorized statistics: for each category how many issues were found and how many 
+    fragments have these issues;
+  - \[Optional\] full categorized statistics: for each category for each issue how many 
+    fragments have this issue
+- for each category base influence on the penalty statistics: min, max and median values
 
 An example of the printed statistics (without full categorized statistics):
 
 ```json
 SUCCESS! Was not found incorrect grades.
+All grades are equal.
 ______
+NEW INSPECTIONS STATISTICS:
 39830 fragments has additional issues
 139 unique issues was found
+4671 unique users was found!        
 ______
 Top 10 issues:
 SC200: 64435 times
@@ -201,6 +230,20 @@ BEST_PRACTICES: 76 issues, 88040 fragments
 ERROR_PRONE: 17 issues, 2363 fragments
 COMPLEXITY: 17 issues, 13928 fragments
 COHESION: 1 issues, 3826 fragments
+______
+______
+PENALTY INSPECTIONS STATISTICS;
+Statistics is empty!
+______
+______
+INFLUENCE ON PENALTY STATISTICS;
+CODE_STYLE issues: min=1, max=100, median=86
+BEST_PRACTICES issues: min=1, max=100, median=98.0
+COMPLEXITY issues: min=1, max=100, median=16.0
+MAINTAINABILITY issues: min=1, max=7, median=2.0
+CYCLOMATIC_COMPLEXITY issues: min=1, max=58, median=11.5
+COHESION issues: min=1, max=100, median=56
+BOOL_EXPR_LEN issues: min=6, max=6, median=6
 ______
 ```
 

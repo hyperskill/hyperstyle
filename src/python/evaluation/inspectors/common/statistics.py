@@ -1,16 +1,45 @@
 from collections import defaultdict
 from dataclasses import dataclass
+from statistics import median
 from typing import Dict, List, Tuple
 
-from src.python.review.inspectors.issue import IssueType, ShortIssue
+from src.python.review.inspectors.issue import BaseIssue, IssueType, ShortIssue
+
+
+@dataclass(frozen=True, eq=True)
+class PenaltyIssue(BaseIssue):
+    influence_on_penalty: int
 
 
 @dataclass(frozen=True)
 class IssuesStatistics:
     stat: Dict[ShortIssue, int]
-    changed_grades_count: int
+    fragments_in_stat: int
 
-    def print_full_statistics(self, to_categorize: bool = True):
+    def print_full_statistics(self, n: int, full_stat: bool, separator: str = '') -> None:
+        if self.fragments_in_stat == 0:
+            print('Statistics is empty!')
+            return
+
+        print(f'{self.fragments_in_stat} fragments has additional issues')
+        print(f'{self.count_unique_issues()} unique issues was found')
+
+        self.print_top_n(n, separator)
+        self.print_short_categorized_statistics()
+        print(separator)
+
+        if full_stat:
+            self.print_full_inspectors_statistics()
+
+    def print_top_n(self, n: int, separator: str) -> None:
+        top_n = self.get_top_n_issues(n)
+        print(separator)
+        print(f'Top {n} issues:')
+        for issue, freq in top_n:
+            IssuesStatistics.print_issue_with_freq(issue, freq)
+        print(separator)
+
+    def print_full_inspectors_statistics(self, to_categorize: bool = True) -> None:
         if to_categorize:
             categorized_statistics: Dict[IssueType, Dict[ShortIssue, int]] = self.get_categorized_statistics()
             for category, issues in categorized_statistics.items():
@@ -20,7 +49,7 @@ class IssuesStatistics:
             self.__print_stat(self.stat)
 
     @classmethod
-    def __print_stat(cls, stat: Dict[ShortIssue, int]):
+    def __print_stat(cls, stat: Dict[ShortIssue, int]) -> None:
         for issue, freq in stat.items():
             cls.print_issue_with_freq(issue, freq, prefix='- ')
 
@@ -54,3 +83,26 @@ class IssuesStatistics:
 
     def count_unique_issues(self) -> int:
         return len(self.stat)
+
+
+# Store list of penalty influences for each category
+@dataclass
+class PenaltyInfluenceStatistics:
+    stat: Dict[IssueType, List[float]]
+
+    def __init__(self, issues_stat_dict: Dict[int, List[PenaltyIssue]]):
+        self.stat = defaultdict(list)
+        for _, issues in issues_stat_dict.items():
+            for issue in issues:
+                self.stat[issue.type].append(issue.influence_on_penalty)
+
+    def print_stat(self):
+        for category, issues in self.stat.items():
+            print(f'{category.value} issues: min={min(issues)}, max={max(issues)}, median={median(issues)}')
+
+
+@dataclass(frozen=True)
+class GeneralInspectorsStatistics:
+    new_issues_stat: IssuesStatistics
+    penalty_issues_stat: IssuesStatistics
+    penalty_influence_stat: PenaltyInfluenceStatistics

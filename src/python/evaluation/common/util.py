@@ -16,6 +16,10 @@ class ColumnName(Enum):
     OLD = 'old'
     NEW = 'new'
     IS_PUBLIC = 'is_public'
+    DECREASED_GRADE = 'decreased_grade'
+    PENALTY = 'penalty'
+    USER = 'user'
+    HISTORY = 'history'
 
 
 @unique
