@@ -37,7 +37,7 @@ Argument | Description
 |**&#8209;lr**, **&#8209;&#8209;learning_rate**| Optimizer learning rate. **Default is 2e-5**.|
 |**&#8209;w**, **&#8209;&#8209;weight_decay**| Weight decay parameter for an optimizer. **Default is 0.01**.|
 |**&#8209;th**, **&#8209;&#8209;threshold**| Is used to compute predictions. Available values: 0 < `threshold` < 1. If the probability of inspection is greater than `threshold`, sample will be classified with the inspection. **Default is 0.5**.|
-|**&#8209;ws**, **&#8209;&#8209;warm_up_steps**| Number of steps optimizer is using constant learning rate before applying scheduler. **Default is 300**.|
+|**&#8209;ws**, **&#8209;&#8209;warm_up_steps**| A number of steps when optimizer uses constant learning rate before applying scheduler policy. **Default is 300**.|
 |**&#8209;sl**, **&#8209;&#8209;save_limit**| Total amount of checkpoints limit. Default is 1.|
 
 To inspect the rest of default training parameters please, address to the [`TrainingArguments`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/common/train_config.py).
