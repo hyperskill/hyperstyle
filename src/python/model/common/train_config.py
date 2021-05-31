@@ -29,7 +29,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the dataset received by either')
 
-    parser.add_argument('--output_dir',
+    parser.add_argument('-o', '--output_dir',
                         default=None,
                         type=str,
                         help='Path to the directory where to save model weights. Default is the directory'
