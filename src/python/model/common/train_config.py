@@ -2,7 +2,6 @@ import argparse
 
 import torch
 from src.python.model.common.util import MarkingArgument
-from src.python.review.common.file_system import Extension
 from transformers import Trainer, TrainingArguments
 
 
@@ -24,17 +23,11 @@ class MultilabelTrainer(Trainer):
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('train_dataset_path',
                         type=str,
-                        help=f'Path to the dataset received by either'
-                             f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
-                             f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
-                             f'{Extension.PY.value}script.')
+                        help='Path to the train dataset.')
 
     parser.add_argument('val_dataset_path',
                         type=str,
-                        help=f'Path to the dataset received by either'
-                             f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
-                             f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
-                             f'{Extension.PY.value}script.')
+                        help='Path to the dataset received by either')
 
     parser.add_argument('--output_dir',
                         default=None,
