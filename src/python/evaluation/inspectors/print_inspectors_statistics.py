@@ -1,11 +1,13 @@
 import argparse
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
-from src.python.evaluation.inspectors.common.statistics import IssuesStatistics
+from src.python.evaluation.inspectors.common.statistics import (
+    GeneralInspectorsStatistics, IssuesStatistics, PenaltyInfluenceStatistics, PenaltyIssue,
+)
 from src.python.review.common.file_system import deserialize_data_from_file
 from src.python.review.inspectors.issue import ShortIssue
 
@@ -33,23 +35,25 @@ def has_incorrect_grades(diffs_dict: dict) -> bool:
     return len(diffs_dict[ColumnName.GRADE.value]) > 0
 
 
-def gather_statistics(diffs_dict: dict) -> IssuesStatistics:
-    changed_grades_count = len(diffs_dict[EvaluationArgument.TRACEBACK.value])
+def has_decreased_grades(diffs_dict: dict) -> bool:
+    return len(diffs_dict[ColumnName.DECREASED_GRADE.value]) > 0
+
+
+def __gather_issues_stat(issues_stat_dict: Dict[int, List[PenaltyIssue]]) -> IssuesStatistics:
+    fragments_in_stat = len(issues_stat_dict)
     issues_dict: Dict[ShortIssue, int] = defaultdict(int)
-    for _, issues in diffs_dict[EvaluationArgument.TRACEBACK.value].items():
+    for _, issues in issues_stat_dict.items():
         for issue in issues:
             short_issue = ShortIssue(origin_class=issue.origin_class, type=issue.type)
             issues_dict[short_issue] += 1
-    return IssuesStatistics(issues_dict, changed_grades_count)
+    return IssuesStatistics(issues_dict, fragments_in_stat)
 
 
-def __print_top_n(statistics: IssuesStatistics, n: int, separator: str) -> None:
-    top_n = statistics.get_top_n_issues(n)
-    print(separator)
-    print(f'Top {n} issues:')
-    for issue, freq in top_n:
-        IssuesStatistics.print_issue_with_freq(issue, freq)
-    print(separator)
+def gather_statistics(diffs_dict: dict) -> GeneralInspectorsStatistics:
+    new_issues_stat = __gather_issues_stat(diffs_dict[EvaluationArgument.TRACEBACK.value])
+    penalty_issues_stat = __gather_issues_stat(diffs_dict[ColumnName.PENALTY.value])
+    return GeneralInspectorsStatistics(new_issues_stat, penalty_issues_stat,
+                                       PenaltyInfluenceStatistics(diffs_dict[ColumnName.PENALTY.value]))
 
 
 def main() -> None:
@@ -64,20 +68,27 @@ def main() -> None:
         print(f'WARNING! Was found incorrect grades in the following fragments: {diffs[ColumnName.GRADE.value]}.')
     else:
         print('SUCCESS! Was not found incorrect grades.')
+
+    if not has_decreased_grades(diffs):
+        print('All grades are equal.')
+    else:
+        print(f'Decreased grades was found in {len(diffs[ColumnName.DECREASED_GRADE.value])} fragments')
+    print(f'{diffs[ColumnName.USER.value]} unique users was found!')
     print(separator)
 
     statistics = gather_statistics(diffs)
-    print(f'{statistics.changed_grades_count} fragments has additional issues')
-    print(f'{statistics.count_unique_issues()} unique issues was found')
-
     n = args.top_n
-    __print_top_n(statistics, n, separator)
-
-    statistics.print_short_categorized_statistics()
+    print('NEW INSPECTIONS STATISTICS:')
+    statistics.new_issues_stat.print_full_statistics(n, args.full_stat, separator)
     print(separator)
 
-    if args.full_stat:
-        statistics.print_full_statistics()
+    print('PENALTY INSPECTIONS STATISTICS;')
+    statistics.penalty_issues_stat.print_full_statistics(n, args.full_stat, separator)
+    print(separator)
+
+    print('INFLUENCE ON PENALTY STATISTICS;')
+    statistics.penalty_influence_stat.print_stat()
+    print(separator)
 
 
 if __name__ == '__main__':

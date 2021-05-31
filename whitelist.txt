@@ -114,6 +114,7 @@ nrows
 groupby
 getuid
 Popen
+reindex
 datasets
 usecols
 linesep
