@@ -47,7 +47,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.VERBOSITY.value.description,
                         default=VerbosityLevel.DISABLE.value,
                         choices=VerbosityLevel.values(),
-                        type=str)
+                        type=int)
 
     # Usage example: -d Flake8,Intelli
     parser.add_argument(RunToolArgument.DISABLE.value.short_name,

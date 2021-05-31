@@ -12,14 +12,14 @@ class VerbosityLevel(Enum):
     """
     Same meaning as the logging level. Should be used in command-line args.
     """
-    DEBUG = '3'
-    INFO = '2'
-    ERROR = '1'
-    DISABLE = '0'
+    DEBUG = 3
+    INFO = 2
+    ERROR = 1
+    DISABLE = 0
 
     @classmethod
-    def values(cls) -> List[str]:
-        return [member.value for member in VerbosityLevel.__members__.values()]
+    def values(cls) -> List[int]:
+        return [member.value for member in VerbosityLevel]
 
 
 @dataclass(frozen=True)
