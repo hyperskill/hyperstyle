@@ -1,9 +1,7 @@
 # Qodana imitation model 
-`RobertaForSequenceClassification`model with `BCELogisticLoss` solve multilabel classification task. 
+`RobertaForSequenceClassification` model with `BCEWithLogitsLoss` solve multilabel classification task. 
 
-Model outputs is tensor of size: `batch_size` x `num_classes`. We get each class probabilities are by taking `sigmoid`. 
-
-Finally, we calculate predictions by comparing the probability of each class with the `threshold`. 
+Model outputs is a tensor of size: `batch_size` x `num_classes`. Class probabilities are recieved by taking `sigmoid` and final predictions are computed by comparing the probability of each class with the `threshold`. 
 
 As classes might be unbalanced the used metric is `f1-score`.
 ## What it does
