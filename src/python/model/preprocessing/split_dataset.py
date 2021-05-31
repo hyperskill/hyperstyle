@@ -22,11 +22,8 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('-d', '--directory_path',
                         type=str,
                         default=None,
-                        help=f'Path to the directory where folders for train, test and validation datasets'
-                             f'will be created'
-                             f'src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
-                             f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
-                             f'{Extension.PY.value}script.')
+                        help=f'Path to the directory where folders for train, test and validation datasets will be '
+                             'created. If not set directories will be created in the parent directory of dataset_path')
 
     parser.add_argument('-ts', '--test_size',
                         type=int,
