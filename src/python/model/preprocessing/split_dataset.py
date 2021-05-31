@@ -19,7 +19,7 @@ def configure_parser() -> argparse.ArgumentParser:
                              f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
                              f'{Extension.PY.value}script.')
 
-    parser.add_argument('-d', '--directory_path',
+    parser.add_argument('-d', '--output_directory_path',
                         type=str,
                         default=None,
                         help='Path to the directory where folders for train, test and validation datasets will be '
@@ -43,7 +43,7 @@ def configure_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def split_dataset(dataset_path: str, output_folder: str, val_size: float, test_size: float, shuffle: bool):
+def split_dataset(dataset_path: str, output_directory_path: str, val_size: float, test_size: float, shuffle: bool):
     df = pd.read_csv(dataset_path)
     target = df.iloc[:, 2:]
     code_bank = df[ColumnName.CODE.value]
@@ -59,19 +59,19 @@ def split_dataset(dataset_path: str, output_folder: str, val_size: float, test_s
                                                                       test_size=val_size,
                                                                       random_state=MarkingArgument.SEED.value,
                                                                       shuffle=shuffle)
-    if output_folder is None:
-        output_folder = Path(dataset_path).parent
+    if output_directory_path is None:
+        output_directory_path = Path(dataset_path).parent
 
     for holdout in [("train", code_train, target_train),
                     ("val", code_val, target_val),
                     ("test", code_test, target_test)]:
         df = pd.concat([holdout[1], holdout[2]], axis=1)
-        create_directory(os.path.join(output_folder, holdout[0]))
-        write_dataframe_to_csv(Path(output_folder) / holdout[0] / f'{holdout[0]}{Extension.CSV.value}', df)
+        create_directory(os.path.join(output_directory_path, holdout[0]))
+        write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{Extension.CSV.value}', df)
 
 
 if __name__ == "__main__":
     parser = configure_parser()
     args = parser.parse_args()
 
-    split_dataset(args.dataset_path, args.directory_path, args.val_size, args.test_size, args.shuffle)
+    split_dataset(args.output_directory_path, args.directory_path, args.val_size, args.test_size, args.shuffle)
