@@ -32,9 +32,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument('-c', '--add_context',
                         help='Use for the datasets with code lines only, if set to True, '
-                             '2 lines before and after target line will be added.'
-                             'If enable context on training dataset, please, make sure you also enable '
-                             'context for testing and validation. Default is False.',
+                             'n lines before and n lines after target line will be added to each sample.'
+                             ' Default is False.',
                         action='store_true')
 
     parser.add_argument('-n', '--n_lines_to_add',
