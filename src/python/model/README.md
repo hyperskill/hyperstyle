@@ -51,6 +51,7 @@ Required arguments:
 `test_dataset_path` &#8209; path to the `test.csv` received by running [`split_dataset.py`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/preprocessing/split_dataset.py) script.
 
 `model_weights_directory_path` &#8209; path to the folder where trained model weights are saved.
+
 Optional arguments:
 
 Argument | Description
