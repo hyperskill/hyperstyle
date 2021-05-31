@@ -27,6 +27,10 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C818': IssueType.CODE_STYLE,
     'C819': IssueType.CODE_STYLE,
 
+    # flake8-spellcheck
+    'SC100': IssueType.INFO,
+    'SC200': IssueType.INFO,
+
     # WPS: Naming
     'WPS117': IssueType.CODE_STYLE,  # Forbid naming variables self, cls, or mcs.
     'WPS125': IssueType.ERROR_PRONE,  # Forbid variable or module names which shadow builtin names.
@@ -71,7 +75,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'WPS419': IssueType.ERROR_PRONE,  # Forbid multiple returning paths with try / except case.
     'WPS424': IssueType.ERROR_PRONE,  # Forbid BaseException exception.
     'WPS426': IssueType.ERROR_PRONE,  # Forbid lambda inside loops.
-    'WPS432': IssueType.CODE_STYLE,  # Forbid magic numbers.
+    'WPS432': IssueType.INFO,  # Forbid magic numbers.
     'WPS433': IssueType.CODE_STYLE,  # Forbid imports nested in functions.
     'WPS439': IssueType.ERROR_PRONE,  # Forbid Unicode escape sequences in binary strings.
     'WPS440': IssueType.ERROR_PRONE,  # Forbid overlapping local and block variables.
