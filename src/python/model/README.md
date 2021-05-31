@@ -1,4 +1,6 @@
 # Qodana imitation model 
+
+## Architecture 
 `RobertaForSequenceClassification` model with `BCEWithLogitsLoss` solve multilabel classification task. 
 
 Model outputs is a tensor of size: `batch_size` x `num_classes`. Class probabilities are recieved by taking `sigmoid` and final predictions are computed by comparing the probability of each class with the `threshold`. 
@@ -57,4 +59,8 @@ Argument | Description
 |**&#8209;bs**, **&#8209;&#8209;batch_size**| Batch size for training and validation dataset. Available values are any `positive integers`. **Default is 16**.|
 |**&#8209;th**, **&#8209;&#8209;threshold**| Is used to compute predictions. Available values: 0 < `threshold` < 1. If the probability of inspection is greater than `threshold`, sample will be classified with the inspection. **Default is 0.5**.|
 
-Output is `predictions.csv` file with the column names match number of classes. Each sample has a binary label: `0` &#8209; if the model didn't found an error with particular if in a sample, and `1` &#8209; if the error was found.
+Output is a `predictions.csv` file with the column names matches the number of classes. Each sample has a binary label: 
+
+- `0` &#8209; if the model didn't found an error in a sample.
+
+- `1` &#8209; if the error was found in a sample.
