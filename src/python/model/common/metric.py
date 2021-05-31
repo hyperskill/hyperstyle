@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
 
@@ -20,6 +19,3 @@ class Metric:
         prediction_probabilities = torch.from_numpy(logits).sigmoid()
         predictions = torch.where(prediction_probabilities > self.threshold, 1, 0)
         return {'f1_score': self.get_f1_score(predictions, torch.tensor(labels))}
-
-    def eval_compute_metric(self, ):
-        pass

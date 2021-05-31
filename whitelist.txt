@@ -142,3 +142,4 @@ idx
 QodanaDataset
 cuda
 f1
+WANDB

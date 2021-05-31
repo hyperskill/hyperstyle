@@ -7,8 +7,8 @@ import pandas as pd
 import torch
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.model.common.evaluation_config import configure_arguments
-from src.python.model.common.util import MarkingArgument
 from src.python.model.common.metric import Metric
+from src.python.model.common.util import MarkingArgument
 from src.python.model.dataset.dataset import QodanaDataset
 from src.python.review.common.file_system import Extension
 from torch.utils.data import DataLoader
