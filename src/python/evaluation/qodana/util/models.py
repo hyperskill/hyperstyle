@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
 from enum import Enum, unique
+from typing import List
 
 
 @dataclass(frozen=True)
@@ -38,10 +39,18 @@ class QodanaIssue:
             problem_id=issue[QodanaJsonField.PROBLEM_ID.value],
         )
 
+    @classmethod
+    def parse_list_issues_from_json(cls, str_json: str) -> List['QodanaIssue']:
+        return list(map(lambda i: QodanaIssue.from_json(i), json.loads(str_json)[QodanaJsonField.ISSUES.value]))
+
 
 @unique
 class QodanaColumnName(Enum):
     INSPECTIONS = 'inspections'
+    ID = 'id'
+    INSPECTION_ID = 'inspection_id'
+    COUNT_ALL = 'count_all'
+    COUNT_UNIQUE = 'count_unique'
 
 
 @unique

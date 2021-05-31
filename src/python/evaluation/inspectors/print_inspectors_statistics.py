@@ -21,12 +21,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='If True, statistics will be categorized by several categories.',
                         action='store_true')
 
-    parser.add_argument('-n', '--top_n',
+    parser.add_argument('-n', '--top-n',
                         help='The top N items will be printed',
                         type=int,
                         default=10)
 
-    parser.add_argument('--full_stat',
+    parser.add_argument('--full-stat',
                         help='If True, full statistics will be printed.',
                         action='store_true')
 

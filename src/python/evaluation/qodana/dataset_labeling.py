@@ -16,7 +16,8 @@ import numpy as np
 import pandas as pd
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from src.python.evaluation.qodana.util.util import to_json
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
     copy_directory,
@@ -186,13 +187,6 @@ class DatasetLabel:
                 id_to_issues[fragment_id].append(qodana_issue)
         return id_to_issues
 
-    @classmethod
-    def _to_json(cls, issues: List[QodanaIssue]) -> str:
-        issues_json = {
-            QodanaJsonField.ISSUES.value: list(map(lambda i: i.to_json(), issues)),
-        }
-        return json.dumps(issues_json)
-
     def _label_chunk(self, chunk: pd.DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
         tmp_dir_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
         create_directory(tmp_dir_path)
@@ -219,7 +213,7 @@ class DatasetLabel:
 
         logger.info('Write inspections')
         chunk[QodanaColumnName.INSPECTIONS.value] = chunk.apply(
-            lambda row: self._to_json(inspections.get(row[ColumnName.ID.value], [])), axis=1,
+            lambda row: to_json(inspections.get(row[ColumnName.ID.value], [])), axis=1,
         )
 
         remove_directory(tmp_dir_path)
