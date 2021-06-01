@@ -74,4 +74,4 @@ if __name__ == "__main__":
     parser = configure_parser()
     args = parser.parse_args()
 
-    split_dataset(args.output_directory_path, args.directory_path, args.val_size, args.test_size, args.shuffle)
+    split_dataset(args.output_directory_path, args.val_size, args.test_size, args.shuffle)
