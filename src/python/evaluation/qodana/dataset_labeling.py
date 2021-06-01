@@ -38,7 +38,7 @@ from src.python.review.run_tool import positive_int
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-TEMPLATE_FOLDER = Path(os.path.dirname(os.path.abspath(__file__))) / 'resources' / 'project_templates'
+TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'project_templates'
 
 
 def configure_arguments(parser: ArgumentParser) -> None:
