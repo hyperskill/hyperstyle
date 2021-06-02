@@ -2,6 +2,7 @@ import linecache
 import os
 import pickle
 import re
+import shutil
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
@@ -34,6 +35,7 @@ class Extension(Enum):
     XLSX = '.xlsx'
     CSV = '.csv'
     PICKLE = '.pickle'
+    JSON = '.json'
 
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
@@ -49,10 +51,21 @@ def all_items_condition(name: str) -> bool:
     return True
 
 
+def extension_file_condition(extension: Extension) -> ItemCondition:
+    def has_this_extension(name: str) -> bool:
+        return get_extension_from_file(name) == extension
+
+    return has_this_extension
+
+
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
-def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_items_condition,
-                              item_type: FileSystemItem = FileSystemItem.FILE) -> List[Path]:
+def get_all_file_system_items(
+    root: Path,
+    item_condition: ItemCondition = all_items_condition,
+    item_type: FileSystemItem = FileSystemItem.FILE,
+    without_subdirs: bool = False,
+) -> List[Path]:
     if not root.is_dir():
         raise ValueError(f'The {root} is not a directory')
 
@@ -61,6 +74,10 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
         for item in fs_tuple[item_type.value]:
             if item_condition(item):
                 items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
+
+        if without_subdirs:
+            break
+
     return items
 
 
@@ -85,7 +102,7 @@ def deserialize_data_from_file(path: Path) -> Any:
 
 # For getting name of the last folder or file
 # For example, returns 'folder' for both 'path/data/folder' and 'path/data/folder/'
-def get_name_from_path(path: str, with_extension: bool = True) -> str:
+def get_name_from_path(path: Union[Path, str], with_extension: bool = True) -> str:
     head, tail = os.path.split(path)
     # Tail can be empty if '/' is at the end of the path
     file_name = tail or os.path.basename(head)
@@ -148,7 +165,7 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
 
 # Not empty extensions are returned with a dot, for example, '.txt'
 # If file has no extensions, an empty one ('') is returned
-def get_extension_from_file(file: Path) -> Extension:
+def get_extension_from_file(file: Union[Path, str]) -> Extension:
     return Extension(os.path.splitext(file)[1])
 
 
@@ -167,15 +184,28 @@ def remove_slash(path: str) -> str:
     return path.rstrip('/')
 
 
+def remove_directory(directory: Union[str, Path]) -> None:
+    if os.path.isdir(directory):
+        shutil.rmtree(directory, ignore_errors=True)
+
+
 def add_slash(path: str) -> str:
     if not path.endswith('/'):
         path += '/'
     return path
 
 
-def get_parent_folder(path: Path, to_add_slash: bool = False) -> Path:
+def get_parent_folder(path: Union[Path, str], to_add_slash: bool = False) -> Path:
     path = remove_slash(str(path))
     parent_folder = '/'.join(path.split('/')[:-1])
     if to_add_slash:
         parent_folder = add_slash(parent_folder)
     return Path(parent_folder)
+
+
+def copy_directory(source: Union[str, Path], destination: Union[str, Path], dirs_exist_ok: bool = True):
+    shutil.copytree(source, destination, dirs_exist_ok=dirs_exist_ok)
+
+
+def copy_file(source: Union[str, Path], destination: Union[str, Path]):
+    shutil.copy(source, destination)

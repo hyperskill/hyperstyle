@@ -1,3 +1,4 @@
 openpyxl==3.0.7
 pandas==1.2.3
 pandarallel
+numpy~=1.20.2

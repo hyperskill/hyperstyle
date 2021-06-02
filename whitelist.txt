@@ -104,3 +104,17 @@ dataframes
 numpy
 Pickler
 Unpickler
+dataset
+qodana
+listdir
+concat
+copytree
+iterrows
+nrows
+groupby
+getuid
+Popen
+reindex
+datasets
+usecols
+linesep

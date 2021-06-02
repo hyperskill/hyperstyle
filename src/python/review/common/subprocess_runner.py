@@ -21,3 +21,8 @@ def run_in_subprocess(command: List[str]) -> str:
         logger.debug('%s\'s stderr:\n%s' % (command[0], stderr))
 
     return stdout
+
+
+def run_and_wait(command: List[str]) -> None:
+    process = subprocess.Popen(command)
+    process.wait()

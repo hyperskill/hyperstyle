@@ -1,4 +1,5 @@
 from enum import Enum, unique
+from typing import Set
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
@@ -16,6 +17,10 @@ class ColumnName(Enum):
     OLD = 'old'
     NEW = 'new'
     IS_PUBLIC = 'is_public'
+    DECREASED_GRADE = 'decreased_grade'
+    PENALTY = 'penalty'
+    USER = 'user'
+    HISTORY = 'history'
 
 
 @unique
@@ -39,3 +44,8 @@ script_structure_rule = ('Please, make sure your XLSX-file matches following scr
                          f'Acceptable language-names are: {LanguageVersion.PYTHON_3.value}, '
                          f'{LanguageVersion.JAVA_8.value} ,'
                          f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.')
+
+
+# Split string by separator
+def parse_set_arg(str_arg: str, separator: str = ',') -> Set[str]:
+    return set(str_arg.split(separator))
