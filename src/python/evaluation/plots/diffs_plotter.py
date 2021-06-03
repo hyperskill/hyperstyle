@@ -1,15 +1,18 @@
 import argparse
+import sys
 from pathlib import Path
 from statistics import median
 from typing import Any, Callable, Dict
+
+sys.path.append('../../../..')
 
 import pandas as pd
 import plotly.graph_objects as go
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
 from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
-from src.python.evaluation.plots.common import create_bar_plot, create_box_plot, save_plot
-from src.python.review.common.file_system import create_directory, deserialize_data_from_file
+from src.python.evaluation.plots.common import create_bar_plot, create_box_plot, Extension, save_plot
+from src.python.review.common.file_system import deserialize_data_from_file
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -23,6 +26,14 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
         "save_dir",
         type=lambda value: Path(value).absolute(),
         help="The directory where the plotted charts will be saved",
+    )
+
+    parser.add_argument(
+        "--file-extension",
+        type=str,
+        default=Extension.SVG.value,
+        choices=Extension.values(),
+        help="Allows you to select the extension of output files",
     )
 
 
@@ -106,12 +117,17 @@ def get_median_penalty_influence_by_category(
 
 
 def get_penalty_influence_distribution(
-    statistics: PenaltyInfluenceStatistics, x_axis_name: str = "Categories", y_axis_name: str = "Penalty influence (%)",
+    statistics: PenaltyInfluenceStatistics,
+    x_axis_name: str = "Categories",
+    y_axis_name: str = "Penalty influence (%)",
 ):
     stat = statistics.stat
 
     df = _get_dataframe_from_dict(
-        stat, key_name=x_axis_name, value_name=y_axis_name, key_mapper=lambda issue_type: issue_type.name,
+        stat,
+        key_name=x_axis_name,
+        value_name=y_axis_name,
+        key_mapper=lambda issue_type: issue_type.name,
     )
     df = df.explode(y_axis_name)
 
@@ -126,25 +142,25 @@ def main():
     diffs = deserialize_data_from_file(args.diffs_file_path)
     statistics = gather_statistics(diffs)
 
-    create_directory(args.save_dir)
+    extension = Extension(args.file_extension)
 
     plot = get_unique_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name="unique-issues-by-category")
+    save_plot(plot, args.save_dir, plot_name="unique-issues-by-category", extension=extension)
 
     plot = get_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name="issues-by-category")
+    save_plot(plot, args.save_dir, plot_name="issues-by-category", extension=extension)
 
     plot = get_unique_issues_by_category(statistics.penalty_issues_stat, y_axis_name="Number of unique penalty issues")
-    save_plot(plot, args.save_dir, plot_name="unique-penalty-issues-by-category")
+    save_plot(plot, args.save_dir, plot_name="unique-penalty-issues-by-category", extension=extension)
 
     plot = get_issues_by_category(statistics.penalty_issues_stat, y_axis_name="Number of penalty issues")
-    save_plot(plot, args.save_dir, plot_name="penalty-issues-by-category")
+    save_plot(plot, args.save_dir, plot_name="penalty-issues-by-category", extension=extension)
 
     plot = get_median_penalty_influence_by_category(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name="median-penalty-influence-by-category")
+    save_plot(plot, args.save_dir, plot_name="median-penalty-influence-by-category", extension=extension)
 
     plot = get_penalty_influence_distribution(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name="penalty_influence_distribution")
+    save_plot(plot, args.save_dir, plot_name="penalty_influence_distribution", extension=extension)
 
 
 if __name__ == "__main__":
