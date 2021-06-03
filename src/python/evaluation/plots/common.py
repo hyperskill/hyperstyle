@@ -1,5 +1,6 @@
 from enum import Enum
 from pathlib import Path
+from typing import List
 
 import pandas as pd
 import plotly.express as px
@@ -16,6 +17,10 @@ class Extension(Enum):
     PDF = '.pdf'
     EPS = '.eps'
     JSON = '.json'
+
+    @classmethod
+    def values(cls) -> List[str]:
+        return [member.value for member in Extension]
 
 
 def create_bar_plot(df: pd.DataFrame, x_axis: str, y_axis: str) -> go.Figure:
