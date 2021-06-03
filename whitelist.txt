@@ -118,3 +118,9 @@ reindex
 datasets
 usecols
 linesep
+plotly
+JPG
+WEBP
+SVG
+EPS
+xaxis
