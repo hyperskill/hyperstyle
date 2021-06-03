@@ -60,7 +60,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'review=src.python.review.run_tool:main'
-        ]
-    }
+            'review=src.python.review.run_tool:main',
+        ],
+    },
 )
