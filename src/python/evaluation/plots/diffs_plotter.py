@@ -5,12 +5,11 @@ from typing import Any, Callable, Dict
 
 import pandas as pd
 import plotly.graph_objects as go
-
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
 from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
-from src.python.evaluation.plots.common import create_bar_plot, save_plot, create_box_plot
-from src.python.review.common.file_system import deserialize_data_from_file, create_directory
+from src.python.evaluation.plots.common import create_bar_plot, create_box_plot, save_plot
+from src.python.review.common.file_system import create_directory, deserialize_data_from_file
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -107,12 +106,12 @@ def get_median_penalty_influence_by_category(
 
 
 def get_penalty_influence_distribution(
-    statistics: PenaltyInfluenceStatistics, x_axis_name: str = "Categories", y_axis_name: str = "Penalty influence (%)"
+    statistics: PenaltyInfluenceStatistics, x_axis_name: str = "Categories", y_axis_name: str = "Penalty influence (%)",
 ):
     stat = statistics.stat
 
     df = _get_dataframe_from_dict(
-        stat, key_name=x_axis_name, value_name=y_axis_name, key_mapper=lambda issue_type: issue_type.name
+        stat, key_name=x_axis_name, value_name=y_axis_name, key_mapper=lambda issue_type: issue_type.name,
     )
     df = df.explode(y_axis_name)
 
