@@ -1,0 +1,41 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "script",
+        "ecmaFeatures": {}
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-misleading-character-class": "off",
+        "no-setter-return": "off",
+        "no-unsafe-negation": "off",
+        "no-unsafe-finally": "off",
+        "no-undef": "off",
+        "no-console": "off",
+
+        "complexity": ["error", 5],
+        "curly": "error",
+        "consistent-return": "error",
+        "default-case": "error",
+        "eqeqeq": "error",
+        "no-empty-function": "error",
+        "no-fallthrough": "error",
+        "no-multi-spaces": "error",
+        "yoda": "error",
+
+        "brace-style": "error",
+        "camelcase": "error",
+        "comma-style": "error",
+        "comma-spacing": "error",
+        "semi": "error",
+        "no-multiple-empty-lines": "error",
+        "no-var": "error",
+        "space-infix-ops": "error",
+        "object-curly-newline" : "error",
+        "no-trailing-spaces": "error",
+        "no-whitespace-before-property": "error",
+        "max-len": ["error", { "code": 80 }],
+        "constructor-super": "error"
+    },
+    "env": {}
+}
