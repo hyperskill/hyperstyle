@@ -18,7 +18,7 @@ def get_version() -> str:
 
 
 def get_inspectors_additional_files() -> List[str]:
-    inspectors_path = current_dir / 'review' / 'inspectors'
+    inspectors_path = current_dir / 'src' / 'python' / 'review' / 'inspectors'
 
     result = []
     for root, _, files in os.walk(inspectors_path):
@@ -60,7 +60,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'review=review.run_tool:main',
-        ],
-    },
+            'review=src.python.review.run_tool:main'
+        ]
+    }
 )
