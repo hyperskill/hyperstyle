@@ -26,6 +26,7 @@ class IssueType(Enum):
     CLASS_RESPONSE = 'CLASS_RESPONSE'
     METHOD_NUMBER = 'METHOD_NUMBER'
     MAINTAINABILITY = 'MAINTAINABILITY'
+    INFO = 'INFO'
 
 
 # Keys in results dictionary
