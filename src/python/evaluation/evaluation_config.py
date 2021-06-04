@@ -1,4 +1,5 @@
 import logging.config
+import os
 from argparse import Namespace
 from pathlib import Path
 from typing import List, Union
@@ -6,7 +7,6 @@ from typing import List, Union
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import EvaluationArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_directory
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ class EvaluationConfig:
                 self.output_folder_path = (
                     Path(self.xlsx_file_path).parent.parent / EvaluationArgument.RESULT_FILE_NAME.value
                 )
-                create_directory(self.output_folder_path)
+                os.makedirs(self.output_folder_path, exist_ok=True)
             except FileNotFoundError as e:
                 logger.error('XLSX-file with the specified name does not exists.')
                 raise e

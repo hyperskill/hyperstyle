@@ -66,14 +66,10 @@ def new_temp_dir() -> Path:
 def create_file(file_path: Union[str, Path], content: str):
     file_path = Path(file_path)
 
-    create_directory(os.path.dirname(file_path))
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w+') as f:
         f.writelines(content)
         yield Path(file_path)
-
-
-def create_directory(directory: str) -> None:
-    os.makedirs(directory, exist_ok=True)
 
 
 def get_file_line(path: Path, line_number: int):
