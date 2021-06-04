@@ -11,7 +11,13 @@ import plotly.graph_objects as go
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
 from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
-from src.python.evaluation.plots.common import create_bar_plot, create_box_plot, Extension, save_plot
+from src.python.evaluation.plots.common import (
+    create_bar_plot,
+    create_box_plot,
+    Extension,
+    get_supported_image_extensions,
+    save_plot,
+)
 from src.python.review.common.file_system import deserialize_data_from_file
 
 
@@ -23,17 +29,17 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        "save_dir",
+        'save_dir',
         type=lambda value: Path(value).absolute(),
-        help="The directory where the plotted charts will be saved",
+        help='The directory where the plotted charts will be saved',
     )
 
     parser.add_argument(
-        "--file-extension",
+        '--file-extension',
         type=str,
         default=Extension.SVG.value,
-        choices=Extension.values(),
-        help="Allows you to select the extension of output files",
+        choices=get_supported_image_extensions(),
+        help='Allows you to select the extension of output files',
     )
 
 
@@ -60,8 +66,8 @@ def _get_dataframe_from_dict(
 
 def get_unique_issues_by_category(
     statistics: IssuesStatistics,
-    x_axis_name: str = "Categories",
-    y_axis_name: str = "Number of unique issues",
+    x_axis_name: str = 'Categories',
+    y_axis_name: str = 'Number of unique issues',
     limit: int = 0,
 ) -> go.Figure:
     categorized_statistics = statistics.get_short_categorized_statistics()
@@ -79,8 +85,8 @@ def get_unique_issues_by_category(
 
 def get_issues_by_category(
     statistics: IssuesStatistics,
-    x_axis_name: str = "Categories",
-    y_axis_name: str = "Number of issues",
+    x_axis_name: str = 'Categories',
+    y_axis_name: str = 'Number of issues',
     limit: int = 0,
 ) -> go.Figure:
     categorized_statistics = statistics.get_short_categorized_statistics()
@@ -98,8 +104,8 @@ def get_issues_by_category(
 
 def get_median_penalty_influence_by_category(
     statistics: PenaltyInfluenceStatistics,
-    x_axis_name: str = "Categories",
-    y_axis_name: str = "Penalty influence (%)",
+    x_axis_name: str = 'Categories',
+    y_axis_name: str = 'Penalty influence (%)',
     limit: int = 0,
 ) -> go.Figure:
     stat = statistics.stat
@@ -118,8 +124,8 @@ def get_median_penalty_influence_by_category(
 
 def get_penalty_influence_distribution(
     statistics: PenaltyInfluenceStatistics,
-    x_axis_name: str = "Categories",
-    y_axis_name: str = "Penalty influence (%)",
+    x_axis_name: str = 'Categories',
+    y_axis_name: str = 'Penalty influence (%)',
 ):
     stat = statistics.stat
 
@@ -145,23 +151,23 @@ def main():
     extension = Extension(args.file_extension)
 
     plot = get_unique_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name="unique-issues-by-category", extension=extension)
+    save_plot(plot, args.save_dir, plot_name='unique-issues-by-category', extension=extension)
 
     plot = get_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name="issues-by-category", extension=extension)
+    save_plot(plot, args.save_dir, plot_name='issues-by-category', extension=extension)
 
-    plot = get_unique_issues_by_category(statistics.penalty_issues_stat, y_axis_name="Number of unique penalty issues")
-    save_plot(plot, args.save_dir, plot_name="unique-penalty-issues-by-category", extension=extension)
+    plot = get_unique_issues_by_category(statistics.penalty_issues_stat, y_axis_name='Number of unique penalty issues')
+    save_plot(plot, args.save_dir, plot_name='unique-penalty-issues-by-category', extension=extension)
 
-    plot = get_issues_by_category(statistics.penalty_issues_stat, y_axis_name="Number of penalty issues")
-    save_plot(plot, args.save_dir, plot_name="penalty-issues-by-category", extension=extension)
+    plot = get_issues_by_category(statistics.penalty_issues_stat, y_axis_name='Number of penalty issues')
+    save_plot(plot, args.save_dir, plot_name='penalty-issues-by-category', extension=extension)
 
     plot = get_median_penalty_influence_by_category(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name="median-penalty-influence-by-category", extension=extension)
+    save_plot(plot, args.save_dir, plot_name='median-penalty-influence-by-category', extension=extension)
 
     plot = get_penalty_influence_distribution(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name="penalty_influence_distribution", extension=extension)
+    save_plot(plot, args.save_dir, plot_name='penalty_influence_distribution', extension=extension)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
