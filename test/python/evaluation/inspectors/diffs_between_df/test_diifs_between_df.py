@@ -3,7 +3,7 @@ from test.python.evaluation import INSPECTORS_DIR_PATH
 
 import pytest
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.evaluation.inspectors.diffs_between_df import find_diffs
 from src.python.review.inspectors.inspector_type import InspectorType
@@ -15,7 +15,7 @@ EMPTY_DIFFS = {
     ColumnName.GRADE.value: [],
     ColumnName.DECREASED_GRADE.value: [],
     ColumnName.USER.value: 0,
-    EvaluationArgument.TRACEBACK.value: {},
+    ColumnName.TRACEBACK.value: {},
     ColumnName.PENALTY.value: {},
 }
 
@@ -23,7 +23,7 @@ INCORRECT_GRADE_DIFFS = {
     ColumnName.GRADE.value: [1, 2],
     ColumnName.DECREASED_GRADE.value: [],
     ColumnName.USER.value: 0,
-    EvaluationArgument.TRACEBACK.value: {},
+    ColumnName.TRACEBACK.value: {},
     ColumnName.PENALTY.value: {},
 }
 
@@ -55,7 +55,7 @@ ISSUES_DIFFS = {
     ColumnName.GRADE.value: [],
     ColumnName.DECREASED_GRADE.value: [],
     ColumnName.USER.value: 0,
-    EvaluationArgument.TRACEBACK.value: {
+    ColumnName.TRACEBACK.value: {
         1: ISSUES,
     },
     ColumnName.PENALTY.value: {},
@@ -65,7 +65,7 @@ MIXED_DIFFS = {
     ColumnName.GRADE.value: [2, 3],
     ColumnName.DECREASED_GRADE.value: [],
     ColumnName.USER.value: 0,
-    EvaluationArgument.TRACEBACK.value: {
+    ColumnName.TRACEBACK.value: {
         1: ISSUES,
     },
     ColumnName.PENALTY.value: {},
@@ -75,7 +75,7 @@ DECREASED_GRADE = {
     ColumnName.GRADE.value: [],
     ColumnName.DECREASED_GRADE.value: [2, 3],
     ColumnName.USER.value: 0,
-    EvaluationArgument.TRACEBACK.value: {},
+    ColumnName.TRACEBACK.value: {},
     ColumnName.PENALTY.value: {},
 }
 

@@ -5,7 +5,7 @@ from typing import Dict, Optional, Tuple
 import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df, get_solutions_df_by_file_path, write_df_to_file
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.util import ColumnName
 from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 
 CodeToGradesDict = Dict[str, Tuple[str, Optional[str]]]
@@ -35,12 +35,12 @@ def get_code_to_grades_dict(df: pd.DataFrame) -> CodeToGradesDict:
     df.apply(lambda row: __add_grade(code_to_grades_dict,
                                      row[ColumnName.CODE.value],
                                      row[ColumnName.GRADE.value],
-                                     row[EvaluationArgument.TRACEBACK.value]), axis=1)
+                                     row[ColumnName.TRACEBACK.value]), axis=1)
     return code_to_grades_dict
 
 
 def fill_all_solutions_df(all_solutions_df: pd.DataFrame, code_to_grades_dict: CodeToGradesDict) -> pd.DataFrame:
-    all_solutions_df[ColumnName.GRADE.value], all_solutions_df[EvaluationArgument.TRACEBACK.value] = zip(
+    all_solutions_df[ColumnName.GRADE.value], all_solutions_df[ColumnName.TRACEBACK.value] = zip(
         *all_solutions_df[ColumnName.CODE.value].map(lambda code: code_to_grades_dict[code]))
     return all_solutions_df
 

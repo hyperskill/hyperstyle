@@ -21,6 +21,7 @@ class ColumnName(Enum):
     PENALTY = 'penalty'
     USER = 'user'
     HISTORY = 'history'
+    TRACEBACK = 'traceback'
 
 
 @unique

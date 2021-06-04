@@ -5,8 +5,8 @@ from typing import Dict, List
 import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from src.python.evaluation.common.pandas_util import filter_df_by_condition, get_solutions_df_by_file_path
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
+from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.common.file_system import deserialize_data_from_file, Extension, get_parent_folder
 
@@ -32,12 +32,12 @@ def __get_new_inspections(fragment_id_to_issues: Dict[int, List[PenaltyIssue]], 
 
 def __get_public_fragments(solutions_df: pd.DataFrame, diffs_dict: dict) -> pd.DataFrame:
     # Keep only public solutions
-    public_fragments = filter_df_by_condition(solutions_df, ColumnName.IS_PUBLIC.value, 'YES')
+    public_fragments = filter_df_by_single_value(solutions_df, ColumnName.IS_PUBLIC.value, 'YES')
     count_inspections_column = 'count_inspections'
     new_inspections_column = 'new_inspections'
 
     # Get only new inspections and count them
-    fragment_id_to_issues = diffs_dict[EvaluationArgument.TRACEBACK.value]
+    fragment_id_to_issues = diffs_dict[ColumnName.TRACEBACK.value]
     public_fragments[new_inspections_column] = public_fragments.apply(
         lambda row: __get_new_inspections(fragment_id_to_issues, row[ColumnName.ID.value]), axis=1)
     public_fragments[count_inspections_column] = public_fragments.apply(
@@ -45,7 +45,7 @@ def __get_public_fragments(solutions_df: pd.DataFrame, diffs_dict: dict) -> pd.D
 
     public_fragments = public_fragments.sort_values(count_inspections_column, ascending=False)
     # Keep only public columns
-    return public_fragments[[ColumnName.CODE.value, EvaluationArgument.TRACEBACK.value, new_inspections_column]]
+    return public_fragments[[ColumnName.CODE.value, ColumnName.TRACEBACK.value, new_inspections_column]]
 
 
 # TODO: add readme
