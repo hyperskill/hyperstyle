@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -7,7 +8,6 @@ from src.python.model.common.metric import Metric
 from src.python.model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
 from src.python.model.common.util import MarkingArgument
 from src.python.model.dataset.dataset import QodanaDataset
-from src.python.review.common.file_system import create_directory
 from transformers import RobertaForSequenceClassification
 
 
@@ -28,7 +28,7 @@ def main():
     metrics = Metric(args.threshold)
     if args.output_directory_path is None:
         args.output_directory_path = Path(args.train_dataset_path).parent / MarkingArgument.WEIGHTS.value
-        create_directory(args.output_directory_path)
+        os.makedirs(args.output_directory_path, exist_ok=True)
 
     train_args = TrainingArgs(args)
 
