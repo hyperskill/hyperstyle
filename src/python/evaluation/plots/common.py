@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from pathlib import Path
 from typing import List
@@ -5,7 +6,6 @@ from typing import List
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from src.python.review.common.file_system import create_directory
 
 
 class Extension(Enum):
@@ -45,6 +45,6 @@ def create_box_plot(df: pd.DataFrame, x_axis: str, y_axis: str) -> go.Figure:
 def save_plot(
     fig: go.Figure, dir_path: Path, plot_name: str = "result_plot", extension: Extension = Extension.SVG,
 ) -> None:
-    create_directory(dir_path)
+    os.makedirs(dir_path, exist_ok=True)
     file = dir_path / f"{plot_name}{extension.value}"
     fig.write_image(str(file))
