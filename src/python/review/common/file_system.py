@@ -88,7 +88,7 @@ def match_condition(regex: str) -> ItemCondition:
 
 
 def serialize_data_and_write_to_file(path: Path, data: Any) -> None:
-    create_directory(get_parent_folder(path))
+    os.makedirs(get_parent_folder(path), exist_ok=True)
     with open(path, 'wb') as f:
         p = pickle.Pickler(f)
         p.dump(data)
@@ -139,14 +139,10 @@ def new_temp_file(suffix: Extension = Extension.EMPTY) -> Tuple[str, str]:
 def create_file(file_path: Union[str, Path], content: str):
     file_path = Path(file_path)
 
-    create_directory(os.path.dirname(file_path))
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w+') as f:
         f.writelines(content)
         yield Path(file_path)
-
-
-def create_directory(directory: Union[str, Path]) -> None:
-    os.makedirs(directory, exist_ok=True)
 
 
 def get_file_line(path: Path, line_number: int):

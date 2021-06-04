@@ -22,7 +22,6 @@ from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
     copy_directory,
     copy_file,
-    create_directory,
     create_file,
     Extension,
     get_all_file_system_items,
@@ -189,7 +188,7 @@ class DatasetLabel:
 
     def _label_chunk(self, chunk: pd.DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
         tmp_dir_path = self.dataset_path.parent.absolute() / f'qodana_project_{chunk_id}'
-        create_directory(tmp_dir_path)
+        os.makedirs(tmp_dir_path, exist_ok=True)
 
         project_dir = tmp_dir_path / 'project'
         results_dir = tmp_dir_path / 'results'
