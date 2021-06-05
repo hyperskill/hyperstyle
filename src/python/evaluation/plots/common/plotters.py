@@ -31,7 +31,7 @@ def _get_dataframe_from_dict(
 
 
 def _extract_stats_from_issues_statistics(
-    statistics: IssuesStatistics, limit: int, only_unique: bool
+    statistics: IssuesStatistics, limit: int, only_unique: bool,
 ) -> Dict[IssueType, int]:
     categorized_statistics = statistics.get_short_categorized_statistics()
 
