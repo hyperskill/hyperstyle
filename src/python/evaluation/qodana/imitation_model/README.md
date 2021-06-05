@@ -1,4 +1,12 @@
 # Qodana imitation model 
+## Description
+The general purpose of the model is to simulate the behavior of [`Qodana`](https://github.com/JetBrains/Qodana/tree/main) – 
+a code quality monitoring tool that identifies and suggests fixes for bugs, security vulnerabilities, duplications, and imperfections.
+
+Motivation for developing a model:
+- acceleration of the code analysis process by training the model to recognize a certain class of errors;
+- the ability to run the model on separate files without the need to create a project (for example, for the Java language)
+
 
 ## Architecture 
 [`RobertaForSequenceClassification`](https://huggingface.co/transformers/model_doc/roberta.html#robertaforsequenceclassification) model with [`BCEWithLogitsLoss`](https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html) solve multilabel classification task. 
