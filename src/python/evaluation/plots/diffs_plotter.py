@@ -32,6 +32,15 @@ class ConfigFields(Enum):
     LIMIT = 'limit'
     MARGIN = 'margin'
     SORT_ORDER = 'sort_order'
+    COLOR = 'color'
+
+
+X_AXIS_NAME = ConfigFields.X_AXIS_NAME.value
+Y_AXIS_NAME = ConfigFields.Y_AXIS_NAME.value
+LIMIT = ConfigFields.LIMIT.value
+MARGIN = ConfigFields.MARGIN.value
+SORT_ORDER = ConfigFields.SORT_ORDER.value
+COLOR = ConfigFields.COLOR.value
 
 
 @unique
@@ -106,22 +115,26 @@ def get_plot_params(config: Dict, plot_type: PlotTypes) -> Dict[str, Any]:
     if config_params is None:
         return params
 
-    if config_params.get(ConfigFields.MARGIN.value) is not None:
-        margin_value = config_params.get(ConfigFields.MARGIN.value).upper()
-        params[ConfigFields.MARGIN.value] = plotly_consts.MARGIN[margin_value]
+    if config_params.get(MARGIN) is not None:
+        margin_value = config_params.get(MARGIN).upper()
+        params[MARGIN] = plotly_consts.MARGIN[margin_value]
 
-    if config_params.get(ConfigFields.SORT_ORDER.value) is not None:
-        sort_order_value = config_params.get(ConfigFields.SORT_ORDER.value)
-        params[ConfigFields.SORT_ORDER.value] = plotly_consts.SORT_ORDER(sort_order_value)
+    if config_params.get(SORT_ORDER) is not None:
+        sort_order_value = config_params.get(SORT_ORDER)
+        params[SORT_ORDER] = plotly_consts.SORT_ORDER(sort_order_value)
 
-    if config_params.get(ConfigFields.LIMIT.value) is not None:
-        params[ConfigFields.LIMIT.value] = config_params.get(ConfigFields.LIMIT.value)
+    if config_params.get(LIMIT) is not None:
+        params[LIMIT] = config_params.get(LIMIT)
 
-    if config_params.get(ConfigFields.X_AXIS_NAME.value) is not None:
-        params[ConfigFields.X_AXIS_NAME.value] = config_params.get(ConfigFields.X_AXIS_NAME.value)
+    if config_params.get(X_AXIS_NAME) is not None:
+        params[X_AXIS_NAME] = config_params.get(X_AXIS_NAME)
 
-    if config_params.get(ConfigFields.Y_AXIS_NAME.value) is not None:
-        params[ConfigFields.Y_AXIS_NAME.value] = config_params.get(ConfigFields.Y_AXIS_NAME.value)
+    if config_params.get(Y_AXIS_NAME) is not None:
+        params[Y_AXIS_NAME] = config_params.get(Y_AXIS_NAME)
+
+    if config_params.get(COLOR) is not None:
+        color_value = config_params.get(COLOR)
+        params[COLOR] = plotly_consts.COLOR[color_value]
 
     return params
 

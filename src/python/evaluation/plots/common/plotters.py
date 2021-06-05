@@ -50,6 +50,7 @@ def get_unique_issues_by_category(
     limit: int = 0,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
     filtered_stats = _extract_stats_from_issues_statistics(statistics, limit, only_unique=True)
 
@@ -60,7 +61,7 @@ def get_unique_issues_by_category(
         key_mapper=lambda issue_type: issue_type.name,
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order)
+    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
 
 
 def get_issues_by_category(
@@ -70,6 +71,7 @@ def get_issues_by_category(
     limit: int = 0,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
     filtered_stats = _extract_stats_from_issues_statistics(statistics, limit, only_unique=False)
 
@@ -80,7 +82,7 @@ def get_issues_by_category(
         key_mapper=lambda issue_type: issue_type.name,
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order)
+    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
 
 
 def get_median_penalty_influence_by_category(
@@ -90,6 +92,7 @@ def get_median_penalty_influence_by_category(
     limit: int = 0,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
     stat = statistics.stat
     filtered_stats = {issue_type: influence for issue_type, influence in stat.items() if median(influence) >= limit}
@@ -102,7 +105,7 @@ def get_median_penalty_influence_by_category(
         value_mapper=lambda influence: median(influence),
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order)
+    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
 
 
 def get_penalty_influence_distribution(
@@ -112,6 +115,7 @@ def get_penalty_influence_distribution(
     limit: int = 0,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ):
     stat = statistics.stat
     filtered_stats = {issue_type: influence for issue_type, influence in stat.items() if len(influence) >= limit}
@@ -124,4 +128,4 @@ def get_penalty_influence_distribution(
     )
     df = df.explode(y_axis_name)
 
-    return create_box_plot(df, x_axis_name, y_axis_name, margin, sort_order)
+    return create_box_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)

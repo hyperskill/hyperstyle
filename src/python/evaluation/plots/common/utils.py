@@ -21,8 +21,9 @@ def create_bar_plot(
     y_axis: str,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
-    fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
+    fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis, color_discrete_sequence=color.value)
     update_layout(fig, margin, sort_order)
     return fig
 
@@ -33,8 +34,9 @@ def create_box_plot(
     y_axis: str,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
-    fig = px.box(df, x=x_axis, y=y_axis)
+    fig = px.box(df, x=x_axis, y=y_axis, color_discrete_sequence=color.value)
     update_layout(fig, margin, sort_order)
     return fig
 
