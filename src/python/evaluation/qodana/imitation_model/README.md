@@ -24,17 +24,17 @@ Model has two use cases:
 ___
 ## Data preprocessing
 
-Please address to the [`following documentation`](https://github.com/hyperskill/hyperstyle/tree/roberta-model/src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](https://github.com/hyperskill/hyperstyle/tree/roberta-model/src/python/model/preprocessing) to preprocess data for model training and evaluation afterwards. 
+Please address to the [`following documentation`](src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](preprocessing) to preprocess data for model training and evaluation afterwards. 
 
 ___
 
-## How to train model
+## How to train the model
 
-Run [`train.py`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/train.py) script from the command line with the following arguments:
+Run [`train.py`](train.py) script from the command line with the following arguments:
 
 Required arguments:
 
-`train_dataset_path`, `val_dataset_path` &#8209; path to the `train.csv` and `val.csv` dataset received by running [`split_dataset.py`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/preprocessing/split_dataset.py) script.
+`train_dataset_path`, `val_dataset_path` &#8209; path to the `train.csv` and `val.csv` dataset received by running [`split_dataset.py`](preprocessing/split_dataset.py) script.
 
 Optional arguments:
 
@@ -50,15 +50,15 @@ Argument | Description
 |**&#8209;ws**, **&#8209;&#8209;warm_up_steps**| A number of steps when optimizer uses constant learning rate before applying scheduler policy. **Default is 300**.|
 |**&#8209;sl**, **&#8209;&#8209;save_limit**| Total amount of checkpoints limit. Default is 1.|
 
-To inspect the rest of default training parameters please, address to the [`TrainingArguments`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/common/train_config.py).
+To inspect the rest of default training parameters please, address to the [`TrainingArguments`](common/train_config.py).
 
 ## How to evaluate model
 
-Run [`evaluation.py`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/evaluation.py) script from the command line with the following arguments:
+Run [`evaluation.py`](evaluation.py) script from the command line with the following arguments:
 
 Required arguments:
 
-`test_dataset_path` &#8209; path to the `test.csv` received by running [`split_dataset.py`](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/model/preprocessing/split_dataset.py) script.
+`test_dataset_path` &#8209; path to the `test.csv` received by running [`split_dataset.py`](preprocessing/split_dataset.py) script.
 
 `model_weights_directory_path` &#8209; path to the folder where trained model weights are saved.
 
