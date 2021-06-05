@@ -9,6 +9,8 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Tuple, Union
 
+import yaml
+
 
 @unique
 class FileSystemItem(Enum):
@@ -119,6 +121,11 @@ def deserialize_data_from_file(path: Path) -> Any:
     with open(path, 'rb') as f:
         u = pickle.Unpickler(f)
         return u.load()
+
+
+def parse_yaml(path: Union[Path, str]) -> Any:
+    with open(path) as file:
+        return yaml.safe_load(file)
 
 
 # For getting name of the last folder or file
