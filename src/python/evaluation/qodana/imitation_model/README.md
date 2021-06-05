@@ -11,7 +11,9 @@ Motivation for developing a model:
 ## Architecture 
 [`RobertaForSequenceClassification`](https://huggingface.co/transformers/model_doc/roberta.html#robertaforsequenceclassification) model with [`BCEWithLogitsLoss`](https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html) solve multilabel classification task. 
 
-Model outputs is a tensor of size: `batch_size` x `num_classes`. Class probabilities are recieved by taking `sigmoid` and final predictions are computed by comparing the probability of each class with the `threshold`. 
+Model outputs is a tensor of size: `batch_size`  x `num_classes`. Where `batch_size` is the number of training examples utilized in one iteration, 
+and `num_classes` is the number of error types met in the dataset. By model class here, we mean a unique error type.
+Class probabilities are received by taking `sigmoid` and final predictions are computed by comparing the probability of each class with the `threshold`. 
 
 As classes might be unbalanced the used metric is `f1-score`.
 ## What it does
@@ -66,7 +68,7 @@ Argument | Description
 --- | ---
 |**&#8209;o**, **&#8209;&#8209;output_directory_path**| Path to the directory where labeled dataset will be saved. Default is the `test` folder.|
 |**&#8209;c**, **&#8209;&#8209;context_length**| Sequence length or embedding size of tokenized samples. Available values are any `positive integers`. **Default is 40**.|
-|**&#8209;bs**, **&#8209;&#8209;batch_size**| Batch size for training and validation dataset. Available values are any `positive integers`. **Default is 16**.|
+|**&#8209;bs**, **&#8209;&#8209;batch_size**| The number of training examples utilized in one training and validation iteration. Available values are any `positive integers`. **Default is 16**.|
 |**&#8209;th**, **&#8209;&#8209;threshold**| Is used to compute predictions. Available values: 0 < `threshold` < 1. If the probability of inspection is greater than `threshold`, sample will be classified with the inspection. **Default is 0.5**.|
 
 Output is a `predictions.csv` file with the column names matches the number of classes. Each sample has a binary label: 
