@@ -8,9 +8,9 @@ class Metric:
 
     def get_f1_score(self, predictions: torch.tensor, targets: torch.tensor) -> float:
         confusion_matrix = multilabel_confusion_matrix(targets, predictions)
-        false_positives = sum([score[0][1] for score in confusion_matrix])
-        false_negatives = sum([score[1][0] for score in confusion_matrix])
-        true_positives = sum([score[1][1] for score in confusion_matrix])
+        false_positives = sum(score[0][1] for score in confusion_matrix)
+        false_negatives = sum(score[1][0] for score in confusion_matrix)
+        true_positives = sum(score[1][1] for score in confusion_matrix)
         f1_score = true_positives / (true_positives + 1 / 2 * (false_positives + false_negatives))
         return f1_score
 

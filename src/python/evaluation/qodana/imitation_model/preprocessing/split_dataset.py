@@ -6,8 +6,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
-from src.python.review.common.file_system import create_directory, Extension
+from src.python.model.common.util import MarkingArgument
+from src.python.review.common.file_system import Extension
 
 
 def configure_parser() -> argparse.ArgumentParser:
@@ -66,7 +66,7 @@ def split_dataset(dataset_path: str, output_directory_path: str, val_size: float
                     ("val", code_val, target_val),
                     ("test", code_test, target_test)]:
         df = pd.concat([holdout[1], holdout[2]], axis=1)
-        create_directory(os.path.join(output_directory_path, holdout[0]))
+        os.makedirs(os.path.join(output_directory_path, holdout[0]), exist_ok=True)
         write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{Extension.CSV.value}', df)
 
 
