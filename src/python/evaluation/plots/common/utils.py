@@ -37,7 +37,7 @@ def create_box_plot(
 ) -> go.Figure:
     fig = px.box(df, x=x_axis, y=y_axis)
 
-    update_layout(fig, margin) # TODO: sort_order ?
+    update_layout(fig, margin)
 
     return fig
 
