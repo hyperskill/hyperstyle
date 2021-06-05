@@ -21,7 +21,7 @@ from src.python.evaluation.plots.common.plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from src.python.evaluation.plots.common.utils import get_supported_image_extensions, save_plot
+from src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 
 
@@ -94,7 +94,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
         '--file-extension',
         type=str,
         default=Extension.SVG.value,
-        choices=get_supported_image_extensions(),
+        choices=get_supported_extensions(),
         help='Allows you to select the extension of output files',
     )
 
