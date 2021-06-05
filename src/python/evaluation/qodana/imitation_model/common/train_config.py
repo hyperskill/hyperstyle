@@ -1,7 +1,7 @@
 import argparse
 
 import torch
-from src.python.model.common.util import MarkingArgument
+from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
 from transformers import Trainer, TrainingArguments
 
 
@@ -32,7 +32,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-o', '--output_directory_path',
                         default=None,
                         type=str,
-                        help='Path to the directory where to save model weights. Default is the directory'
+                        help='Path to the directory where to save imitation_model weights. Default is the directory'
                              'where train dataset is.')
 
     parser.add_argument('-cl', '--context_length',
@@ -58,7 +58,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-e', '--epoch',
                         type=int,
                         default=1,
-                        help='Number of epochs to train model.')
+                        help='Number of epochs to train imitation_model.')
 
     parser.add_argument('-th', '--threshold',
                         type=float,

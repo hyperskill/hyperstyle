@@ -1,7 +1,7 @@
 # Qodana imitation model 
 
 ## Architecture 
-`RobertaForSequenceClassification` model with `BCEWithLogitsLoss` solve multilabel classification task. 
+[`RobertaForSequenceClassification`](https://huggingface.co/transformers/model_doc/roberta.html#robertaforsequenceclassification) model with [`BCEWithLogitsLoss`](https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html) solve multilabel classification task. 
 
 Model outputs is a tensor of size: `batch_size` x `num_classes`. Class probabilities are recieved by taking `sigmoid` and final predictions are computed by comparing the probability of each class with the `threshold`. 
 

@@ -1,7 +1,7 @@
-setuptools~=47.3.2
+setuptools==56.0.0
 
 # python code analysis tools
-pylint~=2.5.3
+pylint==2.7.4
 pylint-django==2.3.0
 flake8==3.9.0
 
@@ -25,8 +25,8 @@ cohesion==1.0.0
 radon==4.5.0
 
 # extra libraries and frameworks
-django~=3.0.8
-requests~=2.24.0
+django==3.2
+requests==2.25.1
 argparse==1.4.0
 
 pytest~=6.2.3

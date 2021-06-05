@@ -10,13 +10,13 @@ import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.model.common.util import CustomTokens, MarkingArgument
+from src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, MarkingArgument
 from src.python.review.common.file_system import Extension
 
 
 logger = logging.getLogger(__name__)
 sys.path.append('')
-sys.path.append('../../..')
+sys.path.append('../../../../..')
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

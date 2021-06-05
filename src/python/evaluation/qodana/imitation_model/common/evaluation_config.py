@@ -13,7 +13,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument('model_weights_directory_path',
                         type=str,
-                        help='Path to the directory where trained model weights are stored.')
+                        help='Path to the directory where trained imitation_model weights are stored.')
 
     parser.add_argument('-o', '--output_directory_path',
                         default=None,

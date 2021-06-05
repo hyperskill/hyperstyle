@@ -3,10 +3,10 @@ import sys
 from pathlib import Path
 
 import torch
-from src.python.model.common.metric import Metric
-from src.python.model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
-from src.python.model.common.util import MarkingArgument
-from src.python.model.dataset.dataset import QodanaDataset
+from src.python.evaluation.qodana.imitation_model.common.metric import Metric
+from src.python.evaluation.qodana.imitation_model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
+from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
+from src.python.evaluation.qodana.imitation_model.dataset import QodanaDataset
 from src.python.review.common.file_system import create_directory
 from transformers import RobertaForSequenceClassification
 

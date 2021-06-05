@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.model.common.util import MarkingArgument
+from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
 from src.python.review.common.file_system import create_directory, Extension
 
 
