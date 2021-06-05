@@ -1,24 +1,74 @@
 import argparse
 import sys
+from enum import Enum, unique
 from pathlib import Path
-from statistics import median
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Union
 
 sys.path.append('../../../..')
 
-import pandas as pd
 import plotly.graph_objects as go
 from src.python.common.tool_arguments import RunToolArgument
-from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
-from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
-from src.python.evaluation.plots.common import (
-    create_bar_plot,
-    create_box_plot,
-    Extension,
-    get_supported_image_extensions,
-    save_plot,
+from src.python.evaluation.inspectors.common.statistics import (
+    GeneralInspectorsStatistics,
+    IssuesStatistics,
+    PenaltyInfluenceStatistics,
 )
-from src.python.review.common.file_system import deserialize_data_from_file
+from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
+from src.python.evaluation.plots.common import plotly_consts
+from src.python.evaluation.plots.common.plotters import (
+    get_issues_by_category,
+    get_median_penalty_influence_by_category,
+    get_penalty_influence_distribution,
+    get_unique_issues_by_category,
+)
+from src.python.evaluation.plots.common.utils import get_supported_image_extensions, save_plot
+from src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
+
+
+@unique
+class ConfigFields(Enum):
+    X_AXIS_NAME = 'x_axis_name'
+    Y_AXIS_NAME = 'y_axis_name'
+    LIMIT = 'limit'
+    MARGIN = 'margin'
+    SORT_ORDER = 'sort_order'
+
+
+@unique
+class PlotTypes(Enum):
+    UNIQUE_ISSUES_BY_CATEGORY = 'unique_issues_by_category'
+    ISSUES_BY_CATEGORY = 'issues_by_category'
+    UNIQUE_PENALTY_ISSUES_BY_CATEGORY = 'unique_penalty_issues_by_category'
+    PENALTY_ISSUES_BY_CATEGORY = 'penalty_issues_by_category'
+    MEDIAN_PENALTY_INFLUENCE_BY_CATEGORY = 'median_penalty_influence_by_category'
+    PENALTY_INFLUENCE_DISTRIBUTION = 'penalty_influence_distribution'
+
+    def to_plotter_function(self) -> Callable[..., go.Figure]:
+        type_to_function = {
+            PlotTypes.UNIQUE_ISSUES_BY_CATEGORY: get_unique_issues_by_category,
+            PlotTypes.ISSUES_BY_CATEGORY: get_issues_by_category,
+            PlotTypes.UNIQUE_PENALTY_ISSUES_BY_CATEGORY: get_unique_issues_by_category,
+            PlotTypes.PENALTY_ISSUES_BY_CATEGORY: get_issues_by_category,
+            PlotTypes.MEDIAN_PENALTY_INFLUENCE_BY_CATEGORY: get_median_penalty_influence_by_category,
+            PlotTypes.PENALTY_INFLUENCE_DISTRIBUTION: get_penalty_influence_distribution,
+        }
+
+        return type_to_function[self]
+
+    def extract_statistics(
+        self,
+        statistics: GeneralInspectorsStatistics,
+    ) -> Union[IssuesStatistics, PenaltyInfluenceStatistics]:
+        type_to_statistics = {
+            PlotTypes.UNIQUE_ISSUES_BY_CATEGORY: statistics.new_issues_stat,
+            PlotTypes.ISSUES_BY_CATEGORY: statistics.new_issues_stat,
+            PlotTypes.UNIQUE_PENALTY_ISSUES_BY_CATEGORY: statistics.penalty_issues_stat,
+            PlotTypes.PENALTY_ISSUES_BY_CATEGORY: statistics.penalty_issues_stat,
+            PlotTypes.MEDIAN_PENALTY_INFLUENCE_BY_CATEGORY: statistics.penalty_influence_stat,
+            PlotTypes.PENALTY_INFLUENCE_DISTRIBUTION: statistics.penalty_influence_stat,
+        }
+
+        return type_to_statistics[self]
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -35,6 +85,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
+        'config_path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to the yaml file containing information about the graphs to be plotted.',
+    )
+
+    parser.add_argument(
         '--file-extension',
         type=str,
         default=Extension.SVG.value,
@@ -43,130 +99,60 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def _get_dataframe_from_dict(
-    data_dict: Dict[Any, Any],
-    key_name: str,
-    value_name: str,
-    key_mapper: Callable = lambda x: x,
-    value_mapper: Callable = lambda y: y,
-):
-    """
-    Converts 'data_dict' to a dataframe consisting of two columns: 'key_name', 'value_name'.
-    'key_name' contains all keys of 'data_dict', 'value_name' contains all corresponding
-    values of 'data_dict'. With the functions 'key_mapper' and 'value_mapper' you can
-    additionally convert keys and values respectively.
-    """
-    converted_dict = {
-        key_name: list(map(key_mapper, data_dict.keys())),
-        value_name: list(map(value_mapper, data_dict.values())),
-    }
+def get_plot_params(config: Dict, plot_type: PlotTypes) -> Dict[str, Any]:
+    config_params = config.get(plot_type.value)
+    params = {}
 
-    return pd.DataFrame.from_dict(converted_dict)
+    if config_params is None:
+        return params
 
+    if config_params.get(ConfigFields.MARGIN.value) is not None:
+        margin_value = config_params.get(ConfigFields.MARGIN.value).upper()
+        params[ConfigFields.MARGIN.value] = plotly_consts.MARGIN[margin_value]
 
-def get_unique_issues_by_category(
-    statistics: IssuesStatistics,
-    x_axis_name: str = 'Categories',
-    y_axis_name: str = 'Number of unique issues',
-    limit: int = 0,
-) -> go.Figure:
-    categorized_statistics = statistics.get_short_categorized_statistics()
-    filtered_stats = {issue_type: stat[0] for issue_type, stat in categorized_statistics.items() if stat[0] >= limit}
+    if config_params.get(ConfigFields.SORT_ORDER.value) is not None:
+        sort_order_value = config_params.get(ConfigFields.SORT_ORDER.value)
+        params[ConfigFields.SORT_ORDER.value] = plotly_consts.SORT_ORDER(sort_order_value)
 
-    df = _get_dataframe_from_dict(
-        filtered_stats,
-        key_name=x_axis_name,
-        value_name=y_axis_name,
-        key_mapper=lambda issue_type: issue_type.name,
-    )
+    if config_params.get(ConfigFields.LIMIT.value) is not None:
+        params[ConfigFields.LIMIT.value] = config_params.get(ConfigFields.LIMIT.value)
 
-    return create_bar_plot(df, x_axis_name, y_axis_name)
+    if config_params.get(ConfigFields.X_AXIS_NAME.value) is not None:
+        params[ConfigFields.X_AXIS_NAME.value] = config_params.get(ConfigFields.X_AXIS_NAME.value)
+
+    if config_params.get(ConfigFields.Y_AXIS_NAME.value) is not None:
+        params[ConfigFields.Y_AXIS_NAME.value] = config_params.get(ConfigFields.Y_AXIS_NAME.value)
+
+    return params
 
 
-def get_issues_by_category(
-    statistics: IssuesStatistics,
-    x_axis_name: str = 'Categories',
-    y_axis_name: str = 'Number of issues',
-    limit: int = 0,
-) -> go.Figure:
-    categorized_statistics = statistics.get_short_categorized_statistics()
-    filtered_stats = {issue_type: stat[1] for issue_type, stat in categorized_statistics.items() if stat[1] >= limit}
-
-    df = _get_dataframe_from_dict(
-        filtered_stats,
-        key_name=x_axis_name,
-        value_name=y_axis_name,
-        key_mapper=lambda issue_type: issue_type.name,
-    )
-
-    return create_bar_plot(df, x_axis_name, y_axis_name)
+def plot_and_save(
+    config: Dict,
+    general_statistics: GeneralInspectorsStatistics,
+    save_dir: Path,
+    extension: Extension,
+) -> None:
+    for plot_type in PlotTypes:
+        if plot_type.value in config:
+            params = get_plot_params(config, plot_type)
+            plotter_function = plot_type.to_plotter_function()
+            statistics = plot_type.extract_statistics(general_statistics)
+            plot = plotter_function(statistics, **params)
+            save_plot(plot, save_dir, plot_name=plot_type.value, extension=extension)
 
 
-def get_median_penalty_influence_by_category(
-    statistics: PenaltyInfluenceStatistics,
-    x_axis_name: str = 'Categories',
-    y_axis_name: str = 'Penalty influence (%)',
-    limit: int = 0,
-) -> go.Figure:
-    stat = statistics.stat
-    filtered_stats = {issue_type: influence for issue_type, influence in stat.items() if median(influence) >= limit}
-
-    df = _get_dataframe_from_dict(
-        filtered_stats,
-        key_name=x_axis_name,
-        value_name=y_axis_name,
-        key_mapper=lambda issue_type: issue_type.name,
-        value_mapper=lambda influence: median(influence),
-    )
-
-    return create_bar_plot(df, x_axis_name, y_axis_name)
-
-
-def get_penalty_influence_distribution(
-    statistics: PenaltyInfluenceStatistics,
-    x_axis_name: str = 'Categories',
-    y_axis_name: str = 'Penalty influence (%)',
-):
-    stat = statistics.stat
-
-    df = _get_dataframe_from_dict(
-        stat,
-        key_name=x_axis_name,
-        value_name=y_axis_name,
-        key_mapper=lambda issue_type: issue_type.name,
-    )
-    df = df.explode(y_axis_name)
-
-    return create_box_plot(df, x_axis_name, y_axis_name)
-
-
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
 
     diffs = deserialize_data_from_file(args.diffs_file_path)
-    statistics = gather_statistics(diffs)
+    general_statistics = gather_statistics(diffs)
 
     extension = Extension(args.file_extension)
+    config = parse_yaml(args.config_path)
 
-    plot = get_unique_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name='unique-issues-by-category', extension=extension)
-
-    plot = get_issues_by_category(statistics.new_issues_stat)
-    save_plot(plot, args.save_dir, plot_name='issues-by-category', extension=extension)
-
-    plot = get_unique_issues_by_category(statistics.penalty_issues_stat, y_axis_name='Number of unique penalty issues')
-    save_plot(plot, args.save_dir, plot_name='unique-penalty-issues-by-category', extension=extension)
-
-    plot = get_issues_by_category(statistics.penalty_issues_stat, y_axis_name='Number of penalty issues')
-    save_plot(plot, args.save_dir, plot_name='penalty-issues-by-category', extension=extension)
-
-    plot = get_median_penalty_influence_by_category(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name='median-penalty-influence-by-category', extension=extension)
-
-    plot = get_penalty_influence_distribution(statistics.penalty_influence_stat)
-    save_plot(plot, args.save_dir, plot_name='penalty_influence_distribution', extension=extension)
+    plot_and_save(config, general_statistics, args.save_dir, extension)
 
 
 if __name__ == '__main__':
