@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
 from src.python.evaluation.plots.common import plotly_consts
 from src.python.evaluation.plots.common.utils import create_bar_plot, create_box_plot
+from src.python.review.inspectors.issue import IssueType
 
 
 def _get_dataframe_from_dict(
@@ -29,7 +30,9 @@ def _get_dataframe_from_dict(
     return pd.DataFrame.from_dict(converted_dict)
 
 
-def _extract_stats_from_issues_statistics(statistics: IssuesStatistics, limit: int, only_unique: bool):
+def _extract_stats_from_issues_statistics(
+    statistics: IssuesStatistics, limit: int, only_unique: bool
+) -> Dict[IssueType, int]:
     categorized_statistics = statistics.get_short_categorized_statistics()
 
     # If you want to get only unique issues, you should use position 0 of the tuple, otherwise 1.
@@ -62,11 +65,11 @@ def get_unique_issues_by_category(
 
 def get_issues_by_category(
     statistics: IssuesStatistics,
-    margin: Optional[plotly_consts.MARGIN] = None,
-    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     x_axis_name: str = 'Categories',
     y_axis_name: str = 'Number of issues',
     limit: int = 0,
+    margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ) -> go.Figure:
     filtered_stats = _extract_stats_from_issues_statistics(statistics, limit, only_unique=False)
 
@@ -82,11 +85,11 @@ def get_issues_by_category(
 
 def get_median_penalty_influence_by_category(
     statistics: PenaltyInfluenceStatistics,
-    margin: Optional[plotly_consts.MARGIN] = None,
-    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     x_axis_name: str = 'Categories',
     y_axis_name: str = 'Penalty influence (%)',
     limit: int = 0,
+    margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ) -> go.Figure:
     stat = statistics.stat
     filtered_stats = {issue_type: influence for issue_type, influence in stat.items() if median(influence) >= limit}
@@ -104,18 +107,21 @@ def get_median_penalty_influence_by_category(
 
 def get_penalty_influence_distribution(
     statistics: PenaltyInfluenceStatistics,
-    margin: Optional[plotly_consts.MARGIN] = None,
     x_axis_name: str = 'Categories',
     y_axis_name: str = 'Penalty influence (%)',
+    limit: int = 0,
+    margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ):
     stat = statistics.stat
+    filtered_stats = {issue_type: influence for issue_type, influence in stat.items() if len(influence) >= limit}
 
     df = _get_dataframe_from_dict(
-        stat,
+        filtered_stats,
         key_name=x_axis_name,
         value_name=y_axis_name,
         key_mapper=lambda issue_type: issue_type.name,
     )
     df = df.explode(y_axis_name)
 
-    return create_box_plot(df, x_axis_name, y_axis_name, margin)
+    return create_box_plot(df, x_axis_name, y_axis_name, margin, sort_order)
