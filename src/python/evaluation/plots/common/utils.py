@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from src.python.evaluation.plots import plotly_consts
+from src.python.evaluation.plots.common import plotly_consts
 from src.python.review.common.file_system import Extension
 
 
@@ -19,27 +19,43 @@ def create_bar_plot(
     df: pd.DataFrame,
     x_axis: str,
     y_axis: str,
-    margin: plotly_consts.MARGIN = plotly_consts.MARGIN.ZERO,
-    sort_order: plotly_consts.SORT_ORDER = plotly_consts.SORT_ORDER.TOTAL_DESCENDING,
+    margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ) -> go.Figure:
     fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
 
-    fig.update_layout(
-        xaxis={'categoryorder': sort_order},
-        margin=margin,
-    )
+    update_layout(fig, margin, sort_order)
 
     return fig
 
 
 def create_box_plot(
-    df: pd.DataFrame, x_axis: str, y_axis: str, margin: plotly_consts.MARGIN = plotly_consts.MARGIN.ZERO,
+    df: pd.DataFrame,
+    x_axis: str,
+    y_axis: str,
+    margin: Optional[plotly_consts.MARGIN] = None,
 ) -> go.Figure:
     fig = px.box(df, x=x_axis, y=y_axis)
 
-    fig.update_layout(margin=margin)
+    update_layout(fig, margin) # TODO: sort_order ?
 
     return fig
+
+
+def update_layout(
+    fig: go.Figure,
+    margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+) -> None:
+    new_layout = {}
+
+    if margin is not None:
+        new_layout["margin"] = margin.value
+
+    if sort_order is not None:
+        new_layout["xaxis"] = {"categoryorder": sort_order.value}
+
+    fig.update_layout(**new_layout)
 
 
 def save_plot(
