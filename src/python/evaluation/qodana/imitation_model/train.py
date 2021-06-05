@@ -5,7 +5,9 @@ from pathlib import Path
 
 import torch
 from src.python.evaluation.qodana.imitation_model.common.metric import Metric
-from src.python.evaluation.qodana.imitation_model.common.train_config import configure_arguments, MultilabelTrainer, TrainingArgs
+from src.python.evaluation.qodana.imitation_model.common.train_config import (
+    configure_arguments, MultilabelTrainer, TrainingArgs
+)
 from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
 from src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
 from transformers import RobertaForSequenceClassification
