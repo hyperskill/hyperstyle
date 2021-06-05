@@ -9,7 +9,7 @@ from src.python.evaluation.plots.common import plotly_consts
 from src.python.review.common.file_system import Extension
 
 
-def get_supported_image_extensions() -> List[str]:
+def get_supported_extensions() -> List[str]:
     extensions = Extension.get_image_extensions()
     extensions.append(Extension.JSON)
     return [extension.value for extension in extensions]
@@ -23,9 +23,7 @@ def create_bar_plot(
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ) -> go.Figure:
     fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
-
     update_layout(fig, margin, sort_order)
-
     return fig
 
 
@@ -34,11 +32,10 @@ def create_box_plot(
     x_axis: str,
     y_axis: str,
     margin: Optional[plotly_consts.MARGIN] = None,
+    sort_order: Optional[plotly_consts.SORT_ORDER] = None,
 ) -> go.Figure:
     fig = px.box(df, x=x_axis, y=y_axis)
-
-    update_layout(fig, margin)
-
+    update_layout(fig, margin, sort_order)
     return fig
 
 
