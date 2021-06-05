@@ -3,7 +3,6 @@ from enum import Enum
 
 class MARGIN(Enum):
     ZERO = {'l': 0, 'r': 0, 'b': 0, 't': 0}
-    DEFAULT = {}
 
 
 class SORT_ORDER(Enum):  # noqa: N801
