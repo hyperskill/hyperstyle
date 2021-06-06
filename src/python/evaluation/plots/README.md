@@ -1,5 +1,5 @@
 # Hyperstyle evaluation: plots
-This module allows you to visualize the data obtained with the [inspectors](inspectors) module
+This module allows you to visualize the data obtained with the [inspectors](../inspectors) module
 
 ## [diffs_plotter.py](diffs_plotter.py)
 This script allows you to visualize a dataset obtained with [diffs_between_df.py](../inspectors/diffs_between_df.py). 
