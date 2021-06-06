@@ -53,7 +53,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
     """ transform: ['1, 2', '3'] array([[1, 1, 0], [0, 0, 1]])
     """
-    target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy()
+    target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy().astype(str)
     target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
