@@ -2,7 +2,6 @@ import logging
 
 import pandas as pd
 import torch
-
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
 from torch.utils.data import Dataset
