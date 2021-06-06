@@ -5,12 +5,12 @@ This module allows you to visualize the data obtained with the [inspectors](insp
 This script allows you to visualize a dataset obtained with [diffs_between_df.py](../inspectors/diffs_between_df.py). 
 
 The script can build the following graphs: 
-* number of unique issues by category ([Example]())
-* number of issues by category ([Example]())
-* number of unique penalty issues by category ([Example]())
-* number of penalty issues by category ([Example]())
-* median influence on penalty by category ([Example]()) 
-* distribution of influence on penalty by category ([Example]())
+* number of unique issues by category ([Example](#number-of-unique-issues-by-category))
+* number of issues by category ([Example](#number-of-issues-by-category))
+* number of unique penalty issues by category ([Example](#number-of-unique-penalty-issues-by-category))
+* number of penalty issues by category ([Example](#number-of-penalty-issues-by-category))
+* median influence on penalty by category ([Example](#median-influence-on-penalty-by-category)) 
+* distribution of influence on penalty by category ([Example](#distribution-of-influence-on-penalty-by-category))
 
 ### Usage
 Run the [diffs_plotter.py](diffs_plotter.py) with the arguments from command line.
