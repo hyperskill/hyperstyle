@@ -29,7 +29,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the dataset received by either')
 
-    parser.add_argument('-w', '--trained_weights_directory_path',
+    parser.add_argument('-wp', '--trained_weights_directory_path',
                         default=None,
                         type=str,
                         help='Path to the directory where to save imitation_model weights. Default is the directory'
@@ -58,7 +58,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         default=2e-5,
                         help='Learning rate.')
 
-    parser.add_argument('-w', '--weight_decay',
+    parser.add_argument('-wd', '--weight_decay',
                         type=int,
                         default=0.01,
                         help='Wight decay parameter for optimizer.')
