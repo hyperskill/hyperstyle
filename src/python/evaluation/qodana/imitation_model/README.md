@@ -51,13 +51,15 @@ code | inspections
 Please address to the [`following documentation`](src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](preprocessing) to preprocess data for model training and evaluation afterwards. 
 
 After completing the 3d preprocessing step you should have 3 folders:
-`train`, `test`, `val`. 
-Input file for [train.py](train.py) script should consists of 4+ columns:
+`train`, `val`, `test` with `train.csv`, `val.csv` and `test.csv` respectively.
+
+Each file has the same structure, it should consist of 4+ columns:
 - `id` – solutions id;
 - `code` – line od code or block of code;
 - `lang` - language version;
 - `0`, `1`, `2` ... `n` – several columns, equal to the unique number of errors detected by Qodana in the dataset.
 The values in the columns are binary numbers: `1` if inspection is detected and `0` otherwise.
+  
 
 ## How to train the model
 
@@ -65,7 +67,13 @@ Run [`train.py`](train.py) script from the command line with the following argum
 
 Required arguments:
 
-`train_dataset_path`, `val_dataset_path` &#8209; path to the `train.csv` and `val.csv` dataset received by running [`split_dataset.py`](preprocessing/split_dataset.py) script.
+- `train_dataset_path`  &#8209; path to the `train.csv` – file that consists of samples
+that model will use for training.
+
+- `val_dataset_path` &#8209; path to the `val.csv` – file that consists of samples
+that model will use for evaluation during training.
+  
+Both files are received by running [`split_dataset.py`](preprocessing/split_dataset.py) script and has the structure as described above.
 
 Optional arguments:
 
