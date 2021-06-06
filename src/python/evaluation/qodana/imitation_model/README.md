@@ -20,13 +20,44 @@ As classes might be unbalanced the used metric is `f1-score`.
 
 Model has two use cases:
 - It can be trained to predict a unique number of errors in a **block** of code, unfixed length. 
+  
+**Example**: 
+
+code | inspections
+--- | ---
+|`import java.util.Scanner; class Main {public static void main(String[] args) {Scanner scanner = new Scanner(System.in);// put your code here int num = scanner.nextInt(); System.out.println((num / 10 ) % 10);}}`| 1, 2|
+
+
 - It can be trained to predict a unique number of errors in a **line** of code. 
-___
+
+**Example**
+
+code | inspections
+--- | ---
+|`import java.util.Scanner;`| 0|
+|`\n`|0|
+|`class Main {`|1|
+|`public static void main(String[] args`) {|1|
+|`Scanner scanner = new Scanner(System.in);`|0|
+|`// put your code here`|0|
+|`int num = scanner.nextInt();`|0|
+|`System.out.println((num / 10 ) % 10);`|2|
+|`}`|0|
+|`}`|0|
+
+
 ## Data preprocessing
 
 Please address to the [`following documentation`](src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](preprocessing) to preprocess data for model training and evaluation afterwards. 
 
-___
+After completing the 3d preprocessing step you should have 3 folders:
+`train`, `test`, `val`. 
+Input file for [train.py](train.py) script should consists of 4+ columns:
+- `id` – solutions id;
+- `code` – line od code or block of code;
+- `lang` - language version;
+- `0`, `1`, `2` ... `n` – several columns, equal to the unique number of errors detected by Qodana in the dataset.
+The values in the columns are binary numbers: `1` if inspection is detected and `0` otherwise.
 
 ## How to train the model
 
