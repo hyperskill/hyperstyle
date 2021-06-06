@@ -18,7 +18,7 @@ Run the [diffs_plotter.py](diffs_plotter.py) with the arguments from command lin
 **Required arguments**:
 1. `diffs_file_path` — path to a file with serialized diffs that were founded by [diffs_between_df.py](../inspectors/diffs_between_df.py).
 2. `save_dir` — directory where the plotted charts will be saved.
-3. `config_path` — path to the yaml file containing information about the charts to be plotted.
+3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#example-of-config).
 
 
 **Optional arguments**:
@@ -47,6 +47,23 @@ Parametr | Description
 **margin** | Defines the outer margin on all four sides of the chart. The available values are specified in the Enum class `MARGIN` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
 **sort_order** | Defines the sorting order of the chart. The available values are specified in the Enum class `SORT_ORDER` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
 **color** | Defines the color of the chart. The available values are specified in the Enum class `COLOR` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
+
+#### Example of config
+```yaml
+unique_issues_by_category:
+  margin: "ZERO"
+  limit: 10
+  sort_order: "total descending"
+  color: "RED"
+unique_penalty_issues_by_category:
+  margin: "ZERO"
+  limit: 10
+  sort_order: "total descending"
+median_penalty_influence_by_category:
+penalty_influence_distribution:
+```
+
+The result will be four graphs (`unique_issues_by_category`, `unique_penalty_issues_by_category`, `median_penalty_influence_by_category`, `penalty_influence_distribution`) with the corresponding parameters.
 
 ### Examples
 
