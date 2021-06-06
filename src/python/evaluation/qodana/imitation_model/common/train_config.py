@@ -6,6 +6,16 @@ from transformers import Trainer, TrainingArguments
 
 
 class MultilabelTrainer(Trainer):
+    """ By default RobertaForSequence classification does not support
+        multi-label classification.
+
+        Target and logits tensors should be represented as torch.FloatTensor of shape (1,).
+        https://huggingface.co/transformers/model_doc/roberta.html#transformers.RobertaForSequenceClassification
+
+        To fine-tune the model for the multi-label classification task we can simply modify the trainer by
+        changing its loss function. https://huggingface.co/transformers/main_classes/trainer.html
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
