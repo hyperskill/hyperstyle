@@ -21,7 +21,7 @@ class QodanaDataset(Dataset):
         df = pd.read_csv(data_path)
         tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
         code = list(map(str, df[ColumnName.CODE.value]))
-        self.target = torch.tensor(df.iloc[:, 1:].values)
+        self.target = torch.tensor(df.iloc[:, 1:].astype(float).values)
         self.code_encoded = tokenizer(
             code, padding=True, truncation=True, max_length=context_length, return_tensors="pt",
         )[DatasetColumnArgument.INPUT_IDS.value]
