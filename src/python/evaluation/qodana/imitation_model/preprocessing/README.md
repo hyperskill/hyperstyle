@@ -1,4 +1,9 @@
 # Data preprocessing
+
+This module transforms filtered and labeled dataset into the files that can be used as input
+files for [train](src/python/evaluation/qodana/imitation_model/train.py) and 
+[evaluation](src/python/evaluation/qodana/imitation_model/evaluation.py) scripts. 
+
 ### Step 1
 
 Run [fragment_to_inspections_list.py](https://github.com/hyperskill/hyperstyle/blob/roberta-model/src/python/evaluation/qodana/fragment_to_inspections_list.py) 
