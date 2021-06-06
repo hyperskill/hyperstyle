@@ -18,7 +18,7 @@ Run the [diffs_plotter.py](diffs_plotter.py) with the arguments from command lin
 **Required arguments**:
 1. `diffs_file_path` — path to a file with serialized diffs that were founded by [diffs_between_df.py](../inspectors/diffs_between_df.py).
 2. `save_dir` — directory where the plotted charts will be saved.
-3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#example-of-config).
+3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config).
 
 
 **Optional arguments**:
