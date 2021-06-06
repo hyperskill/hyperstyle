@@ -153,14 +153,3 @@ f1
 WANDB
 PNG
 consts
-D3
-G10
-T10
-Dark24
-Dark2
-Light24
-Pastel1
-Pastel2
-Set1
-Set2
-Set3
