@@ -56,9 +56,8 @@ unique_issues_by_category:
   sort_order: "total descending"
   color: "RED"
 unique_penalty_issues_by_category:
-  margin: "ZERO"
-  limit: 10
-  sort_order: "total descending"
+  limit: 30
+  sort_order: "category ascending"
 median_penalty_influence_by_category:
 penalty_influence_distribution:
 ```
