@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, MarkingArgument
+from src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 from src.python.review.common.file_system import Extension
 
 
@@ -53,7 +53,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
     """ transform: ['1, 2', '3'] array([[1, 1, 0], [0, 0, 1]])
     """
-    target = df[MarkingArgument.INSPECTIONS.value].to_numpy()
+    target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy()
     target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
@@ -73,7 +73,7 @@ class Context:
         special tokens are added.
     """
     def __init__(self, df: pd.DataFrame, n_lines: int):
-        self.indices = df[MarkingArgument.ID.value].to_numpy()
+        self.indices = df[DatasetColumnArgument.ID.value].to_numpy()
         self.lines = df[ColumnName.CODE.value]
         self.n_lines: int = n_lines
         self.df = df

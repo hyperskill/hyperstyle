@@ -1,5 +1,6 @@
 import argparse
 
+from src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArguments
 from src.python.review.common.file_system import Extension
 
 
@@ -21,19 +22,20 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Path to the directory where labeled dataset will be saved. Default is the parent folder'
                              'of test_dataset_path.')
 
-    parser.add_argument('-cl', '--context_length',
+    parser.add_argument(ModelCommonArguments.CONTEXT_LENGTH.value.short_name,
+                        ModelCommonArguments.CONTEXT_LENGTH.value.long_name,
                         type=int,
                         default=40,
-                        help='Sequence length of 1 sample after tokenization, default is 40.')
+                        help=ModelCommonArguments.CONTEXT_LENGTH.value.description)
 
-    parser.add_argument('-bs', '--batch_size',
+    parser.add_argument(ModelCommonArguments.BATCH_SIZE.value.short_name,
+                        ModelCommonArguments.BATCH_SIZE.value.long_name,
                         type=int,
                         default=8,
-                        help='Batch_size – default is 8.')
+                        help=ModelCommonArguments.BATCH_SIZE.value.description)
 
-    parser.add_argument('-th', '--threshold',
+    parser.add_argument(ModelCommonArguments.THRESHOLD.value.short_name,
+                        ModelCommonArguments.THRESHOLD.value.long_name,
                         type=float,
                         default=0.5,
-                        help='If the probability of inspection on code sample is greater than threshold,'
-                             'inspection id will be assigned to the sample. '
-                             'Default is 0.5.')
+                        help=ModelCommonArguments.THRESHOLD.value.description)

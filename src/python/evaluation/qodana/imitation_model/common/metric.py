@@ -2,7 +2,7 @@ import torch
 from sklearn.metrics import multilabel_confusion_matrix
 
 
-class Metric:
+class Measurer:
     def __init__(self, threshold: float):
         self.threshold = threshold
 

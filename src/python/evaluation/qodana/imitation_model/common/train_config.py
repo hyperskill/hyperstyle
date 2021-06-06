@@ -1,7 +1,7 @@
 import argparse
 
 import torch
-from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
+from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, ModelCommonArguments
 from transformers import Trainer, TrainingArguments
 
 
@@ -10,7 +10,7 @@ class MultilabelTrainer(Trainer):
         super().__init__(*args, **kwargs)
 
     def compute_loss(self, model, inputs, return_outputs=False):
-        labels = inputs.pop(MarkingArgument.LABELS.value)
+        labels = inputs.pop(DatasetColumnArgument.LABELS.value)
         outputs = model(**inputs)
         logits = outputs.logits
         loss_bce = torch.nn.BCEWithLogitsLoss()
@@ -29,21 +29,29 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to the dataset received by either')
 
-    parser.add_argument('-o', '--output_directory_path',
+    parser.add_argument('-w', '--trained_weights_directory_path',
                         default=None,
                         type=str,
                         help='Path to the directory where to save imitation_model weights. Default is the directory'
                              'where train dataset is.')
 
-    parser.add_argument('-cl', '--context_length',
+    parser.add_argument(ModelCommonArguments.CONTEXT_LENGTH.value.short_name,
+                        ModelCommonArguments.CONTEXT_LENGTH.value.long_name,
                         type=int,
                         default=40,
-                        help='Sequence length of 1 sample after tokenization, default is 40.')
+                        help=ModelCommonArguments.CONTEXT_LENGTH.value.description)
 
-    parser.add_argument('-bs', '--batch_size',
+    parser.add_argument(ModelCommonArguments.BATCH_SIZE.value.short_name,
+                        ModelCommonArguments.BATCH_SIZE.value.long_name,
                         type=int,
                         default=16,
-                        help='Batch_size for training, default is 16.')
+                        help=ModelCommonArguments.BATCH_SIZE.value.description)
+
+    parser.add_argument(ModelCommonArguments.THRESHOLD.value.short_name,
+                        ModelCommonArguments.THRESHOLD.value.long_name,
+                        type=float,
+                        default=0.5,
+                        help=ModelCommonArguments.THRESHOLD.value.description)
 
     parser.add_argument('-lr', '--learning_rate',
                         type=int,
@@ -59,13 +67,6 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=int,
                         default=1,
                         help='Number of epochs to train imitation_model.')
-
-    parser.add_argument('-th', '--threshold',
-                        type=float,
-                        default=0.5,
-                        help='Is used to compute predictions. If the probability of inspection is greater '
-                             'than threshold, sample will be classified with the inspection. '
-                             'Default is 0.5.')
 
     parser.add_argument('-ws', '--warm_up_steps',
                         type=int,
@@ -90,14 +91,14 @@ class TrainingArgs:
                                  warmup_steps=self.args.warm_up_steps,
                                  weight_decay=self.args.weight_decay,
                                  save_total_limit=self.args.save_limit,
-                                 output_dir=self.args.output_directory_path,
+                                 output_dir=self.args.trained_weights_directory_path,
                                  overwrite_output_dir=True,
                                  load_best_model_at_end=True,
                                  greater_is_better=True,
                                  save_steps=val_steps_to_be_made,
                                  eval_steps=val_steps_to_be_made,
                                  logging_steps=val_steps_to_be_made,
-                                 evaluation_strategy=MarkingArgument.STEPS.value,
-                                 logging_strategy=MarkingArgument.STEPS.value,
-                                 seed=MarkingArgument.SEED.value,
-                                 report_to=[MarkingArgument.WANDB.value])
+                                 evaluation_strategy=DatasetColumnArgument.STEPS.value,
+                                 logging_strategy=DatasetColumnArgument.STEPS.value,
+                                 seed=DatasetColumnArgument.SEED.value,
+                                 report_to=[DatasetColumnArgument.WANDB.value])

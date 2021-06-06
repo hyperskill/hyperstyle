@@ -2,7 +2,9 @@ import logging
 
 import pandas as pd
 import torch
-from src.python.evaluation.qodana.imitation_model.common.util import MarkingArgument
+
+from src.python.evaluation.common.util import ColumnName
+from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
 from torch.utils.data import Dataset
 from transformers import RobertaTokenizer
 
@@ -19,15 +21,15 @@ class QodanaDataset(Dataset):
         super().__init__()
         df = pd.read_csv(data_path)
         tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-        code = list(map(str, df['code']))
+        code = list(map(str, df[ColumnName.CODE.value]))
         self.target = torch.tensor(df.iloc[:, 1:].values)
         self.code_encoded = tokenizer(
             code, padding=True, truncation=True, max_length=context_length, return_tensors="pt",
-        )[MarkingArgument.INPUT_IDS.value]
+        )[DatasetColumnArgument.INPUT_IDS.value]
 
     def __getitem__(self, idx):
-        return {MarkingArgument.INPUT_IDS.value: self.code_encoded[idx],
-                MarkingArgument.LABELS.value: self.target[idx]}
+        return {DatasetColumnArgument.INPUT_IDS.value: self.code_encoded[idx],
+                DatasetColumnArgument.LABELS.value: self.target[idx]}
 
     def __len__(self):
         return len(self.target)

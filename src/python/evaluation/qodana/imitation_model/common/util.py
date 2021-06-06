@@ -1,8 +1,10 @@
 from enum import Enum, unique
 
+from src.python.common.tool_arguments import ArgumentsInfo
+
 
 @unique
-class MarkingArgument(Enum):
+class DatasetColumnArgument(Enum):
     ID = 'id'
     IN_ID = 'inspection_id'
     INSPECTIONS = 'inspections'
@@ -18,3 +20,17 @@ class MarkingArgument(Enum):
 @unique
 class CustomTokens(Enum):
     NOC = '[NOC]'  # no context token to add when there are no lines for the context
+
+
+@unique
+class ModelCommonArguments(Enum):
+    THRESHOLD = ArgumentsInfo('-th', '--threshold',
+                              'If the probability of inspection on code sample is greater than threshold,'
+                              'inspection id will be assigned to the sample. '
+                              'Default is 0.5.')
+
+    CONTEXT_LENGTH = ArgumentsInfo('-cl', '--context_length',
+                                   'Sequence length of 1 sample after tokenization, default is 40.')
+
+    BATCH_SIZE = ArgumentsInfo('-bs', '--batch_size',
+                               'Batch size – default values are 16 for training and 8 for evaluation mode.')
