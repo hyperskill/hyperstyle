@@ -15,6 +15,22 @@ from torch.utils.data import DataLoader
 from transformers import RobertaForSequenceClassification
 
 
+def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
+                    model: transformers.RobertaForSequenceClassification,
+                    predictions: np.ndarray,
+                    num_labels: int,
+                    device: torch.device,
+                    args: argparse.ArgumentParser) -> pd.DataFrame:
+    start_index = 0
+    for batch in eval_dataloader:
+        with torch.no_grad():
+            logits = model(input_ids=batch[DatasetColumnArgument.INPUT_IDS.value].to(device)).logits
+            logits = logits.sigmoid().detach().cpu().numpy()
+            predictions[start_index:start_index + args.batch_size, :num_labels] = (logits > args.threshold).astype(int)
+            start_index += args.batch_size
+    return pd.DataFrame(predictions, columns=range(num_labels), dtype=int)
+
+
 def main():
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
@@ -32,15 +48,7 @@ def main():
                                                              num_labels=num_labels).to(device)
     model.eval()
 
-    start_index = 0
-
-    for batch in eval_dataloader:
-        with torch.no_grad():
-            logits = model(input_ids=batch[DatasetColumnArgument.INPUT_IDS.value].to(device)).logits
-            logits = logits.sigmoid().detach().cpu().numpy()
-            predictions[start_index:start_index + args.batch_size, :num_labels] = (logits > args.threshold).astype(int)
-            start_index += args.batch_size
-    predictions = pd.DataFrame(predictions, columns=range(num_labels), dtype=int)
+    predictions = get_predictions(eval_dataloader, model, predictions, num_labels, device, args)
     true_labels = pd.read_csv(args.test_dataset_path).iloc[:, 1:]
     metric = Measurer(args.threshold)
     print(f"f1_score: {metric.get_f1_score(predictions, true_labels)}")
