@@ -23,8 +23,8 @@ def create_bar_plot(
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
-    fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis, color_discrete_sequence=color.value)
-    update_layout(fig, margin, sort_order)
+    fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
+    update_figure(fig, margin, sort_order, color)
     return fig
 
 
@@ -36,15 +36,16 @@ def create_box_plot(
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     color: Optional[plotly_consts.COLOR] = None,
 ) -> go.Figure:
-    fig = px.box(df, x=x_axis, y=y_axis, color_discrete_sequence=color.value)
-    update_layout(fig, margin, sort_order)
+    fig = px.box(df, x=x_axis, y=y_axis)
+    update_figure(fig, margin, sort_order, color)
     return fig
 
 
-def update_layout(
+def update_figure(
     fig: go.Figure,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
+    color: Optional[plotly_consts.COLOR] = None,
 ) -> None:
     new_layout = {}
 
@@ -55,6 +56,13 @@ def update_layout(
         new_layout["xaxis"] = {"categoryorder": sort_order.value}
 
     fig.update_layout(**new_layout)
+
+    new_trace = {}
+
+    if color is not None:
+        new_trace["marker"] = {"color": color.value}
+
+    fig.update_traces(**new_trace)
 
 
 def save_plot(
