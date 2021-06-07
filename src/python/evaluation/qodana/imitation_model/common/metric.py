@@ -3,6 +3,7 @@ import logging.config
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
 from src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
+from typing import Union
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,7 @@ class Measurer:
     def __init__(self, threshold: float):
         self.threshold = threshold
 
-    def get_f1_score(self, predictions: torch.tensor, targets: torch.tensor) -> float:
+    def get_f1_score(self, predictions: torch.tensor, targets: torch.tensor) -> Union[float, None]:
         confusion_matrix = multilabel_confusion_matrix(targets, predictions)
         false_positives = sum(score[0][1] for score in confusion_matrix)
         false_negatives = sum(score[1][0] for score in confusion_matrix)
@@ -21,7 +22,8 @@ class Measurer:
             return f1_score
         except ZeroDivisionError as e:
             logger.error("No values of the class present in the dataset.")
-            raise ZeroDivisionError(e)
+            # return None to make it clear after printing what classes are missing in the datasets
+            return None
 
     def compute_metric(self, evaluation_predictions: torch.tensor) -> dict:
         logits, targets = evaluation_predictions
