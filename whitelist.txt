@@ -118,6 +118,12 @@ reindex
 datasets
 usecols
 linesep
+plotly
+JPG
+WEBP
+SVG
+EPS
+xaxis
 preprocessing
 num
 dataloader
@@ -145,3 +151,5 @@ cuda
 f1
 WANDB
 preprocess
+PNG
+consts
