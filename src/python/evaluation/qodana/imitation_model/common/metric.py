@@ -19,8 +19,8 @@ class Measurer:
             f1_score = true_positives / (true_positives + 1 / 2 * (false_positives + false_negatives))
             return f1_score
         except ZeroDivisionError as e:
-            logger.error('No true positives, false positives or false negatives values')
-            return 0.
+            logger.error("No values of the class present in the dataset.")
+            raise ZeroDivisionError(e)
 
     def compute_metric(self, evaluation_predictions: torch.tensor) -> dict:
         logits, targets = evaluation_predictions
