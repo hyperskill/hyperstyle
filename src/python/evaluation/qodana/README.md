@@ -1,4 +1,4 @@
-# Dataset label
+# Dataset labelling
 This script allows you to label a dataset using the found [Qodana](https://github.com/JetBrains/Qodana) inspections.
 
 The dataset must contain at least three columns: `id`, `code` and `lang`, where `id` is a unique solution number, `lang` is the language in which the code is written in the `code` column. The `lang` must belong to one of the following values: `java7`, `java8`, `java9`, `java11`, `python3`, `kotlin`. If `lang` is not equal to any of the values, the row will be skipped.
@@ -22,7 +22,7 @@ Run the [dataset_labeling.py](dataset_labeling.py) with the arguments from comma
 
 ---
 
-# Postprocessing
+# Preprocessing
 
 The model that imitates Qodana analysis gets input from a dataset in a special format. 
 This module allows preparing datasets that were graded by [dataset_marking.py](dataset_marking.py) script.
@@ -231,3 +231,44 @@ id   |  code                                  |  lang         |  inspections
 1    |  "// second line from code with id 1"  |  java11       |  0
 
 ```
+
+# Postprocessing
+
+At this stage, you can convert the data received by the Qodana into the format of the Hyperstyle tool for 
+analysis and statistics gathering.
+
+## Convert Qodana inspections into Hyperstyle inspections
+
+This stage allows you to convert the `inspections` column from `csv` marked by Qodana into 
+`traceback` column with the Hyperstyle tool format.
+
+This stage includes:
+- keep only unique code fragments in both datasets (Qodana and Hyperstyle);
+- keep only fragments in both datasets that have same ids and same code fragments;
+- add a `grade` column into Qodana dataset corresponding to the `grade` column акщь Hyperstyle dataset;
+- add a `traceback` column in the Hyperstyle format into Qodana dataset with inspection from the `inspections` column. 
+
+Please, note that your Qodana input file must be graded by [dataset_labeling.py](dataset_labeling.py) script 
+and have `inspections` column. Your Hyperstyle input file must be graded by [evaluation_run_tool.py](../evaluation_run_tool.py) script 
+and have `traceback` and `grade` columns.
+
+Output files is two new `csv` files.
+
+#### Usage
+
+Run the [convert_to_hyperstyle_inspections.py](convert_to_hyperstyle_inspections.py) with the arguments from command line.
+
+Required arguments:
+
+- `solutions_file_path_hyperstyle` — path to a `csv` file labelled by Hyperstyle;
+- `solutions_file_path_qodana` — path to a `csv` file labelled by Qodana.
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;i**, **&#8209;&#8209;issues-to-keep**| Set of issues ids to keep in the dataset separated by comma. By default all issues are deleted. |
+
+The Hyperstyle resulting file will be stored in the same folder with `solutions_file_path_hyperstyle`.
+The Qodana resulting file will be stored in the same folder with `solutions_file_path_qodana`.
+
+___

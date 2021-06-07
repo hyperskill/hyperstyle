@@ -9,7 +9,7 @@ from src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )
 from src.python.evaluation.common.util import ColumnName, parse_set_arg
-from src.python.evaluation.qodana.util.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
+from src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from src.python.review.common.file_system import Extension, get_parent_folder
 from src.python.review.inspectors.inspector_type import InspectorType
@@ -30,8 +30,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                              f'\nAll code fragments from this file must be graded by qodana'
                              f'(file contains inspections column)')
 
-    parser.add_argument('-i', '--issues-to-delete',
-                        help='Set of issues to delete',
+    parser.add_argument('-i', '--issues-to-keep',
+                        help='Set of issues to keep',
                         default='')
 
 
@@ -55,13 +55,13 @@ def __check_code_by_ids(qodana_df: pd.DataFrame, hyperstyle_df: pd.DataFrame) ->
 
 
 # Convert qodana inspections output to hyperstyle output
-# Note: keep only issues json field in the result
-def __qodana_to_hyperstyle_output(qodana_output: str, issues_to_delete: Set[str]) -> str:
+# Note: keep only <issues> json field in the result
+def __qodana_to_hyperstyle_output(qodana_output: str, issues_to_keep: Set[str]) -> str:
     qodana_issues = QodanaIssue.parse_list_issues_from_json(qodana_output)
-    filtered_issues = filter(lambda issue: issue.problem_id not in issues_to_delete, qodana_issues)
+    filtered_issues = filter(lambda issue: issue.problem_id in issues_to_keep, qodana_issues)
     hyperstyle_issues = map(lambda issue:
                             BaseIssue(origin_class=issue.problem_id,
-                                      type=DETECT_CLASS_NAME_TO_ISSUE_TYPE.get(issue.problem_id, IssueType.INFO),
+                                      type=QODANA_CLASS_NAME_TO_ISSUE_TYPE.get(issue.problem_id, IssueType.INFO),
                                       description=issue.description,
                                       file_path=Path(),
                                       line_no=issue.line,
@@ -77,12 +77,12 @@ def __qodana_to_hyperstyle_output(qodana_output: str, issues_to_delete: Set[str]
 # Add column with hyperstyle output (convert qodana output to hyperstyle output)
 # Add grade column with grades from hyperstyle dataframe (to gather statistics by diffs_between_df.py script)
 def __prepare_qodana_df(qodana_df: pd.DataFrame, hyperstyle_df: pd.DataFrame,
-                        issues_to_delete: Set[str]) -> pd.DataFrame:
+                        issues_to_keep: Set[str]) -> pd.DataFrame:
     qodana_df = __preprocess_df(qodana_df, hyperstyle_df[ColumnName.ID.value])
     __check_code_by_ids(qodana_df, hyperstyle_df)
 
     qodana_df[ColumnName.TRACEBACK.value] = qodana_df.apply(
-        lambda row: __qodana_to_hyperstyle_output(row[QodanaColumnName.INSPECTIONS.value], issues_to_delete), axis=1)
+        lambda row: __qodana_to_hyperstyle_output(row[QodanaColumnName.INSPECTIONS.value], issues_to_keep), axis=1)
 
     qodana_df[ColumnName.GRADE.value] = hyperstyle_df[ColumnName.GRADE.value]
     return qodana_df
@@ -99,13 +99,12 @@ def __reassign_ids(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# TODO: add readme
 def main() -> None:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
 
-    issues_to_delete = parse_set_arg(args.issues_to_delete)
+    issues_to_keep = parse_set_arg(args.issues_to_keep)
 
     qodana_solutions_file_path = args.solutions_file_path_qodana
     qodana_solutions_df = __reassign_ids(get_solutions_df_by_file_path(qodana_solutions_file_path))
@@ -114,7 +113,7 @@ def main() -> None:
     hyperstyle_solutions_df = __reassign_ids(get_solutions_df_by_file_path(hyperstyle_solutions_file_path))
     hyperstyle_solutions_df = __preprocess_df(hyperstyle_solutions_df, qodana_solutions_df[ColumnName.ID.value])
 
-    qodana_solutions_df = __prepare_qodana_df(qodana_solutions_df, hyperstyle_solutions_df, issues_to_delete)
+    qodana_solutions_df = __prepare_qodana_df(qodana_solutions_df, hyperstyle_solutions_df, issues_to_keep)
 
     __write_updated_df(qodana_solutions_file_path, qodana_solutions_df, 'qodana')
     __write_updated_df(hyperstyle_solutions_file_path, hyperstyle_solutions_df, 'hyperstyle')
