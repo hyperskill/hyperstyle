@@ -27,4 +27,4 @@ RUN pip3 install --no-cache-dir ./review
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 ENV PATH="$JAVA_HOME/bin:${PATH}"`
 
-CMD ["/bin/bash"]
+CMD ["/bin/sh"]
