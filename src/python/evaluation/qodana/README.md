@@ -271,4 +271,41 @@ Argument | Description
 The Hyperstyle resulting file will be stored in the same folder with `solutions_file_path_hyperstyle`.
 The Qodana resulting file will be stored in the same folder with `solutions_file_path_qodana`.
 
+An example of the Qodana inspections before and after this processing:
+
+1. Before:
+
+```json
+{
+  "issues": [
+    {
+      "fragment_id": 0,
+      "line": 8,
+      "offset": 8,
+      "length": 10,
+      "highlighted_element": "System.out",
+      "description": "Uses of <code>System.out</code> should probably be replaced with more robust logging #loc",
+      "problem_id": "SystemOutErr"
+    }
+  ]
+}
+```
+
+2. After:
+
+```json
+{
+  "issues": [
+    {
+      "code": "SystemOutErr",
+      "text": "Uses of <code>System.out</code> should probably be replaced with more robust logging #loc",
+      "line": "",
+      "line_number": 8,
+      "column_number": 8,
+      "category": "INFO",
+      "influence_on_penalty": 0
+    }
+  ]
+}
+```
 ___

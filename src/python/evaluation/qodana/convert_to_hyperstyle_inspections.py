@@ -95,7 +95,7 @@ def __write_updated_df(old_df_path: Path, df: pd.DataFrame, name_prefix: str) ->
 
 def __reassign_ids(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(ColumnName.CODE.value)
-    df[ColumnName.ID] = df.index
+    df[ColumnName.ID.value] = df.index
     return df
 
 
