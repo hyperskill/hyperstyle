@@ -107,11 +107,12 @@ Argument | Description
 --- | ---
 |**&#8209;o**, **&#8209;&#8209;output_directory_path**| Path to the directory where labeled dataset will be saved. Default is the `test` folder.|
 |**&#8209;c**, **&#8209;&#8209;context_length**| Sequence length or embedding size of tokenized samples. Available values are any `positive integers`. **Default is 40**.|
+|**&#8209;sf**, **&#8209;&#8209;save_f1_score**| If enabled report with f1 scores by classes will be saved to the `csv` file in the parent directory of labeled dataset. **Disabled by default**.|
 |**&#8209;bs**, **&#8209;&#8209;batch_size**| The number of training examples utilized in one training and validation iteration. Available values are any `positive integers`. **Default is 16**.|
 |**&#8209;th**, **&#8209;&#8209;threshold**| Is used to compute predictions. Available values: 0 < `threshold` < 1. If the probability of inspection is greater than `threshold`, sample will be classified with the inspection. **Default is 0.5**.|
 
 Output is a `predictions.csv` file with the column names matches the number of classes. Each sample has a binary label: 
 
 - `0` &#8209; if the model didn't found an error in a sample.
-
+~~~~
 - `1` &#8209; if the error was found in a sample.

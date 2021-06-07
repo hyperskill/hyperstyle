@@ -2,8 +2,9 @@ import logging.config
 
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
-from src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
 from typing import Union
+
+from src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class Measurer:
         try:
             f1_score = true_positives / (true_positives + 1 / 2 * (false_positives + false_negatives))
             return f1_score
-        except ZeroDivisionError as e:
+        except ZeroDivisionError:
             logger.error("No values of the class present in the dataset.")
             # return None to make it clear after printing what classes are missing in the datasets
             return None
