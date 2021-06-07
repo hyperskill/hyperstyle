@@ -52,7 +52,8 @@ def main():
     predictions = get_predictions(eval_dataloader, model, predictions, num_labels, device, args)
     true_labels = torch.tensor(pd.read_csv(args.test_dataset_path).iloc[:, 1:].to_numpy())
     metric = Measurer(args.threshold)
-    print(f"{MeasurerArgument.F1_SCORE.value}: {metric.get_f1_score(torch.tensor(predictions.to_numpy()), true_labels)}",
+    print(f"{MeasurerArgument.F1_SCORE.value}:"
+          f"{metric.get_f1_score(torch.tensor(predictions.to_numpy()), true_labels)}",
           f"{MeasurerArgument.F1_SCORE_BY_CLS.value}:"
           f"{metric.f1_score_by_classes(torch.tensor(predictions.to_numpy()), true_labels)}")
     write_dataframe_to_csv(args.output_directory_path, predictions)
