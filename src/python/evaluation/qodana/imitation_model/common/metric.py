@@ -26,5 +26,5 @@ class Measurer:
         f1_scores_by_classes = {}
         for unique_class in unique_classes:
             class_mask = torch.where(targets == int(unique_class))
-            f1_scores_by_classes[unique_class] = self.get_f1_score(predictions[class_mask], targets[class_mask])
+            f1_scores_by_classes[str(unique_class)] = self.get_f1_score(predictions[class_mask], targets[class_mask])
         return f1_scores_by_classes
