@@ -6,7 +6,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: stepik/hyperstyle
+    container: nastyabirillo/hyperstyle
 
     steps:
       - name: Checkout
