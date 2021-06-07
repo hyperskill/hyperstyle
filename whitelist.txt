@@ -118,6 +118,13 @@ reindex
 datasets
 usecols
 linesep
+plotly
+JPG
+WEBP
+SVG
+EPS
+xaxis
+
 preprocessing
 num
 dataloader
@@ -144,3 +151,5 @@ QodanaDataset
 cuda
 f1
 WANDB
+PNG
+consts

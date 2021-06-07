@@ -9,6 +9,8 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Tuple, Union
 
+import yaml
+
 
 @unique
 class FileSystemItem(Enum):
@@ -37,11 +39,32 @@ class Extension(Enum):
     PICKLE = '.pickle'
     JSON = '.json'
 
+    # Image extensions
+    PNG = '.png'
+    JPG = '.jpg'
+    JPEG = '.jpeg'
+    WEBP = '.webp'
+    SVG = '.svg'
+    PDF = '.pdf'
+    EPS = '.eps'
+
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
     @classmethod
     def get_extension_from_file(cls, file: str) -> 'Extension':
         return Extension(os.path.splitext(file)[1])
+
+    @classmethod
+    def get_image_extensions(cls) -> List['Extension']:
+        return [
+            Extension.PNG,
+            Extension.JPG,
+            Extension.JPEG,
+            Extension.WEBP,
+            Extension.SVG,
+            Extension.PDF,
+            Extension.EPS,
+        ]
 
 
 ItemCondition = Callable[[str], bool]
@@ -98,6 +121,11 @@ def deserialize_data_from_file(path: Path) -> Any:
     with open(path, 'rb') as f:
         u = pickle.Unpickler(f)
         return u.load()
+
+
+def parse_yaml(path: Union[Path, str]) -> Any:
+    with open(path) as file:
+        return yaml.safe_load(file)
 
 
 # For getting name of the last folder or file
