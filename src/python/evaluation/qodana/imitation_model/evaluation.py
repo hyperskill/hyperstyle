@@ -32,6 +32,12 @@ def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
     return pd.DataFrame(predictions, columns=range(num_labels), dtype=int)
 
 
+def save_f1_scores(output_directory_path: Path, f1_score_by_class_dict: dict) -> None:
+    f1_score_report_path = Path(output_directory_path).parent / f'predictions{MeasurerArgument.F1_SCORE_BY_CLS.value}'
+    f1_score_report_df = pd.DataFrame({MeasurerArgument.F1_SCORE.value: f1_score_by_class_dict.values()})
+    write_dataframe_to_csv(f1_score_report_path, f1_score_report_df)
+
+
 def main():
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
@@ -52,11 +58,15 @@ def main():
     predictions = get_predictions(eval_dataloader, model, predictions, num_labels, device, args)
     true_labels = torch.tensor(pd.read_csv(args.test_dataset_path).iloc[:, 1:].to_numpy())
     metric = Measurer(args.threshold)
+    f1_score_by_class_dict = metric.f1_score_by_classes(torch.tensor(predictions.to_numpy()), true_labels)
+
     print(f"{MeasurerArgument.F1_SCORE.value}:"
           f"{metric.get_f1_score(torch.tensor(predictions.to_numpy()), true_labels)}",
-          f"{MeasurerArgument.F1_SCORE_BY_CLS.value}:"
-          f"{metric.f1_score_by_classes(torch.tensor(predictions.to_numpy()), true_labels)}")
+          f"\n{MeasurerArgument.F1_SCORE_BY_CLS.value}: {f1_score_by_class_dict}")
+
     write_dataframe_to_csv(args.output_directory_path, predictions)
+    if args.save_f1_score:
+        save_f1_scores(args.output_directory_path, f1_score_by_class_dict)
 
 
 if __name__ == '__main__':
