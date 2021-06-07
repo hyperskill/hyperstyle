@@ -35,7 +35,8 @@ def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
 def save_f1_scores(output_directory_path: Path, f1_score_by_class_dict: dict) -> None:
     f1_score_report_file_name = f'{MeasurerArgument.F1_SCORES_BY_CLS.value}{Extension.CSV.value}'
     f1_score_report_path = Path(output_directory_path).parent / f1_score_report_file_name
-    f1_score_report_df = pd.DataFrame({MeasurerArgument.F1_SCORE.value: f1_score_by_class_dict.values()})
+    f1_score_report_df = pd.DataFrame({MeasurerArgument.F1_SCORE.value: f1_score_by_class_dict.values(),
+                                       'inspection_id': range(len(f1_score_by_class_dict.values()))})
     write_dataframe_to_csv(f1_score_report_path, f1_score_report_df)
 
 
