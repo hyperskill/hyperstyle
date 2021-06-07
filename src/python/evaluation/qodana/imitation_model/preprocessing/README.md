@@ -53,5 +53,5 @@ Argument | Description
 --- | ---
 |**&#8209;o**, **&#8209;&#8209;output_directory_path**| Path to the directory where folders for train, test and validation datasets with the corresponding files will be created. If not set, folders will be created in the parent directory of `dataset_path`.|
 |**&#8209;ts**, **&#8209;&#8209;test_size**| Proportion of test dataset. Available values: 0 < n < 1. Default is 0.2.|
-|**&#8209;c**, **&#8209;&#8209;add_context**| Proportion of validation dataset that will be taken from train dataset. Available values are: 0 < n < 1. Default is 0.3.|
+|**&#8209;vs**, **&#8209;&#8209;val_size**| Proportion of validation dataset that will be taken from train dataset. Available values are: 0 < n < 1. Default is 0.3.|
 |**&#8209;sh**, **&#8209;&#8209;shuffle**| If `True` data will be shuffled before split. Default is `True`.|
