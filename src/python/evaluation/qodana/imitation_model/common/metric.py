@@ -20,3 +20,11 @@ class Measurer:
         prediction_probabilities = torch.from_numpy(logits).sigmoid()
         predictions = torch.where(prediction_probabilities > self.threshold, 1, 0)
         return {MeasurerArgument.F1_SCORE.value: self.get_f1_score(predictions, torch.tensor(targets))}
+
+    def f1_score_by_classes(self, predictions: torch.tensor, targets: torch.tensor) -> dict:
+        unique_classes = torch.unique(targets)
+        f1_scores_by_classes = {}
+        for unique_class in unique_classes:
+            class_mask = torch.where(targets == int(unique_class))
+            f1_scores_by_classes[unique_class] = self.get_f1_score(predictions[class_mask], targets[class_mask])
+        return f1_scores_by_classes

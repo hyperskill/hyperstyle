@@ -9,7 +9,7 @@ import transformers
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.qodana.imitation_model.common.evaluation_config import configure_arguments
 from src.python.evaluation.qodana.imitation_model.common.metric import Measurer
-from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
+from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
 from src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
 from src.python.review.common.file_system import Extension
 from torch.utils.data import DataLoader
@@ -52,7 +52,8 @@ def main():
     predictions = get_predictions(eval_dataloader, model, predictions, num_labels, device, args)
     true_labels = pd.read_csv(args.test_dataset_path).iloc[:, 1:]
     metric = Measurer(args.threshold)
-    print(f"f1_score: {metric.get_f1_score(predictions, true_labels)}")
+    print(f"{MeasurerArgument.F1_SCORE.value}: {metric.get_f1_score(predictions, true_labels)}",
+          f"{MeasurerArgument.F1_SCORE_BY_CLS.value}: {metric.f1_score_by_classes(predictions, true_labels)}")
     write_dataframe_to_csv(args.output_directory_path, predictions)
 
 
