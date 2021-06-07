@@ -245,7 +245,7 @@ This stage allows you to convert the `inspections` column from `csv` marked by Q
 This stage includes:
 - keep only unique code fragments in both datasets (Qodana and Hyperstyle);
 - keep only fragments in both datasets that have same ids and same code fragments;
-- add a `grade` column into Qodana dataset corresponding to the `grade` column акщь Hyperstyle dataset;
+- add a `grade` column into Qodana dataset corresponding to the `grade` column from Hyperstyle dataset;
 - add a `traceback` column in the Hyperstyle format into Qodana dataset with inspection from the `inspections` column. 
 
 Please, note that your Qodana input file must be graded by [dataset_labeling.py](dataset_labeling.py) script 
