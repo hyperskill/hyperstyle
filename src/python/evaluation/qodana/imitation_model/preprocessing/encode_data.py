@@ -100,7 +100,11 @@ class Context:
         self.df[ColumnName.CODE.value] = lines_with_context
         return self.df
 
-    def add_context_before(self, current_line_index: int, current_line: str) -> List:
+    def add_context_before(self, current_line_index: int, current_line: str) -> List[str]:
+        """ Add n_lines lines before the target line from the same piece of code,
+            If there are less than n lines above the target line will add
+            a special token.
+        """
         context = ['']
         for n_line_index in range(current_line_index - self.n_lines, self.n_lines):
             if n_line_index >= len(self.lines):
@@ -114,7 +118,11 @@ class Context:
         context = [context[0] + current_line]
         return context
 
-    def add_context_after(self, context: List, current_line_index: int) -> List:
+    def add_context_after(self, context: List, current_line_index: int) -> List[str]:
+        """ Add n_lines lines after the target line from the same piece of code,
+            If there are less than n lines after the target line will add
+            a special token.
+        """
         for n_line_index in range(current_line_index + 1, self.n_lines + current_line_index + 1):
             if n_line_index >= len(self.lines) or self.indices[n_line_index] != self.indices[current_line_index]:
                 context = [context[0] + CustomTokens.NOC.value]
