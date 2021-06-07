@@ -39,4 +39,4 @@ class ModelCommonArguments(Enum):
 @unique
 class MeasurerArgument(Enum):
     F1_SCORE = 'f1_score'
-    F1_SCORE_BY_CLS = 'f1_score_by_class'
+    F1_SCORES_BY_CLS = 'f1_scores_by_class'

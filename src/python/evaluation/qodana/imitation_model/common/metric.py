@@ -1,9 +1,8 @@
 import logging.config
+from typing import Union
 
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
-from typing import Union
-
 from src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
 
 logger = logging.getLogger(__name__)
