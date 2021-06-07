@@ -1,5 +1,6 @@
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
+from src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
 
 
 class Measurer:
@@ -18,4 +19,4 @@ class Measurer:
         logits, targets = evaluation_predictions
         prediction_probabilities = torch.from_numpy(logits).sigmoid()
         predictions = torch.where(prediction_probabilities > self.threshold, 1, 0)
-        return {'f1_score': self.get_f1_score(predictions, torch.tensor(targets))}
+        return {MeasurerArgument.F1_SCORE.value: self.get_f1_score(predictions, torch.tensor(targets))}

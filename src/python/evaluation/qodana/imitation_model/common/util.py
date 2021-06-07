@@ -34,3 +34,8 @@ class ModelCommonArguments(Enum):
 
     BATCH_SIZE = ArgumentsInfo('-bs', '--batch_size',
                                'Batch size – default values are 16 for training and 8 for evaluation mode.')
+
+
+@unique
+class MeasurerArgument(Enum):
+    F1_SCORE = 'f1_score'
