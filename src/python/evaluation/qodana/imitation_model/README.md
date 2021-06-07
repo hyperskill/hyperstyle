@@ -114,5 +114,5 @@ Argument | Description
 Output is a `predictions.csv` file with the column names matches the number of classes. Each sample has a binary label: 
 
 - `0` &#8209; if the model didn't found an error in a sample.
-~~~~
+
 - `1` &#8209; if the error was found in a sample.
