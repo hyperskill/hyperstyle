@@ -51,7 +51,19 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
-    """ transform: ['1, 2', '3'] array([[1, 1, 0], [0, 0, 1]])
+    """ Transforms strings in 'inspections' column,
+        denoting inspection ids into n columns
+        with binary values:
+
+        1 x n_rows -> n_unique_classes x n_rows
+
+        Where n_unique_classes is equal to the number
+        of unique inspections in the dataset.
+
+        Example:
+            inspections        ->       1, 2, 3
+            '1, 2'                      1  1  0
+            '3'                         0  0  1
     """
     target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy().astype(str)
     target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
