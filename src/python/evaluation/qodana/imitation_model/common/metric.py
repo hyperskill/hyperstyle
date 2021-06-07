@@ -22,9 +22,10 @@ class Measurer:
         return {MeasurerArgument.F1_SCORE.value: self.get_f1_score(predictions, torch.tensor(targets))}
 
     def f1_score_by_classes(self, predictions: torch.tensor, targets: torch.tensor) -> dict:
-        unique_classes = torch.unique(targets)
+        unique_classes = range(len(targets[0]))
         f1_scores_by_classes = {}
         for unique_class in unique_classes:
-            class_mask = torch.where(targets == int(unique_class))
-            f1_scores_by_classes[str(unique_class)] = self.get_f1_score(predictions[class_mask], targets[class_mask])
+            class_mask = torch.where(targets[:, unique_class] == 1)
+            f1_scores_by_classes[str(unique_class)] = self.get_f1_score(predictions[class_mask[0], unique_class],
+                                                                        targets[class_mask[0], unique_class])
         return f1_scores_by_classes
