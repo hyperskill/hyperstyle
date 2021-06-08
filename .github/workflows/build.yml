@@ -4,19 +4,14 @@ on: [push, pull_request]
 
 jobs:
 
-  container:
+  build:
     runs-on: ubuntu-latest
     container: nastyabirillo/hyperstyle
+    
     steps:
-#       - run: |
-#           echo This job does specify a container.
-#           echo It runs in the container instead of the VM.
 
       - name: Checkout
         uses: actions/checkout@v1
-        
-#       - name: Pull docker image
-#         run: docker pull nastyabirillo/hyperstyle
           
 #       - name: Lint with flake8
 #         run: |
@@ -28,4 +23,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          bash pytest
+            pytest
