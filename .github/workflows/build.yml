@@ -6,21 +6,21 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: nastyabirillo/hyperstyle
+#     container: nastyabirillo/hyperstyle
 
     steps:
       - name: Checkout
         uses: actions/checkout@v1
         
-      - name: Install sh
-        run: apk install bash
+      - name: Pull docker image
+        run: docker pull nastyabirillo/hyperstyle
           
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
-          ./bin/bash flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          docker run nastyabirillo/hyperstyle flake8 review --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
-          ./bin/bash flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          docker run nastyabirillo/hyperstyle flake8 review --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
       - name: Test with pytest
         run: |
