@@ -8,7 +8,7 @@ RUN npm i -g eslint@7.5.0
 RUN java -version
 RUN ls /usr/lib/jvm
 
-# Other dependencies
+## Other dependencies
 RUN apk add bash
 
 # Dependencies and package installation
@@ -25,6 +25,6 @@ RUN pip3 install --no-cache-dir ./review
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:${PATH}"`
+ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 CMD ["/bin/bash"]
