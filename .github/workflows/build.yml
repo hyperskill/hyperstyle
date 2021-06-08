@@ -3,12 +3,13 @@ name: Python build
 on: [push, pull_request]
 
 jobs:
-  build:
 
+  build:
     runs-on: ubuntu-latest
     container: nastyabirillo/hyperstyle
-
+    
     steps:
+
       - name: Checkout
         uses: actions/checkout@v1
           
@@ -21,4 +22,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest
+            pytest
