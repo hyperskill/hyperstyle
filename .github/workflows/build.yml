@@ -3,19 +3,15 @@ name: Python build
 on: [push, pull_request]
 
 jobs:
-#   build:
-  
-  container-job:
-    runs-on: self-hosted
 
-    container:
-      image: nastyabirillo/hyperstyle
-
-
-#     runs-on: alpine
-#     container: nastyabirillo/hyperstyle
-
+  container:
+    runs-on: ubuntu-latest
+    container: nastyabirillo/hyperstyle
     steps:
+#       - run: |
+#           echo This job does specify a container.
+#           echo It runs in the container instead of the VM.
+
       - name: Checkout
         uses: actions/checkout@v1
         
