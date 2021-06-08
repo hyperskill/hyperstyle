@@ -3,17 +3,24 @@ name: Python build
 on: [push, pull_request]
 
 jobs:
-  build:
+#   build:
+  
+  container-job:
+    runs-on: self-hosted
 
-    runs-on: ubuntu-latest
+    container:
+      image: nastyabirillo/hyperstyle
+
+
+#     runs-on: alpine
 #     container: nastyabirillo/hyperstyle
 
     steps:
       - name: Checkout
         uses: actions/checkout@v1
         
-      - name: Pull docker image
-        run: docker pull nastyabirillo/hyperstyle
+#       - name: Pull docker image
+#         run: docker pull nastyabirillo/hyperstyle
           
 #       - name: Lint with flake8
 #         run: |
@@ -25,4 +32,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          docker run nastyabirillo/hyperstyle pytest
+          pytest
