@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        
+      - name: Install sh
+        run: apk install sh
           
       - name: Lint with flake8
         run: |
