@@ -17,6 +17,7 @@ jobs:
           
       - name: Lint with flake8
         run: |
+          ls -la
           # stop the build if there are Python syntax errors or undefined names
           docker run nastyabirillo/hyperstyle flake8 review --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
