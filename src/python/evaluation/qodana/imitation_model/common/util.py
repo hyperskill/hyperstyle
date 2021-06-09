@@ -14,6 +14,10 @@ class DatasetColumnArgument(Enum):
     STEPS = 'steps'
     WEIGHTS = 'weights'
     WANDB = 'wandb'
+
+
+@unique
+class SeedArgument(Enum):
     SEED = 42
 
 

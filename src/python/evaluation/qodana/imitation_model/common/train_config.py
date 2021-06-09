@@ -1,7 +1,11 @@
 import argparse
 
 import torch
-from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, ModelCommonArgument
+from src.python.evaluation.qodana.imitation_model.common.util import (
+    DatasetColumnArgument,
+    ModelCommonArgument,
+    SeedArgument,
+)
 from transformers import Trainer, TrainingArguments
 
 
@@ -110,5 +114,5 @@ class TrainingArgs:
                                  logging_steps=val_steps_to_be_made,
                                  evaluation_strategy=DatasetColumnArgument.STEPS.value,
                                  logging_strategy=DatasetColumnArgument.STEPS.value,
-                                 seed=DatasetColumnArgument.SEED.value,
+                                 seed=SeedArgument.SEED.value,
                                  report_to=[DatasetColumnArgument.WANDB.value])

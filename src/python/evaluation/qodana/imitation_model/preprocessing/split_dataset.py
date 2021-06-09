@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
+from src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
 from src.python.review.common.file_system import Extension
 
 
@@ -51,13 +51,13 @@ def split_dataset(dataset_path: str, output_directory_path: str, val_size: float
     code_train, code_test, target_train, target_test = train_test_split(code_bank,
                                                                         target,
                                                                         test_size=test_size,
-                                                                        random_state=DatasetColumnArgument.SEED.value,
+                                                                        random_state=SeedArgument.SEED.value,
                                                                         shuffle=shuffle)
 
     code_train, code_val, target_train, target_val = train_test_split(code_train,
                                                                       target_train,
                                                                       test_size=val_size,
-                                                                      random_state=DatasetColumnArgument.SEED.value,
+                                                                      random_state=SeedArgument.SEED.value,
                                                                       shuffle=shuffle)
     if output_directory_path is None:
         output_directory_path = Path(dataset_path).parent
