@@ -1,8 +1,8 @@
-pytest~=5.4.3
+pytest~=6.2.3
 pytest-runner
 pytest-subtests
-jsonschema==3.2.0
-Django~=3.0.8
-pylint~=2.5.3
-requests~=2.24.0
-setuptools~=47.3.1
+jsonschema~=3.2.0
+django~=3.2
+pylint~=2.7.4
+requests~=2.25.1
+setuptools~=56.0.0
