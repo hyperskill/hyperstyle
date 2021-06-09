@@ -14,13 +14,6 @@ RUN apk add bash
 # Upgrade pip
 RUN python3.8 -m pip install --upgrade pip
 
-# Install numpy and pandas
-RUN apk add --no-cache python3-dev libstdc++ && \
-    apk add --no-cache g++ && \
-    ln -s /usr/include/locale.h /usr/include/xlocale.h && \
-    pip3 install numpy && \
-    pip3 install pandas
-
 # Set up Eslint
 RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
 
