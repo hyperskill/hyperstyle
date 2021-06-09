@@ -1,5 +1,5 @@
 import logging.config
-from typing import Union
+from typing import Optional
 
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
@@ -12,7 +12,7 @@ class Measurer:
     def __init__(self, threshold: float):
         self.threshold = threshold
 
-    def get_f1_score(self, predictions: torch.tensor, targets: torch.tensor) -> Union[float, None]:
+    def get_f1_score(self, predictions: torch.tensor, targets: torch.tensor) -> Optional[float]:
         confusion_matrix = multilabel_confusion_matrix(targets, predictions)
         false_positives = sum(score[0][1] for score in confusion_matrix)
         false_negatives = sum(score[1][0] for score in confusion_matrix)
