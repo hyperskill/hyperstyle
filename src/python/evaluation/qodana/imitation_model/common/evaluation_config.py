@@ -1,6 +1,6 @@
 import argparse
 
-from src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArguments
+from src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArgument
 from src.python.review.common.file_system import Extension
 
 
@@ -28,20 +28,20 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=f'If enabled report with f1 scores by class will be saved to the {Extension.CSV.value}'
                              ' File will be saved to the labeled dataset parent directory. Default is False.')
 
-    parser.add_argument(ModelCommonArguments.CONTEXT_LENGTH.value.short_name,
-                        ModelCommonArguments.CONTEXT_LENGTH.value.long_name,
+    parser.add_argument(ModelCommonArgument.CONTEXT_LENGTH.value.short_name,
+                        ModelCommonArgument.CONTEXT_LENGTH.value.long_name,
                         type=int,
                         default=40,
-                        help=ModelCommonArguments.CONTEXT_LENGTH.value.description)
+                        help=ModelCommonArgument.CONTEXT_LENGTH.value.description)
 
-    parser.add_argument(ModelCommonArguments.BATCH_SIZE.value.short_name,
-                        ModelCommonArguments.BATCH_SIZE.value.long_name,
+    parser.add_argument(ModelCommonArgument.BATCH_SIZE.value.short_name,
+                        ModelCommonArgument.BATCH_SIZE.value.long_name,
                         type=int,
                         default=8,
-                        help=ModelCommonArguments.BATCH_SIZE.value.description)
+                        help=ModelCommonArgument.BATCH_SIZE.value.description)
 
-    parser.add_argument(ModelCommonArguments.THRESHOLD.value.short_name,
-                        ModelCommonArguments.THRESHOLD.value.long_name,
+    parser.add_argument(ModelCommonArgument.THRESHOLD.value.short_name,
+                        ModelCommonArgument.THRESHOLD.value.long_name,
                         type=float,
                         default=0.5,
-                        help=ModelCommonArguments.THRESHOLD.value.description)
+                        help=ModelCommonArgument.THRESHOLD.value.description)

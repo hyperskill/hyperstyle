@@ -23,7 +23,7 @@ class CustomTokens(Enum):
 
 
 @unique
-class ModelCommonArguments(Enum):
+class ModelCommonArgument(Enum):
     THRESHOLD = ArgumentsInfo('-th', '--threshold',
                               'If the probability of inspection on code sample is greater than threshold,'
                               'inspection id will be assigned to the sample. '
