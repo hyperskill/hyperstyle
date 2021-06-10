@@ -24,7 +24,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case14_returns_errors.py', 4),
     ('case16_comments.py', 0),
     ('case17_dangerous_default_value.py', 1),
-    ('case18_comprehensions.py', 10),
+    ('case18_comprehensions.py', 9),
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
