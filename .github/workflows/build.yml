@@ -23,6 +23,7 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-test.txt
         pip install -r requirements-evaluation.txt
+        pip install -r requirements-roberta.txt
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
