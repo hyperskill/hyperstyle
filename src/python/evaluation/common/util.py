@@ -17,11 +17,11 @@ class ColumnName(Enum):
     OLD = 'old'
     NEW = 'new'
     IS_PUBLIC = 'is_public'
-    HISTORY = 'history'
-    USER = 'user'
-    TIME = 'time'
     DECREASED_GRADE = 'decreased_grade'
     PENALTY = 'penalty'
+    USER = 'user'
+    HISTORY = 'history'
+    TIME = 'time'
 
 
 @unique
