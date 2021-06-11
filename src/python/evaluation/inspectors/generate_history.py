@@ -12,12 +12,15 @@ from src.python.evaluation.common.pandas_util import (
     write_df_to_file,
 )
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.evaluation_run_tool import get_language
 from src.python.review.common.file_system import Extension, get_name_from_path, get_parent_folder
+from src.python.review.common.language import Language
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value
 GRADE = ColumnName.GRADE.value
 HISTORY = ColumnName.HISTORY.value
 USER = ColumnName.USER.value
+LANG = ColumnName.LANG.value
 TIME = ColumnName.TIME.value
 EXTRACTED_ISSUES = 'extracted_issues'
 
@@ -26,7 +29,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         RunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
         type=lambda value: Path(value).absolute(),
-        help=f'Path to csv file. Your dataset must include column-names: "{USER}", "{TIME}, "{TRACEBACK}".',
+        help=f'Path to csv file. Your dataset must include column-names: '
+             f'"{USER}", "{LANG}", "{TIME}, "{TRACEBACK}".',
     )
 
     parser.add_argument(
@@ -49,29 +53,40 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def update_counter(history: str, counter: Counter) -> None:
+def _update_counter(extracted_issues: str, counter: Counter) -> None:
     issue_classes = []
-    if history:
-        issue_classes = history.split(',')
+    if extracted_issues:
+        issue_classes = extracted_issues.split(',')
+
     counter.update(issue_classes)
 
 
-def add_history(row, solutions_df: pd.DataFrame) -> str:
+def _add_history(row, solutions_df: pd.DataFrame) -> str:
     counter = Counter()
 
-    filtered_df = solutions_df[(solutions_df[USER] == row[USER]) & (solutions_df[TIME] < row[TIME])]
-    filtered_df.apply(lambda row: update_counter(row[EXTRACTED_ISSUES], counter), axis=1)
+    filtered_df = solutions_df[
+        (solutions_df[USER] == row[USER]) & (solutions_df[LANG] == row[LANG]) & (solutions_df[TIME] < row[TIME])
+    ]
+    filtered_df.apply(lambda row: _update_counter(row[EXTRACTED_ISSUES], counter), axis=1)
 
-    history = {'python': [{'origin_class': key, 'number': value} for key, value in counter.items()]}
+    history = {}
+
+    # If we were unable to identify the language version, we return an empty history
+    try:
+        lang_version = get_language(row[LANG])
+    except KeyError:
+        return json.dumps(history)
+
+    lang = Language.from_language_version(lang_version)
+    if len(counter) != 0:
+        history = {lang.value.lower(): [{'origin_class': key, 'number': value} for key, value in counter.items()]}
 
     return json.dumps(history)
 
 
-def extract_issues(traceback: str) -> str:
-    issue_classes = []
+def _extract_issues(traceback: str) -> str:
     issues = get_issues_from_json(traceback)
-    for issue in issues:
-        issue_classes.append(issue.origin_class)
+    issue_classes = [issue.origin_class for issue in issues]
     return ','.join(issue_classes)
 
 
@@ -83,9 +98,9 @@ def main():
     pandarallel.initialize()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
-    solutions_df[EXTRACTED_ISSUES] = solutions_df.parallel_apply(lambda row: extract_issues(row[TRACEBACK]), axis=1)
-    solutions_df[HISTORY] = solutions_df.parallel_apply(add_history, axis=1, args=(solutions_df,))
+    solutions_df = get_solutions_df_by_file_path(solutions_file_path).head(1000)
+    solutions_df[EXTRACTED_ISSUES] = solutions_df.parallel_apply(lambda row: _extract_issues(row[TRACEBACK]), axis=1)
+    solutions_df[HISTORY] = solutions_df.parallel_apply(_add_history, axis=1, args=(solutions_df,))
 
     columns_to_drop = [EXTRACTED_ISSUES]
 
@@ -95,7 +110,7 @@ def main():
     if not args.dont_drop_traceback:
         columns_to_drop.append(TRACEBACK)
 
-    solutions_df.drop(columns=columns_to_drop, inplace=True)
+    solutions_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
     output_path = args.output_path
     if output_path is None:
