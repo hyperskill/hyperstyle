@@ -1,9 +1,8 @@
 import os
 from pathlib import Path
-from typing import Optional
-
 from test.python.common import FILE_SYSTEM_DATA_FOLDER
 from test.python.evaluation.testing_config import get_testing_arguments
+from typing import Optional
 
 import pytest
 from src.python.evaluation.evaluation_config import EvaluationConfig
