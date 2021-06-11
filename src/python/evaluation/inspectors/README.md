@@ -7,6 +7,7 @@ This module contains _preprocessing_ stage and _analysing_ stage.
   the `csv` or `xslx` file with student solutions and drop duplicates of code fragments (optional);
 - [distribute_grades.py](distribute_grades.py) allows distributing calculated grades and traceback 
   for unique solutions into all solutions.
+- [generate_history.py](generate_history.py) allows you to generate history based on issues from previous solutions.
 
 `Analysing` stage includes:
 - [diffs_between_df.py](diffs_between_df.py) allows finding a difference between 
@@ -92,6 +93,8 @@ Please, note that your solutions file should consist of at least 4 obligatory co
 - `lang`,
 - `time`,
 - `traceback`.
+
+You can get such a file with [evaluation_run_tool.py](../evaluation_run_tool.py).
 
 The output file is a new `csv` file with all columns from the input except for `traceback` and `grade` 
 (this behavior can be changed when you run the script).
