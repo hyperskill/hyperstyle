@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from typing import Optional
+
 from test.python.common import FILE_SYSTEM_DATA_FOLDER
 from test.python.evaluation.testing_config import get_testing_arguments
 
@@ -15,8 +17,8 @@ INPUT_DATA = [
 ]
 
 
-def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion) -> str:
-    command = config.build_command(file, language.value)
+def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion, history: Optional[str] = None) -> str:
+    command = config.build_command(file, language.value, history)
     return run_in_subprocess(command)
 
 
@@ -24,6 +26,7 @@ def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion)
 def test_synthetic_files(test_file: str, language: LanguageVersion):
     input_file = FILE_SYSTEM_DATA_FOLDER / test_file
     test_args = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
+    test_args.with_history = False
     config = EvaluationConfig(test_args)
 
     expected_output = inspect_code(config, input_file, language)
