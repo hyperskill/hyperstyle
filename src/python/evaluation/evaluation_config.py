@@ -33,13 +33,13 @@ class EvaluationConfig:
         else:
             self.output_file_name = output_file_name
 
-    def build_command(self, inspected_file_path: Union[str, Path], lang: str, history: str) -> List[str]:
+    def build_command(self, inspected_file_path: Union[str, Path], lang: str, history: Optional[str]) -> List[str]:
         command = [LanguageVersion.PYTHON_3.value,
                    self.tool_path,
                    inspected_file_path,
                    RunToolArgument.FORMAT.value.short_name, self.format]
 
-        if self.with_history is not None:
+        if self.with_history is not None and history is not None:
             command.extend([RunToolArgument.HISTORY.value.long_name, history])
 
         if lang == LanguageVersion.JAVA_8.value or lang == LanguageVersion.JAVA_11.value:

@@ -6,6 +6,7 @@ import sys
 import time
 import traceback
 from pathlib import Path
+from typing import Optional
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -79,7 +80,7 @@ def get_language(lang_key: str) -> LanguageVersion:
         raise KeyError(e)
 
 
-def __inspect_row(lang: str, code: str, fragment_id: int, history: str, config: EvaluationConfig) -> str:
+def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str], config: EvaluationConfig) -> str:
     print(f'current id: {fragment_id}')
     # Tool does not work correctly with tmp files from <tempfile> module on macOS
     # thus we create a real file in the file system
@@ -110,7 +111,7 @@ def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataF
             lambda row: __inspect_row(row[ColumnName.LANG.value],
                                       row[ColumnName.CODE.value],
                                       row[ColumnName.ID.value],
-                                      row[ColumnName.HISTORY.value],
+                                      row.get(ColumnName.HISTORY.value),
                                       config), axis=1)
 
         lang_code_dataframe[ColumnName.GRADE.value] = lang_code_dataframe.parallel_apply(
