@@ -1,4 +1,5 @@
 from enum import Enum, unique
+from typing import Set
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension
@@ -19,6 +20,8 @@ class ColumnName(Enum):
     HISTORY = 'history'
     USER = 'user'
     TIME = 'time'
+    DECREASED_GRADE = 'decreased_grade'
+    PENALTY = 'penalty'
 
 
 @unique
@@ -41,5 +44,9 @@ script_structure_rule = ('Please, make sure your XLSX-file matches following scr
                          'acceptable language-names: \n'
                          f'Acceptable language-names are: {LanguageVersion.PYTHON_3.value}, '
                          f'{LanguageVersion.JAVA_8.value} ,'
-                         f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.'
-                         f'4. If you have the --with-history flag, check for the "{ColumnName.HISTORY.value}" column.')
+                         f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.')
+
+
+# Split string by separator
+def parse_set_arg(str_arg: str, separator: str = ',') -> Set[str]:
+    return set(str_arg.split(separator))

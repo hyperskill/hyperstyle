@@ -57,7 +57,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
                                                     n_cc=8,
                                                     n_other_complexity=2)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=2)),
-    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5, n_cohesion=1)),
+    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_cc=5, n_cohesion=1)),
     ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
                                                  n_cc=1)),
     ('case8_good_class.py', IssuesTestInfo(n_cc=1, n_cohesion=1)),
@@ -107,13 +107,13 @@ def test_parse():
     assert [issue.description for issue in issues] == ['test 1', 'test 2', 'test 3']
     assert [issue.type for issue in issues] == [IssueType.CODE_STYLE,
                                                 IssueType.CODE_STYLE,
-                                                IssueType.BEST_PRACTICES]
+                                                IssueType.INFO]
 
 
 def test_choose_issue_type():
     error_codes = ['B006', 'SC100', 'R503', 'ABC123', 'E101']
     expected_issue_types = [
-        IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
+        IssueType.ERROR_PRONE, IssueType.INFO,
         IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
         IssueType.CODE_STYLE,
     ]

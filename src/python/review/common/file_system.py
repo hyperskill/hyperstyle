@@ -9,6 +9,8 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Tuple, Union
 
+import yaml
+
 
 @unique
 class FileSystemItem(Enum):
@@ -37,11 +39,32 @@ class Extension(Enum):
     PICKLE = '.pickle'
     JSON = '.json'
 
+    # Image extensions
+    PNG = '.png'
+    JPG = '.jpg'
+    JPEG = '.jpeg'
+    WEBP = '.webp'
+    SVG = '.svg'
+    PDF = '.pdf'
+    EPS = '.eps'
+
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
     @classmethod
     def get_extension_from_file(cls, file: str) -> 'Extension':
         return Extension(os.path.splitext(file)[1])
+
+    @classmethod
+    def get_image_extensions(cls) -> List['Extension']:
+        return [
+            Extension.PNG,
+            Extension.JPG,
+            Extension.JPEG,
+            Extension.WEBP,
+            Extension.SVG,
+            Extension.PDF,
+            Extension.EPS,
+        ]
 
 
 ItemCondition = Callable[[str], bool]
@@ -51,10 +74,21 @@ def all_items_condition(name: str) -> bool:
     return True
 
 
+def extension_file_condition(extension: Extension) -> ItemCondition:
+    def has_this_extension(name: str) -> bool:
+        return get_extension_from_file(name) == extension
+
+    return has_this_extension
+
+
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
-def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_items_condition,
-                              item_type: FileSystemItem = FileSystemItem.FILE) -> List[Path]:
+def get_all_file_system_items(
+    root: Path,
+    item_condition: ItemCondition = all_items_condition,
+    item_type: FileSystemItem = FileSystemItem.FILE,
+    without_subdirs: bool = False,
+) -> List[Path]:
     if not root.is_dir():
         raise ValueError(f'The {root} is not a directory')
 
@@ -63,6 +97,10 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
         for item in fs_tuple[item_type.value]:
             if item_condition(item):
                 items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
+
+        if without_subdirs:
+            break
+
     return items
 
 
@@ -73,7 +111,7 @@ def match_condition(regex: str) -> ItemCondition:
 
 
 def serialize_data_and_write_to_file(path: Path, data: Any) -> None:
-    create_directory(get_parent_folder(path))
+    os.makedirs(get_parent_folder(path), exist_ok=True)
     with open(path, 'wb') as f:
         p = pickle.Pickler(f)
         p.dump(data)
@@ -83,6 +121,11 @@ def deserialize_data_from_file(path: Path) -> Any:
     with open(path, 'rb') as f:
         u = pickle.Unpickler(f)
         return u.load()
+
+
+def parse_yaml(path: Union[Path, str]) -> Any:
+    with open(path) as file:
+        return yaml.safe_load(file)
 
 
 # For getting name of the last folder or file
@@ -124,14 +167,10 @@ def new_temp_file(suffix: Extension = Extension.EMPTY) -> Tuple[str, str]:
 def create_file(file_path: Union[str, Path], content: str):
     file_path = Path(file_path)
 
-    create_directory(os.path.dirname(file_path))
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w+') as f:
         f.writelines(content)
         yield Path(file_path)
-
-
-def create_directory(directory: Union[str, Path]) -> None:
-    os.makedirs(directory, exist_ok=True)
 
 
 def get_file_line(path: Path, line_number: int):
@@ -150,7 +189,7 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
 
 # Not empty extensions are returned with a dot, for example, '.txt'
 # If file has no extensions, an empty one ('') is returned
-def get_extension_from_file(file: Path) -> Extension:
+def get_extension_from_file(file: Union[Path, str]) -> Extension:
     return Extension(os.path.splitext(file)[1])
 
 

@@ -1,4 +1,5 @@
 import logging.config
+import os
 from argparse import Namespace
 from pathlib import Path
 from typing import List, Optional, Union
@@ -7,7 +8,6 @@ from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.util import EvaluationArgument
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
-    create_directory,
     Extension,
     get_parent_folder,
     get_restricted_extension,
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class EvaluationConfig:
     def __init__(self, args: Namespace):
         self.tool_path: Union[str, Path] = args.tool_path
-        self.output_format: str = args.format
+        self.format: str = args.format
         self.solutions_file_path: Union[str, Path] = args.solutions_file_path
         self.traceback: bool = args.traceback
         self.with_history: bool = args.with_history
@@ -37,7 +37,7 @@ class EvaluationConfig:
         command = [LanguageVersion.PYTHON_3.value,
                    self.tool_path,
                    inspected_file_path,
-                   RunToolArgument.FORMAT.value.short_name, self.output_format]
+                   RunToolArgument.FORMAT.value.short_name, self.format]
 
         if self.with_history is not None:
             command.extend([RunToolArgument.HISTORY.value.long_name, history])
@@ -50,7 +50,7 @@ class EvaluationConfig:
         if self.output_folder_path is None:
             try:
                 self.output_folder_path = get_parent_folder(Path(self.solutions_file_path))
-                create_directory(self.output_folder_path)
+                os.makedirs(self.output_folder_path, exist_ok=True)
             except FileNotFoundError as e:
                 logger.error('XLSX-file or CSV-file with the specified name does not exists.')
                 raise e

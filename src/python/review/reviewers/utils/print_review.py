@@ -4,6 +4,7 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Dict, List
 
+from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.common.file_system import get_file_line
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
@@ -135,11 +136,11 @@ def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int) -> Dict[s
 
 
 # It works only for old json format
-def convert_json_to_issues(issues_json: List[dict]) -> List[BaseIssue]:
+def convert_json_to_issues(issues_json: List[dict]) -> List[PenaltyIssue]:
     issues = []
     for issue in issues_json:
         issues.append(
-            BaseIssue(
+            PenaltyIssue(
                 origin_class=issue[IssueJsonFields.CODE.value],
                 description=issue[IssueJsonFields.TEXT.value],
                 line_no=int(issue[IssueJsonFields.LINE_NUMBER.value]),
@@ -148,6 +149,7 @@ def convert_json_to_issues(issues_json: List[dict]) -> List[BaseIssue]:
 
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
+                influence_on_penalty=issue.get(IssueJsonFields.INFLUENCE_ON_PENALTY.value, 0),
             ),
         )
     return issues

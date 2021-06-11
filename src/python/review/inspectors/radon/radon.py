@@ -10,6 +10,9 @@ from src.python.review.inspectors.issue import BaseIssue, IssueData, IssueType, 
 from src.python.review.inspectors.tips import get_maintainability_index_tip
 
 
+MAINTAINABILITY_ORIGIN_CLASS = "RAD100"
+
+
 class RadonInspector(BaseInspector):
     inspector_type = InspectorType.RADON
 
@@ -41,7 +44,9 @@ class RadonInspector(BaseInspector):
             file_path = Path(groups[0])
             maintainability_lack = convert_percentage_of_value_to_lack_of_value(float(groups[1]))
 
-            issue_data = IssueData.get_base_issue_data_dict(file_path, cls.inspector_type)
+            issue_data = IssueData.get_base_issue_data_dict(
+                file_path, cls.inspector_type, origin_class=MAINTAINABILITY_ORIGIN_CLASS,
+            )
             issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
             issue_data[IssueData.MAINTAINABILITY_LACK.value] = maintainability_lack
             issue_data[IssueData.ISSUE_TYPE.value] = IssueType.MAINTAINABILITY

@@ -30,18 +30,35 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 # Find difference between two dataframes. Return dict:
 # {
 #  grade: [list_of_fragment_ids],
+#  decreased_grade: [list_of_fragment_ids],
+#  user: count_unique_users,
 #  traceback: {
+#       fragment_id: [list of issues]
+#     },
+#  penalty: {
 #       fragment_id: [list of issues]
 #     },
 # }
 # The key <grade> contains only fragments that increase quality in new df
+# The key <decreased_grade> contains only fragments that decrease quality in new df
+# The key <user> count number of unique users in the new dataset
 # The key <traceback> contains list of new issues for each fragment
+# The key <penalty> contains list of issues with not zero influence_on_penalty coefficient
 def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
+    if ColumnName.HISTORY.value in new_df.columns:
+        del new_df[ColumnName.HISTORY.value]
+    new_df = new_df.reindex(columns=old_df.columns)
     inconsistent_positions = get_inconsistent_positions(old_df, new_df)
     diffs = {
         ColumnName.GRADE.value: [],
+        ColumnName.DECREASED_GRADE.value: [],
         EvaluationArgument.TRACEBACK.value: {},
+        ColumnName.PENALTY.value: {},
     }
+    if ColumnName.USER.value in new_df.columns:
+        diffs[ColumnName.USER.value] = len(new_df[ColumnName.USER.value].unique())
+    else:
+        diffs[ColumnName.USER.value] = 0
     # Keep only diffs in the TRACEBACK column
     for row, _ in filter(lambda t: t[1] == EvaluationArgument.TRACEBACK.value, inconsistent_positions.index):
         old_value = old_df.iloc[row][ColumnName.GRADE.value]
@@ -53,13 +70,21 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
             # It is an unexpected keys, we should check the algorithm
             diffs[ColumnName.GRADE.value].append(fragment_id)
         else:
-            # Find difference between issues
+            if new_quality < old_quality:
+                diffs[ColumnName.DECREASED_GRADE.value].append(fragment_id)
             old_issues = get_issues_by_row(old_df, row)
             new_issues = get_issues_by_row(new_df, row)
+            # Find difference between issues
             if len(old_issues) > len(new_issues):
                 raise ValueError(f'New dataframe contains less issues than old for fragment {id}')
             difference = set(set(new_issues) - set(old_issues))
-            diffs[EvaluationArgument.TRACEBACK.value][fragment_id] = difference
+            if len(difference) > 0:
+                diffs[EvaluationArgument.TRACEBACK.value][fragment_id] = difference
+
+            # Find issues with influence_in_penalty > 0
+            penalty = set(filter(lambda i: i.influence_on_penalty > 0, new_issues))
+            if len(penalty) > 0:
+                diffs[ColumnName.PENALTY.value][fragment_id] = penalty
     return diffs
 
 
