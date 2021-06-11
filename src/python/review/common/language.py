@@ -16,7 +16,7 @@ class Language(Enum):
 
     @staticmethod
     def from_language_version(language_version: LanguageVersion) -> 'Language':
-        lang_to_lang_version = {
+        version_to_lang = {
             LanguageVersion.PYTHON_3: Language.PYTHON,
             LanguageVersion.JAVA_7: Language.JAVA,
             LanguageVersion.JAVA_8: Language.JAVA,
@@ -25,7 +25,7 @@ class Language(Enum):
             LanguageVersion.KOTLIN: Language.KOTLIN,
         }
 
-        return lang_to_lang_version.get(language_version, Language.UNKNOWN)
+        return version_to_lang.get(language_version, Language.UNKNOWN)
 
 
 EXTENSION_TO_LANGUAGE = {
