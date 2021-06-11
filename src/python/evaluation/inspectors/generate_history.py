@@ -98,7 +98,7 @@ def main():
     pandarallel.initialize()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path).head(1000)
+    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
     solutions_df[EXTRACTED_ISSUES] = solutions_df.parallel_apply(lambda row: _extract_issues(row[TRACEBACK]), axis=1)
     solutions_df[HISTORY] = solutions_df.parallel_apply(_add_history, axis=1, args=(solutions_df,))
 
