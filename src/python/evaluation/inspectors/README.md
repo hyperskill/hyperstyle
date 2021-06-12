@@ -96,8 +96,8 @@ Please, note that your solutions file should consist of at least 4 obligatory co
 
 You can get such a file with [evaluation_run_tool.py](../evaluation_run_tool.py).
 
-The output file is a new `csv` file with all columns from the input except for `traceback` and `grade` 
-(this behavior can be changed when you run the script).
+The output file is a new `xlsx` or `csv` (the same format with the input files) file with all columns from the input 
+except for `traceback` and `grade` (this behavior can be changed when you run the script).
 
 #### Usage
 

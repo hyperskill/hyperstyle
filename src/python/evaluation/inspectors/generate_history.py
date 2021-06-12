@@ -13,7 +13,12 @@ from src.python.evaluation.common.pandas_util import (
 )
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
 from src.python.evaluation.evaluation_run_tool import get_language
-from src.python.review.common.file_system import Extension, get_name_from_path, get_parent_folder
+from src.python.review.common.file_system import (
+    Extension,
+    get_name_from_path,
+    get_parent_folder,
+    get_restricted_extension,
+)
 from src.python.review.common.language import Language
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value
@@ -29,7 +34,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         RunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
         type=lambda value: Path(value).absolute(),
-        help=f'Path to csv file. Your dataset must include column-names: '
+        help=f'Path to csv or xlsx file. Your dataset must include column-names: '
              f'"{USER}", "{LANG}", "{TIME}, "{TRACEBACK}".',
     )
 
@@ -118,7 +123,8 @@ def main():
         dataset_name = get_name_from_path(solutions_file_path, with_extension=False)
         output_path = output_dir / f'{dataset_name}_with_history{Extension.CSV.value}'
 
-    write_df_to_file(solutions_df, output_path, Extension.CSV)
+    output_ext = get_restricted_extension(solutions_file_path, [Extension.XLSX, Extension.CSV])
+    write_df_to_file(solutions_df, output_path, output_ext)
 
 
 if __name__ == '__main__':
