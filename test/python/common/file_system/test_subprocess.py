@@ -25,7 +25,6 @@ def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion,
 def test_synthetic_files(test_file: str, language: LanguageVersion):
     input_file = FILE_SYSTEM_DATA_FOLDER / test_file
     test_args = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
-    test_args.with_history = False
     config = EvaluationConfig(test_args)
 
     expected_output = inspect_code(config, input_file, language)
