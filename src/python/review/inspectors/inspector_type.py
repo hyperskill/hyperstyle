@@ -24,6 +24,7 @@ class InspectorType(Enum):
     ESLINT = 'ESLINT'
 
     UNDEFINED = 'UNDEFINED'
+    QODANA = 'QODANA'
 
     @classmethod
     def available_values(cls) -> List[str]:

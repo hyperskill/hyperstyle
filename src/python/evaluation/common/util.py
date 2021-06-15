@@ -22,6 +22,7 @@ class ColumnName(Enum):
     USER = 'user'
     HISTORY = 'history'
     TIME = 'time'
+    TRACEBACK = 'traceback'
 
 
 @unique

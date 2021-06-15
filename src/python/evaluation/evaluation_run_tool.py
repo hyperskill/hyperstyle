@@ -101,13 +101,13 @@ def __get_grade_from_traceback(traceback: str) -> str:
 # TODO: calculate grade after it
 def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataFrame) -> pd.DataFrame:
     report = pd.DataFrame(columns=lang_code_dataframe.columns)
-    report[EvaluationArgument.TRACEBACK.value] = []
+    report[ColumnName.TRACEBACK.value] = []
 
     pandarallel.initialize()
     if config.traceback:
-        report[EvaluationArgument.TRACEBACK.value] = []
+        report[ColumnName.TRACEBACK.value] = []
     try:
-        lang_code_dataframe[EvaluationArgument.TRACEBACK.value] = lang_code_dataframe.parallel_apply(
+        lang_code_dataframe[ColumnName.TRACEBACK.value] = lang_code_dataframe.parallel_apply(
             lambda row: __inspect_row(row[ColumnName.LANG.value],
                                       row[ColumnName.CODE.value],
                                       row[ColumnName.ID.value],
@@ -115,10 +115,10 @@ def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataF
                                       config), axis=1)
 
         lang_code_dataframe[ColumnName.GRADE.value] = lang_code_dataframe.parallel_apply(
-            lambda row: __get_grade_from_traceback(row[EvaluationArgument.TRACEBACK.value]), axis=1)
+            lambda row: __get_grade_from_traceback(row[ColumnName.TRACEBACK.value]), axis=1)
 
         if not config.traceback:
-            del lang_code_dataframe[EvaluationArgument.TRACEBACK.value]
+            del lang_code_dataframe[ColumnName.TRACEBACK.value]
         return lang_code_dataframe
 
     except ValueError as e:
