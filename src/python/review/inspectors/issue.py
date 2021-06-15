@@ -1,8 +1,9 @@
 import abc
+from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -27,6 +28,61 @@ class IssueType(Enum):
     METHOD_NUMBER = 'METHOD_NUMBER'
     MAINTAINABILITY = 'MAINTAINABILITY'
     INFO = 'INFO'
+
+    UNDEFINED = 'UNDEFINED'
+
+    def __str__(self) -> str:
+        return ' '.join(self.value.lower().split('_'))
+
+
+ISSUE_TYPE_TO_MAIN_CATEGORY = {
+    # CODE_STYLE
+    IssueType.CODE_STYLE: IssueType.CODE_STYLE,
+    IssueType.LINE_LEN: IssueType.CODE_STYLE,
+
+    # BEST_PRACTICES
+    IssueType.BEST_PRACTICES: IssueType.BEST_PRACTICES,
+    IssueType.FUNC_LEN: IssueType.BEST_PRACTICES,
+    IssueType.BOOL_EXPR_LEN: IssueType.BEST_PRACTICES,
+    IssueType.METHOD_NUMBER: IssueType.BEST_PRACTICES,
+    IssueType.CLASS_RESPONSE: IssueType.BEST_PRACTICES,
+
+    # ERROR_PRONE
+    IssueType.ERROR_PRONE: IssueType.ERROR_PRONE,
+
+    # COMPLEXITY
+    IssueType.COMPLEXITY: IssueType.COMPLEXITY,
+    IssueType.CYCLOMATIC_COMPLEXITY: IssueType.COMPLEXITY,
+    IssueType.WEIGHTED_METHOD: IssueType.COMPLEXITY,
+    IssueType.COUPLING: IssueType.COMPLEXITY,
+    IssueType.COHESION: IssueType.COMPLEXITY,
+    IssueType.MAINTAINABILITY: IssueType.COMPLEXITY,
+    IssueType.CHILDREN_NUMBER: IssueType.COMPLEXITY,
+    IssueType.INHERITANCE_DEPTH: IssueType.COMPLEXITY,
+    IssueType.ARCHITECTURE: IssueType.COMPLEXITY,
+}
+
+
+def get_main_category_by_issue_type(issue_type: IssueType) -> IssueType:
+    return ISSUE_TYPE_TO_MAIN_CATEGORY.get(issue_type, IssueType.UNDEFINED)
+
+
+def main_category_to_issue_type_list_dict() -> Dict[IssueType, List[IssueType]]:
+    main_category_to_issue_type = defaultdict(list)
+    for key, value in ISSUE_TYPE_TO_MAIN_CATEGORY.items():
+        main_category_to_issue_type[value].append(key)
+    return main_category_to_issue_type
+
+
+MAIN_CATEGORY_TO_ISSUE_TYPE_LIST = main_category_to_issue_type_list_dict()
+
+IssuesStat = Dict[IssueType, int]
+
+
+def get_default_issue_stat() -> IssuesStat:
+    stat = {issue: 0 for issue in set(ISSUE_TYPE_TO_MAIN_CATEGORY.values())}
+    stat[IssueType.UNDEFINED] = 0
+    return stat
 
 
 # Keys in results dictionary

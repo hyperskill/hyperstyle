@@ -13,6 +13,10 @@ class Language(Enum):
     JS = 'JAVASCRIPT'
     UNKNOWN = 'UNKNOWN'
 
+    @classmethod
+    def values(cls) -> List[str]:
+        return [member.value for member in cls.__members__.values()]
+
 
 EXTENSION_TO_LANGUAGE = {
     Extension.JAVA: Language.JAVA,
