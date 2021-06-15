@@ -121,7 +121,7 @@ class IssueJsonFields(Enum):
     INFLUENCE_ON_PENALTY = 'influence_on_penalty'
 
 
-def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int) -> Dict[str, Any]:
+def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int = 0) -> Dict[str, Any]:
     line_text = get_file_line(issue.file_path, issue.line_no)
 
     return {

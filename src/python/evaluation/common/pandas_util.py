@@ -1,12 +1,12 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, List, Set, Union
+from typing import Any, Iterable, List, Set, Union
 
 import numpy as np
 import pandas as pd
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.application_config import LanguageVersion
@@ -18,15 +18,19 @@ logger = logging.getLogger(__name__)
 
 def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],
                           column: str = ColumnName.LANG.value) -> pd.DataFrame:
-    return df.loc[df[column].isin(set(map(lambda l: l.value, languages)))]
+    return filter_df_by_iterable_value(df, column, set(map(lambda l: l.value, languages)))
 
 
-def filter_df_by_condition(df: pd.DataFrame, column: str, value: Any) -> pd.DataFrame:
+def filter_df_by_iterable_value(df: pd.DataFrame, column: str, value: Iterable) -> pd.DataFrame:
+    return df.loc[df[column].isin(value)]
+
+
+def filter_df_by_single_value(df: pd.DataFrame, column: str, value: Any) -> pd.DataFrame:
     return df.loc[df[column] == value]
 
 
 def drop_duplicates(df: pd.DataFrame, column: str = ColumnName.CODE.value) -> pd.DataFrame:
-    return df.drop_duplicates(column, keep='last')
+    return df.drop_duplicates(column, keep='last').reset_index(drop=True)
 
 
 # Find all rows and columns where two dataframes are inconsistent.
@@ -100,4 +104,4 @@ def get_issues_from_json(str_json: str) -> List[PenaltyIssue]:
 
 
 def get_issues_by_row(df: pd.DataFrame, row: int) -> List[PenaltyIssue]:
-    return get_issues_from_json(df.iloc[row][EvaluationArgument.TRACEBACK.value])
+    return get_issues_from_json(df.iloc[row][ColumnName.TRACEBACK.value])

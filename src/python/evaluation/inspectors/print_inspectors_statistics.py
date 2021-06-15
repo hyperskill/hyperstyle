@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from src.python.common.tool_arguments import RunToolArgument
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics, IssuesStatistics, PenaltyInfluenceStatistics, PenaltyIssue,
 )
@@ -32,11 +32,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def has_incorrect_grades(diffs_dict: dict) -> bool:
-    return len(diffs_dict[ColumnName.GRADE.value]) > 0
+    return len(diffs_dict.get(ColumnName.GRADE.value, [])) > 0
 
 
 def has_decreased_grades(diffs_dict: dict) -> bool:
-    return len(diffs_dict[ColumnName.DECREASED_GRADE.value]) > 0
+    return len(diffs_dict.get(ColumnName.DECREASED_GRADE.value, [])) > 0
 
 
 def __gather_issues_stat(issues_stat_dict: Dict[int, List[PenaltyIssue]]) -> IssuesStatistics:
@@ -50,10 +50,10 @@ def __gather_issues_stat(issues_stat_dict: Dict[int, List[PenaltyIssue]]) -> Iss
 
 
 def gather_statistics(diffs_dict: dict) -> GeneralInspectorsStatistics:
-    new_issues_stat = __gather_issues_stat(diffs_dict[EvaluationArgument.TRACEBACK.value])
-    penalty_issues_stat = __gather_issues_stat(diffs_dict[ColumnName.PENALTY.value])
+    new_issues_stat = __gather_issues_stat(diffs_dict.get(ColumnName.TRACEBACK.value, {}))
+    penalty_issues_stat = __gather_issues_stat(diffs_dict.get(ColumnName.PENALTY.value, {}))
     return GeneralInspectorsStatistics(new_issues_stat, penalty_issues_stat,
-                                       PenaltyInfluenceStatistics(diffs_dict[ColumnName.PENALTY.value]))
+                                       PenaltyInfluenceStatistics(diffs_dict.get(ColumnName.PENALTY.value, {})))
 
 
 def main() -> None:
@@ -73,7 +73,7 @@ def main() -> None:
         print('All grades are equal.')
     else:
         print(f'Decreased grades was found in {len(diffs[ColumnName.DECREASED_GRADE.value])} fragments')
-    print(f'{diffs[ColumnName.USER.value]} unique users was found!')
+    print(f'{diffs.get(ColumnName.USER.value, 0)} unique users was found!')
     print(separator)
 
     statistics = gather_statistics(diffs)
