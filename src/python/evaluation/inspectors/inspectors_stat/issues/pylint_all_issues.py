@@ -73,8 +73,8 @@ ALL_ISSUES = {
     'E0117': 'Emitted when a nonlocal variable does not have an attached name somewhere in the parent scopes',
     'E0118': 'Emitted when a name is used prior a global declaration, which results in an error since Python 3.6. '
              'This message can\'t be emitted when using Python < 3.6.',
-    'E0119': 'Emitted when format function is not called on str object. e.g doing print("value: {}").format(123) '
-             'instead of print("value: {}".format(123)). This might not be what the user intended to do.',
+    'E0119': 'Emitted when format function is not called on str object. '
+             'This might not be what the user intended to do.',
     'E0202': 'Used when a class defines a method which is hidden by an instance attribute from an ancestor class or '
              'set by some client code.',
     'E0203': 'Used when an instance member is accessed before it\'s actually assigned.',
@@ -353,8 +353,8 @@ ALL_ISSUES = {
              'receive one or more required keywords.',
     'W1304': 'Used when a PEP 3101 format string that uses named fields is used with an argument that is not required '
              'by the format string.',
-    'W1305': 'Used when a PEP 3101 format string contains both automatic field numbering (e.g. \'{}\') and manual '
-             'field specification (e.g. \'{0}\').',
+    'W1305': 'Used when a PEP 3101 format string contains both automatic field numbering and manual '
+             'field specification.',
     'W1306': 'Used when a PEP 3101 format string uses an attribute specifier ({0.length}), but the argument passed '
              'for formatting doesn\'t have that attribute.',
     'W1307': 'Used when a PEP 3101 format string uses a lookup specifier ({a[1]}), but the argument passed for '

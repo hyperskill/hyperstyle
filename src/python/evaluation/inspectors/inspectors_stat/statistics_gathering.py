@@ -4,7 +4,7 @@ from typing import Callable, Dict, List, Set, Tuple
 from src.python.evaluation.inspectors.inspectors_stat.issues.flake8_all_issues import (
     ALL_BUGBEAR_ISSUES, ALL_BUILTINS_ISSUES, ALL_COMPREHENSIONS_ISSUES, ALL_FORMAT_STRING_ISSUES,
     ALL_IMPORT_ORDER_ISSUES, ALL_RETURN_ISSUES, ALL_SPELLCHECK_ISSUES, ALL_STANDARD_ISSUES, ALL_WPS_ISSUES,
-    FLAKE8_DISABLED_ISSUES
+    FLAKE8_DISABLED_ISSUES,
 )
 from src.python.evaluation.inspectors.inspectors_stat.issues.other_issues import PYTHON_AST_ISSUES, PYTHON_RADON_ISSUES
 from src.python.evaluation.inspectors.inspectors_stat.issues.pylint_all_issues import ALL_ISSUES, PYLINT_DISABLED_ISSUES
@@ -17,7 +17,7 @@ from src.python.review.inspectors.eslint.eslint import ESLintInspector
 from src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from src.python.review.inspectors.issue import (
-    get_default_issue_stat, get_main_category_by_issue_type, IssuesStat, IssueType
+    get_default_issue_stat, get_main_category_by_issue_type, IssuesStat, IssueType,
 )
 from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 from src.python.review.inspectors.pmd.pmd import PMDInspector
