@@ -5,13 +5,13 @@ from typing import List, Set
 import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument, parse_set_arg
+from src.python.evaluation.common.util import ColumnName, parse_set_arg
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.common.file_system import Extension, get_parent_folder, serialize_data_and_write_to_file
 from src.python.review.inspectors.issue import BaseIssue
 
 
-TRACEBACK = EvaluationArgument.TRACEBACK.value
+TRACEBACK = ColumnName.TRACEBACK.value
 ID = ColumnName.ID.value
 GRADE = ColumnName.GRADE.value
 

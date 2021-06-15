@@ -6,7 +6,7 @@ from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import (
     get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )
-from src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from src.python.evaluation.common.util import ColumnName
 from src.python.review.common.file_system import (
     Extension, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
 )
@@ -52,7 +52,7 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
     diffs = {
         ColumnName.GRADE.value: [],
         ColumnName.DECREASED_GRADE.value: [],
-        EvaluationArgument.TRACEBACK.value: {},
+        ColumnName.TRACEBACK.value: {},
         ColumnName.PENALTY.value: {},
     }
     if ColumnName.USER.value in new_df.columns:
@@ -60,7 +60,7 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
     else:
         diffs[ColumnName.USER.value] = 0
     # Keep only diffs in the TRACEBACK column
-    for row, _ in filter(lambda t: t[1] == EvaluationArgument.TRACEBACK.value, inconsistent_positions.index):
+    for row, _ in filter(lambda t: t[1] == ColumnName.TRACEBACK.value, inconsistent_positions.index):
         old_value = old_df.iloc[row][ColumnName.GRADE.value]
         new_value = new_df.iloc[row][ColumnName.GRADE.value]
         old_quality = QualityType(old_value).to_number()
@@ -79,7 +79,7 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
                 raise ValueError(f'New dataframe contains less issues than old for fragment {id}')
             difference = set(set(new_issues) - set(old_issues))
             if len(difference) > 0:
-                diffs[EvaluationArgument.TRACEBACK.value][fragment_id] = difference
+                diffs[ColumnName.TRACEBACK.value][fragment_id] = difference
 
             # Find issues with influence_in_penalty > 0
             penalty = set(filter(lambda i: i.influence_on_penalty > 0, new_issues))
