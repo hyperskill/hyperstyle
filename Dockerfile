@@ -13,6 +13,9 @@ RUN ls /usr/lib/jvm
 # Other dependencies
 RUN apk add bash
 
+# Set up Eslint
+RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
+
 # Dependencies and package installation
 WORKDIR /
 
