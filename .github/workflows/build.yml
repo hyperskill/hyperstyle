@@ -6,34 +6,26 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    container: nastyabirillo/hyperstyle
-    
+    # Consistent with Version.md
+    container: nastyabirillo/hyperstyle:1.2.0
+
     steps:
 
       - name: Checkout
         uses: actions/checkout@v1
-        
-#     Note: The original Dockerfile for this action contains the following commands to install numpy and pandas. 
-#     We exclude them from production to compress the docker image
 
-#      RUN apk add --no-cache python3-dev libstdc++ && \
-#          apk add --no-cache g++ && \
-#          ln -s /usr/include/locale.h /usr/include/xlocale.h && \
-#          pip3 install numpy && \
-#          pip3 install pandas
-          
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-      
+   
       - name: Set up Eslint
         run: |
           npm install eslint --save-dev
           ./node_modules/.bin/eslint --init
-      
+
       - name: Test with pytest
         run: |
             pytest
