@@ -198,7 +198,7 @@ __Note__: If you have `ModuleNotFoundError` while you try to run tests, please c
 __Note__: We use [eslint](https://eslint.org/) and [open-jdk 11](https://openjdk.java.net/projects/jdk/11/)
 in the tests. Please, set up the environment before running the tests. 
 You can see en example of the environment configuration in 
-the [build.yml](./.github/workflows/build.yml) file.
+the [Dockerfile](./docker/dev/Dockerfile) file.
 
 Use `pytest` from the root directory to run __ALL__ tests.
 

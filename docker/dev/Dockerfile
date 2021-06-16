@@ -1,5 +1,3 @@
-# This Dockerfile is used only for production
-
 FROM python:3.8.2-alpine3.11
 
 RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
@@ -10,17 +8,15 @@ RUN npm i -g eslint@7.5.0
 RUN java -version
 RUN ls /usr/lib/jvm
 
+# Install numpy and pandas for tests
+RUN apk add --no-cache python3-dev libstdc++ && \
+    apk add --no-cache g++ && \
+    ln -s /usr/include/locale.h /usr/include/xlocale.h && \
+    pip3 install numpy && \
+    pip3 install pandas
+
 # Other dependencies
 RUN apk add bash
-
-# Set up Eslint
-RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
-
-# Upgrade pip
-RUN python3.8 -m pip install --upgrade pip
-
-# Set up Eslint
-RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
 
 # Dependencies and package installation
 WORKDIR /
