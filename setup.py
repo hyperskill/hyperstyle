@@ -19,13 +19,11 @@ def get_version() -> str:
 
 def get_inspectors_additional_files() -> List[str]:
     inspectors_path = current_dir / 'src' / 'python' / 'review' / 'inspectors'
-
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            file_path = Path(root) / file
-            if not file_path.name.endswith('.py'):
-                result.append(str(file_path))
+            if not (Path(root) / file).endswith('.py'):
+                result.append(str(Path(root) / file))
 
     return result
 
@@ -51,8 +49,14 @@ setup(
     python_requires='>=3.8, <4',
     install_requires=['upsourceapi'],
     packages=find_packages(exclude=[
-        '*.unit_tests', '*.unit_tests.*', 'unit_tests.*', 'unit_tests',
-        '*.functional_tests', '*.functional_tests.*', 'functional_tests.*', 'functional_tests',
+        '*.unit_tests',
+        '*.unit_tests.*',
+        'unit_tests.*',
+        'unit_tests',
+        '*.functional_tests',
+        '*.functional_tests.*',
+        'functional_tests.*',
+        'functional_tests',
     ]),
     zip_safe=False,
     package_data={
