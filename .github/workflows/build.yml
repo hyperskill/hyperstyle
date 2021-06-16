@@ -31,6 +31,10 @@ jobs:
             pytest
             
       # We should have only INFO errors      
-      - name: Run Hyperstyle tool
+      - name: Check installed module can run python linters
         run: |
             python src/python/review/run_tool.py setup.py 
+             
+      - name: Check installed module can run java linters
+        run: |
+            python src/python/review/run_tool.py test/resources/inspectors/java/test_algorithm_with_scanner.java
