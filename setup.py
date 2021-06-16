@@ -22,7 +22,7 @@ def get_inspectors_additional_files() -> List[str]:
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            if not (Path(root) / file).endswith('.py'):
+            if not file.endswith('.py'):
                 result.append(str(Path(root) / file))
 
     return result

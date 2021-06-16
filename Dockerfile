@@ -26,6 +26,7 @@ COPY requirements.txt review/requirements.txt
 RUN pip3 install --no-cache-dir -r review/requirements.txt
 
 COPY . review
+RUN pip3 install --no-cache-dir ./review
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
