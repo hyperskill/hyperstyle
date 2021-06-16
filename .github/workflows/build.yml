@@ -7,13 +7,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HYPERSTYLE_VERSION: 1.2.0
+      HYPERSTYLE_VERSION: $(cat VERSION.md)
     container: nastyabirillo/hyperstyle
 
     steps:
     
       - name: Print env
-        uses: echo ${{env.HYPERSTYLE_VERSION}}
+        run: echo ${env.HYPERSTYLE_VERSION}
 
       - name: Checkout
         uses: actions/checkout@v1
