@@ -29,5 +29,5 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
 
     'F': IssueType.BEST_PRACTICES,  # standard flake8
     'C': IssueType.BEST_PRACTICES,  # flake8-comprehensions
-    'SC': IssueType.BEST_PRACTICES,  # flake8-spellcheck
+    'SC': IssueType.INFO,  # flake8-spellcheck
 }

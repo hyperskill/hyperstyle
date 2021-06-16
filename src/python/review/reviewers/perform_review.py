@@ -6,6 +6,7 @@ from typing import Final, List
 
 from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.language import Language
+from src.python.review.inspectors.issue import IssueType
 from src.python.review.reviewers.common import perform_language_review
 from src.python.review.reviewers.python import perform_python_review
 from src.python.review.reviewers.review_result import ReviewResult
@@ -66,7 +67,8 @@ def perform_and_print_review(path: Path,
     else:
         print_review_result_as_text(review_result, path)
 
-    return len(review_result.all_issues)
+    # Don't count INFO issues too
+    return len(list(filter(lambda issue: issue.type != IssueType.INFO, review_result.all_issues)))
 
 
 def perform_review(path: Path, config: ApplicationConfig) -> ReviewResult:

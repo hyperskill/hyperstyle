@@ -25,6 +25,7 @@ class IssueType(Enum):
     COHESION = 'COHESION'
     CLASS_RESPONSE = 'CLASS_RESPONSE'
     METHOD_NUMBER = 'METHOD_NUMBER'
+    INFO = 'INFO'
 
 
 # Keys in results dictionary
