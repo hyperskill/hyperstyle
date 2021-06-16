@@ -152,12 +152,8 @@ def main() -> int:
             history=args.history,
         )
 
-        n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)
-        if not n_issues:
-            return 0
-
-        return 1
-
+        perform_and_print_review(args.path, OutputFormat(args.format), config)
+        return 0
     except PathNotExists:
         logger.error('Path not exists')
         return 2
