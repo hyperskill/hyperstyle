@@ -201,4 +201,3 @@ You can see en example of the environment configuration in
 the [Dockerfile](./docker/dev/Dockerfile) file.
 
 Use `pytest` from the root directory to run __ALL__ tests.
-
