@@ -18,10 +18,8 @@ def get_version() -> str:
 
 
 def get_inspectors_additional_files() -> List[str]:
-    inspectors_path = current_dir / 'src' / 'python' / 'review' / 'inspectors'
-
     result = []
-    for root, _, files in os.walk(inspectors_path):
+    for root, _, files in os.walk(current_dir / 'src' / 'python' / 'review' / 'inspectors'):
         for file in files:
             file_path = Path(root) / file
             if not file_path.name.endswith('.py'):
@@ -50,10 +48,11 @@ setup(
     keywords='code review',
     python_requires='>=3.8, <4',
     install_requires=['upsourceapi'],
-    packages=find_packages(exclude=[
-        '*.unit_tests', '*.unit_tests.*', 'unit_tests.*', 'unit_tests',
-        '*.functional_tests', '*.functional_tests.*', 'functional_tests.*', 'functional_tests',
-    ]),
+    packages=find_packages(
+        exclude=[
+            '*.unit_tests', '*.unit_tests.*', 'unit_tests.*', 'unit_tests',
+            '*.functional_tests', '*.functional_tests.*', 'functional_tests.*', 'functional_tests',
+        ]),
     zip_safe=False,
     package_data={
         '': get_inspectors_additional_files(),
