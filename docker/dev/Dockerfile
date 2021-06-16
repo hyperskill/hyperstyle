@@ -27,6 +27,9 @@ RUN pip3 install --no-cache-dir -r review/requirements-test.txt
 COPY requirements.txt review/requirements.txt
 RUN pip3 install --no-cache-dir -r review/requirements.txt
 
+COPY requirements-evaluation.txt review/requirements-evaluation.txt
+RUN pip3 install --no-cache-dir -r review/requirements-evaluation.txt
+
 COPY . review
 
 # Container's enviroment variables
