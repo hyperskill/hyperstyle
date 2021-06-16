@@ -13,7 +13,7 @@ jobs:
     steps:
     
       - name: Print env
-        run: eval "echo \"\$${env.HYPERSTYLE_VERSION}\""
+        run: echo "$HYPERSTYLE_VERSION"
 
       - name: Checkout
         uses: actions/checkout@v1
