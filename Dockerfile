@@ -16,12 +16,6 @@ RUN apk add bash
 # Set up Eslint
 RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
 
-# Upgrade pip
-RUN python3.8 -m pip install --upgrade pip
-
-# Set up Eslint
-RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
-
 # Dependencies and package installation
 WORKDIR /
 
