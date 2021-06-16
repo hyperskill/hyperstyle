@@ -1,3 +1,5 @@
+# This Dockerfile is used only for production
+
 FROM python:3.8.2-alpine3.11
 
 RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
@@ -20,7 +22,7 @@ RUN pip3 install --no-cache-dir -r review/requirements-test.txt
 COPY requirements.txt review/requirements.txt
 RUN pip3 install --no-cache-dir -r review/requirements.txt
 
-COPY . review
+COPY docker/prod review
 RUN pip3 install --no-cache-dir ./review
 
 # Container's enviroment variables
