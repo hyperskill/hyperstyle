@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with Version.md
-    container: nastyabirillo/hyperstyle:1.2.0
+    container: nastyabirillo/hyperstyle:1.2.1
 
     steps:
 
