@@ -92,3 +92,5 @@ nom
 wmc
 util
 Namespace
+case18
+case34
