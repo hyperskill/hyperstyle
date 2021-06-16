@@ -6,6 +6,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    env:
+      HYPERSTYLE_VERSION: $(cat VERSION.md)
     container: nastyabirillo/hyperstyle
 
     steps:
