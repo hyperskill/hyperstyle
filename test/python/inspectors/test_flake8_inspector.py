@@ -49,7 +49,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case2_boolean_expressions.py', IssuesTestInfo(n_code_style=1,
                                                     n_cc=8)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=1)),
-    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5)),
+    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=0, n_cc=5)),
     # ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
     #                                              n_cc=1)),
     ('case8_good_class.py', IssuesTestInfo(n_cc=1)),
@@ -90,16 +90,15 @@ def test_parse():
     assert [issue.description for issue in issues] == ['test 1', 'test 2', 'test 3']
     assert [issue.type for issue in issues] == [IssueType.CODE_STYLE,
                                                 IssueType.CODE_STYLE,
-                                                IssueType.BEST_PRACTICES,
                                                 IssueType.INFO]
 
 
 def test_choose_issue_type():
     error_codes = ['B006', 'SC100', 'R503', 'ABC123', 'E101']
     expected_issue_types = [
+        IssueType.ERROR_PRONE, IssueType.INFO,
         IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
-        IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
-        IssueType.CODE_STYLE, IssueType.INFO
+        IssueType.CODE_STYLE
     ]
 
     issue_types = list(map(Flake8Inspector.choose_issue_type, error_codes))

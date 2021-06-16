@@ -21,3 +21,7 @@ def run_in_subprocess(command: List[str]) -> str:
         logger.debug('%s\'s stderr:\n%s' % (command[0], stderr))
 
     return stdout
+
+
+dif = set([5, 6, 7]) - set([1, 5])
+print(dif)
