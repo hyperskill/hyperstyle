@@ -29,3 +29,8 @@ jobs:
       - name: Test with pytest
         run: |
             pytest
+            
+      # We should have only INFO errors      
+      - name: Run Hyperstyle tool
+        run: |
+            python src/python/review/run_tool.py setup.py 
