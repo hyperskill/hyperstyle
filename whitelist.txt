@@ -61,4 +61,3 @@ lcom
 noc
 nom
 wmc
-pathlib
