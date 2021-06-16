@@ -7,8 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HYPERSTYLE_VERSION: ${{cat VERSION.md}}
-    container: nastyabirillo/hyperstyle
+      HYPERSTYLE_VERSION: 1.2.0
+    container: nastyabirillo/hyperstyle:$HYPERSTYLE_VERSION
 
     steps:
     
