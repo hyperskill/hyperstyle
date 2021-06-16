@@ -46,14 +46,14 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        '--dont-drop-traceback',
-        help=f'The "{TRACEBACK}" column will not be removed from the final dataset.',
+        '--to-drop-traceback',
+        help=f'The "{TRACEBACK}" column will be removed from the final dataset.',
         action='store_true',
     )
 
     parser.add_argument(
-        '--dont-drop-grade',
-        help=f'The "{GRADE}" column will not be removed from the final dataset.',
+        '--to-drop-grade',
+        help=f'The "{GRADE}" column will be removed from the final dataset.',
         action='store_true',
     )
 
@@ -109,10 +109,10 @@ def main():
 
     columns_to_drop = [EXTRACTED_ISSUES]
 
-    if not args.dont_drop_grade:
+    if args.to_drop_grade:
         columns_to_drop.append(GRADE)
 
-    if not args.dont_drop_traceback:
+    if args.to_drop_traceback:
         columns_to_drop.append(TRACEBACK)
 
     solutions_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')

@@ -111,8 +111,8 @@ Optional arguments:
 Argument | Description
 --- | ---
 |**&#8209;o**, **&#8209;&#8209;output&#8209;path**| The path where the dataset with history will be saved. If not specified, the dataset will be saved next to the original one. |
-|**&#8209;&#8209;dont&#8209;drop&#8209;traceback**| The `traceback` column will not be removed from the final dataset. Default is false. |
-|**&#8209;&#8209;dont&#8209;drop&#8209;grades**| The `grade` column will not be removed from the final dataset. Default is false.|
+|**&#8209;&#8209;to&#8209;drop&#8209;traceback**| The `traceback` column will be removed from the final dataset. Default is false. |
+|**&#8209;&#8209;to&#8209;drop&#8209;grades**| The `grade` column will be removed from the final dataset. Default is false.|
 
 ___
 
