@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
 from typing import List
 
 from setuptools import find_packages, setup
 
-current_dir = Path(__file__).parent.absolute()
+current_dir = __file__.parent.absolute()
 
 
 def get_long_description() -> str:
@@ -23,7 +22,7 @@ def get_inspectors_additional_files() -> List[str]:
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            file_path = Path(root) / file
+            file_path = root / file
             if not file_path.name.endswith('.py'):
                 result.append(str(file_path))
 
