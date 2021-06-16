@@ -40,7 +40,7 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
             origin_class=BOOL_EXPR_LEN_ORIGIN_CLASS,
             inspector_type=self._inspector_type,
             bool_expr_len=length,
-            type=IssueType.BOOL_EXPR_LEN,
+            type=PythonAstInspector.choose_issue_type(BOOL_EXPR_LEN_ORIGIN_CLASS),
         ))
 
 
@@ -69,7 +69,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=IssueType.FUNC_LEN,
+                type=PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS),
             ))
 
         self._previous_node = node
@@ -91,7 +91,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=IssueType.FUNC_LEN,
+                type=PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS),
             ))
 
         self._previous_node = None
@@ -135,6 +135,16 @@ class PythonAstInspector(BaseInspector):
             )
 
         return metrics
+
+    @staticmethod
+    def choose_issue_type(code: str) -> IssueType:
+        if code == BOOL_EXPR_LEN_ORIGIN_CLASS:
+            return IssueType.BOOL_EXPR_LEN
+
+        if code == FUNC_LEN_ORIGIN_CLASS:
+            return IssueType.FUNC_LEN
+
+        return IssueType.BEST_PRACTICES
 
 
 def create_line_no_to_sym_no_map(content) -> Dict[int, int]:

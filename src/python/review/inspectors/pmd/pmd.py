@@ -10,7 +10,7 @@ from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
-from src.python.review.inspectors.pmd.issue_types import RULE_TO_ISSUE_TYPE
+from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +72,7 @@ class PMDInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, rule: str) -> IssueType:
-        issue_type = RULE_TO_ISSUE_TYPE.get(rule)
+        issue_type = PMD_RULE_TO_ISSUE_TYPE.get(rule)
         if not issue_type:
             logger.warning('%s: %s - unknown rule' %
                            (cls.inspector_type.value, rule))
