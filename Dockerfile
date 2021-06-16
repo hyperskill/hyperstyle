@@ -22,7 +22,7 @@ RUN pip3 install --no-cache-dir -r review/requirements-test.txt
 COPY requirements.txt review/requirements.txt
 RUN pip3 install --no-cache-dir -r review/requirements.txt
 
-COPY docker/prod review
+COPY . review
 RUN pip3 install --no-cache-dir ./review
 
 # Container's enviroment variables
