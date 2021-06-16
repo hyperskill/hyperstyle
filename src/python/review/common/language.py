@@ -15,7 +15,7 @@ class Language(Enum):
 
     @classmethod
     def values(cls) -> List[str]:
-        return [member.value for member in cls.__members__.values()]
+        return [member.value for member in Language]
 
 
 EXTENSION_TO_LANGUAGE = {

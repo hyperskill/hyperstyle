@@ -67,7 +67,7 @@ def __collect_language_stat(*args: Set[Tuple[Set[str], Callable]]) -> IssuesStat
 def collect_stat_by_language(language: Language) -> IssuesStat:
     if language == Language.PYTHON:
         python_inspection_to_matcher = [
-            (set(set(ALL_ISSUES.keys()) - set(PYLINT_DISABLED_ISSUES)), PylintInspector.choose_issue_type),
+            (set(ALL_ISSUES.keys()) - set(PYLINT_DISABLED_ISSUES), PylintInspector.choose_issue_type),
             (__get_flake8_issue_keys(), Flake8Inspector.choose_issue_type),
             (set(PYTHON_RADON_ISSUES.keys()), RadonInspector.choose_issue_type),
             (set(PYTHON_AST_ISSUES.keys()), PythonAstInspector.choose_issue_type),
