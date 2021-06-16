@@ -11,6 +11,9 @@ jobs:
     container: nastyabirillo/hyperstyle
 
     steps:
+    
+      - name: Print env
+        uses: echo ${{env.HYPERSTYLE_VERSION}}
 
       - name: Checkout
         uses: actions/checkout@v1
