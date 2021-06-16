@@ -22,9 +22,8 @@ def get_inspectors_additional_files() -> List[str]:
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            file_path = Path(root) / file
-            if not file_path.endswith('.py'):
-                result.append(str(file_path))
+            if not (Path(root) / file).endswith('.py'):
+                result.append(str(Path(root) / file))
 
     return result
 
