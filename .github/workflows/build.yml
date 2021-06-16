@@ -6,14 +6,10 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    env:
-      HYPERSTYLE_VERSION: 1.2.0
-    container: nastyabirillo/hyperstyle:$HYPERSTYLE_VERSION
+    # Consistent with Version.md
+    container: nastyabirillo/hyperstyle:1.2.0
 
     steps:
-    
-      - name: Print env
-        run: echo "$HYPERSTYLE_VERSION"
 
       - name: Checkout
         uses: actions/checkout@v1
