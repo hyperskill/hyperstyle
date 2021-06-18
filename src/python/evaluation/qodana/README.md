@@ -25,20 +25,20 @@ Run the [dataset_labeling.py](dataset_labeling.py) with the arguments from comma
 # Preprocessing
 
 The model that imitates Qodana analysis gets input from a dataset in a special format. 
-This module allows preparing datasets that were graded by [dataset_marking.py](dataset_marking.py) script.
+This module allows preparing datasets that were graded by [dataset_labeling.py](dataset_labeling.py) script.
 
 Data processing consists of several stages:
-- union several `csv` files that were graded by [dataset_marking.py](dataset_marking.py) script 
+- union several `csv` files that were graded by [dataset_labeling.py](dataset_labeling.py) script 
   and filter inspections list if it is necessary;
 - get all unique inspections from the dataset;
 - convert `csv` file into a special format.
 
 ## Filter inspections
 
-This stage allow you to union several `csv` files that were graded by [dataset_marking.py](dataset_marking.py) script 
+This stage allow you to union several `csv` files that were graded by [dataset_labeling.py](dataset_labeling.py) script 
   and filter inspections list if it is necessary.
 
-Please, note that your all input files must be graded by [dataset_marking.py](dataset_marking.py) script 
+Please, note that your all input files must be graded by [dataset_labeling.py](dataset_labeling.py) script 
 and have `inspections` column.
 
 Output file is a new `csv` file with the all columns from the input files.
@@ -63,7 +63,7 @@ ___
 ## Get all unique inspections
 
 This stage allow you to get all unique inspections from a `csv` file graded by Qodana. 
-Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+Please, note that your input file must be graded by [dataset_labeling.py](dataset_labeling.py) script 
 and has `inspections` column.
 
 Output file is a new `csv` file with four columns: `id`, `inspection_id`, `count_all`, `count_uniq`. 
@@ -78,7 +78,7 @@ Run the [get_unique_inspectors.py](get_unique_inspectors.py) with the arguments 
 
 Required arguments:
 
-`solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script.
+`solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script.
 
 Optional arguments:
 Argument | Description
@@ -101,7 +101,7 @@ ___
 #### Convert `csv` file into a special format
 
 This block describes what format can be converted csv-file with code samples 
-graded by [dataset_marking.py](dataset_marking.py) script.
+graded by [dataset_labeling.py](dataset_labeling.py) script.
 
 We have two different formats:
 - fragment to inspections list;
@@ -112,7 +112,7 @@ We have two different formats:
 
 This data representation match code fragments to a list with ids of inspections.
 
-Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+Please, note that your input file must be graded by [dataset_labeling.py](dataset_labeling.py) script 
 and has `inspections` column.
 
 Output file is a new `csv` file with a new `inspections` column with list with ids of inspections. 
@@ -124,7 +124,7 @@ Run the [fragment_to_inspections_list.py](fragment_to_inspections_list.py) with 
 
 Required arguments:
 
-- `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
+- `solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script,
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
@@ -172,7 +172,7 @@ id   |  code             |  lang         |  inspections
 
 This data representation match each line in code fragments to a list with ids of inspections in this line.
 
-Please, note that your input file must be graded by [dataset_marking.py](dataset_marking.py) script 
+Please, note that your input file must be graded by [dataset_labeling.py](dataset_labeling.py) script 
 and has `inspections` column.
 
 Output file is a new `csv` file with a new `inspections` column with list with ids of inspections. 
@@ -186,7 +186,7 @@ Run the [fragment_to_inspections_list_line_by_line.py](fragment_to_inspections_l
 
 Required arguments:
 
-- `solutions_file_path` — path to csv-file with code samples graded by [dataset_marking.py](dataset_marking.py) script,
+- `solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script,
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
