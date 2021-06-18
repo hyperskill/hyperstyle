@@ -10,7 +10,7 @@ from src.python.review.inspectors.issue import BaseIssue, IssueData, IssueType, 
 from src.python.review.inspectors.tips import get_maintainability_index_tip
 
 
-MAINTAINABILITY_ORIGIN_CLASS = "RAD100"
+MAINTAINABILITY_ORIGIN_CLASS = 'RAD100'
 
 
 class RadonInspector(BaseInspector):
@@ -19,9 +19,9 @@ class RadonInspector(BaseInspector):
     @classmethod
     def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
         mi_command = [
-            "radon", "mi",  # compute the Maintainability Index score
-            "--max", "F",  # set the maximum MI rank to display
-            "--show",  # actual MI value is shown in results, alongside the rank
+            'radon', 'mi',  # compute the Maintainability Index score
+            '--max', 'F',  # set the maximum MI rank to display
+            '--show',  # actual MI value is shown in results, alongside the rank
             path,
         ]
 
@@ -31,13 +31,13 @@ class RadonInspector(BaseInspector):
     @classmethod
     def mi_parse(cls, mi_output: str) -> List[BaseIssue]:
         """
-        Parses the results of the "mi" command.
+        Parses the results of the 'mi' command.
         Description: https://radon.readthedocs.io/en/latest/commandline.html#the-mi-command
 
-        :param mi_output: "mi" command output.
+        :param mi_output: 'mi' command output.
         :return: list of issues.
         """
-        row_re = re.compile(r"^(.*) - \w \((.*)\)$", re.M)
+        row_re = re.compile(r'^(.*) - \w \((.*)\)$', re.M)
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(mi_output):
@@ -49,8 +49,15 @@ class RadonInspector(BaseInspector):
             )
             issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
             issue_data[IssueData.MAINTAINABILITY_LACK.value] = maintainability_lack
-            issue_data[IssueData.ISSUE_TYPE.value] = IssueType.MAINTAINABILITY
+            issue_data[IssueData.ISSUE_TYPE.value] = cls.choose_issue_type(MAINTAINABILITY_ORIGIN_CLASS)
 
             issues.append(MaintainabilityLackIssue(**issue_data))
 
         return issues
+
+    @staticmethod
+    def choose_issue_type(code: str) -> IssueType:
+        if code == MAINTAINABILITY_ORIGIN_CLASS:
+            return IssueType.MAINTAINABILITY
+
+        return IssueType.BEST_PRACTICES

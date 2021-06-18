@@ -27,10 +27,6 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C818': IssueType.CODE_STYLE,
     'C819': IssueType.CODE_STYLE,
 
-    # flake8-spellcheck
-    'SC100': IssueType.INFO,
-    'SC200': IssueType.INFO,
-
     # WPS: Naming
     'WPS117': IssueType.CODE_STYLE,  # Forbid naming variables self, cls, or mcs.
     'WPS125': IssueType.ERROR_PRONE,  # Forbid variable or module names which shadow builtin names.
@@ -111,7 +107,7 @@ CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
 
     'F': IssueType.BEST_PRACTICES,  # standard flake8
     'C': IssueType.BEST_PRACTICES,  # flake8-comprehensions
-    'SC': IssueType.BEST_PRACTICES,  # flake8-spellcheck
+    'SC': IssueType.INFO,  # flake8-spellcheck
 
     'WPS1': IssueType.CODE_STYLE,  # WPS type: Naming
     'WPS2': IssueType.COMPLEXITY,  # WPS type: Complexity

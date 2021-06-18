@@ -27,6 +27,10 @@ class Language(Enum):
 
         return version_to_lang.get(language_version, Language.UNKNOWN)
 
+    @classmethod
+    def values(cls) -> List[str]:
+        return [member.value for member in Language]
+
 
 EXTENSION_TO_LANGUAGE = {
     Extension.JAVA: Language.JAVA,
