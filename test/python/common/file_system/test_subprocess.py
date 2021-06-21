@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from test.python.common import FILE_SYSTEM_DATA_FOLDER
 from test.python.evaluation.testing_config import get_testing_arguments
+from typing import Optional
 
 import pytest
 from src.python.evaluation.evaluation_config import EvaluationConfig
@@ -15,8 +16,8 @@ INPUT_DATA = [
 ]
 
 
-def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion) -> str:
-    command = config.build_command(file, language.value)
+def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion, history: Optional[str] = None) -> str:
+    command = config.build_command(file, language.value, history)
     return run_in_subprocess(command)
 
 

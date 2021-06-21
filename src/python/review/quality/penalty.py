@@ -58,7 +58,7 @@ def get_previous_issues_by_language(lang_to_history: Optional[str], language: La
         return []
 
     language_to_history = json.loads(lang_to_history)
-    history = language_to_history[language.value.lower()]
+    history = language_to_history.get(language.value.lower(), [])
 
     previous_issues = []
     for issue_data in history:

@@ -7,6 +7,7 @@ This module contains _preprocessing_ stage and _analysing_ stage.
   the `csv` or `xslx` file with student solutions and drop duplicates of code fragments (optional);
 - [distribute_grades.py](distribute_grades.py) allows distributing calculated grades and traceback 
   for unique solutions into all solutions.
+- [generate_history.py](generate_history.py) allows you to generate history based on issues from previous solutions.
 
 `Analysing` stage includes:
 - [diffs_between_df.py](diffs_between_df.py) allows finding a difference between 
@@ -79,6 +80,39 @@ Required arguments:
 - `solutions_file_path_uniq` — path to xlsx-file or csv-file with unique code samples,
 
 The resulting file will be stored in the same folder as the input file with all samples.
+
+----
+
+### Generate history
+
+[generate_history.py](generate_history.py) allows you to generate history based on issues from previous solutions.
+
+Please, note that your solutions file should consist of at least 4 obligatory columns:
+
+- `user`,
+- `lang`,
+- `time`,
+- `traceback`.
+
+You can get such a file with [evaluation_run_tool.py](../evaluation_run_tool.py).
+
+The output file is a new `xlsx` or `csv` (the same format with the input files) file with all columns from the input 
+except for `traceback` and `grade` (this behavior can be changed when you run the script).
+
+#### Usage
+
+Run the [generate_history.py](generate_history.py) with the arguments from command line.
+
+Required argument:
+
+- `solutions_file_path` — path to xlsx-file or csv-file with necessary columns,
+
+Optional arguments:
+Argument | Description
+--- | ---
+|**&#8209;o**, **&#8209;&#8209;output&#8209;path**| The path where the dataset with history will be saved. If not specified, the dataset will be saved next to the original one. |
+|**&#8209;&#8209;to&#8209;drop&#8209;traceback**| The `traceback` column will be removed from the final dataset. Default is false. |
+|**&#8209;&#8209;to&#8209;drop&#8209;grades**| The `grade` column will be removed from the final dataset. Default is false.|
 
 ___
 

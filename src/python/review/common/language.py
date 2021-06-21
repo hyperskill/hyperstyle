@@ -2,6 +2,7 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import List
 
+from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension, get_extension_from_file
 
 
@@ -12,6 +13,19 @@ class Language(Enum):
     KOTLIN = 'KOTLIN'
     JS = 'JAVASCRIPT'
     UNKNOWN = 'UNKNOWN'
+
+    @staticmethod
+    def from_language_version(language_version: LanguageVersion) -> 'Language':
+        version_to_lang = {
+            LanguageVersion.PYTHON_3: Language.PYTHON,
+            LanguageVersion.JAVA_7: Language.JAVA,
+            LanguageVersion.JAVA_8: Language.JAVA,
+            LanguageVersion.JAVA_9: Language.JAVA,
+            LanguageVersion.JAVA_11: Language.JAVA,
+            LanguageVersion.KOTLIN: Language.KOTLIN,
+        }
+
+        return version_to_lang.get(language_version, Language.UNKNOWN)
 
     @classmethod
     def values(cls) -> List[str]:
