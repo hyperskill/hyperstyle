@@ -106,6 +106,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.HISTORY.value.description,
                         type=str)
 
+    parser.add_argument(RunToolArgument.WITH_ALL_CATEGORIES.value.long_name,
+                        help=RunToolArgument.WITH_ALL_CATEGORIES.value.description,
+                        action='store_true')
+
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
     if verbosity is VerbosityLevel.ERROR:
@@ -150,6 +154,7 @@ def main() -> int:
             end_line=args.end_line,
             new_format=args.new_format,
             history=args.history,
+            with_all_categories=args.with_all_categories,
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)

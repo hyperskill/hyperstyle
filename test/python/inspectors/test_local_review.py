@@ -24,6 +24,7 @@ def config() -> ApplicationConfig:
         allow_duplicates=False,
         n_cpu=1,
         inspectors_config={"n_cpu": 1},
+        with_all_categories=False,
     )
 
 
