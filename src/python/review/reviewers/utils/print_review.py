@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
+from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.file_system import get_file_line
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
@@ -12,7 +13,8 @@ from src.python.review.reviewers.review_result import ReviewResult
 
 
 def print_review_result_as_text(review_result: ReviewResult,
-                                path: Path) -> None:
+                                path: Path,
+                                config: ApplicationConfig) -> None:
     heading = f'\nReview of {str(path)} ({len(review_result.all_issues)} violations)'
     print(heading)
 
@@ -32,9 +34,13 @@ def print_review_result_as_text(review_result: ReviewResult,
                     issue.line_no,
                 ).strip()
 
+                issue_type = issue.type
+                if not config.with_all_categories:
+                    issue_type = issue_type.to_main_type()
+
                 print(f'{issue.line_no} : '
                       f'{issue.column_no} : '
-                      f'{issue.type.value} : '
+                      f'{issue_type.value} : '
                       f'{issue.inspector_type.value} : '
                       f'{issue.origin_class} : '
                       f'{issue.description} : '
@@ -48,7 +54,7 @@ def print_review_result_as_text(review_result: ReviewResult,
     print(review_result.general_quality, end='')
 
 
-def print_review_result_as_json(review_result: ReviewResult) -> None:
+def print_review_result_as_json(review_result: ReviewResult, config: ApplicationConfig) -> None:
     issues = review_result.all_issues
 
     issues.sort(key=lambda issue: issue.line_no)
@@ -65,12 +71,12 @@ def print_review_result_as_json(review_result: ReviewResult) -> None:
         if quality_with_penalty != quality_without_penalty:
             influence_on_penalty = review_result.general_punisher.get_issue_influence_on_penalty(issue.origin_class)
 
-        output_json['issues'].append(convert_issue_to_json(issue, influence_on_penalty))
+        output_json['issues'].append(convert_issue_to_json(issue, config, influence_on_penalty))
 
     print(json.dumps(output_json))
 
 
-def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
+def print_review_result_as_multi_file_json(review_result: ReviewResult, config: ApplicationConfig) -> None:
     file_review_result_jsons = []
 
     review_result.file_review_results.sort(key=lambda result: result.file_path)
@@ -94,7 +100,7 @@ def print_review_result_as_multi_file_json(review_result: ReviewResult) -> None:
             if quality_with_penalty != quality_without_penalty:
                 influence_on_penalty = file_review_result.punisher.get_issue_influence_on_penalty(issue.origin_class)
 
-            file_review_result_json['issues'].append(convert_issue_to_json(issue, influence_on_penalty))
+            file_review_result_json['issues'].append(convert_issue_to_json(issue, config, influence_on_penalty))
 
     quality_without_penalty = review_result.general_quality.quality_type
     quality_with_penalty = review_result.general_punisher.get_quality_with_penalty(quality_without_penalty)
@@ -121,8 +127,12 @@ class IssueJsonFields(Enum):
     INFLUENCE_ON_PENALTY = 'influence_on_penalty'
 
 
-def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int = 0) -> Dict[str, Any]:
+def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig, influence_on_penalty: int = 0) -> Dict[str, Any]:
     line_text = get_file_line(issue.file_path, issue.line_no)
+
+    issue_type = issue.type
+    if not config.with_all_categories:
+        issue_type = issue_type.to_main_type()
 
     return {
         IssueJsonFields.CODE.value: issue.origin_class,
@@ -130,7 +140,7 @@ def convert_issue_to_json(issue: BaseIssue, influence_on_penalty: int = 0) -> Di
         IssueJsonFields.LINE.value: line_text,
         IssueJsonFields.LINE_NUMBER.value: issue.line_no,
         IssueJsonFields.COLUMN_NUMBER.value: issue.column_no,
-        IssueJsonFields.CATEGORY.value: issue.type.value,
+        IssueJsonFields.CATEGORY.value: issue_type.value,
         IssueJsonFields.INFLUENCE_ON_PENALTY.value: influence_on_penalty,
     }
 
