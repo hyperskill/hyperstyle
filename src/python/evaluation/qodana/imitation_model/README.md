@@ -120,9 +120,9 @@ Output is a `predictions.csv` file with the column names matches the number of c
 
 ## How to use model, pretrained on Java code snippets from Stepik
 
-There are 2 trained models available for the usage and 2 datasets that models were trained and evaluated on. 
+There are 2 trained models available for the usage and 2 datasets on which models were trained and evaluated. 
 Access to the datasets is restricted. 
-### Model trained on the full text code samples:
+### Model that uses program text as an input:
 - [`train_dataset`](https://drive.google.com/drive/folders/1bdLExLIbY53SVobT0y4Lnz9oeZENqLmt?usp=sharing) – private access;
 - [`evaluation_dataset`](https://drive.google.com/file/d/1hZlP7q3gVoIl8vmOur0UFpEyFDYyVZko/view?usp=sharing) – private access;
 - [`test_dataset`](https://drive.google.com/file/d/1oappcDcH-p-2LwjdOfZHRSiRB9Vi39mc/view?usp=sharing) – private access;
@@ -135,13 +135,13 @@ Evaluation results are:
    
 Inspection | Description | F1-Score
 --- | --- | ---
-|No Errors | No errors were detected by Qodana.| 0.73 |
-| Syntax Error |Reports any irrelevant usages of java construction.| 0.99|
+|No Errors | No errors from the [list](https://docs.google.com/spreadsheets/d/14BTj_lTTRrGlx-GPTcbMlc8zdt--WXLZHRnegKRrZYM/edit?usp=sharing) were detected by Qodana.| 0.73 |
+| Syntax Error |Reports any irrelevant usages of java syntax.| 0.99|
 | System Out Error | Reports any usages of System.out or System.err. | 0.99 |
 | IO Resources | Reports any I/O resource which is not safely closed. | 0.97 |
 
 The rests of the inspections were not learnt by the model due to the class disbalance. 
-### Model trained on lines of code:
+### Model that uses a line of program text as an input:
 - [`train_dataset`](https://drive.google.com/file/d/1c-kJUV4NKuehCoLiIC3JWrJh3_NgTmvi/view?usp=sharing) – private access;
 - [`evaluation_dataset`](https://drive.google.com/file/d/1AVN4Uj4omPEquC3EAL6XviFATkYKcY_2/view?usp=sharing) – private access;
 - [`test_dataset`](https://drive.google.com/file/d/1J3gz3wS_l63SI0_OMym8x5pCj7-PCIgG/view?usp=sharing) – private access;
@@ -158,8 +158,8 @@ Evaluation results are:
    
 Inspection | Description | F1-score
 --- | --- | ---
-|No Errors | No errors were detected by Qodana.| 0.99 |
-| Syntax Error |Reports any irrelevant usages of java construction.| 0.23|
+|No Errors | No errors from the [list](https://docs.google.com/spreadsheets/d/14BTj_lTTRrGlx-GPTcbMlc8zdt--WXLZHRnegKRrZYM/edit?usp=sharing) were detected by Qodana.| 0.99 |
+| Syntax Error |Reports any irrelevant usages of java syntax.| 0.23|
 | System Out Error | Reports any usages of System.out or System.err.| 0.30 |
 | IO Resources | Reports any I/O resource which is not safely closed | 0.23 |
 
