@@ -78,6 +78,10 @@ class RunToolArgument(Enum):
                             'Json string, which contains lists of issues in the previous submissions '
                             'for other tasks for one user.')
 
+    WITH_ALL_CATEGORIES = ArgumentsInfo(None, '--with-all-categories',
+                                        'Without this flag, all issues will be categorized into 5 main categories: '
+                                        'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.')
+
     SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
                                         'Local XLSX-file or CSV-file path. '
                                         'Your file must include column-names: '

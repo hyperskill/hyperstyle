@@ -25,6 +25,8 @@ ISSUE_TYPE_TO_PENALTY_COEFFICIENT = {
     IssueType.MAINTAINABILITY: 0.3,
     IssueType.METHOD_NUMBER: 0.2,
     IssueType.WEIGHTED_METHOD: 0.2,
+    IssueType.UNDEFINED: 0,
+    IssueType.INFO: 0,
 }
 
 

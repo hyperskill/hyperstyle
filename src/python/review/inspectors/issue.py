@@ -10,29 +10,46 @@ from src.python.review.inspectors.inspector_type import InspectorType
 
 @unique
 class IssueType(Enum):
+    # Code style issues
     CODE_STYLE = 'CODE_STYLE'
-    BEST_PRACTICES = 'BEST_PRACTICES'
-    ERROR_PRONE = 'ERROR_PRONE'
-    FUNC_LEN = 'FUNC_LEN'
     LINE_LEN = 'LINE_LEN'
-    CYCLOMATIC_COMPLEXITY = 'CYCLOMATIC_COMPLEXITY'
+
+    # Best practice issues
+    BEST_PRACTICES = 'BEST_PRACTICES'
+    FUNC_LEN = 'FUNC_LEN'
     BOOL_EXPR_LEN = 'BOOL_EXPR_LEN'
+    CLASS_RESPONSE = 'CLASS_RESPONSE'
+    METHOD_NUMBER = 'METHOD_NUMBER'
+
+    # Error-prone issues
+    ERROR_PRONE = 'ERROR_PRONE'
+
+    # Code complexity issues
     COMPLEXITY = 'COMPLEXITY'
-    ARCHITECTURE = 'ARCHITECTURE'
+    CYCLOMATIC_COMPLEXITY = 'CYCLOMATIC_COMPLEXITY'
     INHERITANCE_DEPTH = 'INHERITANCE_DEPTH'
     CHILDREN_NUMBER = 'CHILDREN_NUMBER'
     WEIGHTED_METHOD = 'WEIGHTED_METHOD'
     COUPLING = 'COUPLING'
     COHESION = 'COHESION'
-    CLASS_RESPONSE = 'CLASS_RESPONSE'
-    METHOD_NUMBER = 'METHOD_NUMBER'
     MAINTAINABILITY = 'MAINTAINABILITY'
+
+    # Info issues
     INFO = 'INFO'
 
+    # Others
     UNDEFINED = 'UNDEFINED'
+    ARCHITECTURE = 'ARCHITECTURE'  # TODO: Distribute into one of the main types
 
     def __str__(self) -> str:
         return ' '.join(self.value.lower().split('_'))
+
+    def to_main_type(self) -> 'IssueType':
+        """
+        Converts the issue type to main issue type.
+        Main issue types: CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.
+        """
+        return get_main_category_by_issue_type(self)
 
 
 ISSUE_TYPE_TO_MAIN_CATEGORY = {
@@ -60,6 +77,9 @@ ISSUE_TYPE_TO_MAIN_CATEGORY = {
     IssueType.CHILDREN_NUMBER: IssueType.COMPLEXITY,
     IssueType.INHERITANCE_DEPTH: IssueType.COMPLEXITY,
     IssueType.ARCHITECTURE: IssueType.COMPLEXITY,
+
+    # INFO
+    IssueType.INFO: IssueType.INFO,
 }
 
 

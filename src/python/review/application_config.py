@@ -12,6 +12,7 @@ class ApplicationConfig:
     allow_duplicates: bool
     n_cpu: int
     inspectors_config: dict
+    with_all_categories: bool
     start_line: int = 1
     end_line: Optional[int] = None
     new_format: bool = False
