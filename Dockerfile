@@ -1,20 +1,13 @@
-# This Dockerfile is used only for production
+FROM python:3.8-buster
 
-FROM python:3.8.2-alpine3.11
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jdk && \
+    apt-get install -y nodejs npm
 
-RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
-    && apk add --update nodejs npm
-
-RUN npm i -g eslint@7.5.0
+RUN npm i npm@latest -g
 
 RUN java -version
 RUN ls /usr/lib/jvm
-
-# Other dependencies
-RUN apk add bash
-
-# Set up Eslint
-RUN npm install eslint --save-dev && ./node_modules/.bin/eslint --init
 
 # Dependencies and package installation
 WORKDIR /
@@ -27,6 +20,9 @@ RUN pip3 install --no-cache-dir -r review/requirements.txt
 
 COPY . review
 RUN pip3 install --no-cache-dir ./review
+
+# Set up Eslint
+RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modules/.bin/eslint --init
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
