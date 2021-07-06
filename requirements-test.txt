@@ -6,3 +6,4 @@ django~=3.2
 pylint~=2.7.4
 requests~=2.25.1
 setuptools~=56.0.0
+pandas
