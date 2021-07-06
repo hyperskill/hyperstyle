@@ -116,3 +116,51 @@ Output is a `predictions.csv` file with the column names matches the number of c
 - `0` &#8209; if the model didn't found an error in a sample.
 
 - `1` &#8209; if the error was found in a sample.
+
+
+## How to use model, pretrained on Java code snippets from Stepik
+
+There are 2 trained models available for the usage and 2 datasets that models were trained and evaluated on. 
+Access to the datasets is restricted. 
+### Model trained on the full text code samples:
+- [`train_dataset`](https://drive.google.com/drive/folders/1bdLExLIbY53SVobT0y4Lnz9oeZENqLmt?usp=sharing) – private access;
+- [`evaluation_dataset`](https://drive.google.com/file/d/1hZlP7q3gVoIl8vmOur0UFpEyFDYyVZko/view?usp=sharing) – private access;
+- [`test_dataset`](https://drive.google.com/file/d/1oappcDcH-p-2LwjdOfZHRSiRB9Vi39mc/view?usp=sharing) – private access;
+- [`model_weights`](https://drive.google.com/file/d/1PFVHVd4JDjFUD3b5fDSGXoYBWEDlaEAg/view?usp=sharing) – public access.
+  
+The model was trained to detect 110 Qodana inspections. The whole
+list of inspections can be found via the link [here](https://drive.google.com/file/d/1PVqjx7QEot1dIXyiYP_-dJnWGup2Ef7v/view?usp=sharing). 
+   
+Evaluation results are:
+   
+Inspection | Description | F1-Score
+--- | --- | ---
+|No Errors | No errors were detected by Qodana.| 0.73 |
+| Syntax Error |Reports any irrelevant usages of java construction.| 0.99|
+| System Out Error | Reports any usages of System.out or System.err. | 0.99 |
+| IO Resources | Reports any I/O resource which is not safely closed. | 0.97 |
+
+The rests of the inspections were not learnt by the model due to the class disbalance. 
+### Model trained on lines of code:
+- [`train_dataset`](https://drive.google.com/file/d/1c-kJUV4NKuehCoLiIC3JWrJh3_NgTmvi/view?usp=sharing) – private access;
+- [`evaluation_dataset`](https://drive.google.com/file/d/1AVN4Uj4omPEquC3EAL6XviFATkYKcY_2/view?usp=sharing) – private access;
+- [`test_dataset`](https://drive.google.com/file/d/1J3gz3wS_l63SI0_OMym8x5pCj7-PCIgG/view?usp=sharing) – private access;
+- [`model_weights`](https://drive.google.com/file/d/1fc32-5XyUeOpZ5AkRotqv_3cWksHjat_/view?usp=sharing) – public access.
+  
+One sample in the dataset consists of one line of program in the context. The context is 2 lines of the same
+program before and after the target line. When there are not enough lines before or after target, special
+token `NOC` is added.
+
+The model was also trained to detect 110 inspections. The whole
+list of inspections can be found via the link [here](https://drive.google.com/file/d/1PVqjx7QEot1dIXyiYP_-dJnWGup2Ef7v/view?usp=sharing). 
+   
+Evaluation results are:
+   
+Inspection | Description | F1-score
+--- | --- | ---
+|No Errors | No errors were detected by Qodana.| 0.99 |
+| Syntax Error |Reports any irrelevant usages of java construction.| 0.23|
+| System Out Error | Reports any usages of System.out or System.err.| 0.30 |
+| IO Resources | Reports any I/O resource which is not safely closed | 0.23 |
+
+The rests of the inspections were not learnt by the model due to the class disbalance.
