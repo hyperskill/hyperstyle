@@ -164,3 +164,10 @@ Inspection | Description | F1-score
 | IO Resources | Reports any I/O resource which is not safely closed | 0.23 |
 
 The rests of the inspections were not learnt by the model due to the class disbalance.
+
+To use any of the model follow [`fine-tuning`](https://huggingface.co/transformers/training.html) tutorial from HuggingFace. Unarchive `model weights` zip and use absolute path to the root folder instead of built-in name of pretrained model. 
+
+For example: 
+
+    RobertaForSequenceClassification.from_pretrained(<path to the folder with weights>, 
+                                                      num_labels=<unique number of inspections in your dataset>)
