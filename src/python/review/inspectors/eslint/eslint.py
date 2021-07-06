@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import List
 
@@ -21,8 +22,19 @@ class ESLintInspector(BaseInspector):
     }
 
     @classmethod
+    def _get_eslint_local_path(cls) -> str:
+        common_path = 'node_modules/.bin/eslint'
+        standard_path = f'./{common_path}'
+        prod_path = f'./review/{common_path}'
+        if os.path.exists(standard_path):
+            return standard_path
+        elif os.path.exists(prod_path):
+            return prod_path
+        raise FileNotFoundError('Eslint was not configured!')
+
+    @classmethod
     def _create_command(cls, path: Path, output_path: Path, is_local: bool = False) -> List[str]:
-        eslint_command = 'eslint' if not is_local else './node_modules/.bin/eslint'
+        eslint_command = 'eslint' if not is_local else cls._get_eslint_local_path()
         return [
             eslint_command,
             '-c', PATH_ESLINT_CONFIG,
