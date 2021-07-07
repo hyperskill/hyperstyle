@@ -12,9 +12,6 @@ def run_in_subprocess(command: List[str]) -> str:
         stderr=subprocess.PIPE
     )
 
-    if process.returncode != 0:
-        raise Exception('Error during running command: command')
-
     stdout = process.stdout.decode()
     stderr = process.stderr.decode()
 
