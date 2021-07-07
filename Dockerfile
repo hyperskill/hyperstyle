@@ -26,6 +26,6 @@ RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modul
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:${PATH}"
+ENV PATH="$JAVA_HOME/bin:${PATH}:$HOME/review"
 
 CMD ["/bin/bash"]
