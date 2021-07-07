@@ -22,10 +22,10 @@ COPY . review
 RUN pip3 install --no-cache-dir ./review
 
 # Set up Eslint
-RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modules/.bin/eslint --init
+RUN npm install -g --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modules/.bin/eslint --init
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:${PATH}:$HOME/review"
+ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 CMD ["/bin/bash"]
