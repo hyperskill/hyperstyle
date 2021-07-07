@@ -22,7 +22,7 @@ COPY . review
 RUN pip3 install --no-cache-dir ./review
 
 # Set up Eslint
-RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/lib/node_modules/.bin/eslint --init
+RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modules/.bin/eslint --init
 
 # Container's enviroment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
