@@ -23,7 +23,7 @@ jobs:
   
       - name: Set up Eslint
         run: |
-          npm install eslint --save-dev
+          npm install eslint@7.5.0 --save-dev
           ./node_modules/.bin/eslint --init
       
       - name: Test with pytest
