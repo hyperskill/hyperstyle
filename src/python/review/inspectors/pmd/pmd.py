@@ -65,7 +65,7 @@ class PMDInspector(BaseInspector):
                     line_no=int(row['Line']),
                     column_no=1,
                     type=self.choose_issue_type(row['Rule']),
-                    origin_class=row['Rule set'],
+                    origin_class=row['Rule'],
                     description=row['Description'],
                     inspector_type=self.inspector_type,
                 ) for row in reader]
