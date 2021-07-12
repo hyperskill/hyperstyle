@@ -25,6 +25,7 @@ class LanguageVersion(Enum):
     JAVA_8 = 'java8'
     JAVA_9 = 'java9'
     JAVA_11 = 'java11'
+    JAVA_15 = 'java15'
     PYTHON_3 = 'python3'
     KOTLIN = 'kotlin'
 
@@ -39,6 +40,7 @@ class LanguageVersion(Enum):
                 cls.JAVA_8: Extension.JAVA,
                 cls.JAVA_9: Extension.JAVA,
                 cls.JAVA_11: Extension.JAVA,
+                cls.JAVA_15: Extension.JAVA,
                 cls.KOTLIN: Extension.KT}
 
     def extension_by_language(self) -> Extension:
@@ -50,4 +52,5 @@ class LanguageVersion(Enum):
             or self == LanguageVersion.JAVA_8
             or self == LanguageVersion.JAVA_9
             or self == LanguageVersion.JAVA_11
+            or self == LanguageVersion.JAVA_15
         )
