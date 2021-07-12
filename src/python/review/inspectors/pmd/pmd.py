@@ -32,14 +32,12 @@ class PMDInspector(BaseInspector):
                         output_path: Path,
                         language_version: LanguageVersion,
                         n_cpu: int) -> List[str]:
-        java_version = cls._get_java_version(language_version)
-
         return [
             PATH_TOOLS_PMD_SHELL_SCRIPT,
             'pmd', '-d', str(path), '-no-cache',
             '-R', PATH_TOOLS_PMD_RULES_SET,
             '-language', 'java',
-            '-version', java_version,
+            '-version', cls._get_java_version(language_version),
             '-f', 'csv', '-r', str(output_path),
             '-t', str(n_cpu),
         ]
