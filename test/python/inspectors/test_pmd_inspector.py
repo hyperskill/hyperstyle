@@ -8,11 +8,11 @@ from .conftest import use_file_metadata
 FILE_NAMES_AND_N_ISSUES = [
     ('test_algorithm_with_scanner.java', 0),
     ('test_simple_valid_program.java', 0),
-    ('test_boolean_expr.java', 1),
+    ('test_boolean_expr.java', 2),
     ('test_class_with_booleans.java', 3),
     ('test_closing_streams.java', 1),
     ('test_code_with_comments.java', 0),
-    ('test_comparing_strings.java', 3),
+    ('test_comparing_strings.java', 4),
     ('test_constants.java', 4),
     ('test_covariant_equals.java', 1),
     ('test_curly_braces.java', 2),
@@ -29,7 +29,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_thread_run.java', 1),
     ('test_unused_imports.java', 4),
     ('test_valid_algorithm_1.java', 0),
-    ('test_valid_curly_braces.java', 0),
+    ('test_valid_curly_braces.java', 1),
     ('test_when_only_equals_overridden.java', 1),
     ('test_valid_spaces.java', 0),
 ]
