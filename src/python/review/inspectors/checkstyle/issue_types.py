@@ -150,10 +150,10 @@ CHECK_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'UniquePropertiesCheck': IssueType.ERROR_PRONE,
 
     # ---- Modifiers ----
-    'RedundantModifierCheck': IssueType.BEST_PRACTICES,
+    'ModifierOrderCheck': IssueType.CODE_STYLE,
     # 'ClassMemberImpliedModifierCheck': IssueType.BEST_PRACTICES,
     # 'InterfaceMemberImpliedModifierCheck': IssueType.BEST_PRACTICES,
-    # 'ModifierOrderCheck': IssueType.CODE_STYLE,
+    # 'RedundantModifierCheck': IssueType.BEST_PRACTICES,
 
     # ---- Naming Conventions ----
     'AbbreviationAsWordInNameCheck': IssueType.CODE_STYLE,
