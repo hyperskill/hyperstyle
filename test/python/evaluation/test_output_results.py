@@ -8,9 +8,9 @@ from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 
 FILE_NAMES = [
-    # ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),
-    # ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', True),
-    # ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False),
+    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),
+    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', True),
+    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False),
     ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', True),
 ]
 
@@ -25,8 +25,6 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
     config = EvaluationConfig(testing_arguments_dict)
     lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
     test_dataframe = inspect_solutions_df(config, lang_code_dataframe)
-
-    test_dataframe.to_excel("/home/ilya/Desktop/test_dataframe.xlsx")
 
     sheet_name = 'grades'
     if output_type:
