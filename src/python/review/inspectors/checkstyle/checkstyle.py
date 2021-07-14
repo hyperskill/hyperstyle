@@ -20,10 +20,6 @@ PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_PMD_FILES / 'config.xml'
 class CheckstyleInspector(BaseInspector):
     inspector_type = InspectorType.CHECKSTYLE
 
-    skipped_issues = [
-        'EmptyLineSeparatorCheck',
-    ]
-
     origin_class_to_pattern = {
         'CyclomaticComplexityCheck':
             r'Cyclomatic Complexity is (\d+)',
@@ -52,14 +48,10 @@ class CheckstyleInspector(BaseInspector):
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
-            issues = parse_checkstyle_file_result(Path(output_path),
-                                                  self.inspector_type,
-                                                  self.choose_issue_type,
-                                                  self.origin_class_to_pattern)
-            return [
-                issue for issue in issues
-                if issue.origin_class not in self.skipped_issues
-            ]
+            return parse_checkstyle_file_result(Path(output_path),
+                                                self.inspector_type,
+                                                self.choose_issue_type,
+                                                self.origin_class_to_pattern)
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:
