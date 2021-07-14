@@ -4,26 +4,15 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-    <property name="fileExtensions" value="java, properties, xml"/>
+    <property name="fileExtensions" value="java"/>
 
-    <!-- Checks whether files end with a new line.                        -->
-    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
-    <!--    <module name="NewlineAtEndOfFile"/>-->
-
-    <!-- Miscellaneous other checks.                   -->
-    <!-- See http://checkstyle.sf.net/config_misc.html -->
-<!--    <module name="RegexpSingleline">-->
-<!--        <property name="format" value="\s+$"/>-->
-<!--        <property name="minimum" value="0"/>-->
-<!--        <property name="maximum" value="0"/>-->
-<!--        <property name="message" value="Line has trailing spaces."/>-->
-<!--    </module>-->
+    <!-- Size Violations -->
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
 
     <module name="TreeWalker">
-<!--        <module name="SuppressionCommentFilter"/>-->
-
-        <!-- Checks for blocks. You know, those {}'s         -->
-        <!-- See http://checkstyle.sf.net/config_blocks.html -->
+        <!-- Block Checks -->
         <module name="AvoidNestedBlocks">
             <property name="allowInSwitchCase" value="true"/>
         </module>
@@ -33,19 +22,21 @@
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
 
-        <!-- Checks for common coding problems               -->
-        <!-- See http://checkstyle.sf.net/config_coding.html -->
+        <!-- Coding -->
+        <module name="ArrayTrailingComma"/>
         <module name="CovariantEquals"/>
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <module name="FallThrough"/>
+        <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleStringLiterals">
-            <property name="allowedDuplicates" value="2"/>
-            <property name="ignoreStringsRegexp" value="^.{1,5}$"/>
+            <!-- Consistent with the AvoidDuplicateLiterals rule from PMD config -->
+            <property name="allowedDuplicates" value="3"/>
+            <property name="ignoreStringsRegexp" value="^.{1,2}$"/>
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="NoFinalizer"/>
@@ -57,34 +48,35 @@
         <module name="StringLiteralEquality"/>
         <module name="UnnecessaryParentheses"/>
 
-<!--        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/> Since Checkstyle 8.24 -->
-<!--        <module name="VariableDeclarationUsageDistance"/>-->
-
-        <!-- Checks for imports                              -->
-        <!-- See http://checkstyle.sf.net/config_import.html -->
-        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <!-- Imports  -->
         <module name="RedundantImport"/>
         <module name="UnusedImports">
             <property name="processJavadoc" value="false"/>
         </module>
 
-        <!-- Miscellaneous other checks                    -->
-        <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <module name="ArrayTypeStyle"/>
-        <module name="TodoComment"/>
-        <module name="UpperEll"/>
-        <module name="Indentation"/>
-
-        <!-- Modifier Checks                                    -->
-        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <module name="ModifierOrder"/>
-<!--        <module name="RedundantModifier"/>-->
-
-        <!-- Checks for Naming Conventions.                  -->
-        <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="AbbreviationAsWordInName">
-            <property name="allowedAbbreviationLength" value="3"/>
+        <!-- Metrics -->
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="0"/>
         </module>
+        <module name="CyclomaticComplexity">
+            <property name="max" value="0"/>
+            <property name="switchBlockAsSingleDecisionPoint" value="true"/>
+        </module>
+        <module name="JavaNCSS">
+            <property name="methodMaximum" value="0"/>
+        </module>
+
+        <!-- Miscellaneous -->
+        <module name="ArrayTypeStyle"/>
+        <module name="CommentsIndentation"/>
+        <module name="Indentation"/>
+        <module name="UpperEll"/>
+
+        <!-- Modifiers -->
+        <module name="ModifierOrder"/>
+
+        <!-- Naming Conventions -->
+        <module name="AbbreviationAsWordInName"/>
         <module name="ConstantName">
             <property name="format" value="^log(ger)?$|^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
         </module>
@@ -98,16 +90,13 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
-        <!-- Checks for Size Violations.                    -->
-        <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
+        <!-- Size Violations -->
+        <module name="ParameterNumber">
+            <!-- Consistent with the ExcessiveParameterList rule from PMD config -->
+            <property name="max" value="9"/>
         </module>
-<!--        <module name="MethodLength"/>-->
-        <module name="ParameterNumber"/>
 
-        <!-- Checks for whitespace                               -->
-        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <!-- Whitespaces -->
         <module name="EmptyForIteratorPad"/>
         <module name="EmptyLineSeparator">
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
@@ -118,27 +107,14 @@
         <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap">
             <property name="tokens"
-                value="ASSIGN,DIV_ASSIGN,PLUS_ASSIGN,MINUS_ASSIGN,STAR_ASSIGN,MOD_ASSIGN,
+                      value="ASSIGN,DIV_ASSIGN,PLUS_ASSIGN,MINUS_ASSIGN,STAR_ASSIGN,MOD_ASSIGN,
                 SR_ASSIGN,BSR_ASSIGN,SL_ASSIGN,BXOR_ASSIGN,BOR_ASSIGN,BAND_ASSIGN"/>
             <property name="option" value="eol"/>
         </module>
-
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
-
-        <!-- Metrics -->
-        <module name="BooleanExpressionComplexity">
-            <property name="max" value="0"/>
-        </module>
-        <module name="JavaNCSS">
-            <property name="methodMaximum" value="0"/>
-        </module>
-        <module name="CyclomaticComplexity">
-            <property name="max" value="0"/>
-            <property name="switchBlockAsSingleDecisionPoint" value="true"/>
-        </module>
 
     </module>
 </module>
