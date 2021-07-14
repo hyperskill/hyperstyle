@@ -16,11 +16,11 @@ More information about these categories can be found on [this](https://support.h
 The current statistics is:
 
 |            | Error prone | Code style | Code complexity | Best practice |
-|------------|-------------|------------|-----------------|---------------|
-| Python     | 162         | 146        | 35              | 254           |
-| Java       | 51          | 50         | 8               | 110           |
-| JavaScript | 15          | 17         | 1               | 34            |
-| Kotlin     | 21          | 70         | 12              | 75            |
+|------------|:-----------:|:----------:|:---------------:|:-------------:|
+| Python     |     162     |     146    |        35       |      254      |
+| Java       |      51     |     50     |        8        |      110      |
+| JavaScript |      15     |     17     |        1        |       34      |
+| Kotlin     |      21     |     70     |        12       |       75      |
 
 
 ## Usage
