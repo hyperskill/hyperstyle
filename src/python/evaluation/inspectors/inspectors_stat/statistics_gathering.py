@@ -76,8 +76,7 @@ def collect_stat_by_language(language: Language) -> IssuesStat:
     elif language == Language.JAVA:
         java_inspection_to_matcher = [
             (set(PMD_RULE_TO_ISSUE_TYPE.keys()), PMDInspector.choose_issue_type),
-            (set(CHECK_CLASS_NAME_TO_ISSUE_TYPE.keys() - set(CheckstyleInspector.skipped_issues)),
-             CheckstyleInspector.choose_issue_type),
+            (set(CHECK_CLASS_NAME_TO_ISSUE_TYPE.keys()), CheckstyleInspector.choose_issue_type),
         ]
         return __collect_language_stat(*java_inspection_to_matcher)
     elif language == Language.KOTLIN:

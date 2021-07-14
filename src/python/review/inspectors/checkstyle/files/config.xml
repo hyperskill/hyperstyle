@@ -6,6 +6,8 @@
 <module name="Checker">
     <property name="fileExtensions" value="java"/>
 
+    <!-- This config was created using the following table: https://bit.ly/3BbxmD5 -->
+
     <!-- Size Violations -->
     <module name="LineLength">
         <property name="max" value="120"/>
