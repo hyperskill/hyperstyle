@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.44">
+    <file name="/home/user/Desktop/some_project/main1.java">
+        <error line="69" column="31" severity="error" message="Only one statement per line allowed."
+               source="com.puppycrawl.tools.checkstyle.checks.coding.OneStatementPerLineCheck"/>
+        <error line="112" column="9" severity="error" message="Boolean expression complexity is 77 (max allowed is 0)."
+               source="com.puppycrawl.tools.checkstyle.checks.metrics.BooleanExpressionComplexityCheck"/>
+    </file>
+    <file name="/home/user/Desktop/some_project/main2.java">
+        <error line="62" severity="error" message="Line is longer than 120 characters (found 228)."
+               source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+        <error line="136" column="19" severity="error" message="',' is not followed by whitespace."
+               source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+    </file>
+</checkstyle>
