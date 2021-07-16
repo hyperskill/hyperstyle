@@ -1,0 +1,5 @@
+"Problem","Package","File","Priority","Line","Description","Rule set","Rule"
+"1","","/home/user/Desktop/some_project/main1.java","3","37","Use equals() to compare object references.","Error Prone","CompareObjectsWithEquals"
+"2","","/home/user/Desktop/some_project/main1.java","2","68","The method name and parameter number are suspiciously close to equals(Object)","Error Prone","SuspiciousEqualsMethodName"
+"3","","/home/user/Desktop/some_project/main2.java","4","113","Useless parentheses.","Code Style","UselessParentheses"
+"4","","/home/user/Desktop/some_project/main2.java","3","131","Avoid empty if statements","Error Prone","EmptyIfStmt"
