@@ -58,6 +58,11 @@ class PMDInspector(BaseInspector):
             return self.parse_output(output_path)
 
     def parse_output(self, output_path: Path) -> List[BaseIssue]:
+        """
+        Parses the PMD output, which is a csv file, and returns a list of the issues found there.
+
+        If the passed path is not a file, an empty list is returned.
+        """
         if not output_path.is_file():
             logger.error('%s: error - no output file' % self.inspector_type.value)
             return []
@@ -77,6 +82,9 @@ class PMDInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, rule: str) -> IssueType:
+        """
+        Defines IssueType by PMD rule name using config.
+        """
         issue_type = PMD_RULE_TO_ISSUE_TYPE.get(rule)
         if not issue_type:
             logger.warning('%s: %s - unknown rule' %
