@@ -6,7 +6,7 @@ from test.python.inspectors import PYTHON_DATA_FOLDER
 from .conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
-    ('case0_spaces.py', 3),
+    ('case0_spaces.py', 0),
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 3),
     ('case3_redefining_builtin.py', 1),
@@ -22,7 +22,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case15_redefining.py', 2),
     ('case16_comments.py', 0),
     ('case17_dangerous_default_value.py', 1),
-    ('case18_comprehensions.py', 2),
+    ('case18_comprehensions.py', 3),
     ('case19_bad_indentation.py', 2),
     ('case21_imports.py', 2),
     ('case23_merging_comparisons.py', 4),

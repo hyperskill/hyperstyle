@@ -1,30 +1,12 @@
-FROM python:3.8.2-alpine3.11
+FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
-RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
-    && apk add --update nodejs npm
-
-RUN npm i -g eslint@7.5.0
-
-RUN java -version
-RUN ls /usr/lib/jvm
-
-# Other dependencies
-RUN apk add bash
-
-# Dependencies and package installation
-WORKDIR /
-
-COPY requirements-test.txt review/requirements-test.txt
-RUN pip3 install --no-cache-dir -r review/requirements-test.txt
-
-COPY requirements.txt review/requirements.txt
-RUN pip3 install --no-cache-dir -r review/requirements.txt
+RUN npm install eslint@7.5.0 -g \
+    && eslint --init
 
 COPY . review
-RUN pip3 install --no-cache-dir ./review
+RUN pip install --no-cache-dir \
+    -r review/requirements-test.txt \
+    -r review/requirements.txt \
+    ./review
 
-# Container's enviroment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:${PATH}"`
-
-CMD ["bin/bash"]
+CMD ["/bin/bash"]

@@ -1,43 +1,34 @@
 name: Python build
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
-  build:
 
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
+    # Consistent with base image in Dockerfile
+    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        pip install -r requirements.txt
-        pip install -r requirements-test.txt
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-        # TODO: change max-complexity into 10 after refactoring
-        flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=I201,I202,I101,I100,R504,A003,E800,SC200,SC100,E402 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-    - name: Set up Eslint
-      run: |
-        npm install eslint --save-dev
-        ./node_modules/.bin/eslint --init
-    - name: Set up Java ${{ matrix.python-version }}
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11'
-    - name: Check java version
-      run: java -version
-    - name: Test with pytest
-      run: |
-        pytest
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install requirements
+        run: |
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          # TODO: change max-complexity into 10 after refactoring
+          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=I201,I202,I101,I100,R504,A003,E800,SC200,SC100,E402 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+
+      - name: Set up Eslint
+        run: |
+          # Consistent with eslint version in Dockerfile
+          npm install eslint@7.5.0 -g && eslint --init
+
+      - name: Test with pytest
+        run: |
+          pytest

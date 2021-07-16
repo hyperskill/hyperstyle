@@ -14,7 +14,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case3_redefining_builtin.py', 1),
     ('case4_naming.py', 10),
     ('case5_returns.py', 1),
-    ('case6_unused_variables.py', 3),
+    # ('case6_unused_variables.py', 3),
     ('case8_good_class.py', 0),
     ('case7_empty_lines.py', 0),
     ('case10_unused_variable_in_loop.py', 1),
@@ -24,7 +24,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case14_returns_errors.py', 4),
     ('case16_comments.py', 0),
     ('case17_dangerous_default_value.py', 1),
-    ('case18_comprehensions.py', 10),
+    ('case18_comprehensions.py', 9),
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
@@ -49,9 +49,9 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case2_boolean_expressions.py', IssuesTestInfo(n_code_style=1,
                                                     n_cc=8)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=1)),
-    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=3, n_cc=5)),
-    ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
-                                                 n_cc=1)),
+    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_best_practices=0, n_cc=5)),
+    # ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
+    #                                              n_cc=1)),
     ('case8_good_class.py', IssuesTestInfo(n_cc=1)),
     ('case7_empty_lines.py', IssuesTestInfo(n_cc=4)),
     ('case10_unused_variable_in_loop.py', IssuesTestInfo(n_best_practices=1,
@@ -90,13 +90,13 @@ def test_parse():
     assert [issue.description for issue in issues] == ['test 1', 'test 2', 'test 3']
     assert [issue.type for issue in issues] == [IssueType.CODE_STYLE,
                                                 IssueType.CODE_STYLE,
-                                                IssueType.BEST_PRACTICES]
+                                                IssueType.INFO]
 
 
 def test_choose_issue_type():
     error_codes = ['B006', 'SC100', 'R503', 'ABC123', 'E101']
     expected_issue_types = [
-        IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
+        IssueType.ERROR_PRONE, IssueType.INFO,
         IssueType.ERROR_PRONE, IssueType.BEST_PRACTICES,
         IssueType.CODE_STYLE
     ]
