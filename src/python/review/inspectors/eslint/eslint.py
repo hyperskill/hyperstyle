@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import List
 
@@ -22,19 +21,9 @@ class ESLintInspector(BaseInspector):
     }
 
     @classmethod
-    def _get_eslint_local_path(cls) -> str:
-        common_path = 'node_modules/.bin/eslint'
-        standard_path = f'./{common_path}'
-        prod_path = f'./review/{common_path}'
-        if os.path.exists(standard_path):
-            return standard_path
-        elif os.path.exists(prod_path):
-            return prod_path
-        raise FileNotFoundError('Eslint was not configured!')
-
-    @classmethod
-    def _create_command(cls, path: Path, output_path: Path, is_local: bool = False) -> List[str]:
-        eslint_command = 'eslint' if not is_local else cls._get_eslint_local_path()
+    def _create_command(cls, path: Path, output_path: Path) -> List[str]:
+        local_path = 'node_modules/.bin/eslint'  # used only in local dev environment
+        eslint_command = local_path if Path(local_path).exists() else 'eslint'
         return [
             eslint_command,
             '-c', PATH_ESLINT_CONFIG,
@@ -43,10 +32,10 @@ class ESLintInspector(BaseInspector):
             path,
         ]
 
-    def inspect(self, path: Path, config: dict, is_local: bool = False) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / 'output.xml'
-            command = self._create_command(path, output_path, is_local)
+            command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
             issues = parse_checkstyle_file_result(output_path,

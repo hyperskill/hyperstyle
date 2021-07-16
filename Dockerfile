@@ -1,32 +1,12 @@
-FROM python:3.8-buster
+FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
-RUN apt-get update && \
-    apt-get install -y openjdk-11-jdk && \
-    apt-get install -y nodejs npm
-
-RUN npm i npm@latest -g
-
-RUN java -version
-RUN ls /usr/lib/jvm
-
-# Dependencies and package installation
-WORKDIR /
-
-COPY requirements-test.txt review/requirements-test.txt
-RUN pip3 install --no-cache-dir -r review/requirements-test.txt
-
-COPY requirements.txt review/requirements.txt
-RUN pip3 install --no-cache-dir -r review/requirements.txt
+RUN npm install eslint@7.5.0 -g \
+    && eslint --init
 
 COPY . review
-RUN pip3 install --no-cache-dir ./review
-
-# Set up Eslint
-RUN npm install eslint@7.5.0 -g
-RUN npm install --prefix ./review eslint@7.5.0 --save-dev && ./review/node_modules/.bin/eslint --init
-
-# Container's enviroment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:${PATH}:${pwd}/review"
+RUN pip install --no-cache-dir \
+    -r review/requirements-test.txt \
+    -r review/requirements.txt \
+    ./review
 
 CMD ["/bin/bash"]
