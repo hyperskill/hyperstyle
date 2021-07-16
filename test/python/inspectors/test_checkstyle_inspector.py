@@ -25,8 +25,9 @@ from src.python.review.inspectors.tips import (
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAME_AND_ISSUES = [
-    ('empty_single_file_project.xml', []),
-    ('empty_multi_file_project.xml', []),
+    ('empty_file.xml', []),
+    ('single_file_project_without_issues.xml', []),
+    ('multi_file_project_without_issues.xml', []),
     (
         'single_file_project_without_metric_issues.xml',
         [

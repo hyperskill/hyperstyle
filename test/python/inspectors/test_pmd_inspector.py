@@ -10,7 +10,8 @@ from src.python.review.inspectors.pmd.pmd import PMDInspector
 from .conftest import use_file_metadata
 
 FILE_NAME_AND_ISSUES = [
-    ('empty_project.csv', []),
+    ('empty_file.csv', []),
+    ('project_without_issues.csv', []),
     (
         'single_file_project.csv',
         [
