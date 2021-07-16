@@ -1,9 +1,85 @@
-from test.python.inspectors import JAVA_DATA_FOLDER
+from pathlib import Path
+from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
+from typing import List
 
 import pytest
+from src.python.review.inspectors.inspector_type import InspectorType
+from src.python.review.inspectors.issue import CodeIssue, IssueType
 from src.python.review.inspectors.pmd.pmd import PMDInspector
 
 from .conftest import use_file_metadata
+
+FILE_NAME_AND_ISSUES = [
+    ('empty_file.csv', []),
+    ('project_without_issues.csv', []),
+    (
+        'single_file_project.csv',
+        [
+            CodeIssue(
+                origin_class='AvoidDuplicateLiterals', type=IssueType.BEST_PRACTICES,
+                description="The String literal 'Howdy' appears 4 times in this file; "
+                            "the first occurrence is on line 6",
+                file_path=Path('/home/user/Desktop/some_project/main.java'),
+                line_no=6, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='UncommentedEmptyMethodBody', type=IssueType.BEST_PRACTICES,
+                description='Document empty method body',
+                file_path=Path('/home/user/Desktop/some_project/main.java'),
+                line_no=12, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='UnusedLocalVariable', type=IssueType.BEST_PRACTICES,
+                description="Avoid unused local variables such as 'result'.",
+                file_path=Path('/home/user/Desktop/some_project/main.java'),
+                line_no=31, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='UnusedPrivateMethod', type=IssueType.BEST_PRACTICES,
+                description="Avoid unused private methods such as 'emptyLoop()'.",
+                file_path=Path('/home/user/Desktop/some_project/main.java'),
+                line_no=61, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+        ],
+    ),
+    (
+        'multi_file_project.csv',
+        [
+            CodeIssue(
+                origin_class='CompareObjectsWithEquals', type=IssueType.ERROR_PRONE,
+                description='Use equals() to compare object references.',
+                file_path=Path('/home/user/Desktop/some_project/main1.java'),
+                line_no=37, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='SuspiciousEqualsMethodName', type=IssueType.ERROR_PRONE,
+                description='The method name and parameter number are suspiciously close to equals(Object)',
+                file_path=Path('/home/user/Desktop/some_project/main1.java'),
+                line_no=68, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='UselessParentheses', type=IssueType.CODE_STYLE,
+                description='Useless parentheses.',
+                file_path=Path('/home/user/Desktop/some_project/main2.java'),
+                line_no=113, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+            CodeIssue(
+                origin_class='EmptyIfStmt', type=IssueType.BEST_PRACTICES,
+                description='Avoid empty if statements',
+                file_path=Path('/home/user/Desktop/some_project/main2.java'),
+                line_no=131, column_no=1, inspector_type=InspectorType.PMD,
+            ),
+        ],
+    ),
+]
+
+
+@pytest.mark.parametrize(('file_name', 'expected_issues'), FILE_NAME_AND_ISSUES)
+def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
+    path_to_file = PMD_DATA_FOLDER / file_name
+    issues = PMDInspector().parse_output(path_to_file)
+    assert issues == expected_issues
+
 
 FILE_NAMES_AND_N_ISSUES = [
     ('test_algorithm_with_scanner.java', 0),

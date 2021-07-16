@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.44">
+    <file name="/home/user/Desktop/some_project/main.java">
+        <error line="6" column="13" severity="error" message="The String &quot;Howdy&quot; appears 4 times in the file."
+               source="com.puppycrawl.tools.checkstyle.checks.coding.MultipleStringLiteralsCheck"/>
+        <error line="12" column="32" severity="error" message="&apos;{&apos; is not followed by whitespace."
+               source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+        <error line="37" column="33" severity="error"
+               message="Literal Strings should be compared using equals(), not &apos;==&apos;."
+               source="com.puppycrawl.tools.checkstyle.checks.coding.StringLiteralEqualityCheck"/>
+    </file>
+</checkstyle>

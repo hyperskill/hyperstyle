@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.44">
+    <file name="/home/user/Desktop/some_project/main1.java">
+        <error line="62" column="38" severity="error" message="Must have at least one statement."
+               source="com.puppycrawl.tools.checkstyle.checks.blocks.EmptyBlockCheck"/>
+        <error line="68" column="20" severity="error"
+               message="covariant equals without overriding equals(java.lang.Object)."
+               source="com.puppycrawl.tools.checkstyle.checks.coding.CovariantEqualsCheck"/>
+    </file>
+    <file name="/home/user/Desktop/some_project/main2.java">
+        <error line="116" column="3" severity="error"
+               message="'if' child has incorrect indentation level 2, expected level should be 12."
+               source="com.puppycrawl.tools.checkstyle.checks.indentation.IndentationCheck"/>
+        <error line="123" column="15" severity="error" message="Should use uppercase 'L'."
+               source="com.puppycrawl.tools.checkstyle.checks.UpperEllCheck"/>
+    </file>
+</checkstyle>

@@ -55,6 +55,11 @@ class CheckstyleInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:
+        """
+        Defines IssueType by Checkstyle check class using config.
+        """
+
+        # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
         check_class_name = check_class.split('.')[-1]
         issue_type = CHECK_CLASS_NAME_TO_ISSUE_TYPE.get(check_class_name)
         if not issue_type:

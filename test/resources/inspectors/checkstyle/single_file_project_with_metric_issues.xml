@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.44">
+    <file name="/home/user/Desktop/some_project/main.java">
+        <error line="5" column="5" severity="error" message="NCSS for this method is 42 (max allowed is 0)."
+               source="com.puppycrawl.tools.checkstyle.checks.metrics.JavaNCSSCheck"/>
+        <error line="5" column="5" severity="error" message="Cyclomatic Complexity is 69 (max allowed is 0)."
+               source="com.puppycrawl.tools.checkstyle.checks.metrics.CyclomaticComplexityCheck"/>
+        <error line="31" column="25" severity="error" message="&apos;switch&apos; is not followed by whitespace."
+               source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+    </file>
+</checkstyle>
