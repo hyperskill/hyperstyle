@@ -19,7 +19,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
 
     path_to_file = JS_DATA_FOLDER / file_name
     with use_file_metadata(path_to_file) as file_metadata:
-        issues = inspector.inspect(file_metadata.path, {}, True)
+        issues = inspector.inspect(file_metadata.path, {})
         issues = filter_low_measure_issues(issues, Language.JS)
 
     assert len(issues) == n_issues
