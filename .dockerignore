@@ -1,0 +1,7 @@
+**/*.pyc
+**/.pytest_cache/
+**/__pycache__/
+.git
+.github
+.idea
+node_modules

@@ -1,18 +1,21 @@
 name: Python build
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
-    # Consistent with Version.md
-    container: nastyabirillo/hyperstyle:1.2.1
+    # Consistent with base image in Dockerfile
+    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Install requirements
+        run: |
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
 
       - name: Lint with flake8
         run: |
@@ -21,21 +24,24 @@ jobs:
           # TODO: change max-complexity into 10 after refactoring
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-   
+
       - name: Set up Eslint
         run: |
-          npm install eslint --save-dev
-          ./node_modules/.bin/eslint --init
+          # Consistent with eslint version in Dockerfile
+          npm install eslint@7.5.0 -g && eslint --init
 
       - name: Test with pytest
         run: |
-            pytest
-            
-      # We should have only INFO errors      
+          pytest
+
       - name: Check installed module can run python linters
         run: |
-            python src/python/review/run_tool.py setup.py 
-             
+            python src/python/review/run_tool.py setup.py
+
       - name: Check installed module can run java linters
         run: |
             python src/python/review/run_tool.py test/resources/inspectors/java/test_algorithm_with_scanner.java
+
+      - name: Check installed module can run js linters
+        run: |
+          python src/python/review/run_tool.py test/resources/inspectors/js/case0_no_issues.js
