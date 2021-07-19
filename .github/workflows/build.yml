@@ -34,8 +34,8 @@ jobs:
           pytest
 
       - name: Install review module
-          run: |
-            pip install .
+        run: |
+          pip install .
 
       - name: Check installed module can run python linters
         run: |
