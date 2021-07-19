@@ -69,7 +69,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--to-save-path',
         action='store_true',
-        help='Allows to save the path to the file where the issue was found. By default, the path is not saved.'
+        help='Allows to save the path to the file where the issue was found. By default, the path is not saved.',
     )
 
     parser.add_argument(
