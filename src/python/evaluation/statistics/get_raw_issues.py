@@ -152,8 +152,8 @@ def _inspect_row(
     for inspector in inspectors:
         try:
             raw_issues.extend(inspector.inspect(temp_file, inspectors_config))
-        except Exception as e:
-            logger.warning(f'{fragment_id}: inspector {inspector.inspector_type.value} failed.', e)
+        except Exception:
+            logger.warning(f'{fragment_id}: inspector {inspector.inspector_type.value} failed.')
 
     os.remove(temp_file)
 
