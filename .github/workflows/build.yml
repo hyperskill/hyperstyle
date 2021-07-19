@@ -1,40 +1,34 @@
 name: Python build
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
-    # Consistent with Version.md
-    container: nastyabirillo/hyperstyle:1.2.0
+    # Consistent with base image in Dockerfile
+    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Install requirements
+        run: |
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
 
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
-          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-   
+          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=I201,I202,I101,I100,R504,A003,E800,SC200,SC100,E402 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+
       - name: Set up Eslint
         run: |
-          npm install eslint --save-dev
-          ./node_modules/.bin/eslint --init
+          # Consistent with eslint version in Dockerfile
+          npm install eslint@7.5.0 -g && eslint --init
 
       - name: Test with pytest
         run: |
-            pytest
-            
-      # We should have only INFO errors      
-      - name: Check installed module can run python linters
-        run: |
-            python src/python/review/run_tool.py setup.py 
-             
-      - name: Check installed module can run java linters
-        run: |
-            python src/python/review/run_tool.py test/resources/inspectors/java/test_algorithm_with_scanner.java
+          pytest
