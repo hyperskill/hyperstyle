@@ -32,3 +32,15 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+
+      - name: Check installed module can run python linters
+        run: |
+            python src/python/review/run_tool.py setup.py
+
+      - name: Check installed module can run java linters
+        run: |
+            python src/python/review/run_tool.py test/resources/inspectors/java/test_algorithm_with_scanner.java
+
+      - name: Check installed module can run js linters
+        run: |
+          python src/python/review/run_tool.py test/resources/inspectors/js/case0_no_issues.js
