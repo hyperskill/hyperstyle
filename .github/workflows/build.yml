@@ -15,7 +15,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt requirements-evaluation.txt requirements-roberta.txt
 
       - name: Lint with flake8
         run: |
