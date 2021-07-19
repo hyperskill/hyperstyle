@@ -20,13 +20,19 @@ MEASURE = 'measure'
 
 
 class RawIssueEncoder(json.JSONEncoder):
+    to_safe_path: bool
+
+    def __init__(self, to_safe_path: bool = True, **kwargs):
+        super().__init__(**kwargs)
+        self.to_safe_path = to_safe_path
+
     def default(self, obj):
         if isinstance(obj, BaseIssue):
             issue_data = {
                 IssueData.ORIGIN_ClASS.value: obj.origin_class,
                 IssueData.ISSUE_TYPE.value: obj.type.value,
                 IssueData.DESCRIPTION.value: obj.description,
-                IssueData.FILE_PATH.value: str(obj.file_path),
+                IssueData.FILE_PATH.value: str(obj.file_path) if self.to_safe_path else "",
                 IssueData.LINE_NUMBER.value: obj.line_no,
                 IssueData.COLUMN_NUMBER.value: obj.column_no,
                 IssueData.INSPECTOR_TYPE.value: obj.inspector_type.value,

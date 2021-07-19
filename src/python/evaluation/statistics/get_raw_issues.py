@@ -57,13 +57,19 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--allow-zero-measure-issues',
         action='store_true',
-        help='Allow issues with zero measure. By default such issues are skipped.',
+        help='Allow issues with zero measure. By default, such issues are skipped.',
     )
 
     parser.add_argument(
         '--allow-info-issues',
         action='store_true',
-        help='Allow issues from the INFO category. By default such issues are skipped.',
+        help='Allow issues from the INFO category. By default, such issues are skipped.',
+    )
+
+    parser.add_argument(
+        '--to-save-path',
+        action='store_true',
+        help='Allows to save the path to the file where the issue was found. By default, the path is not saved.'
     )
 
     parser.add_argument(
@@ -111,6 +117,7 @@ def _inspect_row(
     allow_duplicates: bool,
     allow_zero_measure_issues: bool,
     allow_info_issues: bool,
+    to_safe_path: bool,
 ) -> Optional[str]:
 
     # If we were unable to identify the language version, we return None
@@ -118,19 +125,19 @@ def _inspect_row(
         language_version = get_language(language_code)
     except KeyError:
         logger.warning(f'{fragment_id}: it was not possible to determine the language version from "{language_code}"')
-        return None  # TODO: maybe we should return []
+        return None
 
     # If we were unable to identify the language, we return None
     language = Language.from_language_version(language_version)
     if language == Language.UNKNOWN:
         logger.warning(f'{fragment_id}: it was not possible to determine the language from "{language_version}"')
-        return None  # TODO: maybe we should return []
+        return None
 
     # If there are no inspectors for the language, then return None
     inspectors = LANGUAGE_TO_INSPECTORS.get(language, [])
     if not inspectors:
         logger.warning(f'{fragment_id}: no inspectors were found for the {language}.')
-        return None  # TODO: maybe we should return []
+        return None
 
     tmp_file_extension = language_version.extension_by_language().value
     tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{fragment_id}{tmp_file_extension}'
@@ -152,7 +159,7 @@ def _inspect_row(
 
     raw_issues = _filter_issues(raw_issues, allow_duplicates, allow_zero_measure_issues, allow_info_issues)
 
-    return json.dumps(raw_issues, cls=RawIssueEncoder)
+    return json.dumps(raw_issues, cls=RawIssueEncoder, to_safe_path=to_safe_path)
 
 
 def _is_correct_output_path(output_path: Path) -> bool:
@@ -182,6 +189,7 @@ def inspect_solutions(
     allow_duplicates: bool,
     allow_zero_measure_issues: bool,
     allow_info_issues: bool,
+    to_save_path: bool,
 ) -> pd.DataFrame:
 
     pandarallel.initialize()
@@ -195,6 +203,7 @@ def inspect_solutions(
             allow_duplicates,
             allow_zero_measure_issues,
             allow_info_issues,
+            to_save_path,
         ),
         axis=1,
     )
@@ -216,6 +225,7 @@ def main() -> None:
         args.allow_duplicates,
         args.allow_zero_measure_issues,
         args.allow_info_issues,
+        args.to_save_path,
     )
 
     output_path = _get_output_path(args.solutions_file_path, args.output)
