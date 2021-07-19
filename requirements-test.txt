@@ -8,3 +8,4 @@ pylint==2.7.4
 requests==2.25.1
 setuptools==56.0.0
 openpyxl==3.0.7
+pandarallel==1.5.2

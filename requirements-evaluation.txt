@@ -1,2 +1,1 @@
-pandarallel==1.5.2
 plotly==4.14.3
