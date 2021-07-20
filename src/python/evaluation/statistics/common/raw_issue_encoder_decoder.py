@@ -4,16 +4,12 @@ from pathlib import Path
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import (
     BaseIssue,
-    BoolExprLenIssue,
     CodeIssue,
-    CohesionIssue,
-    CyclomaticComplexityIssue,
-    FuncLenIssue,
+    get_issue_class_by_issue_type,
     IssueData,
     IssueType,
-    LineLenIssue,
-    MaintainabilityLackIssue,
     Measurable,
+    MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME,
 )
 
 MEASURE = 'measure'
@@ -55,28 +51,11 @@ class RawIssueDecoder(json.JSONDecoder):
         json_dict[IssueData.INSPECTOR_TYPE.value] = InspectorType(json_dict[IssueData.INSPECTOR_TYPE.value])
         json_dict[IssueData.FILE_PATH.value] = Path(json_dict[IssueData.FILE_PATH.value])
 
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.BOOL_EXPR_LEN:
-            json_dict[IssueData.BOOL_EXPR_LEN.value] = json_dict.pop(MEASURE)
-            return BoolExprLenIssue(**json_dict)
-
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.FUNC_LEN:
-            json_dict[IssueData.FUNCTION_LEN.value] = json_dict.pop(MEASURE)
-            return FuncLenIssue(**json_dict)
-
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.LINE_LEN:
-            json_dict[IssueData.LINE_LEN.value] = json_dict.pop(MEASURE)
-            return LineLenIssue(**json_dict)
-
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.CYCLOMATIC_COMPLEXITY:
-            json_dict[IssueData.CYCLOMATIC_COMPLEXITY.value] = json_dict.pop(MEASURE)
-            return CyclomaticComplexityIssue(**json_dict)
-
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.COHESION:
-            json_dict[IssueData.COHESION_LACK.value] = json_dict.pop(MEASURE)
-            return CohesionIssue(**json_dict)
-
-        if json_dict[IssueData.ISSUE_TYPE.value] == IssueType.MAINTAINABILITY:
-            json_dict[IssueData.MAINTAINABILITY_LACK.value] = json_dict.pop(MEASURE)
-            return MaintainabilityLackIssue(**json_dict)
+        issue_type = json_dict[IssueData.ISSUE_TYPE.value]
+        if issue_type in MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME.keys():
+            measure_name = MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME[issue_type]
+            json_dict[measure_name] = json_dict.pop(MEASURE)
+            measurable_issue_class = get_issue_class_by_issue_type(issue_type)
+            return measurable_issue_class(**json_dict)
 
         return CodeIssue(**json_dict)
