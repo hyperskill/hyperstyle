@@ -136,7 +136,7 @@ fun main(args: Array<String>) {
     val sqrt = Math.sqrt(Math.sqrt(sq))
     println(sqrt)
 }
-","[{""origin_class"": ""LongMethod"", ""type"": ""FUNC_LEN"", ""description"": ""Too long function. Try to split it into smaller functions / methods. It will make your code easy to understand and less error prone."", ""file_path"": """", ""line_no"": 3, ""column_no"": 5, ""inspector_type"": ""DETEKT"", ""measure"": 6}, {""origin_class"": ""NoSemicolons"", ""type"": ""CODE_STYLE"", ""description"": ""Unnecessary semicolon"", ""file_path"": """", ""line_no"": 1, ""column_no"": 19, ""inspector_type"": ""DETEKT""}]"
+","[{""origin_class"": ""LongMethod"", ""type"": ""FUNC_LEN"", ""description"": ""Too long function. Try to split it into smaller functions / methods. It will make your code easy to understand and less error prone."", ""file_path"": """", ""line_no"": 3, ""column_no"": 5, ""inspector_type"": ""DETEKT"", ""measure"": 6}, {""origin_class"": ""ComplexMethod"", ""type"": ""CYCLOMATIC_COMPLEXITY"", ""description"": ""Too complex function. You can figure out how to simplify this code or split it into a set of small functions / methods. It will make your code easy to understand and less error prone."", ""file_path"": """", ""line_no"": 3, ""column_no"": 5, ""inspector_type"": ""DETEKT"", ""measure"": 1}, {""origin_class"": ""NoSemicolons"", ""type"": ""CODE_STYLE"", ""description"": ""Unnecessary semicolon"", ""file_path"": """", ""line_no"": 1, ""column_no"": 19, ""inspector_type"": ""DETEKT""}]"
 2760563,2019-09-16 17:01:13+00:00,python3,"text = input()
 words = text.split()
 for word in words:
