@@ -28,6 +28,7 @@ class LanguageVersion(Enum):
     JAVA_15 = 'java15'
     PYTHON_3 = 'python3'
     KOTLIN = 'kotlin'
+    JS = 'javascript'
 
     @classmethod
     def values(cls) -> List[str]:
@@ -35,13 +36,16 @@ class LanguageVersion(Enum):
 
     @classmethod
     def language_to_extension_dict(cls) -> Dict['LanguageVersion', Extension]:
-        return {cls.PYTHON_3: Extension.PY,
-                cls.JAVA_7: Extension.JAVA,
-                cls.JAVA_8: Extension.JAVA,
-                cls.JAVA_9: Extension.JAVA,
-                cls.JAVA_11: Extension.JAVA,
-                cls.JAVA_15: Extension.JAVA,
-                cls.KOTLIN: Extension.KT}
+        return {
+            cls.JAVA_7: Extension.JAVA,
+            cls.JAVA_8: Extension.JAVA,
+            cls.JAVA_9: Extension.JAVA,
+            cls.JAVA_11: Extension.JAVA,
+            cls.JAVA_15: Extension.JAVA,
+            cls.PYTHON_3: Extension.PY,
+            cls.KOTLIN: Extension.KT,
+            cls.JS: Extension.JS,
+        }
 
     def extension_by_language(self) -> Extension:
         return self.language_to_extension_dict()[self]
