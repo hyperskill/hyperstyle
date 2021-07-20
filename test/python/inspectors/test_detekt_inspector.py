@@ -23,6 +23,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case16_redundant_unit.kt', 1),
     ('case18_redundant_braces.kt', 3),
     ('case20_cyclomatic_complexity.kt', 0),
+    ('case21_cyclomatic_complexity_bad.kt', 2),
     ('case22_too_many_arguments.kt', 1),
     ('case23_bad_range_performance.kt', 3),
     ('case24_duplicate_when_bug.kt', 1),
