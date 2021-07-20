@@ -277,3 +277,33 @@ class MaintainabilityLackIssue(BaseIssue, Measurable):
 
     def measure(self) -> int:
         return self.maintainability_lack
+
+
+ISSUE_TYPE_TO_CLASS = {
+    IssueType.CODE_STYLE: CodeIssue,
+    IssueType.BEST_PRACTICES: CodeIssue,
+    IssueType.ERROR_PRONE: CodeIssue,
+    IssueType.COMPLEXITY: CodeIssue,
+    IssueType.INFO: CodeIssue,
+
+    IssueType.LINE_LEN: LineLenIssue,
+    IssueType.FUNC_LEN: FuncLenIssue,
+    IssueType.BOOL_EXPR_LEN: BoolExprLenIssue,
+    IssueType.CYCLOMATIC_COMPLEXITY: CyclomaticComplexityIssue,
+    IssueType.MAINTAINABILITY: MaintainabilityLackIssue,
+    IssueType.COHESION: CohesionIssue,
+}
+
+
+def get_issue_class_by_issue_type(issue_type: IssueType):
+    return ISSUE_TYPE_TO_CLASS.get(issue_type, CodeIssue)
+
+
+MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME = {
+    IssueType.LINE_LEN: IssueData.LINE_LEN.value,
+    IssueType.FUNC_LEN: IssueData.FUNCTION_LEN.value,
+    IssueType.BOOL_EXPR_LEN: IssueData.BOOL_EXPR_LEN.value,
+    IssueType.CYCLOMATIC_COMPLEXITY: IssueData.CYCLOMATIC_COMPLEXITY.value,
+    IssueType.MAINTAINABILITY: IssueData.MAINTAINABILITY_LACK.value,
+    IssueType.COHESION: IssueData.COHESION_LACK.value,
+}
