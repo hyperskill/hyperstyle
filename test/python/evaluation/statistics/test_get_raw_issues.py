@@ -10,59 +10,28 @@ from src.python.evaluation.statistics.get_raw_issues import _filter_issues, _get
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType, MaintainabilityLackIssue
 
+ORIGINAL_DF_NAME = 'original_df'
+ORIGINAL_DF_CSV = f'{ORIGINAL_DF_NAME}.csv'
+ORIGINAL_DF_XLSX = f'{ORIGINAL_DF_NAME}.xlsx'
+
+ORIGINAL_DF_WITH_RAW_ISSUES_CSV = f'{ORIGINAL_DF_NAME}_with_raw_issues.csv'
+ORIGINAL_DF_WITH_RAW_ISSUES_XLSX = f'{ORIGINAL_DF_NAME}_with_raw_issues.xlsx'
+
+NEW_DF_NAME = 'new_df'
+
 GET_OUTPUT_PATH_TEST_DATA = [
-    (Path('/home/user/Desktop/some_df.csv'), None, Path('/home/user/Desktop/some_df_with_raw_issues.csv')),
-    (Path('/home/user/Desktop/some_df.xlsx'), None, Path('/home/user/Desktop/some_df_with_raw_issues.xlsx')),
-    (
-        Path('/home/user/Desktop/some_df.csv'),
-        Path('/home/user/Desktop/new_df.csv'),
-        Path('/home/user/Desktop/new_df.csv'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.xlsx'),
-        Path('/home/user/Desktop/new_df.xlsx'),
-        Path('/home/user/Desktop/new_df.xlsx'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.csv'),
-        Path('/home/user/Desktop/new_df'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.csv'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.xlsx'),
-        Path('/home/user/Desktop/new_df'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.xlsx'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.csv'),
-        Path('/home/user/Desktop/new_df/'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.csv'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.xlsx'),
-        Path('/home/user/Desktop/new_df/'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.xlsx'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.csv'),
-        Path('/home/user/Desktop/new_df.unknown'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.csv'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.xlsx'),
-        Path('/home/user/Desktop/new_df.unknown'),
-        Path('/home/user/Desktop/some_df_with_raw_issues.xlsx'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.csv'),
-        Path('/home/user/Desktop/new_df.xlsx'),
-        Path('/home/user/Desktop/new_df.xlsx'),
-    ),
-    (
-        Path('/home/user/Desktop/some_df.xlsx'),
-        Path('/home/user/Desktop/new_df.csv'),
-        Path('/home/user/Desktop/new_df.csv'),
-    ),
+    (Path(ORIGINAL_DF_CSV), None, Path(ORIGINAL_DF_WITH_RAW_ISSUES_CSV)),
+    (Path(ORIGINAL_DF_XLSX), None, Path(ORIGINAL_DF_WITH_RAW_ISSUES_XLSX)),
+    (Path(ORIGINAL_DF_CSV), Path(f'{NEW_DF_NAME}.csv'), Path(f'{NEW_DF_NAME}.csv')),
+    (Path(ORIGINAL_DF_CSV), Path(f'{NEW_DF_NAME}.xlsx'), Path(f'{NEW_DF_NAME}.xlsx')),
+    (Path(ORIGINAL_DF_XLSX), Path(f'{NEW_DF_NAME}.csv'), Path(f'{NEW_DF_NAME}.csv')),
+    (Path(ORIGINAL_DF_XLSX), Path(f'{NEW_DF_NAME}.xlsx'), Path(f'{NEW_DF_NAME}.xlsx')),
+    (Path(ORIGINAL_DF_CSV), Path(NEW_DF_NAME), Path(ORIGINAL_DF_WITH_RAW_ISSUES_CSV)),
+    (Path(ORIGINAL_DF_XLSX), Path(NEW_DF_NAME), Path(ORIGINAL_DF_WITH_RAW_ISSUES_XLSX)),
+    (Path(ORIGINAL_DF_CSV), Path(f'{NEW_DF_NAME}/'), Path(ORIGINAL_DF_WITH_RAW_ISSUES_CSV)),
+    (Path(ORIGINAL_DF_XLSX), Path(f'{NEW_DF_NAME}/'), Path(ORIGINAL_DF_WITH_RAW_ISSUES_XLSX)),
+    (Path(ORIGINAL_DF_CSV), Path(f'{NEW_DF_NAME}.unknown'), Path(ORIGINAL_DF_WITH_RAW_ISSUES_CSV)),
+    (Path(ORIGINAL_DF_XLSX), Path(f'{NEW_DF_NAME}.unknown'), Path(ORIGINAL_DF_WITH_RAW_ISSUES_XLSX)),
 ]
 
 
@@ -260,11 +229,11 @@ FILTER_ISSUES_TEST_DATA = [
     FILTER_ISSUES_TEST_DATA,
 )
 def test_filter_issues(
-    issues: List[BaseIssue],
-    allow_duplicates: bool,
-    allow_zero_measure_issues: bool,
-    allow_info_issues: bool,
-    expected_issues: List[BaseIssue],
+        issues: List[BaseIssue],
+        allow_duplicates: bool,
+        allow_zero_measure_issues: bool,
+        allow_info_issues: bool,
+        expected_issues: List[BaseIssue],
 ):
     assert _filter_issues(issues, allow_duplicates, allow_zero_measure_issues, allow_info_issues) == expected_issues
 
