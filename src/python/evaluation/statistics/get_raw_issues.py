@@ -14,7 +14,7 @@ from pandarallel import pandarallel
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.evaluation_run_tool import get_language
+from src.python.evaluation.evaluation_run_tool import get_language_version
 from src.python.evaluation.statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
 from src.python.review.common.file_system import (
     create_file,
@@ -122,7 +122,7 @@ def _inspect_row(
 
     # If we were unable to identify the language version, we return None
     try:
-        language_version = get_language(language_code)
+        language_version = get_language_version(language_code)
     except KeyError:
         logger.warning(f'{fragment_id}: it was not possible to determine the language version from "{language_code}"')
         return None

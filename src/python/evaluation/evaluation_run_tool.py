@@ -71,7 +71,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         action='store_true')
 
 
-def get_language(lang_key: str) -> LanguageVersion:
+def get_language_version(lang_key: str) -> LanguageVersion:
     try:
         return LanguageVersion(lang_key)
     except ValueError as e:
@@ -84,7 +84,7 @@ def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str]
     print(f'current id: {fragment_id}')
     # Tool does not work correctly with tmp files from <tempfile> module on macOS
     # thus we create a real file in the file system
-    extension = get_language(lang).extension_by_language().value
+    extension = get_language_version(lang).extension_by_language().value
     tmp_file_path = config.solutions_file_path.parent.absolute() / f'inspected_code_{fragment_id}{extension}'
     temp_file = next(create_file(tmp_file_path, code))
     command = config.build_command(temp_file, lang, history)
