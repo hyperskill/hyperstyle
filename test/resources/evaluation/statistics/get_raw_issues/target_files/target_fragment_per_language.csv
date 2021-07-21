@@ -156,3 +156,13 @@ for word in words:
     else:
         continue
 ","[{""origin_class"": ""C901"", ""type"": ""CYCLOMATIC_COMPLEXITY"", ""description"": ""Too complex function. You can figure out how to simplify this code or split it into a set of small functions / methods. It will make your code easy to understand and less error prone."", ""file_path"": """", ""line_no"": 3, ""column_no"": 1, ""inspector_type"": ""FLAKE8"", ""measure"": 8}, {""origin_class"": ""WPS327"", ""type"": ""BEST_PRACTICES"", ""description"": ""Found useless `continue` at the end of the loop"", ""file_path"": """", ""line_no"": 3, ""column_no"": 1, ""inspector_type"": ""FLAKE8""}, {""origin_class"": ""WPS223"", ""type"": ""COMPLEXITY"", ""description"": ""Found too many `elif` branches: 5 > 3"", ""file_path"": """", ""line_no"": 5, ""column_no"": 5, ""inspector_type"": ""FLAKE8""}]"
+47580013,javascript,"async function rockBand(str) {
+  return new Promise(function(resolve, reject) {
+      if (str == 'Linkin Park') {
+      resolve(""Chester, we miss you!"");
+    } else {
+      resolve(""No matter the band we miss him anyway!"");
+    }
+  });
+}
+","[{""origin_class"": ""no-unused-vars"", ""type"": ""CODE_STYLE"", ""description"": ""'rockBand' is defined but never used. (no-unused-vars)"", ""file_path"": """", ""line_no"": 1, ""column_no"": 16, ""inspector_type"": ""ESLINT""}, {""origin_class"": ""no-unused-vars"", ""type"": ""CODE_STYLE"", ""description"": ""'reject' is defined but never used. (no-unused-vars)"", ""file_path"": """", ""line_no"": 2, ""column_no"": 40, ""inspector_type"": ""ESLINT""}, {""origin_class"": ""eqeqeq"", ""type"": ""BEST_PRACTICES"", ""description"": ""Expected '===' and instead saw '=='. (eqeqeq)"", ""file_path"": """", ""line_no"": 3, ""column_no"": 15, ""inspector_type"": ""ESLINT""}]"

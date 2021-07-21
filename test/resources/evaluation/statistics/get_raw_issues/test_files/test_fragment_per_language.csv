@@ -156,3 +156,13 @@ for word in words:
     else:
         continue
 "
+47580013,javascript,"async function rockBand(str) {
+  return new Promise(function(resolve, reject) {
+      if (str == 'Linkin Park') {
+      resolve(""Chester, we miss you!"");
+    } else {
+      resolve(""No matter the band we miss him anyway!"");
+    }
+  });
+}
+"
