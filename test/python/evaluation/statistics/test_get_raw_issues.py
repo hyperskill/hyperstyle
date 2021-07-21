@@ -8,7 +8,7 @@ import pytest
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType, MaintainabilityLackIssue
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType, LineLenIssue, MaintainabilityLackIssue
 
 ORIGINAL_DF_NAME = 'original_df'
 ORIGINAL_DF_CSV = f'{ORIGINAL_DF_NAME}.csv'
@@ -79,6 +79,16 @@ ISSUES_FOR_FILTERING = [
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
     ),
+    LineLenIssue(
+        origin_class="SomeLineLenCheck",
+        type=IssueType.MAINTAINABILITY,
+        description="Some description",
+        file_path=Path("/home/user/Desktop/some_code.java"),
+        line_no=139,
+        column_no=24,
+        inspector_type=InspectorType.CHECKSTYLE,
+        line_len=10,
+    ),
 ]
 
 ISSUES_WITHOUT_DUPLICATES = [
@@ -110,6 +120,16 @@ ISSUES_WITHOUT_DUPLICATES = [
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
     ),
+    LineLenIssue(
+        origin_class="SomeLineLenCheck",
+        type=IssueType.MAINTAINABILITY,
+        description="Some description",
+        file_path=Path("/home/user/Desktop/some_code.java"),
+        line_no=139,
+        column_no=24,
+        inspector_type=InspectorType.CHECKSTYLE,
+        line_len=10,
+    ),
 ]
 
 ISSUES_WITHOUT_ZERO_MEASURE_ISSUES = [
@@ -139,6 +159,16 @@ ISSUES_WITHOUT_ZERO_MEASURE_ISSUES = [
         line_no=303,
         column_no=25,
         inspector_type=InspectorType.CHECKSTYLE,
+    ),
+    LineLenIssue(
+        origin_class="SomeLineLenCheck",
+        type=IssueType.MAINTAINABILITY,
+        description="Some description",
+        file_path=Path("/home/user/Desktop/some_code.java"),
+        line_no=139,
+        column_no=24,
+        inspector_type=InspectorType.CHECKSTYLE,
+        line_len=10,
     ),
 ]
 
@@ -171,6 +201,16 @@ ISSUES_WITHOUT_INFO_CATEGORY = [
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
     ),
+    LineLenIssue(
+        origin_class="SomeLineLenCheck",
+        type=IssueType.MAINTAINABILITY,
+        description="Some description",
+        file_path=Path("/home/user/Desktop/some_code.java"),
+        line_no=139,
+        column_no=24,
+        inspector_type=InspectorType.CHECKSTYLE,
+        line_len=10,
+    ),
 ]
 
 FILTERED_ISSUES = [
@@ -182,6 +222,16 @@ FILTERED_ISSUES = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+    ),
+    LineLenIssue(
+        origin_class="SomeLineLenCheck",
+        type=IssueType.MAINTAINABILITY,
+        description="Some description",
+        file_path=Path("/home/user/Desktop/some_code.java"),
+        line_no=139,
+        column_no=24,
+        inspector_type=InspectorType.CHECKSTYLE,
+        line_len=10,
     ),
 ]
 
