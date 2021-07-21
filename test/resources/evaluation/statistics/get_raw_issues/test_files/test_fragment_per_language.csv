@@ -1,5 +1,5 @@
-id,time,lang,code
-2637248,2019-09-09 12:55:29+00:00,java8,"import java.util.Arrays;
+id,lang,code
+2637248,java8,"import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -127,7 +127,7 @@ public class Main {
     }
 }
 "
-2760103,2019-09-16 16:38:07+00:00,kotlin,"import java.util.*;
+2760103,kotlin,"import java.util.*;
 
 fun main(args: Array<String>) {
     val scanner = Scanner(System.`in`)
@@ -137,7 +137,7 @@ fun main(args: Array<String>) {
     println(sqrt)
 }
 "
-2760563,2019-09-16 17:01:13+00:00,python3,"text = input()
+2760563,python3,"text = input()
 words = text.split()
 for word in words:
     # finish the code here
