@@ -75,7 +75,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '-o', '--output',
         type=lambda value: Path(value).absolute(),
-        help='The path where the dataset with raw issues will be saved. '
+        help='Path where the dataset with raw issues will be saved. '
              'If not specified, the dataset will be saved next to the original one.',
     )
 
