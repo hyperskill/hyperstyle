@@ -3,7 +3,6 @@ disable_noqa=True
 ignore=W291,  # trailing whitespaces
        W292,  # no newline at end of file
        W293,  # blank line contains whitespaces
-       WPS421,  # found wrong function call, can have errors
        W503,  # line break before binary operator
        C408,  # unnecessary (dict/list/tuple) call - rewrite as a literal
        E501,  # line too long
