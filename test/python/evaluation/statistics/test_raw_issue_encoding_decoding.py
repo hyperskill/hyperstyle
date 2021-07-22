@@ -17,171 +17,174 @@ from src.python.review.inspectors.issue import (
     MaintainabilityLackIssue,
 )
 
+FILE_PATH = 'some_file.py'
+DESCRIPTION = 'Some description'
+
 ISSUE_AND_JSON_ISSUE = [
     (
         CodeIssue(
             origin_class='SomeCodeIssueClass',
             type=IssueType.CODE_STYLE,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file2.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=656,
             column_no=42,
             inspector_type=InspectorType.CHECKSTYLE,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeCodeIssueClass",
             "type": "CODE_STYLE",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file2.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 656,
             "column_no": 42,
             "inspector_type": "CHECKSTYLE"
-        }
+        }}
         """,
     ),
     (
         BoolExprLenIssue(
             origin_class='SomeBoolExprLenIssueClass',
             type=IssueType.BOOL_EXPR_LEN,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file3.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=983,
             column_no=428,
             inspector_type=InspectorType.DETEKT,
             bool_expr_len=975,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeBoolExprLenIssueClass",
             "type": "BOOL_EXPR_LEN",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file3.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 983,
             "column_no": 428,
             "inspector_type": "DETEKT",
             "measure": 975
-        }
+        }}
         """,
     ),
     (
         FuncLenIssue(
             origin_class='SomeFuncLenIssueClass',
             type=IssueType.FUNC_LEN,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file4.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=790,
             column_no=487,
             inspector_type=InspectorType.ESLINT,
             func_len=909,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeFuncLenIssueClass",
             "type": "FUNC_LEN",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file4.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 790,
             "column_no": 487,
             "inspector_type": "ESLINT",
             "measure": 909
-        }
+        }}
         """,
     ),
     (
         LineLenIssue(
             origin_class='SomeLineLenIssueClass',
             type=IssueType.LINE_LEN,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file5.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=154,
             column_no=383,
             inspector_type=InspectorType.PMD,
             line_len=383,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeLineLenIssueClass",
             "type": "LINE_LEN",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file5.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 154,
             "column_no": 383,
             "inspector_type": "PMD",
             "measure": 383
-        }
+        }}
         """,
     ),
     (
         CyclomaticComplexityIssue(
             origin_class='SomeCyclomaticComplexityIssueClass',
             type=IssueType.CYCLOMATIC_COMPLEXITY,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file6.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=670,
             column_no=78,
             inspector_type=InspectorType.INTELLIJ,
             cc_value=229,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeCyclomaticComplexityIssueClass",
             "type": "CYCLOMATIC_COMPLEXITY",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file6.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 670,
             "column_no": 78,
             "inspector_type": "INTELLIJ",
             "measure": 229
-        }
+        }}
         """,
     ),
     (
         CohesionIssue(
             origin_class='SomeCohesionIssueClass',
             type=IssueType.COHESION,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file7.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=997,
             column_no=386,
             inspector_type=InspectorType.PYLINT,
             cohesion_lack=564,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeCohesionIssueClass",
             "type": "COHESION",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file7.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 997,
             "column_no": 386,
             "inspector_type": "PYLINT",
             "measure": 564
-        }
+        }}
         """,
     ),
     (
         MaintainabilityLackIssue(
             origin_class='SomeMaintainabilityLackIssueClass',
             type=IssueType.MAINTAINABILITY,
-            description="Some description",
-            file_path=Path("/home/user/Desktop/some_file8.py"),
+            description=DESCRIPTION,
+            file_path=Path(FILE_PATH),
             line_no=830,
             column_no=542,
             inspector_type=InspectorType.RADON,
             maintainability_lack=431,
         ),
-        """
-        {
+        f"""
+        {{
             "origin_class": "SomeMaintainabilityLackIssueClass",
             "type": "MAINTAINABILITY",
-            "description": "Some description",
-            "file_path": "/home/user/Desktop/some_file8.py",
+            "description": "{DESCRIPTION}",
+            "file_path": "{FILE_PATH}",
             "line_no": 830,
             "column_no": 542,
             "inspector_type": "RADON",
             "measure": 431
-        }
+        }}
         """,
     ),
 ]
