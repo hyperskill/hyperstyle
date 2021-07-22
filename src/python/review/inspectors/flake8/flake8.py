@@ -13,6 +13,10 @@ from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
 logger = logging.getLogger(__name__)
 
 PATH_FLAKE8_CONFIG = Path(__file__).parent / '.flake8'
+# To make the whitelist, a list of words was examined based on students' solutions
+# that were flagged by flake8-spellcheck as erroneous. In general, the whitelist included those words
+# that belonged to library methods and which were common abbreviations.
+PATH_FLAKE8_SPELLCHECK_WHITELIST = Path(__file__).parent / 'whitelist.txt'
 FORMAT = '%(path)s:%(row)d:%(col)d:%(code)s:%(text)s'
 INSPECTOR_NAME = 'flake8'
 
@@ -26,6 +30,7 @@ class Flake8Inspector(BaseInspector):
             'flake8',
             f'--format={FORMAT}',
             f'--config={PATH_FLAKE8_CONFIG}',
+            f'--whitelist={PATH_FLAKE8_SPELLCHECK_WHITELIST}',
             '--max-complexity', '0',
             path
         ]
