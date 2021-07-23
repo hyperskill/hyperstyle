@@ -1,0 +1,168 @@
+id,lang,code
+2637248,java8,"import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    private static class TableEntry<T> {
+        private final int key;
+        private final T value;
+
+        public TableEntry(int key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public T getValue() {
+            return value;
+        }
+    }
+
+    private static class HashTable<T> {
+        private int size;
+        private TableEntry[] table;
+
+        public HashTable(int size) {
+            this.size = size;
+            table = new TableEntry[size];
+        }
+
+        public boolean put(int key, T value) {
+            int idx = findKey(key);
+
+            if (idx == -1) {
+                size *= 2;
+                table = Arrays.copyOf(table, size);
+                idx = findKey(key);
+            }
+
+            table[idx] = new TableEntry(key, value);
+            return true;
+        }
+
+        public T get(int key) {
+            int idx = findKey(key);
+
+            if (idx == -1 || table[idx] == null) {
+                return null;
+            }
+
+            return (T) table[idx].getValue();
+        }
+
+        public void remove(int key) {
+            table[findKey(key)] = null;
+        }
+
+        private int findKey(int key) {
+            int hash = key % size;
+
+            while (!(table[hash] == null || table[hash].getKey() == key)) {
+                hash = (hash + 1) % size;
+
+                if (hash == key % size) {
+                    return -1;
+                }
+            }
+
+            return hash;
+        }
+
+        private void rehash() {
+            size *= 2;
+
+            TableEntry[] oldTable = table;
+            table = new TableEntry[size];
+
+            for (TableEntry tableEntry : oldTable) {
+                table[findKey(tableEntry.getKey())] = tableEntry;
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder tableStringBuilder = new StringBuilder();
+
+            for (int i = 0; i < table.length; i++) {
+                if (table[i] == null) {
+                    tableStringBuilder.append(i + "": null"");
+                } else {
+                    tableStringBuilder.append(i + "": key="" + table[i].getKey()
+                            + "", value="" + table[i].getValue());
+                }
+
+                if (i < table.length - 1) {
+                    tableStringBuilder.append(""\n"");
+                }
+            }
+
+            return tableStringBuilder.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int counter = scanner.nextInt();
+
+        HashTable<String> data = new HashTable<>(counter);
+        while (counter != 0) {
+            String command = scanner.next();
+            switch (command) {
+                case ""put"":
+                    data.put(scanner.nextInt(), scanner.next());
+                    break;
+                case ""get"":
+                    String  val = data.get(scanner.nextInt());
+                    System.out.println(val == null ? - 1: val);
+                    break;
+                case ""remove"":
+                    data.remove(scanner.nextInt());
+                    break;
+            }
+            counter--;
+        }
+    }
+}
+"
+2760103,kotlin,"import java.util.*;
+
+fun main(args: Array<String>) {
+    val scanner = Scanner(System.`in`)
+    // put your code here
+    val sq = scanner.nextDouble()
+    val sqrt = Math.sqrt(Math.sqrt(sq))
+    println(sqrt)
+}
+"
+2760563,python3,"text = input()
+words = text.split()
+for word in words:
+    # finish the code here
+    if word.startswith(""WWW.""):
+        print(word)
+    elif word.startswith(""www.""):
+        print(word)
+    elif word.startswith(""https://""):
+        print(word)
+    elif word.startswith(""HTTPS://""):
+        print(word)
+    elif word.startswith(""http://""):
+        print(word)
+    elif word.startswith(""HTTP://""):
+        print(word)
+    else:
+        continue
+"
+47580013,javascript,"async function rockBand(str) {
+  return new Promise(function(resolve, reject) {
+      if (str == 'Linkin Park') {
+      resolve(""Chester, we miss you!"");
+    } else {
+      resolve(""No matter the band we miss him anyway!"");
+    }
+  });
+}
+"

@@ -12,7 +12,7 @@ from src.python.evaluation.common.pandas_util import (
     write_df_to_file,
 )
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument
-from src.python.evaluation.evaluation_run_tool import get_language
+from src.python.evaluation.evaluation_run_tool import get_language_version
 from src.python.review.common.file_system import (
     Extension,
     get_name_from_path,
@@ -78,7 +78,7 @@ def _add_history(row, solutions_df: pd.DataFrame) -> str:
 
     # If we were unable to identify the language version, we return an empty history
     try:
-        lang_version = get_language(row[LANG])
+        lang_version = get_language_version(row[LANG])
     except KeyError:
         return json.dumps(history)
 
