@@ -1,13 +1,13 @@
+from collections import Counter
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Dict, List, Any
-from collections import Counter
+from typing import Any, Dict, List
 
 import pandas as pd
-
 from src.python.evaluation.common.pandas_util import filter_df_by_single_value
-from src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import TutorTask, ComparisonColumnName, \
-    ERROR_CONST
+from src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import (
+    ComparisonColumnName, ERROR_CONST, TutorTask,
+)
 
 
 def sort_freq_dict(freq_dict: Dict[Any, int]) -> Dict[Any, int]:
@@ -84,7 +84,8 @@ class IssuesStatistics:
         self.tutor_uniq_issue_to_freq = sort_freq_dict(self.tutor_uniq_issue_to_freq)
         self.hyperstyle_uniq_issue_to_freq = sort_freq_dict(self.hyperstyle_uniq_issue_to_freq)
         self.code_style_issues_count = sum(solutions_df[ComparisonColumnName.CODE_STYLE_ISSUES_COUNT.value])
-        self.fragments_count_with_code_style_issues = len(list(filter(lambda x: x != 0, solutions_df[ComparisonColumnName.CODE_STYLE_ISSUES_COUNT.value])))
+        self.fragments_count_with_code_style_issues = len(list(
+            filter(lambda x: x != 0, solutions_df[ComparisonColumnName.CODE_STYLE_ISSUES_COUNT.value])))
 
     @staticmethod
     def __parse_issues(issues_str: str) -> List[str]:
@@ -112,7 +113,11 @@ class IssuesStatistics:
         print(self.__separator)
 
     def print_issues_stat(self) -> None:
-        print(f'{len(self.common_issue_to_freq.keys()) + len(self.tutor_uniq_issue_to_freq.keys()) + len(self.hyperstyle_uniq_issue_to_freq.keys())} unique issues in total was found')
+        uniq_issues = (len(self.common_issue_to_freq)
+                       + len(self.tutor_uniq_issue_to_freq)
+                       + len(self.hyperstyle_uniq_issue_to_freq)
+                       )
+        print(f'{uniq_issues} unique issues in total was found')
         print(self.__separator)
         self.__print_freq_issues_stat(self.common_issue_to_freq, 'Common')
         self.__print_freq_issues_stat(self.tutor_uniq_issue_to_freq, 'Tutor unique')

@@ -2,19 +2,19 @@ import argparse
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 import pandas as pd
-
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from src.python.evaluation.common.pandas_util import get_solutions_df, logger, filter_df_by_single_value, \
-    drop_duplicates, get_issues_from_json
+from src.python.evaluation.common.pandas_util import (
+    drop_duplicates, filter_df_by_single_value, get_issues_from_json, get_solutions_df, logger,
+)
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import sort_freq_dict
 from src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import UserStatistics
-from src.python.review.common.file_system import get_restricted_extension, Extension, get_parent_folder
+from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 from src.python.review.inspectors.issue import IssueType
 
 

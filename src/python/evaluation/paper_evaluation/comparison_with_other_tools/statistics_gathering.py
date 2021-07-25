@@ -5,8 +5,9 @@ from pathlib import Path
 
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df
-from src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import TutorStatistics, \
-    IssuesStatistics
+from src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import (
+    IssuesStatistics, TutorStatistics,
+)
 from src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import ComparisonColumnName
 from src.python.review.common.file_system import Extension, get_restricted_extension
 

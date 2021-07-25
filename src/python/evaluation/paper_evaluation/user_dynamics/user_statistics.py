@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Dict, List
 
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 
