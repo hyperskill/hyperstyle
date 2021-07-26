@@ -97,7 +97,5 @@ def test_inspect_solutions(test_file: str, target_freq_file: str, target_ratio_f
     freq_stats = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_freq_file)
     ratio_df = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_ratio_file)
 
-    ratio_df.to_csv("/home/ilya/Downloads/ratio_df.csv")
-
     assert equal_df(stats_by_lang[lang][0], freq_stats)
     assert equal_df(stats_by_lang[lang][1], ratio_df)
