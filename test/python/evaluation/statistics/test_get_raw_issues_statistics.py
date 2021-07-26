@@ -13,7 +13,7 @@ from src.python.evaluation.statistics.get_raw_issues_statistics import (
     _convert_language_code_to_language,
     _get_output_folder,
     DEFAULT_OUTPUT_FOLDER_NAME,
-    inspect_solutions,
+    inspect_raw_issues,
 )
 from src.python.review.common.language import Language
 
@@ -100,7 +100,7 @@ INSPECT_SOLUTIONS_TEST_DATA = [
 @pytest.mark.parametrize(('test_file', 'target_file', 'lang'), INSPECT_SOLUTIONS_TEST_DATA)
 def test_inspect_solutions(test_file: str, target_file: str, lang: str):
     test_df = get_solutions_df_by_file_path(GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER / test_file)
-    stats = inspect_solutions(test_df)
+    stats = inspect_raw_issues(test_df)
 
     freq_stats = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_file)
 

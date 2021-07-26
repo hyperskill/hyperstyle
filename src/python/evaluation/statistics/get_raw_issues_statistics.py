@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import sys
 from collections import Counter
 from json import JSONDecodeError
@@ -32,8 +33,10 @@ LINE_LEN_RATIO = f'{IssueType.LINE_LEN.value}_ratio'
 TOTAL_LINES = 'total_lines'
 VALUE = 'value'
 
-STATS_DF_NAME = 'stats'
+OUTPUT_DF_NAME = 'stats'
 DEFAULT_OUTPUT_FOLDER_NAME = 'raw_issues_statistics'
+
+logger = logging.getLogger(__name__)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -41,35 +44,40 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
         'solutions_with_raw_issues',
         type=lambda value: Path(value).absolute(),
         help=f'Local XLSX-file or CSV-file path. Your file must include column-names: '
-             f'"{CODE}", "{LANG}", and "{RAW_ISSUES}"',
+             f'"{ID}", "{CODE}", "{LANG}", and "{RAW_ISSUES}"',
     )
 
     parser.add_argument(
         '-o', '--output',
         type=lambda value: Path(value).absolute(),
-        help='Path where datasets with statistics will be saved. '
-             'If not specified, datasets will be saved next to the original one.',
+        help='Path where the dataset with statistics will be saved. '
+             'If not specified, the dataset will be saved next to the original one.',
     )
 
 
-def _convert_language_code_to_language(language_code: str) -> str:
+def _convert_language_code_to_language(fragment_id: int, language_code: str) -> str:
     try:
         language_version = get_language_version(language_code)
     except KeyError:
+        logger.warning(f'{fragment_id}: it was not possible to determine the language version from "{language_code}"')
         return language_code
 
     language = Language.from_language_version(language_version)
 
     if language == Language.UNKNOWN:
+        logger.warning(f'{fragment_id}: it was not possible to determine the language from "{language_version}"')
         return language_code
 
     return language.value
 
 
 def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
+    logger.info(f'{row[ID]}: extracting stats')
+
     try:
         issues: List[BaseIssue] = json.loads(row[RAW_ISSUES], cls=RawIssueDecoder)
     except (JSONDecodeError, TypeError):
+        logger.warning(f'{row[ID]}: failed to decode issues')
         issues: List[BaseIssue] = []
 
     counter = Counter([issue.type for issue in issues])
@@ -84,8 +92,9 @@ def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
     row[LINE_LEN_NUMBER] = counter[IssueType.LINE_LEN]
     row[TOTAL_LINES] = get_total_code_lines_from_code(row[CODE])
 
-    row[LANG] = _convert_language_code_to_language(row[LANG])
+    row[LANG] = _convert_language_code_to_language(row[ID], row[LANG])
 
+    logger.info(f'{row[ID]}: extraction of statistics is complete')
     return row
 
 
@@ -96,11 +105,15 @@ def _is_python(language_code: str) -> bool:
         return False
 
 
-def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+def _group_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+    logger.info('The grouping of statistics by language has started')
+
     result = {}
 
     df_grouped_by_lang = df_with_stats.groupby(LANG)
     for lang in df_grouped_by_lang.groups:
+        logger.info(f'"{lang}" statistics grouping started')
+
         lang_group = df_grouped_by_lang.get_group(lang)
 
         columns_with_stats = []
@@ -140,16 +153,19 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]:
         stats.reset_index(inplace=True)
 
         result[str(lang)] = stats
+        logger.info(f'"{lang}" statistics grouping finished')
+
+    logger.info('The grouping of statistics by language has finished')
 
     return result
 
 
-def inspect_solutions(solutions_with_raw_issues: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+def inspect_raw_issues(solutions_with_raw_issues: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     pandarallel.initialize()
 
     solutions_with_raw_issues = solutions_with_raw_issues.parallel_apply(_extract_stats_from_issues, axis=1)
 
-    return _get_stats_by_lang(solutions_with_raw_issues)
+    return _group_stats_by_lang(solutions_with_raw_issues)
 
 
 def _get_output_folder(solutions_file_path: Path, output_folder: Optional[Path]):
@@ -166,7 +182,7 @@ def _save_stats(stats_by_lang: Dict[str, pd.DataFrame], solutions_file_path: Pat
     for lang, stats in stats_by_lang.items():
         lang_folder = output_folder / lang
         lang_folder.mkdir(parents=True, exist_ok=True)
-        write_df_to_file(stats, lang_folder / f'{STATS_DF_NAME}{output_extension.value}', output_extension)
+        write_df_to_file(stats, lang_folder / f'{OUTPUT_DF_NAME}{output_extension.value}', output_extension)
 
 
 if __name__ == "__main__":
@@ -176,6 +192,6 @@ if __name__ == "__main__":
 
     solutions_with_raw_issues = get_solutions_df_by_file_path(args.solutions_with_raw_issues)
 
-    stats_by_lang = inspect_solutions(solutions_with_raw_issues)
+    stats_by_lang = inspect_raw_issues(solutions_with_raw_issues)
 
     _save_stats(stats_by_lang, args.solutions_with_raw_issues, args.output)
