@@ -130,7 +130,7 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
         # Calculate line len ratio according to LineLengthRule
         line_len_ratio_column = lang_group[LINE_LEN_NUMBER] / lang_group[TOTAL_LINES].apply(lambda elem: max(1, elem))
         line_len_ratio_column.name = IssueType.LINE_LEN.value
-        columns_with_stats.append(line_len_ratio_column)
+        columns_with_stats.append(round(line_len_ratio_column, 2))
 
         # Calculate code style ratio according to CodeStyleRule
         if _is_python(str(lang)):
@@ -143,7 +143,7 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
             )
 
         code_style_ratio_column.name = IssueType.CODE_STYLE.value
-        columns_with_stats.append(code_style_ratio_column)
+        columns_with_stats.append(round(code_style_ratio_column, 2))
 
         ratio_stats = pd.concat(columns_with_stats, axis=1)
 
