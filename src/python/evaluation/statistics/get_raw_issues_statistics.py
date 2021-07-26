@@ -28,6 +28,7 @@ CODE = ColumnName.CODE.value
 CODE_STYLE_LINES = f'{IssueType.CODE_STYLE.value}_lines'
 LINE_LEN_NUMBER = f'{IssueType.LINE_LEN.value}_number'
 TOTAL_LINES = 'total_lines'
+VALUE = 'value'
 
 DEFAULT_OUTPUT_FOLDER_NAME = 'raw_issues_statistics'
 MAIN_STATS_DF_NAME = 'main_stats'
@@ -39,12 +40,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
         'solutions_with_raw_issues',
         type=lambda value: Path(value).absolute(),
         help=f'Local XLSX-file or CSV-file path. Your file must include column-names: '
-        f'"{CODE}", "{LANG}", and "{RAW_ISSUES}"',
+             f'"{CODE}", "{LANG}", and "{RAW_ISSUES}"',
     )
 
     parser.add_argument(
-        '-o',
-        '--output',
+        '-o', '--output',
         type=lambda value: Path(value).absolute(),
         help='Path where datasets with statistics will be saved. '
              'If not specified, datasets will be saved next to the original one.',
@@ -68,7 +68,7 @@ def _convert_language_code_to_language(language_code: str) -> str:
 def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
     try:
         issues: List[BaseIssue] = json.loads(row[RAW_ISSUES], cls=RawIssueDecoder)
-    except JSONDecodeError:
+    except (JSONDecodeError, TypeError):
         issues: List[BaseIssue] = []
 
     counter = Counter([issue.type for issue in issues])
@@ -104,7 +104,7 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
 
         columns_with_stats = []
 
-        # ---- main stats ----
+        # ---- Frequency statistics ----
         for issue_type, issue_class in ISSUE_TYPE_TO_CLASS.items():
             column = lang_group[issue_type.value]
             if issubclass(issue_class, Measurable):
@@ -113,33 +113,41 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
 
         columns_with_stats.append(lang_group[TOTAL_LINES].value_counts())
 
-        main_stats = pd.concat(columns_with_stats, axis=1).fillna(0)
+        freq_stats = pd.concat(columns_with_stats, axis=1).fillna(0)
 
-        min_value, max_value = main_stats.index.min(), main_stats.index.max()
-        main_stats = main_stats.reindex(range(min_value, max_value + 1), fill_value=0).astype(int)
+        # Fill in the intermediate values that are not occurred with zeros
+        min_value, max_value = freq_stats.index.min(), freq_stats.index.max()
+        freq_stats = freq_stats.reindex(range(min_value, max_value + 1), fill_value=0).astype(int)
+
+        # Put the values in a separate column
+        freq_stats.index.name = VALUE
+        freq_stats.reset_index(inplace=True)
 
         columns_with_stats.clear()
 
-        # ---- other stats ----
-        line_len_stats_column = lang_group[LINE_LEN_NUMBER] / lang_group[TOTAL_LINES].apply(lambda elem: max(1, elem))
-        line_len_stats_column.name = IssueType.LINE_LEN.value
-        columns_with_stats.append(line_len_stats_column)
+        # ---- Ratio statistics ----
 
+        # Calculate line len ratio according to LineLengthRule
+        line_len_ratio_column = lang_group[LINE_LEN_NUMBER] / lang_group[TOTAL_LINES].apply(lambda elem: max(1, elem))
+        line_len_ratio_column.name = IssueType.LINE_LEN.value
+        columns_with_stats.append(line_len_ratio_column)
+
+        # Calculate code style ratio according to CodeStyleRule
         if _is_python(str(lang)):
-            code_style_stats_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
+            code_style_ratio_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
                 lambda total_lines: max(1, total_lines),
             )
         else:
-            code_style_stats_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
+            code_style_ratio_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
                 lambda total_lines: max(1, total_lines - 4),
             )
 
-        code_style_stats_column.name = IssueType.CODE_STYLE.value
-        columns_with_stats.append(code_style_stats_column)
+        code_style_ratio_column.name = IssueType.CODE_STYLE.value
+        columns_with_stats.append(code_style_ratio_column)
 
-        other_stats = pd.concat(columns_with_stats, axis=1)
+        ratio_stats = pd.concat(columns_with_stats, axis=1)
 
-        result[str(lang)] = (main_stats, other_stats)
+        result[str(lang)] = (freq_stats, ratio_stats)
 
     return result
 
