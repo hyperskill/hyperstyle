@@ -49,5 +49,4 @@ class LanguageVersion(Enum):
             or self == LanguageVersion.JAVA_8
             or self == LanguageVersion.JAVA_9
             or self == LanguageVersion.JAVA_11
-            or self == LanguageVersion.JAVA_15
         )
