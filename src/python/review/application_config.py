@@ -42,3 +42,12 @@ class LanguageVersion(Enum):
     @classmethod
     def language_by_extension(cls, lang: str) -> str:
         return cls.language_to_extension_dict()[lang]
+
+    def is_java(self) -> bool:
+        return (
+            self == LanguageVersion.JAVA_7
+            or self == LanguageVersion.JAVA_8
+            or self == LanguageVersion.JAVA_9
+            or self == LanguageVersion.JAVA_11
+            or self == LanguageVersion.JAVA_15
+        )
