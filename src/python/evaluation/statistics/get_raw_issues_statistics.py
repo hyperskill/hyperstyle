@@ -51,8 +51,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '-o', '--output',
         type=lambda value: Path(value).absolute(),
-        help='Path where the dataset with statistics will be saved. '
-             'If not specified, the dataset will be saved next to the original one.',
+        help='Path to the folder where datasets with statistics will be saved. '
+             'If not specified, the datasets will be saved in the folder next to the original one.',
     )
 
 
