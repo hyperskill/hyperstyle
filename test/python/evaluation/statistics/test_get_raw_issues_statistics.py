@@ -79,6 +79,21 @@ INSPECT_SOLUTIONS_TEST_DATA = [
         'target_df_single_lang.csv',
         Language.JAVA.value,
     ),
+    (
+        'test_df_multi_lang.csv',
+        'target_df_multi_lang_java.csv',
+        Language.JAVA.value,
+    ),
+    (
+        'test_df_multi_lang.csv',
+        'target_df_multi_lang_js.csv',
+        Language.JS.value,
+    ),
+    (
+        'test_df_multi_lang.csv',
+        'target_df_multi_lang_python.csv',
+        Language.PYTHON.value,
+    ),
 ]
 
 
