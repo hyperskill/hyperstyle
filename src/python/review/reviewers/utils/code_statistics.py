@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 
-from src.python.review.common.file_system import get_content_from_file
+from src.python.review.common.file_system import get_total_code_lines_from_file
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 
 
@@ -53,19 +53,6 @@ class CodeStatistics:
         }
 
 
-def __get_total_lines(path: Path) -> int:
-    lines = get_content_from_file(path, to_strip_nl=False).splitlines()
-    return len(list(filter(lambda line: not __is_empty(line) and not __is_comment(line), lines)))
-
-
-def __is_empty(line: str) -> bool:
-    return len(line.strip()) == 0
-
-
-def __is_comment(line: str) -> bool:
-    return line.strip().startswith(('#', '//'))
-
-
 def get_code_style_lines(issues: List[BaseIssue]) -> int:
     code_style_issues = filter(lambda issue: issue.type == IssueType.CODE_STYLE, issues)
     line_counter = Counter([issue.line_no for issue in code_style_issues])
@@ -111,6 +98,6 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         coupling=couplings,
         weighted_method_complexities=weighted_method_complexities,
         method_number=method_numbers,
-        total_lines=__get_total_lines(path),
+        total_lines=get_total_code_lines_from_file(path),
         code_style_lines=get_code_style_lines(issues),
     )
