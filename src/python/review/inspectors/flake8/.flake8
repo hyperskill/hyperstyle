@@ -1,8 +1,6 @@
 [flake8]
 disable_noqa=True
 
-max-line-length=120
-
 dictionaries=en_US,python,technical,django
 
 ignore=W291,  # trailing whitespaces
@@ -10,6 +8,7 @@ ignore=W291,  # trailing whitespaces
        W293,  # blank line contains whitespaces
        W503,  # line break before binary operator
        C408,  # unnecessary (dict/list/tuple) call - rewrite as a literal
+       E501,  # line too long
        E800,  # commented out code
        I101,  # order of imports within a line
        I202,  # additional new line
