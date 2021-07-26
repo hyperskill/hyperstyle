@@ -29,11 +29,10 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
-    ('case31_line_break.py', 11),
+    ('case31_spellcheck.py', 0),
     ('case32_string_format.py', 34),
     ('case33_commas.py', 14),
     ('case34_cohesion.py', 1),
-    ('case35_spellcheck.py', 0),
 ]
 
 
