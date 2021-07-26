@@ -33,6 +33,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case32_string_format.py', 34),
     ('case33_commas.py', 14),
     ('case34_cohesion.py', 1),
+    ('case35_spellcheck.py', 0),
 ]
 
 
