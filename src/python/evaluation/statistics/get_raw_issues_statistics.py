@@ -4,7 +4,7 @@ import sys
 from collections import Counter
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -26,13 +26,14 @@ LANG = ColumnName.LANG.value
 CODE = ColumnName.CODE.value
 
 CODE_STYLE_LINES = f'{IssueType.CODE_STYLE.value}_lines'
+CODE_STYLE_RATIO = f'{IssueType.CODE_STYLE.value}_ratio'
 LINE_LEN_NUMBER = f'{IssueType.LINE_LEN.value}_number'
+LINE_LEN_RATIO = f'{IssueType.LINE_LEN.value}_ratio'
 TOTAL_LINES = 'total_lines'
 VALUE = 'value'
 
+STATS_DF_NAME = 'stats'
 DEFAULT_OUTPUT_FOLDER_NAME = 'raw_issues_statistics'
-MAIN_STATS_DF_NAME = 'main_stats'
-OTHER_STATS_DF_NAME = 'other_stats'
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -95,7 +96,7 @@ def _is_python(language_code: str) -> bool:
         return False
 
 
-def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFrame, pd.DataFrame]]:
+def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     result = {}
 
     df_grouped_by_lang = df_with_stats.groupby(LANG)
@@ -104,7 +105,6 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
 
         columns_with_stats = []
 
-        # ---- Frequency statistics ----
         for issue_type, issue_class in ISSUE_TYPE_TO_CLASS.items():
             column = lang_group[issue_type.value]
             if issubclass(issue_class, Measurable):
@@ -113,24 +113,11 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
 
         columns_with_stats.append(lang_group[TOTAL_LINES].value_counts())
 
-        freq_stats = pd.concat(columns_with_stats, axis=1).fillna(0)
-
-        # Fill in the intermediate values that are not occurred with zeros
-        min_value, max_value = freq_stats.index.min(), freq_stats.index.max()
-        freq_stats = freq_stats.reindex(range(min_value, max_value + 1), fill_value=0).astype(int)
-
-        # Put the values in a separate column
-        freq_stats.index.name = VALUE
-        freq_stats.reset_index(inplace=True)
-
-        columns_with_stats.clear()
-
-        # ---- Ratio statistics ----
-
         # Calculate line len ratio according to LineLengthRule
         line_len_ratio_column = lang_group[LINE_LEN_NUMBER] / lang_group[TOTAL_LINES].apply(lambda elem: max(1, elem))
-        line_len_ratio_column.name = IssueType.LINE_LEN.value
-        columns_with_stats.append(round(line_len_ratio_column, 2))
+        line_len_ratio_column = (round(line_len_ratio_column, 2) * 100).apply(int)
+        line_len_ratio_column.name = LINE_LEN_RATIO
+        columns_with_stats.append(line_len_ratio_column.value_counts())
 
         # Calculate code style ratio according to CodeStyleRule
         if _is_python(str(lang)):
@@ -142,17 +129,22 @@ def _get_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, Tuple[pd.DataFr
                 lambda total_lines: max(1, total_lines - 4),
             )
 
-        code_style_ratio_column.name = IssueType.CODE_STYLE.value
-        columns_with_stats.append(round(code_style_ratio_column, 2))
+        code_style_ratio_column = (round(code_style_ratio_column, 2) * 100).apply(int)
+        code_style_ratio_column.name = CODE_STYLE_RATIO
+        columns_with_stats.append(code_style_ratio_column.value_counts())
 
-        ratio_stats = pd.concat(columns_with_stats, axis=1)
+        stats = pd.concat(columns_with_stats, axis=1).fillna(0).astype(int)
 
-        result[str(lang)] = (freq_stats, ratio_stats)
+        # Put values in a separate column
+        stats.index.name = VALUE
+        stats.reset_index(inplace=True)
+
+        result[str(lang)] = stats
 
     return result
 
 
-def inspect_solutions(solutions_with_raw_issues: pd.DataFrame) -> Dict[str, Tuple[pd.DataFrame, pd.DataFrame]]:
+def inspect_solutions(solutions_with_raw_issues: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     pandarallel.initialize()
 
     solutions_with_raw_issues = solutions_with_raw_issues.parallel_apply(_extract_stats_from_issues, axis=1)
@@ -167,19 +159,14 @@ def _get_output_folder(solutions_file_path: Path, output_folder: Optional[Path])
     return get_parent_folder(solutions_file_path) / DEFAULT_OUTPUT_FOLDER_NAME
 
 
-def _save_stats(
-    stats_by_lang: Dict[str, Tuple[pd.DataFrame, pd.DataFrame]],
-    solutions_file_path: Path,
-    output_path: Optional[Path],
-) -> None:
+def _save_stats(stats_by_lang: Dict[str, pd.DataFrame], solutions_file_path: Path, output_path: Optional[Path]) -> None:
     output_folder = _get_output_folder(solutions_file_path, output_path)
     output_extension = Extension.get_extension_from_file(str(solutions_file_path))
 
-    for lang, (main_stats, other_stats) in stats_by_lang.items():
+    for lang, stats in stats_by_lang.items():
         lang_folder = output_folder / lang
         lang_folder.mkdir(parents=True, exist_ok=True)
-        write_df_to_file(main_stats, lang_folder / f'{MAIN_STATS_DF_NAME}{output_extension.value}', output_extension)
-        write_df_to_file(other_stats, lang_folder / f'{OTHER_STATS_DF_NAME}{output_extension.value}', output_extension)
+        write_df_to_file(stats, lang_folder / f'{STATS_DF_NAME}{output_extension.value}', output_extension)
 
 
 if __name__ == "__main__":
