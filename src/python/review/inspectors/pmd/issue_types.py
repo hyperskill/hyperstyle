@@ -2,7 +2,7 @@ from typing import Dict
 
 from src.python.review.inspectors.issue import IssueType
 
-RULE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+PMD_RULE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # Best Practices
     'AbstractClassWithoutAbstractMethod': IssueType.BEST_PRACTICES,
     'AccessorClassGeneration': IssueType.BEST_PRACTICES,
