@@ -47,7 +47,7 @@ class TutorStatistics:
     def print_tasks_stat(self) -> None:
         print(f'Unique users count: {self.unique_users}')
         print(f'Code snippets count: {sum(self.task_to_freq.values())}')
-        print('Tasks statistics:')
+        print('Tasks issues_statistics:')
         for task, freq in self.task_to_freq.items():
             print(f'Task {task.value}: {freq} items; {self.task_to_error_freq[task]} with tutor errors')
         print(self.__separator)
@@ -55,7 +55,7 @@ class TutorStatistics:
     def print_error_stat(self) -> None:
         print(f'{self.fragments_with_error} code fragments has errors during running by Tutor')
         print(f'{len(self.error_to_freq.keys())} unique errors was found in Tutor')
-        print('Error statistics:')
+        print('Error issues_statistics:')
         for error, freq in self.error_to_freq.items():
             print(f'{error}: {freq} items')
         print(self.__separator)
@@ -107,7 +107,7 @@ class IssuesStatistics:
         self.__add_issues(self.hyperstyle_uniq_issue_to_freq, list(set(hyperstyle_issues) - set(common_issues)))
 
     def __print_freq_issues_stat(self, freq_stat: Dict[str, int], prefix: str) -> None:
-        print(f'{prefix} issues statistics:')
+        print(f'{prefix} issues issues_statistics:')
         for issue, freq in freq_stat.items():
             print(f'{issue} was found {freq} times')
         print(self.__separator)

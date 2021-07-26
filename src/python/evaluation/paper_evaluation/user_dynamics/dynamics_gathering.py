@@ -39,7 +39,7 @@ def __get_top_freq_issues(issues: List[List[PenaltyIssue]], n: int) -> Dict[str,
     return dict(Counter(all_issues).most_common(n))
 
 
-# Get statistics only for users that have >= freq_boundary solutions in solutions_df
+# Get issues_statistics only for users that have >= freq_boundary solutions in solutions_df
 # Statistics for each student has:
 #  - <traceback> - list of list of issues, but without INFO issues
 #  - <top_issues> - for each key of issue from <traceback> has frequency.

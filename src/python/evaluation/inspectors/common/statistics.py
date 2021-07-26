@@ -63,7 +63,7 @@ class IssuesStatistics:
             categorized_stat[issue.type][issue] = freq
         return categorized_stat
 
-    # Get statistics for each IssueType: count unique issues, count fragments with these issues
+    # Get issues_statistics for each IssueType: count unique issues, count fragments with these issues
     def get_short_categorized_statistics(self) -> Dict[IssueType, Tuple[int, int]]:
         categorized_statistics: Dict[IssueType, Dict[ShortIssue, int]] = self.get_categorized_statistics()
         short_categorized_statistics = defaultdict(tuple)
