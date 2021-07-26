@@ -15,7 +15,7 @@ DETECT_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # complexity:
     'ComplexCondition': IssueType.BOOL_EXPR_LEN,
     'ComplexInterface': IssueType.COMPLEXITY,
-    'ComplexMethod': IssueType.COMPLEXITY,
+    'ComplexMethod': IssueType.CYCLOMATIC_COMPLEXITY,
     'LabeledExpression': IssueType.COMPLEXITY,
     'LargeClass': IssueType.COMPLEXITY,
     'LongMethod': IssueType.FUNC_LEN,
