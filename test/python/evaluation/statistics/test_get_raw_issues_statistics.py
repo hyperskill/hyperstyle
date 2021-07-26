@@ -54,7 +54,7 @@ CONVERT_LANGUAGE_CODE_TO_LANGUAGE_TEST_DATA = [
 
 @pytest.mark.parametrize(('language_code', 'expected_language'), CONVERT_LANGUAGE_CODE_TO_LANGUAGE_TEST_DATA)
 def test_convert_language_code_to_language(language_code: str, expected_language: str):
-    actual_language = _convert_language_code_to_language(language_code)
+    actual_language = _convert_language_code_to_language(0, language_code)
     assert actual_language == expected_language
 
 
