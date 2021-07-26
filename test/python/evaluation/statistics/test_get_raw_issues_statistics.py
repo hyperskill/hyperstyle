@@ -61,41 +61,32 @@ def test_convert_language_code_to_language(language_code: str, expected_language
 INSPECT_SOLUTIONS_TEST_DATA = [
     (
         'test_df_with_null_raw_issues.csv',
-        'target_df_with_null_raw_issues_freq.csv',
-        'target_df_with_null_raw_issues_ratio.csv',
+        'target_df_with_null_raw_issues.csv',
         Language.PYTHON.value,
     ),
     (
         'test_df_with_empty_raw_issues.csv',
-        'target_df_with_empty_raw_issues_freq.csv',
-        'target_df_with_empty_raw_issues_ratio.csv',
+        'target_df_with_empty_raw_issues.csv',
         Language.KOTLIN.value,
     ),
     (
         'test_df_with_incorrect_language.csv',
-        'target_df_with_incorrect_language_freq.csv',
-        'target_df_with_incorrect_language_ratio.csv',
+        'target_df_with_incorrect_language.csv',
         'some_weird_lang',
     ),
     (
-        'test_single_lang_df.csv',
-        'target_df_single_lang_freq.csv',
-        'target_df_single_lang_ratio.csv',
+        'test_df_single_lang.csv',
+        'target_df_single_lang.csv',
         Language.JAVA.value,
     ),
 ]
 
 
-@pytest.mark.parametrize(
-    ('test_file', 'target_freq_file', 'target_ratio_file', 'lang'),
-    INSPECT_SOLUTIONS_TEST_DATA,
-)
-def test_inspect_solutions(test_file: str, target_freq_file: str, target_ratio_file: str, lang: str):
+@pytest.mark.parametrize(('test_file', 'target_file', 'lang'), INSPECT_SOLUTIONS_TEST_DATA)
+def test_inspect_solutions(test_file: str, target_file: str, lang: str):
     test_df = get_solutions_df_by_file_path(GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER / test_file)
-    stats_by_lang = inspect_solutions(test_df)
+    stats = inspect_solutions(test_df)
 
-    freq_stats = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_freq_file)
-    ratio_df = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_ratio_file)
+    freq_stats = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_file)
 
-    assert equal_df(stats_by_lang[lang][0], freq_stats)
-    assert equal_df(stats_by_lang[lang][1], ratio_df)
+    assert equal_df(stats[lang], freq_stats)
