@@ -233,3 +233,21 @@ def copy_directory(source: Union[str, Path], destination: Union[str, Path], dirs
 
 def copy_file(source: Union[str, Path], destination: Union[str, Path]):
     shutil.copy(source, destination)
+
+
+def __is_line_empty(line: str) -> bool:
+    return len(line.strip()) == 0
+
+
+def __is_comment(line: str) -> bool:
+    return line.strip().startswith(('#', '//'))
+
+
+def get_total_code_lines_from_file(path: Path) -> int:
+    code = get_content_from_file(path, to_strip_nl=False)
+    return get_total_code_lines_from_code(code)
+
+
+def get_total_code_lines_from_code(code: str) -> int:
+    lines = code.splitlines()
+    return len(list(filter(lambda line: not __is_line_empty(line) and not __is_comment(line), lines)))
