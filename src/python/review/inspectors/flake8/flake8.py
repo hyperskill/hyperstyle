@@ -15,12 +15,17 @@ from src.python.review.inspectors.issue import (
     CyclomaticComplexityIssue,
     IssueData,
     IssueType,
+    LineLenIssue,
 )
-from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
+from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip, get_line_len_tip
 
 logger = logging.getLogger(__name__)
 
 PATH_FLAKE8_CONFIG = Path(__file__).parent / '.flake8'
+# To make the whitelist, a list of words was examined based on students' solutions
+# that were flagged by flake8-spellcheck as erroneous. In general, the whitelist included those words
+# that belonged to library methods and which were common abbreviations.
+PATH_FLAKE8_SPELLCHECK_WHITELIST = Path(__file__).parent / 'whitelist.txt'
 FORMAT = '%(path)s:%(row)d:%(col)d:%(code)s:%(text)s'
 INSPECTOR_NAME = 'flake8'
 
@@ -34,6 +39,7 @@ class Flake8Inspector(BaseInspector):
             'flake8',
             f'--format={FORMAT}',
             f'--config={PATH_FLAKE8_CONFIG}',
+            f'--whitelist={PATH_FLAKE8_SPELLCHECK_WHITELIST}',
             '--max-complexity', '0',
             '--cohesion-below', '100',
             path,
@@ -46,6 +52,7 @@ class Flake8Inspector(BaseInspector):
         row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
         cc_description_re = re.compile(r"'(.+)' is too complex \((\d+)\)")
         cohesion_description_re = re.compile(r"class has low \((\d*\.?\d*)%\) cohesion")
+        line_len_description_re = re.compile(r"line too long \((\d+) > \d+ characters\)")
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(output):
@@ -53,6 +60,7 @@ class Flake8Inspector(BaseInspector):
             origin_class = groups[3]
             cc_match = cc_description_re.match(description)
             cohesion_match = cohesion_description_re.match(description)
+            line_len_match = line_len_description_re.match(description)
             file_path = Path(groups[0])
             line_no = int(groups[1])
 
@@ -74,6 +82,11 @@ class Flake8Inspector(BaseInspector):
                 )
                 issue_data[IssueData.ISSUE_TYPE.value] = IssueType.COHESION
                 issues.append(CohesionIssue(**issue_data))
+            elif line_len_match is not None:
+                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
+                issue_data[IssueData.LINE_LEN.value] = int(line_len_match.groups()[0])
+                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.LINE_LEN
+                issues.append(LineLenIssue(**issue_data))
             else:
                 issue_type = cls.choose_issue_type(origin_class)
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type

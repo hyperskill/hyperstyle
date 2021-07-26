@@ -27,6 +27,8 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C818': IssueType.CODE_STYLE,
     'C819': IssueType.CODE_STYLE,
 
+    # The categorization for WPS was created using the following document: https://bit.ly/3yms06n
+
     # WPS: Naming
     'WPS117': IssueType.CODE_STYLE,  # Forbid naming variables self, cls, or mcs.
     'WPS125': IssueType.ERROR_PRONE,  # Forbid variable or module names which shadow builtin names.
