@@ -26,6 +26,7 @@ ignore=W291,  # trailing whitespaces
        WPS303, # Forbid underscores in numbers.
        WPS305, # Forbid f strings.
        WPS306, # Forbid writing classes without base classes.
+       WPS317, # Forbid incorrect indentation for parameters. (Because of the unnecessary strictness)
        WPS318, # Forbid extra indentation. TODO: Collision with standard flake8 indentation check
        WPS319, # Forbid brackets in the wrong position. (Because of the unnecessary strictness)
        WPS323, # Forbid % formatting on strings.
