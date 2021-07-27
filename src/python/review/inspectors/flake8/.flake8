@@ -27,6 +27,7 @@ ignore=W291,  # trailing whitespaces
        WPS305, # Forbid f strings.
        WPS306, # Forbid writing classes without base classes.
        WPS318, # Forbid extra indentation. TODO: Collision with standard flake8 indentation check
+       WPS319, # Forbid brackets in the wrong position. (Because of the unnecessary strictness)
        WPS323, # Forbid % formatting on strings.
        WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
        WPS335, # Forbid wrong for loop iter targets.
