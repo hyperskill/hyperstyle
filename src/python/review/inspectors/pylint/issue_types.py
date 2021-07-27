@@ -8,6 +8,7 @@ from src.python.review.inspectors.issue import IssueType
 # E errors, for probable bugs in the code
 
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+    'C0200': IssueType.BEST_PRACTICES,  # consider using enumerate
     'W0101': IssueType.ERROR_PRONE,  # unreachable code
     'W0102': IssueType.ERROR_PRONE,  # dangerous default value
     'W0104': IssueType.ERROR_PRONE,  # statement doesn't have any effect
