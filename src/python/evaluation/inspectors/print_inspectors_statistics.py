@@ -18,7 +18,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.DIFFS_FILE_PATH.value.description)
 
     parser.add_argument('--categorize',
-                        help='If True, issues_statistics will be categorized by several categories.',
+                        help='If True, statistics will be categorized by several categories.',
                         action='store_true')
 
     parser.add_argument('-n', '--top-n',
@@ -27,7 +27,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         default=10)
 
     parser.add_argument('--full-stat',
-                        help='If True, full issues_statistics will be printed.',
+                        help='If True, full statistics will be printed.',
                         action='store_true')
 
 

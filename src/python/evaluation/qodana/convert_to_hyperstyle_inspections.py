@@ -75,7 +75,7 @@ def __qodana_to_hyperstyle_output(qodana_output: str, issues_to_keep: Set[str]) 
 
 # Resort all fields in the qodana dataframe according to the hyperstyle dataframe
 # Add column with hyperstyle output (convert qodana output to hyperstyle output)
-# Add grade column with grades from hyperstyle dataframe (to gather issues_statistics by diffs_between_df.py script)
+# Add grade column with grades from hyperstyle dataframe (to gather statistics by diffs_between_df.py script)
 def __prepare_qodana_df(qodana_df: pd.DataFrame, hyperstyle_df: pd.DataFrame,
                         issues_to_keep: Set[str]) -> pd.DataFrame:
     qodana_df = __preprocess_df(qodana_df, hyperstyle_df[ColumnName.ID.value])
