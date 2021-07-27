@@ -120,6 +120,8 @@ def _inspect_row(
     to_safe_path: bool,
 ) -> Optional[str]:
 
+    print(f'{fragment_id}: processing started')
+
     # If we were unable to identify the language version, we return None
     try:
         language_version = get_language_version(language_code)
@@ -141,7 +143,13 @@ def _inspect_row(
 
     tmp_file_extension = language_version.extension_by_language().value
     tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{fragment_id}{tmp_file_extension}'
-    temp_file = next(create_file(tmp_file_path, code))
+
+    try:
+        temp_file = next(create_file(tmp_file_path, code))
+    except Exception:
+        logger.warning(f'{fragment_id}: unable to create file', exc_info=True, stack_info=True)
+        return None
+
     inspectors_config = {
         'language_version': language_version,
         'n_cpu': 1,
@@ -159,7 +167,11 @@ def _inspect_row(
 
     raw_issues = _filter_issues(raw_issues, allow_duplicates, allow_zero_measure_issues, allow_info_issues)
 
-    return json.dumps(raw_issues, cls=RawIssueEncoder, to_safe_path=to_safe_path)
+    json_issues = json.dumps(raw_issues, cls=RawIssueEncoder, to_safe_path=to_safe_path)
+
+    print(f'{fragment_id}: processing finished.')
+
+    return json_issues
 
 
 def _is_correct_output_path(output_path: Path) -> bool:
@@ -215,9 +227,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
-    logging.basicConfig(filename=args.log_output)
+    logging.basicConfig(
+        filename=args.log_output, level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s',
+    )
 
     solutions = get_solutions_df_by_file_path(args.solutions_file_path)
+
+    logger.info("Dataset inspection started.")
 
     solutions_with_raw_issues = inspect_solutions(
         solutions,
@@ -228,9 +244,16 @@ def main() -> None:
         args.to_save_path,
     )
 
+    logger.info("Dataset inspection finished.")
+
     output_path = _get_output_path(args.solutions_file_path, args.output)
     output_extension = Extension.get_extension_from_file(str(output_path))
+
+    logger.info(f'Saving the dataframe to a file: {output_path}.')
+
     write_df_to_file(solutions_with_raw_issues, output_path, output_extension)
+
+    logger.info('Saving complete.')
 
 
 if __name__ == '__main__':
