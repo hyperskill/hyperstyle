@@ -1,6 +1,6 @@
 from pathlib import Path
 from test.python.common_util import equal_df
-from test.python.evaluation.statistics import GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER
+from test.python.evaluation.issues_statistics import GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER
 from typing import List, Optional
 
 import pandas as pd
