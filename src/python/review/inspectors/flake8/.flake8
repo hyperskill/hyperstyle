@@ -33,6 +33,7 @@ ignore=W291,  # trailing whitespaces
        WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
        WPS335, # Forbid wrong for loop iter targets.
        WPS358, # Forbid using float zeros: 0.0.
+       WPS359, # Forbids to unpack iterable objects to lists. (Because of its similarity to "WPS414")
        WPS362, # Forbid assignment to a subscript slice.
        # WPS: Best practices
        WPS404, # Forbid complex defaults. TODO: Collision with "B006"
