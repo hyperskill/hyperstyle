@@ -15,7 +15,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_comparing_strings.java', 3),
     ('test_constants.java', 4),
     ('test_covariant_equals.java', 1),
-    ('test_curly_braces.java', 2),
+    ('test_curly_braces.java', 0),
     ('test_double_checked_locking.java', 2),
     ('test_for_loop.java', 2),
     ('test_implementation_types.java', 0),

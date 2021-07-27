@@ -52,7 +52,8 @@
       </properties>
     </rule>
 <!--    <rule ref="category/java/codestyle.xml/ConfusingTernary"/>-->
-    <rule ref="category/java/codestyle.xml/ControlStatementBraces"/>
+    <!-- Disabled due to NeedBracesCheck duplication -->
+    <!-- <rule ref="category/java/codestyle.xml/ControlStatementBraces"/> -->
     <rule ref="category/java/codestyle.xml/DontImportJavaLang"/>
     <rule ref="category/java/codestyle.xml/DuplicateImports"/>
     <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
