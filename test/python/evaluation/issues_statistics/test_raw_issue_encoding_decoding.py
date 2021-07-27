@@ -3,7 +3,7 @@ import textwrap
 from pathlib import Path
 
 import pytest
-from src.python.evaluation.statistics.common.raw_issue_encoder_decoder import RawIssueDecoder, RawIssueEncoder
+from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder, RawIssueEncoder
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import (
     BaseIssue,

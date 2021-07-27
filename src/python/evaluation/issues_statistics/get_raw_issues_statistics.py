@@ -15,8 +15,8 @@ from pandarallel import pandarallel
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.evaluation_run_tool import get_language_version
-from src.python.evaluation.statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from src.python.evaluation.statistics.get_raw_issues import RAW_ISSUES
+from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
 from src.python.review.common.file_system import Extension, get_parent_folder, get_total_code_lines_from_code
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, ISSUE_TYPE_TO_CLASS, IssueType, Measurable

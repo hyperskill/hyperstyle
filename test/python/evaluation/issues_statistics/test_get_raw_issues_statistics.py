@@ -1,6 +1,6 @@
 from pathlib import Path
 from test.python.common_util import equal_df
-from test.python.evaluation.statistics import (
+from test.python.evaluation.issues_statistics import (
     GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER,
     GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER,
 )
@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 import pytest
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from src.python.evaluation.statistics.get_raw_issues_statistics import (
+from src.python.evaluation.issues_statistics.get_raw_issues_statistics import (
     _convert_language_code_to_language,
     _get_output_folder,
     DEFAULT_OUTPUT_FOLDER_NAME,

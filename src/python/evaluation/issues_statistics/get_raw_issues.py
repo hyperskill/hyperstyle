@@ -15,7 +15,7 @@ from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.evaluation_run_tool import get_language_version
-from src.python.evaluation.statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
+from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
 from src.python.review.common.file_system import (
     create_file,
     Extension,
