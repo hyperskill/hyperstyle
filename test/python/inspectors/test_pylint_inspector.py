@@ -11,7 +11,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case0_spaces.py', 0),
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 3),
-    ('case3_redefining_builtin.py', 2),
+    ('case3_redefining_builtin.py', 0),
     ('case4_naming.py', 3),
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 4),
@@ -32,6 +32,8 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case25_django.py', 0),
     ('case27_using_requests.py', 0),
     ('case30_allow_else_return.py', 0),
+    ('case36_unpacking.py', 0),
+    ('case37_wildcard_import.py', 1),
 ]
 
 
