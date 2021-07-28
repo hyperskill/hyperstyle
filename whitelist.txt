@@ -183,3 +183,9 @@ Xpath
 Ctor
 Atclause
 puppycrawl
+CONST
+isna
+dropna
+sublist
+dyn
+setdefault
