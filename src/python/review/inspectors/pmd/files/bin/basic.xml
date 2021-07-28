@@ -46,29 +46,35 @@
     <rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass"/>
     <rule ref="category/java/codestyle.xml/AvoidUsingNativeCode"/>
     <rule ref="category/java/codestyle.xml/BooleanGetMethodName"/>
-    <rule ref="category/java/codestyle.xml/ClassNamingConventions">
+    <rule ref="category/java/codestyle.xml/ClassNamingConventions"
+          message="Name ''{1}'' must use PascalCase (checked pattern ''{2}'').">
       <properties>
         <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Constants)?" />
       </properties>
     </rule>
 <!--    <rule ref="category/java/codestyle.xml/ConfusingTernary"/>-->
-    <rule ref="category/java/codestyle.xml/ControlStatementBraces"/>
+    <!-- Disabled due to NeedBracesCheck duplication -->
+    <!-- <rule ref="category/java/codestyle.xml/ControlStatementBraces"/> -->
     <rule ref="category/java/codestyle.xml/DontImportJavaLang"/>
     <rule ref="category/java/codestyle.xml/DuplicateImports"/>
     <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
     <rule ref="category/java/codestyle.xml/ExtendsObject"/>
     <rule ref="category/java/codestyle.xml/FieldDeclarationsShouldBeAtStartOfClass"/>
-    <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions"
+          message="Fields must be written using camelCase and constants using UPPER_CASE_SNAKE_CASE. (Incorrect name: ''{1}''. Checked pattern: ''{2}'').">
       <properties>
         <property name="exclusions" value="serialVersionUID|serialPersistentFields|log|logger"/>
       </properties>
     </rule>
     <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop"/>
-    <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions"/>
+    <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions"
+          message="Name ''{1}'' must use camelCase (checked pattern ''{2}'')."/>
     <rule ref="category/java/codestyle.xml/IdenticalCatchBranches"/>
 <!--    <rule ref="category/java/codestyle.xml/LinguisticNaming"/>-->
-    <rule ref="category/java/codestyle.xml/LocalVariableNamingConventions"/>
-    <rule ref="category/java/codestyle.xml/MethodNamingConventions"/>
+    <rule ref="category/java/codestyle.xml/LocalVariableNamingConventions"
+          message="Name ''{1}'' must use camelCase (checked pattern ''{2}'')."/>
+    <rule ref="category/java/codestyle.xml/MethodNamingConventions"
+          message="Name ''{1}'' must use camelCase (checked pattern ''{2}'')."/>
     <rule ref="category/java/codestyle.xml/PackageCase"/>
 <!--    <rule ref="category/java/codestyle.xml/TooManyStaticImports">-->
 <!--      <properties>-->
@@ -90,7 +96,8 @@
     <rule ref="category/java/design.xml/AvoidRethrowingException"/>
     <rule ref="category/java/design.xml/AvoidThrowingNewInstanceOfSameException"/>
     <rule ref="category/java/design.xml/AvoidUncheckedExceptionsInSignatures"/>
-    <rule ref="category/java/design.xml/CollapsibleIfStatements"/>
+    <rule ref="category/java/design.xml/CollapsibleIfStatements"
+          message="These nested if statements could be combined by &amp;&amp; operator."/>
 <!--    <rule ref="category/java/design.xml/CouplingBetweenObjects"/>-->
 <!--    <rule ref="category/java/design.xml/CyclomaticComplexity"/>-->
     <rule ref="category/java/design.xml/DoNotExtendJavaLangError"/>
