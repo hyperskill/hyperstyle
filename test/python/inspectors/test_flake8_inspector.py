@@ -35,6 +35,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case34_cohesion.py', 1),
     ('case35_line_break.py', 11),
     ('case36_unpacking.py', 3),
+    ('case37_wildcard_import.py', 7),
 ]
 
 
@@ -78,6 +79,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case33_commas.py', IssuesTestInfo(n_code_style=14, n_cc=4)),
     ('case34_cohesion.py', IssuesTestInfo(n_cc=6, n_cohesion=2)),
     ('case36_unpacking.py', IssuesTestInfo(n_error_prone=2, n_cc=1, n_other_complexity=1)),
+    ('case37_wildcard_import.py', IssuesTestInfo(n_best_practices=1, n_error_prone=3, n_cc=2, n_other_complexity=2)),
 ]
 
 
