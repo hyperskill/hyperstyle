@@ -40,7 +40,7 @@ class PMDInspector(BaseInspector):
             '-t', str(n_cpu)
         ]
 
-    def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: typing.Dict) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             output_path = Path(temp_dir / 'out.csv')
 
