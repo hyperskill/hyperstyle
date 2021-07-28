@@ -32,6 +32,7 @@ ignore=W291,  # trailing whitespaces
        WPS323, # Forbid % formatting on strings.
        WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
        WPS335, # Forbid wrong for loop iter targets.
+       WPS347, # Forbid imports that may cause confusion outside of the module. (controversial)
        WPS358, # Forbid using float zeros: 0.0.
        WPS359, # Forbids to unpack iterable objects to lists. (Because of its similarity to "WPS414")
        WPS362, # Forbid assignment to a subscript slice.
@@ -52,6 +53,7 @@ ignore=W291,  # trailing whitespaces
        P101, # format string does contain unindexed parameters
        P102, # docstring does contain unindexed parameters
        P103, # other string does contain unindexed parameters
+       F405, # Name may be undefined, or defined from star imports (Collision with the stricter "F403")
        F522, # unused named arguments. TODO: Collision with "P302"
        F523, # unused positional arguments. TODO: Collision with "P301"
        F524, # missing argument. TODO: Collision with "P201" and "P202"
