@@ -25,7 +25,7 @@ class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
     @classmethod
-    def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: typing.Dict) -> List[BaseIssue]:
         command = [
             'flake8',
             f'--format={FORMAT}',
