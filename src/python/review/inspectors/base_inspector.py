@@ -1,6 +1,6 @@
 import abc
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue
@@ -30,5 +30,5 @@ class BaseInspector(abc.ABC):
         raise NotImplementedError('inspector_type property not implemented yet')
 
     @abc.abstractmethod
-    def inspect(self, path: Path, config: typing.Dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict) -> List[BaseIssue]:
         raise NotImplementedError('inspect method not implemented yet')
