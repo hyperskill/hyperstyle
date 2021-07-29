@@ -65,7 +65,7 @@ class SpringlintInspector(BaseInspector):
             '--project', str(path)
         ]
 
-    def inspect(self, path: Path, config: typing.Dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             if path.is_file():
                 return self._inspect_file(path, temp_dir)
