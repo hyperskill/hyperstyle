@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from enum import unique, Enum
-from typing import List, Dict, Union, Any
+from enum import Enum, unique
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -59,6 +59,3 @@ class SurveyStatistics:
         for index, question in enumerate(self.questions):
             print(f'{index + 1}.\t\t{question.without_formatting_count}\t\t{question.with_formatting_count}\t\t  '
                   f'{question.any_formatting_count}')
-
-
-

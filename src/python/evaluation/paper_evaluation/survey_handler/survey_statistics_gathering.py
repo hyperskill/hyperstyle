@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 from src.python.evaluation.evaluation_run_tool import logger
-from src.python.evaluation.paper_evaluation.survey_handler.survey_statistics import SurveyStatistics, SurveyJsonField
+from src.python.evaluation.paper_evaluation.survey_handler.survey_statistics import SurveyJsonField, SurveyStatistics
 from src.python.review.common.file_system import get_content_from_file
 
 
@@ -26,7 +26,10 @@ def main() -> int:
         args = parser.parse_args()
         questions_json = json.loads(get_content_from_file(args.questions_json_path))
         results_json = json.loads(get_content_from_file(args.results_json_path))
-        stat = SurveyStatistics(questions_json[SurveyJsonField.QUESTIONS.value], results_json[SurveyJsonField.QUESTIONS.value])
+        stat = SurveyStatistics(
+            questions_json[SurveyJsonField.QUESTIONS.value],
+            results_json[SurveyJsonField.QUESTIONS.value],
+        )
         stat.print_stat()
         return 0
 
