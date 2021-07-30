@@ -61,8 +61,13 @@ def test_convert_language_code_to_language(language_code: str, expected_language
 INSPECT_SOLUTIONS_TEST_DATA = [
     (
         'test_df_with_null.csv',
-        'target_df_with_null.csv',
+        'target_df_with_null_python.csv',
         Language.PYTHON.value,
+    ),
+    (
+        'test_df_with_null.csv',
+        'target_df_with_null_unknown.csv',
+        '',
     ),
     (
         'test_df_with_empty_raw_issues.csv',
