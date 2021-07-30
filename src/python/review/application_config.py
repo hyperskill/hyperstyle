@@ -58,3 +58,10 @@ class LanguageVersion(Enum):
             or self == LanguageVersion.JAVA_11
             or self == LanguageVersion.JAVA_15
         )
+
+    @classmethod
+    def from_value(cls, value: str, default=None):
+        try:
+            return LanguageVersion(value)
+        except ValueError:
+            return default

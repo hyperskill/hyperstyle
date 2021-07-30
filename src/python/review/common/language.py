@@ -33,6 +33,13 @@ class Language(Enum):
     def values(cls) -> List[str]:
         return [member.value for member in Language]
 
+    @classmethod
+    def from_value(cls, value: str, default=None):
+        try:
+            return Language(value)
+        except ValueError:
+            return default
+
 
 EXTENSION_TO_LANGUAGE = {
     Extension.JAVA: Language.JAVA,

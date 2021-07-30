@@ -70,7 +70,8 @@ class CodeStyleRule(Rule):
         self.n_code_style_lines = n_code_style_lines
         self.n_code_style = n_code_style
 
-        self.get_ratio(n_code_style_lines, n_code_style, total_lines)
+        self.update_quality(n_code_style_lines, n_code_style)
+        self.ratio = self.get_ratio(n_code_style_lines, total_lines, self.config.language)
 
         if self.ratio > self.config.n_code_style_bad:
             self.save_quality(QualityType.BAD)
@@ -84,17 +85,22 @@ class CodeStyleRule(Rule):
         if n_code_style_lines > self.config.n_code_style_lines_bad:
             self.quality_type = QualityType.BAD
 
-    def get_ratio(self, n_code_style_lines, n_code_style, total_lines):
+    @staticmethod
+    def get_ratio(n_code_style_lines: int, total_lines: int, language: Language) -> float:
+        if language == Language.PYTHON:
+            return n_code_style_lines / max(1, total_lines)
+        else:
+            return n_code_style_lines / max(1, total_lines - 4)
+
+    def update_quality(self, n_code_style_lines: int, n_code_style: int):
         if self.config.language == Language.PYTHON:
             if n_code_style == 1:
                 self.save_quality(QualityType.MODERATE)
-            self.ratio = n_code_style_lines / max(1, total_lines)
         else:
             if n_code_style_lines == 1:
                 self.save_quality(QualityType.GOOD)
             elif n_code_style_lines == 2:
                 self.save_quality(QualityType.MODERATE)
-            self.ratio = n_code_style_lines / max(1, total_lines - 4)
 
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
