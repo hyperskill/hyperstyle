@@ -27,4 +27,4 @@ for word in words:
         print(word)
     else:
         continue
-","[{""origin_class"": ""E0001"", ""type"": ""ERROR_PRONE"", ""description"": ""invalid syntax (<unknown>, line 5)"", ""file_path"": """", ""line_no"": 5, ""column_no"": 32, ""inspector_type"": ""PYLINT""}, {""origin_class"": ""E999"", ""type"": ""CODE_STYLE"", ""description"": ""SyntaxError: invalid syntax"", ""file_path"": """", ""line_no"": 5, ""column_no"": 30, ""inspector_type"": ""FLAKE8""}, {""origin_class"": ""E113"", ""type"": ""CODE_STYLE"", ""description"": ""unexpected indentation"", ""file_path"": """", ""line_no"": 6, ""column_no"": 9, ""inspector_type"": ""FLAKE8""}]"
+",[]
