@@ -39,7 +39,6 @@ OUTPUT_DF_NAME = 'stats'
 DEFAULT_OUTPUT_FOLDER_NAME = 'raw_issues_statistics'
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -55,6 +54,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
         type=lambda value: Path(value).absolute(),
         help='Path to the folder where datasets with statistics will be saved. '
              'If not specified, the datasets will be saved in the folder next to the original one.',
+    )
+
+    parser.add_argument(
+        '-l', '--log-output',
+        type=lambda value: Path(value).absolute(),
+        help='Path where logs will be stored. If not specified, then logs will be output to stderr.',
     )
 
 
@@ -75,10 +80,15 @@ def _convert_language_code_to_language(fragment_id: str, language_code: str) -> 
 
 
 def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
-    logger.info(f'{row[ID]}: extracting stats.')
+    print(f'{row[ID]}: extracting stats.')
 
-    if row.isnull().values.any():
-        logger.warning(f'{row[ID]}: the row contains null.')
+    if pd.isnull(row[CODE]):
+        logger.warning(f'{row[ID]}: no code.')
+        row[CODE] = ""
+
+    if pd.isnull(row[CODE]):
+        logger.warning(f'{row[ID]}: no lang.')
+        row[LANG] = ""
 
     try:
         issues: List[BaseIssue] = json.loads(row[RAW_ISSUES], cls=RawIssueDecoder)
@@ -100,7 +110,7 @@ def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
 
     row[LANG] = _convert_language_code_to_language(row[ID], row[LANG])
 
-    logger.info(f'{row[ID]}: extraction of statistics is complete.')
+    print(f'{row[ID]}: extraction of statistics is complete.')
 
     return row
 
@@ -199,8 +209,19 @@ if __name__ == "__main__":
     configure_arguments(parser)
     args = parser.parse_args()
 
+    if args.log_output is not None:
+        args.log_output.parent.mkdir(parents=True, exist_ok=True)
+
+    logging.basicConfig(
+        filename=args.log_output, filemode="w", level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s',
+    )
+
     solutions_with_raw_issues = get_solutions_df_by_file_path(args.solutions_with_raw_issues)
 
+    logger.info("Dataset inspection started.")
+
     stats_by_lang = inspect_raw_issues(solutions_with_raw_issues)
+
+    logger.info("Dataset inspection finished.")
 
     _save_stats(stats_by_lang, args.solutions_with_raw_issues, args.output)
