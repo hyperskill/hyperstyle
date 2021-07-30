@@ -58,7 +58,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def _convert_language_code_to_language(fragment_id: int, language_code: str) -> str:
+def _convert_language_code_to_language(fragment_id: str, language_code: str) -> str:
     language_version = LanguageVersion.from_value(language_code)
 
     if language_version is None:
@@ -76,6 +76,9 @@ def _convert_language_code_to_language(fragment_id: int, language_code: str) -> 
 
 def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
     logger.info(f'{row[ID]}: extracting stats.')
+
+    if row.isnull().values.any():
+        logger.warning(f'{row[ID]}: the row contains Null. ')
 
     try:
         issues: List[BaseIssue] = json.loads(row[RAW_ISSUES], cls=RawIssueDecoder)
@@ -98,14 +101,8 @@ def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
     row[LANG] = _convert_language_code_to_language(row[ID], row[LANG])
 
     logger.info(f'{row[ID]}: extraction of statistics is complete.')
+
     return row
-
-
-def _is_python(language_code: str) -> bool:
-    try:
-        return Language(language_code) == Language.PYTHON
-    except ValueError:
-        return False
 
 
 def _convert_ratio_to_int(ratio: float):
