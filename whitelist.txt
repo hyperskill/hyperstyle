@@ -189,3 +189,4 @@ dropna
 sublist
 dyn
 setdefault
+isnull
