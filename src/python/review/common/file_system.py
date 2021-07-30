@@ -235,6 +235,7 @@ def copy_file(source: Union[str, Path], destination: Union[str, Path]):
     shutil.copy(source, destination)
 
 
+# Before using it, check that there are no line breaks in the string
 def __is_line_empty(line: str) -> bool:
     return len(line.strip()) == 0
 
