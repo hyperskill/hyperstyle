@@ -78,7 +78,7 @@ def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
     logger.info(f'{row[ID]}: extracting stats.')
 
     if row.isnull().values.any():
-        logger.warning(f'{row[ID]}: the row contains Null. ')
+        logger.warning(f'{row[ID]}: the row contains null.')
 
     try:
         issues: List[BaseIssue] = json.loads(row[RAW_ISSUES], cls=RawIssueDecoder)
