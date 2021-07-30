@@ -1,12 +1,14 @@
 from pathlib import Path
 from test.python.common_util import equal_df
-from test.python.evaluation.statistics import GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER
+from test.python.evaluation.issues_statistics import (
+    GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER,
+)
 from typing import List, Optional
 
 import pandas as pd
 import pytest
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from src.python.evaluation.statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
+from src.python.evaluation.issues_statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType, LineLenIssue, MaintainabilityLackIssue
 
