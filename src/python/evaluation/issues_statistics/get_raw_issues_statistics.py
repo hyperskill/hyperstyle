@@ -86,7 +86,7 @@ def _extract_stats_from_issues(row: pd.Series) -> pd.Series:
         logger.warning(f'{row[ID]}: no code.')
         row[CODE] = ""
 
-    if pd.isnull(row[CODE]):
+    if pd.isnull(row[LANG]):
         logger.warning(f'{row[ID]}: no lang.')
         row[LANG] = ""
 
