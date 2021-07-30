@@ -14,12 +14,14 @@ import pandas as pd
 from pandarallel import pandarallel
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.evaluation_run_tool import get_language_version
 from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
+from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import Extension, get_parent_folder, get_total_code_lines_from_code
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, ISSUE_TYPE_TO_CLASS, IssueType, Measurable
+from src.python.review.quality.rules.code_style_scoring import CodeStyleRule
+from src.python.review.quality.rules.line_len_scoring import LineLengthRule
 from src.python.review.reviewers.utils.code_statistics import get_code_style_lines
 
 ID = ColumnName.ID.value
@@ -57,9 +59,9 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def _convert_language_code_to_language(fragment_id: int, language_code: str) -> str:
-    try:
-        language_version = get_language_version(language_code)
-    except KeyError:
+    language_version = LanguageVersion.from_value(language_code)
+
+    if language_version is None:
         logger.warning(f'{fragment_id}: it was not possible to determine the language version from "{language_code}".')
         return language_code
 
@@ -106,6 +108,13 @@ def _is_python(language_code: str) -> bool:
         return False
 
 
+def _convert_ratio_to_int(ratio: float):
+    """
+    Round the ratio to 2 decimal places, multiply by 100, and take the integer part.
+    """
+    return int((round(ratio, 2) * 100))
+
+
 def _group_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     logger.info('The grouping of statistics by language has started.')
 
@@ -127,23 +136,21 @@ def _group_stats_by_lang(df_with_stats: pd.DataFrame) -> Dict[str, pd.DataFrame]
 
         columns_with_stats.append(lang_group[TOTAL_LINES].value_counts())
 
-        # Calculate line len ratio according to LineLengthRule
-        line_len_ratio_column = lang_group[LINE_LEN_NUMBER] / lang_group[TOTAL_LINES].apply(lambda elem: max(1, elem))
-        line_len_ratio_column = (round(line_len_ratio_column, 2) * 100).apply(int)
+        line_len_ratio_column = lang_group.apply(
+            lambda row: LineLengthRule.get_ratio(row[LINE_LEN_NUMBER], row[TOTAL_LINES]),
+            axis=1,
+        )
+        line_len_ratio_column = line_len_ratio_column.apply(_convert_ratio_to_int)
         line_len_ratio_column.name = LINE_LEN_RATIO
         columns_with_stats.append(line_len_ratio_column.value_counts())
 
-        # Calculate code style ratio according to CodeStyleRule
-        if _is_python(str(lang)):
-            code_style_ratio_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
-                lambda total_lines: max(1, total_lines),
-            )
-        else:
-            code_style_ratio_column = lang_group[CODE_STYLE_LINES] / lang_group[TOTAL_LINES].apply(
-                lambda total_lines: max(1, total_lines - 4),
-            )
-
-        code_style_ratio_column = (round(code_style_ratio_column, 2) * 100).apply(int)
+        code_style_ratio_column = lang_group.apply(
+            lambda row: CodeStyleRule.get_ratio(
+                row[CODE_STYLE_LINES], row[TOTAL_LINES], Language.from_value(str(lang), default=Language.UNKNOWN),
+            ),
+            axis=1,
+        )
+        code_style_ratio_column = code_style_ratio_column.apply(_convert_ratio_to_int)
         code_style_ratio_column.name = CODE_STYLE_RATIO
         columns_with_stats.append(code_style_ratio_column.value_counts())
 
