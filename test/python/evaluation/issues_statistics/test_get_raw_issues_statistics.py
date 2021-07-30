@@ -54,14 +54,14 @@ CONVERT_LANGUAGE_CODE_TO_LANGUAGE_TEST_DATA = [
 
 @pytest.mark.parametrize(('language_code', 'expected_language'), CONVERT_LANGUAGE_CODE_TO_LANGUAGE_TEST_DATA)
 def test_convert_language_code_to_language(language_code: str, expected_language: str):
-    actual_language = _convert_language_code_to_language(fragment_id=0, language_code=language_code)
+    actual_language = _convert_language_code_to_language(fragment_id='0', language_code=language_code)
     assert actual_language == expected_language
 
 
 INSPECT_SOLUTIONS_TEST_DATA = [
     (
-        'test_df_with_null_raw_issues.csv',
-        'target_df_with_null_raw_issues.csv',
+        'test_df_with_null.csv',
+        'target_df_with_null.csv',
         Language.PYTHON.value,
     ),
     (
