@@ -294,7 +294,7 @@ TEST_CORRECT_OUTPUT_DATA = [
     ('test_fragment_per_language.csv', 'target_fragment_per_language.csv'),
     ('test_incorrect_language.csv', 'target_incorrect_language.csv'),
     ('test_incorrect_code.csv', 'target_incorrect_code.csv'),
-    # ('test_rows_with_null.csv', 'target_rows_with_null.csv'),
+    ('test_rows_with_null.csv', 'target_rows_with_null.csv'),
 ]
 
 
