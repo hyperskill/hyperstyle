@@ -9,6 +9,7 @@ from typing import List, Optional
 sys.path.append('')
 sys.path.append('../../..')
 
+import numpy as np
 import pandas as pd
 from pandarallel import pandarallel
 from src.python.common.tool_arguments import RunToolArgument
@@ -133,29 +134,29 @@ def _inspect_row(
 
     if pd.isnull(row[LANG]):
         logger.warning(f'{row[ID]}: no lang.')
-        return None
+        return np.nan
 
     if pd.isnull(row[CODE]):
         logger.warning(f'{row[ID]}: no code.')
-        return None
+        return np.nan
 
     # If we were unable to identify the language version, we return None
     language_version = LanguageVersion.from_value(row[LANG])
     if language_version is None:
         logger.warning(f'{row[ID]}: it was not possible to determine the language version from "{row[LANG]}"')
-        return None
+        return np.nan
 
     # If we were unable to identify the language, we return None
     language = Language.from_language_version(language_version)
     if language == Language.UNKNOWN:
         logger.warning(f'{row[ID]}: it was not possible to determine the language from "{language_version}"')
-        return None
+        return np.nan
 
     # If there are no inspectors for the language, then return None
     inspectors = LANGUAGE_TO_INSPECTORS.get(language, [])
     if not inspectors:
         logger.warning(f'{row[ID]}: no inspectors were found for the {language}.')
-        return None
+        return np.nan
 
     tmp_file_extension = language_version.extension_by_language().value
     tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{row[ID]}{tmp_file_extension}'
