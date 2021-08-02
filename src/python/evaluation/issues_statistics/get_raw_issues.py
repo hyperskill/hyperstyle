@@ -160,7 +160,6 @@ def _inspect_row(
 
     tmp_file_extension = language_version.extension_by_language().value
     tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{row[ID]}{tmp_file_extension}'
-
     temp_file = next(create_file(tmp_file_path, row[CODE]))
 
     inspectors_config = {
