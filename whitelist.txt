@@ -52,6 +52,7 @@ expr
 exprs
 f1
 file
+filemode
 fillna
 formatter
 fs
@@ -77,6 +78,7 @@ intellij
 interop
 isin
 isna
+isnull
 issuetype
 iterrows
 javac
