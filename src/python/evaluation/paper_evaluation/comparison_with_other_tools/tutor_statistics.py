@@ -38,7 +38,7 @@ class TutorStatistics:
                                    task_df[ComparisonColumnName.TUTOR_ERROR.value].dropna().values))
             for cell_errors in errors_list:
                 for error in cell_errors:
-                    self.error_to_freq[error] += 1
+                    self.error_to_freq[error.strip()] += 1
                 self.task_to_error_freq[task] += 1
                 self.fragments_with_error += 1
         self.task_to_freq = sort_freq_dict(self.task_to_freq)
@@ -91,7 +91,7 @@ class IssuesStatistics:
     def __parse_issues(issues_str: str) -> List[str]:
         if pd.isna(issues_str) or issues_str == ERROR_CONST:
             return []
-        return issues_str.split(';')
+        return list(map(lambda i: i.strip(), issues_str.split(';')))
 
     @staticmethod
     def __add_issues(issues_dict: Dict[str, int], issues: List[str]) -> None:
