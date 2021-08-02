@@ -29,7 +29,7 @@ jobs:
         run: |
           for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
           do
-            if ![sort -c $file]
+            if ! sort -c $file
             then
               echo "$file is not sorted"
               exit 1
