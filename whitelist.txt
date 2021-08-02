@@ -189,3 +189,5 @@ dropna
 sublist
 dyn
 setdefault
+isnull
+filemode
