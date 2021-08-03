@@ -1,15 +1,15 @@
 id,lang,code
-2760103,java8,"import java.util.*;
+1,java11,"public class Main {
+    public static void main(String[] args) {
 
-fun main(args: Array<String>) {
-    val scanner = Scanner(System.`in`)
-    // put your code here
-    val sq = scanner.nextDouble()
-    val sqrt = Math.sqrt(Math.sqrt(sq))
-    println(sqrt)
+        int variable = 123456;  // Change this line
+
+        System.out.println(variable);
+    }
+
 
 "
-2760563,python3,"text = input()
+2,python3,"text = input()
 words = text.split()
 for word in words:
     # finish the code here
