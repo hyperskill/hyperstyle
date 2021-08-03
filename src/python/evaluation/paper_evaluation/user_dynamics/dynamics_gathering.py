@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 from typing import List
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import (

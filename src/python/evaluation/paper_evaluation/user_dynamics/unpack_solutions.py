@@ -7,8 +7,8 @@ from typing import List
 import pandas as pd
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.common.pandas_util import get_solutions_df, logger
+from src.python.evaluation.common.util import ColumnName
 from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 
 
