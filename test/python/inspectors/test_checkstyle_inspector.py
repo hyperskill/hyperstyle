@@ -43,6 +43,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_indentation_with_spaces.java', 0),
     ('test_indentation_with_tabs.java', 0),
     ('test_indentation_google_style.java', 4),
+    ('test_multiple_literals.java', 1),
 ]
 
 
