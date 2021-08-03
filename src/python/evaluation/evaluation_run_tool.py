@@ -149,7 +149,7 @@ def main() -> int:
         args = parser.parse_args()
         config = EvaluationConfig(args)
         lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
-        results = inspect_solutions_df(config, lang_code_dataframe)
+        results = inspect_solutions_df(config, lang_code_dataframe, to_drop_nan=config.to_drop_nan)
         write_df_to_file(results, config.get_output_file_path(), config.extension)
         end = time.time()
         print(f'All time: {end - start}')

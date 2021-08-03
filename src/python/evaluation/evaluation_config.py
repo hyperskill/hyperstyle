@@ -26,6 +26,7 @@ class EvaluationConfig:
         self.output_folder_path: Union[str, Path] = args.output_folder_path
         self.extension: Extension = get_restricted_extension(self.solutions_file_path, [Extension.XLSX, Extension.CSV])
         self.__init_output_file_name(args.output_file_name)
+        self.to_drop_nan = args.to_drop_nan
 
     def __init_output_file_name(self, output_file_name: Optional[str]):
         if output_file_name is None:
