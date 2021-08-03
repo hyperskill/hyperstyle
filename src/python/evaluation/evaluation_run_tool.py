@@ -70,6 +70,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                              'must contain the history of previous errors.',
                         action='store_true')
 
+    parser.add_argument('--to_drop_nan',
+                        help='If True, empty code fragments will be deleted from df',
+                        action='store_true')
+
 
 def get_language_version(lang_key: str) -> LanguageVersion:
     try:
@@ -100,7 +104,8 @@ def __get_grade_from_traceback(traceback: str) -> str:
 
 
 # TODO: calculate grade after it
-def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataFrame) -> pd.DataFrame:
+def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataFrame,
+                         to_drop_nan: bool = True) -> pd.DataFrame:
     report = pd.DataFrame(columns=lang_code_dataframe.columns)
     report[ColumnName.TRACEBACK.value] = []
 
@@ -108,7 +113,8 @@ def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataF
     if config.traceback:
         report[ColumnName.TRACEBACK.value] = []
     try:
-        lang_code_dataframe = lang_code_dataframe.dropna()
+        if to_drop_nan:
+            lang_code_dataframe = lang_code_dataframe.dropna()
         lang_code_dataframe[ColumnName.TRACEBACK.value] = lang_code_dataframe.parallel_apply(
             lambda row: __inspect_row(row[ColumnName.LANG.value],
                                       row[ColumnName.CODE.value],
