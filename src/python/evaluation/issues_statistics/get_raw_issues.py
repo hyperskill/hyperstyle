@@ -9,13 +9,14 @@ from typing import List, Optional
 sys.path.append('')
 sys.path.append('../../..')
 
+import numpy as np
 import pandas as pd
 from pandarallel import pandarallel
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.evaluation_run_tool import get_language_version
 from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
+from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
     create_file,
     Extension,
@@ -37,6 +38,12 @@ ID = ColumnName.ID.value
 RAW_ISSUES = 'raw_issues'
 
 ALLOWED_EXTENSION = {Extension.XLSX, Extension.CSV}
+
+ERROR_CODES = [
+    'E999',  # flake8
+    'WPS000',  # flake8 (wps)
+    'E0001',  # pylint
+]
 
 logger = logging.getLogger(__name__)
 
@@ -109,10 +116,13 @@ def _filter_issues(
     return filtered_issues
 
 
+def _check_issues_for_errors(issues: List[BaseIssue]) -> bool:
+    origin_classes = {issue.origin_class for issue in issues}
+    return any(error_code in origin_classes for error_code in ERROR_CODES)
+
+
 def _inspect_row(
-    fragment_id: int,
-    code: str,
-    language_code: str,
+    row: pd.Series,
     solutions_file_path: Path,
     allow_duplicates: bool,
     allow_zero_measure_issues: bool,
@@ -120,28 +130,38 @@ def _inspect_row(
     to_safe_path: bool,
 ) -> Optional[str]:
 
+    print(f'{row[ID]}: processing started')
+
+    if pd.isnull(row[LANG]):
+        logger.warning(f'{row[ID]}: no lang.')
+        return np.nan
+
+    if pd.isnull(row[CODE]):
+        logger.warning(f'{row[ID]}: no code.')
+        return np.nan
+
     # If we were unable to identify the language version, we return None
-    try:
-        language_version = get_language_version(language_code)
-    except KeyError:
-        logger.warning(f'{fragment_id}: it was not possible to determine the language version from "{language_code}"')
-        return None
+    language_version = LanguageVersion.from_value(row[LANG])
+    if language_version is None:
+        logger.warning(f'{row[ID]}: it was not possible to determine the language version from "{row[LANG]}"')
+        return np.nan
 
     # If we were unable to identify the language, we return None
     language = Language.from_language_version(language_version)
     if language == Language.UNKNOWN:
-        logger.warning(f'{fragment_id}: it was not possible to determine the language from "{language_version}"')
-        return None
+        logger.warning(f'{row[ID]}: it was not possible to determine the language from "{language_version}"')
+        return np.nan
 
     # If there are no inspectors for the language, then return None
     inspectors = LANGUAGE_TO_INSPECTORS.get(language, [])
     if not inspectors:
-        logger.warning(f'{fragment_id}: no inspectors were found for the {language}.')
-        return None
+        logger.warning(f'{row[ID]}: no inspectors were found for the {language}.')
+        return np.nan
 
     tmp_file_extension = language_version.extension_by_language().value
-    tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{fragment_id}{tmp_file_extension}'
-    temp_file = next(create_file(tmp_file_path, code))
+    tmp_file_path = solutions_file_path.parent.absolute() / f'fragment_{row[ID]}{tmp_file_extension}'
+    temp_file = next(create_file(tmp_file_path, row[CODE]))
+
     inspectors_config = {
         'language_version': language_version,
         'n_cpu': 1,
@@ -151,15 +171,26 @@ def _inspect_row(
 
     for inspector in inspectors:
         try:
-            raw_issues.extend(inspector.inspect(temp_file, inspectors_config))
+            issues = inspector.inspect(temp_file, inspectors_config)
+
+            if _check_issues_for_errors(issues):
+                logger.warning(f'{row[ID]}: inspector {inspector.inspector_type.value} failed.')
+                continue
+
+            raw_issues.extend(issues)
+
         except Exception:
-            logger.warning(f'{fragment_id}: inspector {inspector.inspector_type.value} failed.')
+            logger.warning(f'{row[ID]}: inspector {inspector.inspector_type.value} failed.')
 
     os.remove(temp_file)
 
     raw_issues = _filter_issues(raw_issues, allow_duplicates, allow_zero_measure_issues, allow_info_issues)
 
-    return json.dumps(raw_issues, cls=RawIssueEncoder, to_safe_path=to_safe_path)
+    json_issues = json.dumps(raw_issues, cls=RawIssueEncoder, to_safe_path=to_safe_path)
+
+    print(f'{row[ID]}: processing finished.')
+
+    return json_issues
 
 
 def _is_correct_output_path(output_path: Path) -> bool:
@@ -195,16 +226,8 @@ def inspect_solutions(
     pandarallel.initialize()
 
     solutions_df[RAW_ISSUES] = solutions_df.parallel_apply(
-        lambda row: _inspect_row(
-            row[ID],
-            row[CODE],
-            row[LANG],
-            solutions_file_path,
-            allow_duplicates,
-            allow_zero_measure_issues,
-            allow_info_issues,
-            to_save_path,
-        ),
+        _inspect_row,
+        args=(solutions_file_path, allow_duplicates, allow_zero_measure_issues, allow_info_issues, to_save_path),
         axis=1,
     )
 
@@ -215,9 +238,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
-    logging.basicConfig(filename=args.log_output)
+
+    if args.log_output is not None:
+        args.log_output.parent.mkdir(parents=True, exist_ok=True)
+
+    logging.basicConfig(
+        filename=args.log_output, filemode='w', level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s',
+    )
 
     solutions = get_solutions_df_by_file_path(args.solutions_file_path)
+
+    logger.info('Dataset inspection started.')
 
     solutions_with_raw_issues = inspect_solutions(
         solutions,
@@ -228,9 +259,16 @@ def main() -> None:
         args.to_save_path,
     )
 
+    logger.info('Dataset inspection finished.')
+
     output_path = _get_output_path(args.solutions_file_path, args.output)
     output_extension = Extension.get_extension_from_file(str(output_path))
+
+    logger.info(f'Saving the dataframe to a file: {output_path}.')
+
     write_df_to_file(solutions_with_raw_issues, output_path, output_extension)
+
+    logger.info('Saving complete.')
 
 
 if __name__ == '__main__':

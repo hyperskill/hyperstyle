@@ -31,7 +31,7 @@ class LineLengthRule(Rule):
 
     # TODO: refactor
     def apply(self, n_line_len, n_lines):
-        self.ratio = n_line_len / max(n_lines, 1)
+        self.ratio = self.get_ratio(n_line_len, n_lines)
         self.n_line_len = n_line_len
         self.n_lines = n_lines
 
@@ -60,3 +60,7 @@ class LineLengthRule(Rule):
         result_rule.apply(self.n_line_len + other.n_line_len, self.n_lines + other.n_lines)
 
         return result_rule
+
+    @staticmethod
+    def get_ratio(n_line_len: int, n_lines: int) -> float:
+        return n_line_len / max(n_lines, 1)
