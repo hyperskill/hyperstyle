@@ -32,6 +32,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_valid_curly_braces.java', 0),
     ('test_when_only_equals_overridden.java', 1),
     ('test_valid_spaces.java', 0),
+    ('test_multiple_literals.java', 1),
 ]
 
 
