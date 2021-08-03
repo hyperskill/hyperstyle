@@ -10,20 +10,22 @@ Required arguments:
 
 `solutions_file_path` — path to csv-file with code samples.
 
-Optional arguments:
-Argument | Description
---- | ---
-|**&#8209;fb**, **&#8209;&#8209;freq-boundary**| The boundary of solutions count for one student to analyze. The default value is 100.|
-|**&#8209;n**, **&#8209;&#8209;n**| Top n popular issues in solutions. The default value is 100. |
+In the result a file with students issues dynamics will be created. 
+We have three categories of dynamics:
+- all (count of all code quality issues expect INFO issues)
+- formatting (count of formatting code quality issues from CODE_STYLE category)
+- other (all issues minus formatting issues)
 
-In the result a file with students issues dynamics will be created.
-Also, the top of issues for all students will be printed into the terminal. This statistics has key of issue and frequency for all students.
+Each type of dynamics will be saved into a separated folder with csv files for each student.
+Each csv file has only two columns: fragment id and issues count.
 
-An example of issues dynamics:
+An example of the csv file:
 ```text
-user,traceback
-0,"0,0,0,0,0,0,0,0,0,0,0,1,0,0,3,0,0,0,0,2,0,4,0,6,3,0,3,0,0,0,1,1,0,0,0,1,0,0,0,2,0,0,0,0,0,0,4,0,0,0,1,6,0,1,0,1,3,0,0,1,1,0,0,0,0,0,3,6,1,0,0,0,0,0,0,0,4,1,0,0,1,0,8,0,2,8,0,0,0,0,1,1,1,1,3,7,23,0,9"
-1,"0,0,0,3,0,0,2,1,0,0,0,0,4,1,0,0,1,1,0,0,0,0,0,6,0,1,1,0,8,1,2,1,1,0,0,1,0,4,10,1,1,1,3,0,1,0,0,0,1,0,0,0,0,0,0,2,0,3,0,0,2,2,3,2,0,0,0,1,0,1,1,0,0,1,0,4,6,2,0,0,1,0,0,0,0,2,0,0,0,2,1,2,1,0,1,7,1,0,1,1,0,1,0"
+issue_count,time
+2,0
+20,1
+16,2
+15,3
+5,4
+5,5
 ```
-Each number in the traceback column is the count of issues in one solution. 
-The numbers of issues sorted by timestamps.

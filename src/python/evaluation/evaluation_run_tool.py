@@ -80,7 +80,8 @@ def get_language_version(lang_key: str) -> LanguageVersion:
         raise KeyError(e)
 
 
-def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str], config: EvaluationConfig) -> str:
+def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str],
+                  config: EvaluationConfig) -> Optional[str]:
     print(f'current id: {fragment_id}')
     # Tool does not work correctly with tmp files from <tempfile> module on macOS
     # thus we create a real file in the file system
@@ -107,6 +108,7 @@ def inspect_solutions_df(config: EvaluationConfig, lang_code_dataframe: pd.DataF
     if config.traceback:
         report[ColumnName.TRACEBACK.value] = []
     try:
+        lang_code_dataframe = lang_code_dataframe.dropna()
         lang_code_dataframe[ColumnName.TRACEBACK.value] = lang_code_dataframe.parallel_apply(
             lambda row: __inspect_row(row[ColumnName.LANG.value],
                                       row[ColumnName.CODE.value],
