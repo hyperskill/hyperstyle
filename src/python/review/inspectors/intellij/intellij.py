@@ -51,7 +51,7 @@ class IntelliJInspector(BaseInspector):
             INTELLIJ_INSPECTOR_SETTINGS, output_dir_path, '-v2',
         ]
 
-    def inspect(self, path: Path, config: Dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
 
         path_in_project_to_origin_path = self.copy_files_to_project(path)
         try:

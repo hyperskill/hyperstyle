@@ -109,7 +109,7 @@ class PythonAstInspector(BaseInspector):
     inspector_type = InspectorType.PYTHON_AST
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         if path.is_file():
             path_to_files = [path]
         else:

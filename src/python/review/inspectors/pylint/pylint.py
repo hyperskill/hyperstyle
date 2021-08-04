@@ -25,7 +25,7 @@ class PylintInspector(BaseInspector):
     )
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict) -> List[CodeIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[CodeIssue]:
         command = [
             'pylint',
             '--load-plugins', 'pylint_django',

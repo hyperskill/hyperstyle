@@ -33,7 +33,7 @@ class SpotbugsInspector(BaseInspector):
             str(path),
         ]
 
-    def inspect(self, path: Path, config: Dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         if path.is_file():
             is_successful = javac(path)
         else:

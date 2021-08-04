@@ -42,7 +42,7 @@ class CheckstyleInspector(BaseInspector):
             '-f', 'xml', '-o', output_path, str(path),
         ]
 
-    def inspect(self, path: Path, config: Dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / 'output.xml'
             command = self._create_command(path, output_path)

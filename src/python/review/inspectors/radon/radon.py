@@ -17,7 +17,7 @@ class RadonInspector(BaseInspector):
     inspector_type = InspectorType.RADON
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         mi_command = [
             'radon', 'mi',  # compute the Maintainability Index score
             '--max', 'F',  # set the maximum MI rank to display
