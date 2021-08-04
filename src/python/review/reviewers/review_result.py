@@ -8,23 +8,17 @@ from src.python.review.quality.penalty import Punisher
 
 
 @dataclass
-class FileReviewResult:
-    file_path: Path
-    issues: List[BaseIssue]
+class ReviewResult:
     quality: Quality
     punisher: Punisher
+    issues: List[BaseIssue]
 
 
 @dataclass
-class ReviewResult:
+class FileReviewResult(ReviewResult):
+    file_path: Path
+
+
+@dataclass
+class GeneralReviewResult(ReviewResult):
     file_review_results: List[FileReviewResult]
-    general_quality: Quality
-    general_punisher: Punisher
-
-    @property
-    def all_issues(self) -> List[BaseIssue]:
-        issues = []
-        for file_review_result in self.file_review_results:
-            issues.extend(file_review_result.issues)
-
-        return issues

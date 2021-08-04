@@ -16,7 +16,7 @@ from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.quality.evaluate_quality import evaluate_quality
 from src.python.review.quality.model import Quality
 from src.python.review.quality.penalty import categorize, get_previous_issues_by_language, Punisher
-from src.python.review.reviewers.review_result import FileReviewResult, ReviewResult
+from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
 from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
 from src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata
@@ -43,9 +43,7 @@ LANGUAGE_TO_INSPECTORS = {
 }
 
 
-def perform_language_review(metadata: Metadata,
-                            config: ApplicationConfig,
-                            language: Language) -> ReviewResult:
+def perform_language_review(metadata: Metadata, config: ApplicationConfig, language: Language) -> GeneralReviewResult:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
 
     issues = inspect_in_parallel(metadata.path, config, inspectors)
@@ -73,27 +71,18 @@ def perform_language_review(metadata: Metadata,
 
     file_review_results = []
     for file_metadata in files_metadata:
-        issues = file_path_to_issues[file_metadata.path]
-        code_statistics = gather_code_statistics(issues, file_metadata.path)
+        file_issues = file_path_to_issues[file_metadata.path]
+        code_statistics = gather_code_statistics(file_issues, file_metadata.path)
         code_statistics.total_lines = min(code_statistics.total_lines,
                                           get_range_lines(config.start_line, config.end_line))
 
-        punisher = Punisher(issues, previous_issues)
+        punisher = Punisher(file_issues, previous_issues)
         quality = evaluate_quality(code_statistics, language)
         general_quality = general_quality.merge(quality)
 
-        file_review_results.append(FileReviewResult(
-            file_metadata.path,
-            issues,
-            quality,
-            punisher,
-        ))
+        file_review_results.append(FileReviewResult(quality, punisher, file_issues, file_metadata.path))
 
-    return ReviewResult(
-        file_review_results,
-        general_quality,
-        general_punisher,
-    )
+    return GeneralReviewResult(general_quality, general_punisher, issues, file_review_results)
 
 
 def filter_out_of_range_issues(issues: List[BaseIssue],

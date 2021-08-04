@@ -5,11 +5,11 @@ from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.file_system import FileSystemItem, get_all_file_system_items
 from src.python.review.common.language import Language
 from src.python.review.reviewers.common import perform_language_review
-from src.python.review.reviewers.review_result import ReviewResult
+from src.python.review.reviewers.review_result import GeneralReviewResult
 from src.python.review.reviewers.utils.metadata_exploration import Metadata, ProjectMetadata
 
 
-def perform_python_review(metadata: Metadata, config: ApplicationConfig) -> ReviewResult:
+def perform_python_review(metadata: Metadata, config: ApplicationConfig) -> GeneralReviewResult:
     created_file_paths = []
     if isinstance(metadata, ProjectMetadata):
         created_file_paths.extend(create_init_scripts_in_subdirs(metadata.path))

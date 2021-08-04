@@ -13,6 +13,7 @@ schema = {
                 'code': {'type': 'string'},
                 'text': {'type': 'string'},
             },
+            'additionalProperties': False,
         },
         'issues': {
             'type': 'array',
@@ -25,10 +26,13 @@ schema = {
                     'line': {'type': 'string'},
                     'line_number': {'type': 'number'},
                     'text': {'type': 'string'},
+                    'influence_on_penalty': {'type': 'number'},
                 },
+                'additionalProperties': False,
             },
         },
     },
+    'additionalProperties': False,
 }
 
 
