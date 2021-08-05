@@ -1,6 +1,6 @@
 import json
 import subprocess
-from test.Ашч.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 import pytest
 from jsonschema import validate
