@@ -2,7 +2,7 @@ import csv
 import logging
 import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import new_temp_dir

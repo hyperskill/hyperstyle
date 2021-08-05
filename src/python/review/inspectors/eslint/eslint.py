@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess

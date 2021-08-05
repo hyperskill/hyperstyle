@@ -1,7 +1,7 @@
 import ast
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from src.python.review.common import language
 from src.python.review.common.file_system import get_all_file_system_items

@@ -1,6 +1,6 @@
 import abc
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue

@@ -2,7 +2,7 @@ import logging
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from src.python.review.common.file_system import get_all_file_system_items
 from src.python.review.common.java_compiler import javac, javac_project

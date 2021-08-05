@@ -2,7 +2,7 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from xml.etree import ElementTree
 
 from src.python.review.common.file_system import get_all_file_system_items, new_temp_dir
