@@ -53,11 +53,11 @@ def print_review_result_as_text(review_result: GeneralReviewResult, path: Path, 
     print(review_result.quality, end='')
 
 
-def _get_quality_without_penalty(review_result: ReviewResult):
+def _get_quality_without_penalty(review_result: ReviewResult) -> QualityType:
     return review_result.quality.quality_type
 
 
-def _get_quality_with_penalty(review_result: ReviewResult):
+def _get_quality_with_penalty(review_result: ReviewResult) -> QualityType:
     quality_without_penalty = _get_quality_without_penalty(review_result)
     return review_result.punisher.get_quality_with_penalty(quality_without_penalty)
 
