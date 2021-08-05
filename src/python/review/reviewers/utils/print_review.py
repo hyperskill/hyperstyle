@@ -69,7 +69,7 @@ def get_quality_json_dict(quality: QualityType) -> Dict:
     }
 
 
-def get_influence_json_dict(origin_class: str, review_result: ReviewResult) -> int:
+def get_influence_on_penalty_json_dict(origin_class: str, review_result: ReviewResult) -> int:
     quality_without_penalty = _get_quality_without_penalty(review_result)
     quality_with_penalty = _get_quality_with_penalty(review_result)
 
@@ -96,7 +96,7 @@ def convert_review_result_to_json_dict(review_result: ReviewResult, config: Appl
     for issue in issues:
         json_issue = convert_issue_to_json(issue, config)
 
-        json_issue[OutputJsonFields.INFLUENCE_ON_PENALTY.value] = get_influence_json_dict(
+        json_issue[OutputJsonFields.INFLUENCE_ON_PENALTY.value] = get_influence_on_penalty_json_dict(
             issue.origin_class, review_result,
         )
 
