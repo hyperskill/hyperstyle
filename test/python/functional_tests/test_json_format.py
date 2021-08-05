@@ -38,47 +38,47 @@ OLD_FORMAT_SCHEMA = {
 }
 
 NEW_FORMAT_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "quality": {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "code": {"type": "string"},
-                "text": {"type": "string"},
+    'type': 'object',
+    'additionalProperties': False,
+    'properties': {
+        'quality': {
+            'type': 'object',
+            'additionalProperties': False,
+            'properties': {
+                'code': {'type': 'string'},
+                'text': {'type': 'string'},
             },
         },
-        "file_review_results": {
-            "type": "array",
-            "additionalItems": False,
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "file_name": {"type": "string"},
-                    "quality": {
-                        "type": "object",
-                        "additionalProperties": False,
-                        "properties": {
-                            "code": {"type": "string"},
-                            "text": {"type": "string"},
+        'file_review_results': {
+            'type': 'array',
+            'additionalItems': False,
+            'items': {
+                'type': 'object',
+                'additionalProperties': False,
+                'properties': {
+                    'file_name': {'type': 'string'},
+                    'quality': {
+                        'type': 'object',
+                        'additionalProperties': False,
+                        'properties': {
+                            'code': {'type': 'string'},
+                            'text': {'type': 'string'},
                         },
                     },
-                    "issues": {
-                        "type": "array",
-                        "additionalItems": False,
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "properties": {
-                                "code": {"type": "string"},
-                                "text": {"type": "string"},
-                                "line": {"type": "string"},
-                                "line_number": {"type": "integer"},
-                                "column_number": {"type": "integer"},
-                                "category": {"type": "string"},
-                                "influence_on_penalty": {"type": "integer"},
+                    'issues': {
+                        'type': 'array',
+                        'additionalItems': False,
+                        'items': {
+                            'type': 'object',
+                            'additionalProperties': False,
+                            'properties': {
+                                'code': {'type': 'string'},
+                                'text': {'type': 'string'},
+                                'line': {'type': 'string'},
+                                'line_number': {'type': 'integer'},
+                                'column_number': {'type': 'integer'},
+                                'category': {'type': 'string'},
+                                'influence_on_penalty': {'type': 'integer'},
                             },
                         },
                     },
