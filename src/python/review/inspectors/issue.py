@@ -118,6 +118,7 @@ class IssueData(Enum):
     # Additional fields
     ISSUE_TYPE = 'type'
     DESCRIPTION = 'description'
+    DIFFICULTY = 'difficulty'
 
     LINE_LEN = 'line_len'
     FUNCTION_LEN = 'func_len'
@@ -142,6 +143,44 @@ class IssueData(Enum):
         }
 
 
+@unique
+class IssueDifficulty(Enum):
+    EASY = 'EASY'
+    MEDIUM = 'MEDIUM'
+    HARD = 'HARD'
+
+    @classmethod
+    def get_by_issue_type(cls, issue_type: IssueType) -> 'IssueDifficulty':
+        issue_type_to_difficulty = {
+            # Easy
+            IssueType.CODE_STYLE: cls.EASY,
+            IssueType.LINE_LEN: cls.EASY,
+            IssueType.FUNC_LEN: cls.EASY,
+            IssueType.BOOL_EXPR_LEN: cls.EASY,
+            IssueType.INFO: cls.EASY,  # Because INFO should always be shown on the platforms
+
+            # Medium
+            IssueType.BEST_PRACTICES: cls.MEDIUM,
+
+            # Hard
+            IssueType.CLASS_RESPONSE: cls.HARD,
+            IssueType.METHOD_NUMBER: cls.HARD,
+            IssueType.ERROR_PRONE: cls.HARD,
+            IssueType.COMPLEXITY: cls.HARD,
+            IssueType.CYCLOMATIC_COMPLEXITY: cls.HARD,
+            IssueType.INHERITANCE_DEPTH: cls.HARD,
+            IssueType.CHILDREN_NUMBER: cls.HARD,
+            IssueType.WEIGHTED_METHOD: cls.HARD,
+            IssueType.COUPLING: cls.HARD,
+            IssueType.COHESION: cls.HARD,
+            IssueType.MAINTAINABILITY: cls.HARD,
+            IssueType.UNDEFINED: cls.HARD,
+            IssueType.ARCHITECTURE: cls.HARD,
+        }
+
+        return issue_type_to_difficulty.get(issue_type, cls.HARD)
+
+
 @dataclass(frozen=True, eq=True)
 class ShortIssue:
     origin_class: str
@@ -158,6 +197,7 @@ class BaseIssue(ShortIssue):
     column_no: int
 
     inspector_type: InspectorType
+    difficulty: IssueDifficulty
 
 
 class Measurable(abc.ABC):
