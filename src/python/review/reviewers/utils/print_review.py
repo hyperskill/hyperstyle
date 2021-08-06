@@ -203,7 +203,7 @@ def convert_json_to_issues(issues_json: List[dict]) -> List[PenaltyIssue]:
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
                 influence_on_penalty=issue.get(OutputJsonFields.INFLUENCE_ON_PENALTY.value, 0),
-                difficulty=issue.get(OutputJsonFields.DIFFICULTY.value, IssueDifficulty.HARD),
+                difficulty=IssueDifficulty(issue.get(OutputJsonFields.DIFFICULTY.value, IssueDifficulty.HARD.value)),
             ),
         )
     return issues
