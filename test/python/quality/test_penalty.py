@@ -3,7 +3,7 @@ from typing import List, Set
 
 import pytest
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
 
 punisher = Punisher([], [])
@@ -17,6 +17,7 @@ CURRENT_ISSUES = [
         origin_class="SC200",
         inspector_type=InspectorType.FLAKE8,
         type=IssueType.BEST_PRACTICES,
+        difficulty=IssueDifficulty.MEDIUM,
     ),
     BaseIssue(
         file_path=Path("."),
@@ -26,6 +27,7 @@ CURRENT_ISSUES = [
         origin_class="W0108",
         inspector_type=InspectorType.FLAKE8,
         type=IssueType.CODE_STYLE,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 
