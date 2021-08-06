@@ -50,6 +50,7 @@ OLD_FORMAT_SCHEMA = {
                     'line_number': {'type': 'integer'},
                     'text': {'type': 'string'},
                     'influence_on_penalty': {'type': 'integer'},
+                    'difficulty': {'type': 'string'},
                 },
             },
         },
@@ -98,6 +99,7 @@ NEW_FORMAT_SCHEMA = {
                                 'column_number': {'type': 'integer'},
                                 'category': {'type': 'string'},
                                 'influence_on_penalty': {'type': 'integer'},
+                                'difficulty': {'type': 'string'},
                             },
                         },
                     },
@@ -127,6 +129,7 @@ ISSUES = [
         'column_number': 5,
         'category': 'BEST_PRACTICES',
         'influence_on_penalty': 0,
+        'difficulty': 'MEDIUM',
     },
     {
         'code': 'W0612',
@@ -136,6 +139,7 @@ ISSUES = [
         'column_number': 5,
         'category': 'BEST_PRACTICES',
         'influence_on_penalty': 0,
+        'difficulty': 'MEDIUM',
     },
     {
         'code': 'W0612',
@@ -145,6 +149,7 @@ ISSUES = [
         'column_number': 5,
         'category': 'BEST_PRACTICES',
         'influence_on_penalty': 0,
+        'difficulty': 'MEDIUM',
     },
 ]
 
