@@ -13,6 +13,7 @@ from src.python.review.inspectors.issue import (
     CyclomaticComplexityIssue,
     FuncLenIssue,
     IssueData,
+    IssueDifficulty,
     IssueType,
     LineLenIssue,
 )
@@ -101,6 +102,7 @@ def parse_checkstyle_file_result(
         file_path: Path,
         inspector_type: InspectorType,
         issue_type_selector: Callable[[str], IssueType],
+        difficulty_selector: Callable[[IssueType], IssueDifficulty],
         origin_class_to_description: Dict[str, str]) -> List[BaseIssue]:
     """
     Parses the output, which is a xml file, and returns a list of the issues found there.
@@ -137,6 +139,7 @@ def parse_checkstyle_file_result(
 
             issue_type = issue_type_selector(origin_class)
             issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+            issue_data[IssueData.DIFFICULTY.value] = difficulty_selector(issue_type)
 
             if origin_class in origin_class_to_description:
                 pattern = origin_class_to_description.get(origin_class)

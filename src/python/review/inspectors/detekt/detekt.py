@@ -7,7 +7,7 @@ from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.detekt.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkstyle_file_result
 
 logger = logging.getLogger(__name__)
@@ -50,6 +50,7 @@ class DetektInspector(BaseInspector):
             return parse_checkstyle_file_result(output_path,
                                                 self.inspector_type,
                                                 self.choose_issue_type,
+                                                IssueDifficulty.get_by_issue_type,
                                                 self.origin_class_to_pattern)
 
     @classmethod

@@ -6,7 +6,7 @@ from typing import List, Optional
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import CodeIssue, IssueType
+from src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
 from src.python.review.inspectors.pylint.issue_types import CATEGORY_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from src.python.review.inspectors.tips import add_complexity_tip
 
@@ -71,6 +71,7 @@ class PylintInspector(BaseInspector):
                 description=description,
                 inspector_type=cls.inspector_type,
                 type=issue_type,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
             ))
 
         return issues
