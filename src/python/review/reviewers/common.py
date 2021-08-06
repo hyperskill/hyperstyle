@@ -8,7 +8,7 @@ from src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspect
 from src.python.review.inspectors.detekt.detekt import DetektInspector
 from src.python.review.inspectors.eslint.eslint import ESLintInspector
 from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from src.python.review.inspectors.issue import BaseIssue
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty
 from src.python.review.inspectors.pmd.pmd import PMDInspector
 from src.python.review.inspectors.pyast.python_ast import PythonAstInspector
 from src.python.review.inspectors.pylint.pylint import PylintInspector
@@ -18,7 +18,11 @@ from src.python.review.quality.model import Quality
 from src.python.review.quality.penalty import categorize, get_previous_issues_by_language, Punisher
 from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
-from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
+from src.python.review.reviewers.utils.issues_filter import (
+    filter_duplicate_issues,
+    filter_low_measure_issues,
+    group_issues_by_difficulty,
+)
 from src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata
 
 LANGUAGE_TO_INSPECTORS = {
@@ -66,23 +70,53 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     previous_issues = get_previous_issues_by_language(config.history, language)
     categorize(previous_issues, issues)
 
-    general_punisher = Punisher(issues, previous_issues)
-    general_quality = Quality([])
+    issues_by_difficulty = group_issues_by_difficulty(issues)
+
+    general_punisher_by_difficulty = {
+        difficulty: Punisher(issues, previous_issues) for difficulty, issues in issues_by_difficulty.items()
+    }
+
+    general_quality_by_difficulty = {
+        difficulty: Quality([]) for difficulty in IssueDifficulty
+    }
 
     file_review_results = []
     for file_metadata in files_metadata:
         file_issues = file_path_to_issues[file_metadata.path]
-        code_statistics = gather_code_statistics(file_issues, file_metadata.path)
-        code_statistics.total_lines = min(code_statistics.total_lines,
-                                          get_range_lines(config.start_line, config.end_line))
+        file_issues_by_difficulty = group_issues_by_difficulty(file_issues)
 
-        punisher = Punisher(file_issues, previous_issues)
-        quality = evaluate_quality(code_statistics, language)
-        general_quality = general_quality.merge(quality)
+        code_statistics_by_difficulty = {
+            difficulty: gather_code_statistics(file_issues, file_metadata.path)
+            for difficulty, file_issues in file_issues_by_difficulty.items()
+        }
 
-        file_review_results.append(FileReviewResult(quality, punisher, file_issues, file_metadata.path))
+        for code_statistics in code_statistics_by_difficulty.values():
+            code_statistics.total_lines = min(code_statistics.total_lines,
+                                              get_range_lines(config.start_line, config.end_line))
 
-    return GeneralReviewResult(general_quality, general_punisher, issues, file_review_results)
+        punisher_by_difficulty = {
+            difficulty: Punisher(file_issues, previous_issues)
+            for difficulty, file_issues in file_issues_by_difficulty.items()
+        }
+
+        quality_by_difficulty = {
+            difficulty: evaluate_quality(code_statistics, language)
+            for difficulty, code_statistics in code_statistics_by_difficulty.items()
+        }
+
+        for difficulty, quality in quality_by_difficulty.items():
+            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
+
+        file_review_results.append(
+            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file_metadata.path),
+        )
+
+    return GeneralReviewResult(
+        general_quality_by_difficulty,
+        general_punisher_by_difficulty,
+        issues,
+        file_review_results,
+    )
 
 
 def filter_out_of_range_issues(issues: List[BaseIssue],

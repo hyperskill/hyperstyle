@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
-from src.python.review.inspectors.issue import BaseIssue
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty
 from src.python.review.quality.model import Quality
 from src.python.review.quality.penalty import Punisher
 
 
 @dataclass
 class ReviewResult:
-    quality: Quality
-    punisher: Punisher
+    quality_by_difficulty: Dict[IssueDifficulty, Quality]
+    punisher_by_difficulty: Dict[IssueDifficulty, Punisher]
     issues: List[BaseIssue]
 
 
