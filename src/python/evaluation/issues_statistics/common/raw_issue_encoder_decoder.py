@@ -52,7 +52,10 @@ class RawIssueDecoder(json.JSONDecoder):
         json_dict[IssueData.ISSUE_TYPE.value] = IssueType(json_dict[IssueData.ISSUE_TYPE.value])
         json_dict[IssueData.INSPECTOR_TYPE.value] = InspectorType(json_dict[IssueData.INSPECTOR_TYPE.value])
         json_dict[IssueData.FILE_PATH.value] = Path(json_dict[IssueData.FILE_PATH.value])
-        json_dict[IssueData.DIFFICULTY.value] = IssueDifficulty(json_dict[IssueData.DIFFICULTY.value])
+        # TODO: remove get after some time
+        json_dict[IssueData.DIFFICULTY.value] = IssueDifficulty(
+            json_dict.get(IssueData.DIFFICULTY.value, IssueDifficulty.HARD.value),
+        )
 
         issue_type = json_dict[IssueData.ISSUE_TYPE.value]
         if issue_type in MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME.keys():
