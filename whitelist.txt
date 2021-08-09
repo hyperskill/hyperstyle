@@ -1,4 +1,3 @@
-ColumnName
 Histogram2d
 abstractmethod
 arange
