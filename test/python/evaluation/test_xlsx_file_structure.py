@@ -20,4 +20,4 @@ def test_wrong_column(file_name: str):
         testing_arguments_dict.solutions_file_path = XLSX_DATA_FOLDER / file_name
         config = EvaluationConfig(testing_arguments_dict)
         lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
-        assert inspect_solutions_df(config, lang_code_dataframe, to_drop_nan=False)
+        assert inspect_solutions_df(config, lang_code_dataframe)
