@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -25,7 +25,7 @@ class PylintInspector(BaseInspector):
     )
 
     @classmethod
-    def inspect(cls, path: Path, config: dict) -> List[CodeIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[CodeIssue]:
         command = [
             'pylint',
             '--load-plugins', 'pylint_django',

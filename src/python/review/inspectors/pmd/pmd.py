@@ -2,7 +2,7 @@ import csv
 import logging
 import os
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import new_temp_dir
@@ -42,7 +42,7 @@ class PMDInspector(BaseInspector):
             '-t', str(n_cpu),
         ]
 
-    def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             output_path = Path(temp_dir / 'out.csv')
 
