@@ -1,5 +1,6 @@
 aggfunc
 appendleft
+arange
 argmax
 asctime
 astype
@@ -125,3 +126,4 @@ utils
 webpage
 whitespaces
 writeback
+yaxis
