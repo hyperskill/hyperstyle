@@ -12,6 +12,7 @@ checkstyle
 cloneable
 concat
 config
+configs
 conftest
 const
 consts
@@ -108,6 +109,7 @@ multilabel
 multiline
 multithreading
 namespace
+nbins
 ncss
 ndarray
 nl
@@ -179,6 +181,7 @@ usecols
 util
 utils
 varargs
+vline
 wandb
 warmup
 webp
