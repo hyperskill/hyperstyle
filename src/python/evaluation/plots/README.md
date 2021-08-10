@@ -88,17 +88,17 @@ The result will be four graphs (`unique_issues_by_category`, `unique_penalty_iss
 This script allows you to visualize a dataset obtained with [get_raw_issues_statistics.py](../issues_statistics/get_raw_issues_statistics.py). 
 
 The script can build the following charts: 
-* Line chart ([Example](#number-of-unique-issues-by-category)) # TODO 
-* Box plot ([Example](#number-of-issues-by-category)) # TODO
-* Histogram ([Example](#number-of-unique-penalty-issues-by-category)) # TODO
+* Line chart ([Example](#line-chart))
+* Box plot ([Example](#box-plot))
+* Histogram ([Example](#histogram))
 
 ### Usage
-Run the [diffs_plotter.py](diffs_plotter.py) with the arguments from command line.
+Run the [raw_issues_statistics_plotter.py](raw_issues_statistics_plotter.py) with the arguments from command line.
 
 **Required arguments**:
 1. `stats` — path to a file with stats that were founded by [get_raw_issues_statistics.py](../issues_statistics/get_raw_issues_statistics.py).
 2. `save_dir` — directory where the plotted charts will be saved.
-3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config).
+3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config-1).
 
 **Optional arguments**:
 
@@ -137,3 +137,14 @@ CYCLOMATIC_COMPLEXITY:
 ```
 
 The result will be two graphs: line chart and histogram. The values in both charts will be between 0 and 19 inclusive. In the line chart the x-axis will be named "Cyclomatic complexity value". 
+
+### Examples
+
+#### Line chart
+<img src="./examples/CYCLOMATIC_COMPLEXITY_line_chart.png" width="500">
+
+#### Box plot
+<img src="./examples/BEST_PRACTICES_box_plot.png" width="500">
+
+#### Histogram
+<img src="./examples/CODE_STYLE_ratio_histogram.png" width="500">
