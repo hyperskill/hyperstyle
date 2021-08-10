@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
 from src.python.evaluation.plots.common import plotly_consts
-from src.python.evaluation.plots.common.utils import create_box_plot, create_histogram, create_line_plot
+from src.python.evaluation.plots.common.utils import create_box_plot, create_histogram, create_line_chart
 
 
 @unique
@@ -78,7 +78,7 @@ def plot_line_chart(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
 
     stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
 
-    return create_line_plot(
+    return create_line_chart(
         stats, x_axis_name, y_axis_name, margin=config.margin, color=config.color, vertical_lines=config.boundaries,
     )
 

@@ -42,7 +42,7 @@ def create_box_plot(
     return fig
 
 
-def create_line_plot(
+def create_line_chart(
     df: pd.DataFrame,
     x_axis: str,
     y_axis: str,
