@@ -9,16 +9,15 @@ from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.file_system import get_file_line
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
-from src.python.review.reviewers.review_result import ReviewResult
+from src.python.review.quality.model import QualityType
+from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult, ReviewResult
 
 
-def print_review_result_as_text(review_result: ReviewResult,
-                                path: Path,
-                                config: ApplicationConfig) -> None:
-    heading = f'\nReview of {str(path)} ({len(review_result.all_issues)} violations)'
+def print_review_result_as_text(review_result: GeneralReviewResult, path: Path, config: ApplicationConfig) -> None:
+    heading = f'\nReview of {str(path)} ({len(review_result.issues)} violations)'
     print(heading)
 
-    if len(review_result.all_issues) == 0:
+    if len(review_result.issues) == 0:
         print('There is no issues found')
     else:
         for file_review_result in review_result.file_review_results:
@@ -51,73 +50,89 @@ def print_review_result_as_text(review_result: ReviewResult,
 
     print('*' * len(heading))
     print('General quality:')
-    print(review_result.general_quality, end='')
+    print(review_result.quality, end='')
 
 
-def print_review_result_as_json(review_result: ReviewResult, config: ApplicationConfig) -> None:
-    issues = review_result.all_issues
+def _get_quality_without_penalty(review_result: ReviewResult) -> QualityType:
+    return review_result.quality.quality_type
 
+
+def _get_quality_with_penalty(review_result: ReviewResult) -> QualityType:
+    quality_without_penalty = _get_quality_without_penalty(review_result)
+    return review_result.punisher.get_quality_with_penalty(quality_without_penalty)
+
+
+def get_quality_json_dict(quality: QualityType) -> Dict:
+    return {
+        OutputJsonFields.CODE.value: quality.value,
+        OutputJsonFields.TEXT.value: f'Code quality (beta): {quality.value}',
+    }
+
+
+def get_influence_on_penalty_json_dict(origin_class: str, review_result: ReviewResult) -> int:
+    quality_without_penalty = _get_quality_without_penalty(review_result)
+    quality_with_penalty = _get_quality_with_penalty(review_result)
+
+    if quality_with_penalty != quality_without_penalty:
+        return review_result.punisher.get_issue_influence_on_penalty(origin_class)
+
+    return 0
+
+
+def convert_review_result_to_json_dict(review_result: ReviewResult, config: ApplicationConfig) -> Dict:
+    issues = review_result.issues
     issues.sort(key=lambda issue: issue.line_no)
 
-    quality_without_penalty = review_result.general_quality.quality_type
-    quality_with_penalty = review_result.general_punisher.get_quality_with_penalty(quality_without_penalty)
-    output_json = {'quality': {
-        'code': quality_with_penalty.value,
-        'text': f'Code quality (beta): {quality_with_penalty.value}',
-    }, 'issues': []}
+    quality_with_penalty = _get_quality_with_penalty(review_result)
+
+    output_json = {}
+
+    if isinstance(review_result, FileReviewResult):
+        output_json[OutputJsonFields.FILE_NAME.value] = str(review_result.file_path)
+
+    output_json[OutputJsonFields.QUALITY.value] = get_quality_json_dict(quality_with_penalty)
+    output_json[OutputJsonFields.ISSUES.value] = []
 
     for issue in issues:
-        influence_on_penalty = 0
-        if quality_with_penalty != quality_without_penalty:
-            influence_on_penalty = review_result.general_punisher.get_issue_influence_on_penalty(issue.origin_class)
+        json_issue = convert_issue_to_json(issue, config)
 
-        output_json['issues'].append(convert_issue_to_json(issue, config, influence_on_penalty))
+        json_issue[OutputJsonFields.INFLUENCE_ON_PENALTY.value] = get_influence_on_penalty_json_dict(
+            issue.origin_class, review_result,
+        )
 
-    print(json.dumps(output_json))
+        output_json[OutputJsonFields.ISSUES.value].append(json_issue)
+
+    return output_json
 
 
-def print_review_result_as_multi_file_json(review_result: ReviewResult, config: ApplicationConfig) -> None:
-    file_review_result_jsons = []
+def print_review_result_as_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> None:
+    print(json.dumps(convert_review_result_to_json_dict(review_result, config)))
 
+
+def print_review_result_as_multi_file_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> None:
     review_result.file_review_results.sort(key=lambda result: result.file_path)
 
+    file_review_result_jsons = []
     for file_review_result in review_result.file_review_results:
-        quality_without_penalty = file_review_result.quality.quality_type
-        quality_with_penalty = file_review_result.punisher.get_quality_with_penalty(quality_without_penalty)
-        file_review_result_json = {
-            'file_name': str(file_review_result.file_path),
-            'quality': {
-                'code': quality_with_penalty.value,
-                'text': f'Code quality (beta): {quality_with_penalty.value}',
-            },
-            'issues': [],
-        }
+        file_review_result_jsons.append(convert_review_result_to_json_dict(file_review_result, config))
 
-        file_review_result_jsons.append(file_review_result_json)
-
-        for issue in file_review_result.issues:
-            influence_on_penalty = 0
-            if quality_with_penalty != quality_without_penalty:
-                influence_on_penalty = file_review_result.punisher.get_issue_influence_on_penalty(issue.origin_class)
-
-            file_review_result_json['issues'].append(convert_issue_to_json(issue, config, influence_on_penalty))
-
-    quality_without_penalty = review_result.general_quality.quality_type
-    quality_with_penalty = review_result.general_punisher.get_quality_with_penalty(quality_without_penalty)
+    quality_with_penalty = _get_quality_with_penalty(review_result)
 
     output_json = {
-        'quality': {
-            'code': quality_with_penalty.value,
-            'text': f'Code quality (beta): {quality_with_penalty.value}',
-        },
-        'file_review_results': file_review_result_jsons,
+        OutputJsonFields.QUALITY.value: get_quality_json_dict(quality_with_penalty),
+        OutputJsonFields.FILE_REVIEW_RESULTS.value: file_review_result_jsons,
     }
 
     print(json.dumps(output_json))
 
 
 @unique
-class IssueJsonFields(Enum):
+class OutputJsonFields(Enum):
+    QUALITY = 'quality'
+    ISSUES = 'issues'
+    FILE_REVIEW_RESULTS = 'file_review_results'
+    FILE_NAME = 'file_name'
+
     CODE = 'code'
     TEXT = 'text'
     LINE = 'line'
@@ -127,7 +142,7 @@ class IssueJsonFields(Enum):
     INFLUENCE_ON_PENALTY = 'influence_on_penalty'
 
 
-def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig, influence_on_penalty: int = 0) -> Dict[str, Any]:
+def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig) -> Dict[str, Any]:
     line_text = get_file_line(issue.file_path, issue.line_no)
 
     issue_type = issue.type
@@ -135,13 +150,12 @@ def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig, influence
         issue_type = issue_type.to_main_type()
 
     return {
-        IssueJsonFields.CODE.value: issue.origin_class,
-        IssueJsonFields.TEXT.value: issue.description,
-        IssueJsonFields.LINE.value: line_text,
-        IssueJsonFields.LINE_NUMBER.value: issue.line_no,
-        IssueJsonFields.COLUMN_NUMBER.value: issue.column_no,
-        IssueJsonFields.CATEGORY.value: issue_type.value,
-        IssueJsonFields.INFLUENCE_ON_PENALTY.value: influence_on_penalty,
+        OutputJsonFields.CODE.value: issue.origin_class,
+        OutputJsonFields.TEXT.value: issue.description,
+        OutputJsonFields.LINE.value: line_text,
+        OutputJsonFields.LINE_NUMBER.value: issue.line_no,
+        OutputJsonFields.COLUMN_NUMBER.value: issue.column_no,
+        OutputJsonFields.CATEGORY.value: issue_type.value,
     }
 
 
@@ -151,15 +165,15 @@ def convert_json_to_issues(issues_json: List[dict]) -> List[PenaltyIssue]:
     for issue in issues_json:
         issues.append(
             PenaltyIssue(
-                origin_class=issue[IssueJsonFields.CODE.value],
-                description=issue[IssueJsonFields.TEXT.value],
-                line_no=int(issue[IssueJsonFields.LINE_NUMBER.value]),
-                column_no=int(issue[IssueJsonFields.COLUMN_NUMBER.value]),
-                type=IssueType(issue[IssueJsonFields.CATEGORY.value]),
+                origin_class=issue[OutputJsonFields.CODE.value],
+                description=issue[OutputJsonFields.TEXT.value],
+                line_no=int(issue[OutputJsonFields.LINE_NUMBER.value]),
+                column_no=int(issue[OutputJsonFields.COLUMN_NUMBER.value]),
+                type=IssueType(issue[OutputJsonFields.CATEGORY.value]),
 
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
-                influence_on_penalty=issue.get(IssueJsonFields.INFLUENCE_ON_PENALTY.value, 0),
+                influence_on_penalty=issue.get(OutputJsonFields.INFLUENCE_ON_PENALTY.value, 0),
             ),
         )
     return issues

@@ -8,23 +8,26 @@ from src.python.review.quality.penalty import Punisher
 
 
 @dataclass
-class FileReviewResult:
-    file_path: Path
-    issues: List[BaseIssue]
+class ReviewResult:
+    """
+    ReviewResult contains a list of issues, as well as quality and punisher obtained with these issues.
+    """
     quality: Quality
     punisher: Punisher
+    issues: List[BaseIssue]
 
 
 @dataclass
-class ReviewResult:
+class FileReviewResult(ReviewResult):
+    """
+    FileReviewResult contains the information needed to output about a particular inspected file.
+    """
+    file_path: Path
+
+
+@dataclass
+class GeneralReviewResult(ReviewResult):
+    """
+    GeneralReviewResult contains the information needed to output about the entire inspected project.
+    """
     file_review_results: List[FileReviewResult]
-    general_quality: Quality
-    general_punisher: Punisher
-
-    @property
-    def all_issues(self) -> List[BaseIssue]:
-        issues = []
-        for file_review_result in self.file_review_results:
-            issues.extend(file_review_result.issues)
-
-        return issues
