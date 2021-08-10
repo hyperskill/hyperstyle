@@ -1,24 +1,26 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Callable, Dict, Optional, Tuple
+from typing import Callable, Dict, Optional, Tuple, List
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
 from src.python.evaluation.plots.common import plotly_consts
-from src.python.evaluation.plots.common.utils import create_histogram, create_line_plot
+from src.python.evaluation.plots.common.utils import create_histogram, create_line_plot, create_box_plot
 
 
 @unique
 class PlotTypes(Enum):
     LINE_CHART = 'line_chart'
     HISTOGRAM = 'histogram'
+    BOXPLOT = 'boxplot'
 
     def to_plotter_function(self) -> Callable[..., go.Figure]:
         type_to_function = {
             PlotTypes.LINE_CHART: plot_line_chart,
             PlotTypes.HISTOGRAM: plot_histogram,
+            PlotTypes.BOXPLOT: plot_boxplot,
         }
 
         return type_to_function[self]
@@ -97,3 +99,26 @@ def plot_histogram(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
         n_bins=config.n_bins,
         vertical_lines=config.boundaries,
     )
+
+
+def _get_all_values_from_stats(stats: pd.DataFrame, column_name: str) -> List[int]:
+    result = []
+    stats.apply(lambda row: result.extend([row[VALUE]] * row[column_name]), axis=1)
+    return result
+
+
+def plot_boxplot(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
+    x_axis_name, y_axis_name = _get_axis_names(
+        config,
+        default_x_axis_name="Category",
+        default_y_axis_name='Values',
+    )
+
+    values = _get_all_values_from_stats(stats, config.column)
+
+    if config.range_of_values is not None:
+        values = list(filter(lambda elem: elem in config.range_of_values, values))
+
+    values_df = pd.DataFrame.from_dict({x_axis_name: config.column, y_axis_name: values})
+
+    return create_box_plot(values_df, x_axis_name, y_axis_name, horizontal_lines=config.boundaries)
