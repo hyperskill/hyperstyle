@@ -30,14 +30,15 @@ def create_bar_plot(
 
 def create_box_plot(
     df: pd.DataFrame,
-    x_axis: Optional[str],
+    x_axis: str,
     y_axis: str,
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     color: Optional[plotly_consts.COLOR] = None,
+    horizontal_lines: Optional[Dict[int, Optional[str]]] = None,
 ) -> go.Figure:
     fig = px.box(df, x=x_axis, y=y_axis)
-    update_figure(fig, margin, sort_order, color)
+    update_figure(fig, margin=margin, sort_order=sort_order, color=color, horizontal_lines=horizontal_lines)
     return fig
 
 
@@ -49,7 +50,7 @@ def create_line_plot(
     color: Optional[plotly_consts.COLOR] = None,
     vertical_lines: Optional[Dict[int, Optional[str]]] = None,
 ) -> go.Figure:
-    fig = px.line(df, x=x_axis, y=y_axis, text=y_axis)
+    fig = px.line(df, x=x_axis, y=y_axis)
     update_figure(fig, margin=margin, color=color, vertical_lines=vertical_lines)
     return fig
 
@@ -75,6 +76,7 @@ def update_figure(
     margin: Optional[plotly_consts.MARGIN] = None,
     sort_order: Optional[plotly_consts.SORT_ORDER] = None,
     color: Optional[plotly_consts.COLOR] = None,
+    horizontal_lines: Optional[Dict[int, Optional[str]]] = None,
     vertical_lines: Optional[Dict[int, Optional[str]]] = None,
     x_axis_name: Optional[str] = None,
     y_axis_name: Optional[str] = None,
@@ -101,6 +103,10 @@ def update_figure(
         new_trace["marker"] = {"color": color.value}
 
     fig.update_traces(**new_trace)
+
+    if horizontal_lines is not None:
+        for y, annotation in horizontal_lines.items():
+            fig.add_hline(y=y, annotation_text=annotation)
 
     if vertical_lines is not None:
         for x, annotation in vertical_lines.items():
