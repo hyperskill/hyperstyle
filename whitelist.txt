@@ -1,8 +1,10 @@
 Histogram2d
+Pastel1
 abstractmethod
 arange
 astype
 atclause
+barmode
 bce
 binarizer
 capsys
@@ -187,7 +189,9 @@ webp
 wmc
 wps
 writelines
+xanchor
 xaxis
 xlsx
 xpath
+yanchor
 yaxis

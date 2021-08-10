@@ -1,6 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
+from statistics import median
 from typing import List
 
 import numpy as np
@@ -52,6 +53,9 @@ def __get_users_statistics(solutions_df: pd.DataFrame, output_path: Path) -> Non
                                                   len(__get_all_issues(
                                                       row[ColumnName.TRACEBACK.value])),
                                                   axis=1)
+        m = median(list(user_df[ALL_ISSUES_COUNT]))
+        if m > 10:
+            print(user)
         user_df[FORMATTING_ISSUES_COUNT] = user_df.apply(lambda row:
                                                          len(__get_formatting_issues(
                                                              row[ColumnName.TRACEBACK.value])),
