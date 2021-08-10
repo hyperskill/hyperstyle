@@ -30,8 +30,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def __parse_time_and_solutions(times_str: str, solutions_str: str) -> pd.DataFrame:
-    times = times_str.split(',')[:100]
-    solutions = solutions_str.split('₣')[:100]
+    times = times_str.split(',')
+    solutions = solutions_str.split('₣')
     time_to_solution = dict(zip(times, solutions))
     user_df = pd.DataFrame(time_to_solution.items(), columns=[ColumnName.TIME.value, ColumnName.CODE.value])
     user_df[ColumnName.USER.value] = uuid.uuid4()

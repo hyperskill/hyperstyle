@@ -1,5 +1,3 @@
-Histogram2d
-Pastel1
 abstractmethod
 arange
 astype
