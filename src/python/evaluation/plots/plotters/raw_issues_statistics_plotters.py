@@ -1,26 +1,26 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Callable, Dict, Optional, Tuple, List
+from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
 from src.python.evaluation.plots.common import plotly_consts
-from src.python.evaluation.plots.common.utils import create_histogram, create_line_plot, create_box_plot
+from src.python.evaluation.plots.common.utils import create_box_plot, create_histogram, create_line_plot
 
 
 @unique
 class PlotTypes(Enum):
     LINE_CHART = 'line_chart'
     HISTOGRAM = 'histogram'
-    BOXPLOT = 'boxplot'
+    BOX_PLOT = 'box_plot'
 
     def to_plotter_function(self) -> Callable[..., go.Figure]:
         type_to_function = {
             PlotTypes.LINE_CHART: plot_line_chart,
             PlotTypes.HISTOGRAM: plot_histogram,
-            PlotTypes.BOXPLOT: plot_boxplot,
+            PlotTypes.BOX_PLOT: plot_box_plot,
         }
 
         return type_to_function[self]
@@ -107,7 +107,7 @@ def _get_all_values_from_stats(stats: pd.DataFrame, column_name: str) -> List[in
     return result
 
 
-def plot_boxplot(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
+def plot_box_plot(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
     x_axis_name, y_axis_name = _get_axis_names(
         config,
         default_x_axis_name="Category",
