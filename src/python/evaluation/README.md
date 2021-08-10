@@ -33,3 +33,4 @@ Argument | Description
 |**&#8209;&#8209;traceback**| To include a column with errors traceback into an output file. Default is `False`.|
 |**&#8209;ofp**, **&#8209;&#8209;output&#8209;folder&#8209;path**| An explicit folder path to store file with results. Default is a parent directory of a folder with xlsx-file or csv-file sent for inspection. |
 |**&#8209;ofn**, **&#8209;&#8209;output&#8209;file&#8209;name**| A name of an output file where evaluation results will be stored. Default is `results.xlsx` or `results.csv`.|
+|**&#8209;&#8209;to&#8209;drop&#8209;nan**| If True, empty code fragments will be deleted from df. Default is `False`.|

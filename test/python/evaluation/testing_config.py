@@ -20,5 +20,6 @@ def get_testing_arguments(to_add_traceback=None, to_add_tool_path=None, to_add_h
         testing_arguments.with_history = True
 
     testing_arguments.solutions_file_path = None
+    testing_arguments.to_drop_nan = False
 
     return testing_arguments
