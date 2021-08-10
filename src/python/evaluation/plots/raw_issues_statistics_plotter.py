@@ -1,7 +1,10 @@
 import argparse
+import sys
 from enum import Enum, unique
 from pathlib import Path
 from typing import Dict, List, Optional
+
+sys.path.append('../../../..')
 
 import pandas as pd
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
