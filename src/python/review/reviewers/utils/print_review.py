@@ -90,10 +90,10 @@ def get_influence_on_penalty_json_dict(
     quality_with_penalty = _get_quality_with_penalty(review_result)
 
     influence_on_penalty_json_dict = {
-        difficulty.value: review_result.punisher_by_difficulty[difficulty].get_issue_influence_on_penalty(origin_class)
+        difficulty.value: punisher.get_issue_influence_on_penalty(origin_class)
         if quality_with_penalty[difficulty] != quality_without_penalty[difficulty]
         else 0
-        for difficulty in IssueDifficulty
+        for difficulty, punisher in review_result.punisher_by_difficulty.items()
     }
 
     if config.group_by_difficulty:
