@@ -41,6 +41,7 @@ expm1
 falsy
 fillna
 floordiv
+fromkeys
 fromstring
 fullmatch
 gensim
