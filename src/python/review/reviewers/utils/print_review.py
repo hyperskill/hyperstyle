@@ -61,10 +61,8 @@ def _get_quality_with_penalty(review_result: ReviewResult) -> Dict[IssueDifficul
     quality_without_penalty = _get_quality_without_penalty(review_result)
 
     return {
-        difficulty: review_result.punisher_by_difficulty[difficulty].get_quality_with_penalty(
-            quality_without_penalty[difficulty],
-        )
-        for difficulty, quality in review_result.quality_by_difficulty.items()
+        difficulty: punisher.get_quality_with_penalty(quality_without_penalty[difficulty])
+        for difficulty, punisher in review_result.punisher_by_difficulty.items()
     }
 
 
