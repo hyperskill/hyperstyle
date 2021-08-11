@@ -1,20 +1,52 @@
 import argparse
 import sys
+from collections import Counter
 from pathlib import Path
 from statistics import median
+from typing import List
 
 import pandas as pd
-import plotly.graph_objects as go
+import plotly.express as px
 from src.python.evaluation.common.pandas_util import logger
-from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
-from src.python.review.common.file_system import Extension, extension_file_condition, get_all_file_system_items
+from src.python.review.common.file_system import (
+    Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
+)
+
+MEDIAN_COLUMN = ('Median number of code quality issues in submissions<br>'
+                 'by the same students before and after using Big Brother')
+FREQ_COLUMN = 'Number of users'
+TYPE = 'Submissions\' type'
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('dynamics_folder_path',
                         type=lambda value: Path(value).absolute(),
-                        help='Add description here')
+                        help='Folder with dynamics after embedding tool')
+
+    parser.add_argument('old_dynamics_folder_path',
+                        type=lambda value: Path(value).absolute(),
+                        help='Folder with dynamics before embedding tool')
+
+
+def __get_medians(dynamics_folder_path: Path) -> List[float]:
+    dynamics_paths = get_all_file_system_items(dynamics_folder_path, extension_file_condition(Extension.CSV))
+    medians = []
+    for dynamic in dynamics_paths:
+        dynamic_df = pd.read_csv(dynamic)
+        medians.append(int(median(dynamic_df[DynamicsColumn.ISSUE_COUNT.value])))
+    return medians
+
+
+def __group_medians(path_to_dynamics: Path, dynamics_type: str, threshold: int = 8) -> pd.DataFrame:
+    medians = __get_medians(path_to_dynamics)
+    grouped_medians = dict(Counter(medians))
+    more_threshold = sum([freq for m, freq in grouped_medians.items() if m > threshold])
+    others = {str(m): freq for m, freq in grouped_medians.items() if m <= threshold}
+    others[f'> {threshold}'] = more_threshold
+    new_df = pd.DataFrame(others.items(), columns=[MEDIAN_COLUMN, FREQ_COLUMN])
+    new_df[TYPE] = dynamics_type
+    return new_df
 
 
 def main() -> int:
@@ -23,32 +55,31 @@ def main() -> int:
 
     try:
         args = parser.parse_args()
-        dynamics_folder_path = args.dynamics_folder_path
-        dynamics_paths = get_all_file_system_items(dynamics_folder_path, extension_file_condition(Extension.CSV))
-        dynamic_fig = go.Figure()
+        old_df = __group_medians(args.old_dynamics_folder_path, 'Before embedding tool')
+        new_df = __group_medians(args.dynamics_folder_path, 'After embedding tool')
+        union_df = old_df.append(new_df).sort_values([MEDIAN_COLUMN, TYPE], ascending=[True, False])
+        fig = px.bar(union_df, x=MEDIAN_COLUMN, y=FREQ_COLUMN, width=1000, height=800, color=TYPE,
+                     color_discrete_sequence=['rgb(253,251,220)', 'rgb(47,22,84)'])
+        fig.update_layout(legend={
+            'yanchor': 'top',
+            'y': 0.99,
+            'xanchor': 'right',
+            'x': 0.99,
+        },
+            font_size=22,
+            barmode='group',
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+        )
+        # Add borders around plot
+        fig.update_xaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
+        # Add borders around bars
+        fig.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=0.9)
 
-        medians = []
-        for i, dynamic in enumerate(dynamics_paths):
-            dynamic_df = pd.read_csv(dynamic)
-
-            dynamic_df = dynamic_df.head(100)
-            dynamic_fig.add_trace(go.Scatter(
-                x=dynamic_df[ColumnName.TIME.value],
-                y=dynamic_df[DynamicsColumn.ISSUE_COUNT.value],
-                name=f'user {i}',
-            ))
-            medians.append(median(dynamic_df[DynamicsColumn.ISSUE_COUNT.value]))
-
-        dynamic_fig.update_layout(title='Code quality issues dynamics for Python',
-                                  xaxis_title='Submission number',
-                                  yaxis_title='Code quality issues count')
-        dynamic_fig.show()
-
-        medians = go.Figure(data=go.Scatter(x=list(range(len(medians))), y=medians))
-        medians.update_layout(title='Median values for code quality issues dynamics for Python',
-                              xaxis_title='Student number',
-                              yaxis_title='Median of code quality issues count')
-        medians.show()
+        output_path = get_parent_folder(args.old_dynamics_folder_path) / f'evaluation_chart{Extension.PDF.value}'
+        fig.write_image(str(output_path))
+        fig.show()
         return 0
 
     except Exception:
