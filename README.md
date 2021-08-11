@@ -106,6 +106,7 @@ Argument | Description
 **&#8209;&#8209;new-format**              |  the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.
 **&#8209;&#8209;history**                 |  JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"number\": 20}, {\"origin_class\": \"WPS314\", \"number\": 3}]}"`
 **&#8209;&#8209;with&#8209;all&#8209;categories** | Without this flag, all issues will be categorized into 5 main categories: `CODE_STYLE`, `BEST_PRACTICES`, `ERROR_PRONE`, `COMPLEXITY`, `INFO`.
+**&#8209;&#8209;group&#8209;by&#8209;difficulty** | With this flag, the final grade and influence on penalty will be grouped by the issue difficulty.
 
 The output examples:
 
@@ -127,6 +128,7 @@ The output examples:
       "line_number": 54,
       "column_number": 0,
       "category": "FUNC_LEN",
+      "difficulty": "EASY",
       "influence_on_penalty": 0 
     },
     ...
@@ -157,6 +159,7 @@ The output examples:
           "line_number": 174,
           "column_number": 12,
           "category": "BEST_PRACTICES", 
+          "difficulty": "MEDIUM",
           "influence_on_penalty": 0 
         },
         ...
