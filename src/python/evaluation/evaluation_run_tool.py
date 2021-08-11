@@ -147,7 +147,6 @@ def main() -> int:
         start = time.time()
         args = parser.parse_args()
         config = EvaluationConfig(args)
-        print(config.tool_path)
         lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
         results = inspect_solutions_df(config, lang_code_dataframe)
         write_df_to_file(results, config.get_output_file_path(), config.extension)
