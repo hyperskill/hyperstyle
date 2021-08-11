@@ -77,7 +77,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     }
 
     general_quality_by_difficulty = {
-        difficulty: Quality([]) for difficulty in IssueDifficulty
+        difficulty: Quality([]) for difficulty in issues_by_difficulty.keys()
     }
 
     file_review_results = []
