@@ -72,30 +72,27 @@ class Flake8Inspector(BaseInspector):
                                                             column_number=column_number,
                                                             origin_class=origin_class)
             if cc_match is not None:  # mccabe: cyclomatic complexity
+                issue_type = IssueType.CYCLOMATIC_COMPLEXITY
                 issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
                 issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match.groups()[1])
-                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.CYCLOMATIC_COMPLEXITY
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(
-                    issue_data[IssueData.ISSUE_TYPE.value],
-                )
+                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif cohesion_match is not None:  # flake8-cohesion
+                issue_type = IssueType.COHESION
                 issue_data[IssueData.DESCRIPTION.value] = description  # TODO: Add tip
                 issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
                     float(cohesion_match.group(1)),
                 )
-                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.COHESION
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(
-                    issue_data[IssueData.ISSUE_TYPE.value],
-                )
+                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CohesionIssue(**issue_data))
             elif line_len_match is not None:
+                issue_type = IssueType.LINE_LEN
                 issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
                 issue_data[IssueData.LINE_LEN.value] = int(line_len_match.groups()[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = IssueType.LINE_LEN
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(
-                    issue_data[IssueData.ISSUE_TYPE.value],
-                )
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(LineLenIssue(**issue_data))
             else:
                 issue_type = cls.choose_issue_type(origin_class)
