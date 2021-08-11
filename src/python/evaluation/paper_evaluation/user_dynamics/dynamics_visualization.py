@@ -13,8 +13,9 @@ from src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
 )
 
-MEDIAN_COLUMN = 'Median of count code quality issues in students\' submissions'
-FREQ_COLUMN = 'Count of users'
+MEDIAN_COLUMN = ('Median number of code quality issues in submissions<br>'
+                 'by the same students before and after using Big Brother')
+FREQ_COLUMN = 'Number of users'
 TYPE = 'Submissions\' type'
 
 
@@ -56,7 +57,7 @@ def main() -> int:
         args = parser.parse_args()
         old_df = __group_medians(args.old_dynamics_folder_path, 'Before embedding tool')
         new_df = __group_medians(args.dynamics_folder_path, 'After embedding tool')
-        union_df = new_df.append(old_df).sort_values(by=[MEDIAN_COLUMN], ascending=True)
+        union_df = old_df.append(new_df).sort_values([MEDIAN_COLUMN, TYPE], ascending=[True, False])
         fig = px.bar(union_df, x=MEDIAN_COLUMN, y=FREQ_COLUMN, width=1000, height=800, color=TYPE,
                      color_discrete_sequence=px.colors.qualitative.Pastel1)
         fig.update_layout(legend={
