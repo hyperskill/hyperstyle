@@ -24,6 +24,7 @@ class LocalCommandBuilder:
     end_line: Optional[int] = None
     new_format: bool = False
     group_by_difficulty: bool = False
+    history: Optional[str] = None
 
     def build(self) -> List[str]:
         assert self.path is not None
@@ -44,6 +45,9 @@ class LocalCommandBuilder:
 
         if self.new_format:
             command.append(RunToolArgument.NEW_FORMAT.value.long_name)
+
+        if self.history is not None:
+            command.extend([RunToolArgument.HISTORY.value.long_name, self.history])
 
         if self.group_by_difficulty:
             command.append(RunToolArgument.GROUP_BY_DIFFICULTY.value.long_name)
