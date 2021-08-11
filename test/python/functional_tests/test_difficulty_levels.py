@@ -254,7 +254,7 @@ HISTORY = {
             'origin_class': 'H601',
             'number': 5,
         },
-    ]
+    ],
 }
 
 HARD_ISSUES_WITH_INFLUENCE = {
