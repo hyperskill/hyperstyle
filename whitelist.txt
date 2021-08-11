@@ -5,6 +5,7 @@ astype
 atclause
 barmode
 bce
+bgcolor
 binarizer
 capsys
 case18
@@ -94,8 +95,10 @@ jsonschema
 kts
 lcom
 linecache
+linecolor
 lineno
 linesep
+linewidth
 listdir
 loc
 logits
@@ -152,6 +155,7 @@ rfind
 rmdir
 runtime
 setdefault
+showline
 sigmoid
 singleline
 sklearn
@@ -189,8 +193,10 @@ wmc
 wps
 writelines
 xanchor
+xaxes
 xaxis
 xlsx
 xpath
 yanchor
+yaxes
 yaxis

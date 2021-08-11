@@ -59,7 +59,7 @@ def main() -> int:
         new_df = __group_medians(args.dynamics_folder_path, 'After embedding tool')
         union_df = old_df.append(new_df).sort_values([MEDIAN_COLUMN, TYPE], ascending=[True, False])
         fig = px.bar(union_df, x=MEDIAN_COLUMN, y=FREQ_COLUMN, width=1000, height=800, color=TYPE,
-                     color_discrete_sequence=px.colors.qualitative.Pastel1)
+                     color_discrete_sequence=['rgb(253,251,220)', 'rgb(47,22,84)'])
         fig.update_layout(legend={
             'yanchor': 'top',
             'y': 0.99,
@@ -68,7 +68,14 @@ def main() -> int:
         },
             font_size=22,
             barmode='group',
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
         )
+        # Add borders around plot
+        fig.update_xaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
+        # Add borders around bars
+        fig.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=0.9)
 
         output_path = get_parent_folder(args.old_dynamics_folder_path) / f'evaluation_chart{Extension.PDF.value}'
         fig.write_image(str(output_path))
