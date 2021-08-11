@@ -97,8 +97,7 @@ def print_stat(language: Language, stat: IssuesStat) -> None:
     print(f'Collected statistics for {language.value.lower()} language:')
     for issue_type, freq in stat.items():
         print(f'{issue_type}: {freq} times;')
-    print(f'Note: {IssueType.UNDEFINED} means a category that is not categorized among the four main categories. '
-          f'Most likely it is {IssueType.INFO} category')
+    print(f'Note: {IssueType.UNDEFINED} means a category that is not categorized among the four main categories.')
 
 
 def __parse_language(language: str) -> Language:

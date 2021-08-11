@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -23,7 +23,7 @@ class RadonInspector(BaseInspector):
     inspector_type = InspectorType.RADON
 
     @classmethod
-    def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         mi_command = [
             'radon', 'mi',  # compute the Maintainability Index score
             '--max', 'F',  # set the maximum MI rank to display

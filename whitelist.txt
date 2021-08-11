@@ -1,4 +1,6 @@
+Histogram2d
 abstractmethod
+arange
 astype
 atclause
 bce
@@ -188,3 +190,4 @@ writelines
 xaxis
 xlsx
 xpath
+yaxis

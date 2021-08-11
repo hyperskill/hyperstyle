@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -35,7 +35,7 @@ class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
     @classmethod
-    def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         command = [
             'flake8',
             f'--format={FORMAT}',
