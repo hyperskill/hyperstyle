@@ -167,13 +167,12 @@ class SpringlintInspector(BaseInspector):
     def _create_issue(cls, metric_name: str,
                       metric_value: int, path: Path) -> Optional[BaseIssue]:
         property_name = cls.metric_name_to_property[metric_name]
+        issue_type = cls.metric_name_to_issue_type[metric_name]
         issue_data = cls._get_common_issue_data(path)
         issue_data[property_name] = metric_value
         issue_data[IssueData.DESCRIPTION.value] = cls.metric_name_to_description[metric_name]
-        issue_data[IssueData.ISSUE_TYPE.value] = cls.metric_name_to_issue_type[metric_name]
-        issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(
-            issue_data[IssueData.ISSUE_TYPE.value],
-        )
+        issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+        issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
 
         if metric_name == 'dit':
             return InheritanceIssue(**issue_data)
