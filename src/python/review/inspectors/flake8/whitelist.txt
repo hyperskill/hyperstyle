@@ -4,7 +4,9 @@ arange
 argmax
 asctime
 astype
+barmode
 betavariate
+bgcolor
 birthdate
 blackbox
 bs4
@@ -14,6 +16,8 @@ capwords
 casefold
 caseless
 concat
+config
+configs
 consts
 coord
 copysign
@@ -41,6 +45,7 @@ expm1
 falsy
 fillna
 floordiv
+fromkeys
 fromstring
 fullmatch
 gensim
@@ -48,6 +53,7 @@ gmtime
 groupby
 halfs
 hashable
+hline
 href
 hyp
 hyperskill
@@ -73,12 +79,15 @@ lemmatizer
 lifes
 lim
 linalg
+linecolor
+linewidth
 linspace
 lowercased
 lvl
 lxml
 matmul
 multiline
+nbins
 ndarray
 ndigits
 ndim
@@ -100,6 +109,7 @@ rindex
 rmdir
 schur
 scipy
+showline
 sigmoid
 sqrt
 src
@@ -116,6 +126,7 @@ tokenize
 tokenized
 tokenizer
 tolist
+toplevel
 tracklist
 truediv
 truthy
@@ -123,7 +134,11 @@ unpickled
 upd
 util
 utils
+vline
 webpage
 whitespaces
 writeback
+xanchor
+xaxes
+yanchor
 yaxis
