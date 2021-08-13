@@ -110,6 +110,7 @@ mccabe
 mcs
 measurer
 min
+minsize
 misrefactored
 mlb
 multilabel
@@ -174,10 +175,12 @@ subdirs
 sublist
 svg
 sym
+textposition
 textwrap
 tmp
 tokenizer
 uncommented
+uniformtext
 uniq
 unique
 unit4
