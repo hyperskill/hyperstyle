@@ -125,3 +125,6 @@ utils
 webpage
 whitespaces
 writeback
+textposition
+uniformtext
+minsize
