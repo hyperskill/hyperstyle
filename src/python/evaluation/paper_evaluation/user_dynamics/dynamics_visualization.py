@@ -13,10 +13,10 @@ from src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
 )
 
-MEDIAN_COLUMN = ('Median number of code quality issues in submissions<br>'
-                 'by the same students before and after using Big Brother')
+MEDIAN_COLUMN = 'Median number of code quality issues in submissions'
 FREQ_COLUMN = 'Number of users'
 TYPE = 'Submissions\' type'
+PERCENTAGE = 'percentage'
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -46,6 +46,8 @@ def __group_medians(path_to_dynamics: Path, dynamics_type: str, threshold: int =
     others[f'> {threshold}'] = more_threshold
     new_df = pd.DataFrame(others.items(), columns=[MEDIAN_COLUMN, FREQ_COLUMN])
     new_df[TYPE] = dynamics_type
+    all_users = sum(new_df[FREQ_COLUMN])
+    new_df[PERCENTAGE] = new_df.apply(lambda row: f'{round(row[FREQ_COLUMN] / all_users * 100)}%', axis=1)
     return new_df
 
 
@@ -58,6 +60,7 @@ def main() -> int:
         old_df = __group_medians(args.old_dynamics_folder_path, 'Before embedding tool')
         new_df = __group_medians(args.dynamics_folder_path, 'After embedding tool')
         union_df = old_df.append(new_df).sort_values([MEDIAN_COLUMN, TYPE], ascending=[True, False])
+
         fig = px.bar(union_df, x=MEDIAN_COLUMN, y=FREQ_COLUMN, width=1000, height=800, color=TYPE,
                      color_discrete_sequence=['rgb(253,251,220)', 'rgb(47,22,84)'])
         fig.update_layout(legend={
@@ -75,7 +78,9 @@ def main() -> int:
         fig.update_xaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
         fig.update_yaxes(showline=True, linewidth=1, linecolor='black', mirror=True)
         # Add borders around bars
-        fig.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=0.9)
+        fig.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=0.9,
+                          textposition='outside')
+        fig.update_layout(uniformtext_minsize=11, uniformtext_mode='hide')
 
         output_path = get_parent_folder(args.old_dynamics_folder_path) / f'evaluation_chart{Extension.PDF.value}'
         fig.write_image(str(output_path))
