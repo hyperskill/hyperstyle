@@ -10,8 +10,13 @@ jobs:
     container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
 
     steps:
+      - name: Install git
+        run: |
+          apt-get update
+          apt-get -y install git
+    
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install requirements
         run: |
@@ -25,16 +30,18 @@ jobs:
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
-      - name: Check whitelists are sorted
+      - name: Sort whitelists
         run: |
           for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
           do
-            if ! sort -c $file
-            then
-              echo "$file is not sorted"
-              exit 1
-            fi
+            LC_ALL=C sort $file -o $file
           done
+          
+      - name: Commit sorted whitelists
+        uses: EndBug/add-and-commit@v7.2.1
+        with:
+          add: "['whitelist.txt', 'src/python/review/inspectors/flake8/whitelist.txt']"
+          message: 'Sort whitelists (Github Actions)'
 
       - name: Set up Eslint
         run: |
