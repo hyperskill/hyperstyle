@@ -16,6 +16,7 @@ checkstyle
 cloneable
 concat
 config
+configs
 conftest
 const
 consts
@@ -69,6 +70,7 @@ getuid
 gradle
 groupby
 hashtable
+hline
 hyperstyle
 idx
 ignorecase
@@ -114,6 +116,7 @@ multilabel
 multiline
 multithreading
 namespace
+nbins
 ncss
 ndarray
 nl
@@ -186,6 +189,7 @@ usecols
 util
 utils
 varargs
+vline
 wandb
 warmup
 webp

@@ -15,13 +15,13 @@ from src.python.evaluation.inspectors.common.statistics import (
 )
 from src.python.evaluation.inspectors.print_inspectors_statistics import gather_statistics
 from src.python.evaluation.plots.common import plotly_consts
-from src.python.evaluation.plots.common.plotters import (
+from src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
+from src.python.evaluation.plots.plotters.diffs_plotters import (
     get_issues_by_category,
     get_median_penalty_influence_by_category,
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 
 

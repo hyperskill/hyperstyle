@@ -1,7 +1,7 @@
 # Hyperstyle evaluation: plots
-This module allows you to visualize the data obtained with the [inspectors](../inspectors) module
+This module allows you to visualize the data.
 
-## [diffs_plotter.py](diffs_plotter.py)
+## Diffs plotter
 This script allows you to visualize a dataset obtained with [diffs_between_df.py](../inspectors/diffs_between_df.py). 
 
 The script can build the following charts: 
@@ -83,3 +83,68 @@ The result will be four graphs (`unique_issues_by_category`, `unique_penalty_iss
 
 #### Distribution of influence on penalty by category
 <img src="./examples/penalty_influence_distribution.png" width="500">
+
+## Raw issues statistics plotter
+This script allows you to visualize a dataset obtained with [get_raw_issues_statistics.py](../issues_statistics/get_raw_issues_statistics.py). 
+
+The script can build the following charts: 
+* Line chart ([Example](#line-chart))
+* Box plot ([Example](#box-plot))
+* Histogram ([Example](#histogram))
+
+### Usage
+Run the [raw_issues_statistics_plotter.py](raw_issues_statistics_plotter.py) with the arguments from command line.
+
+**Required arguments**:
+1. `stats` — path to a file with stats that were founded by [get_raw_issues_statistics.py](../issues_statistics/get_raw_issues_statistics.py).
+2. `save_dir` — directory where the plotted charts will be saved.
+3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config-1).
+
+**Optional arguments**:
+
+Argument | Description
+--- | ---
+**&#8209;&#8209;file&#8209;extension** | Allows you to select the extension of output files. Available extensions: `.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`, `.pdf`, `.eps`, `.json`. Default is `.svg`.
+
+### Config
+The configuration file is a dictionary in yaml format, where for each column of the original dataset the types of graphs to be plotted are specified. You can also put the common parameters when plotting multiple graphs for one column in a separate `common` group.
+
+**Possible values of the charts**: 
+* `line_chart`
+* `histogram`
+* `box_plot`
+
+**Possible parameters**:
+Parametr | Description
+---|---
+**x_axis_name** | Name of the x-axis. The default value depends on the type of chart.
+**y_axis_name** | Name of the y-axis. The default value depends on the type of chart.
+**boundaries** | Dictionary consisting of pairs `boundary value`: `boundary name` (boundary name may not exist). Allows to draw vertical or horizontal lines on graphs (depending on the type of plot). By default, the boundaries are not drawn.
+**range_of_values** | Allows you to filter the values. It is an array of two values: a and b. Only values that belong to the range &#91;a, b&#41; are taken into account when plotting. By default, all values are taken into account when plotting.
+**margin** | Defines the outer margin on all four sides of the chart. The available values are specified in the Enum class `MARGIN` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
+**sort_order** | Defines the sorting order of the chart. The available values are specified in the Enum class `SORT_ORDER` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
+**color** | Defines the color of the chart. The available values are specified in the Enum class `COLOR` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.
+**n_bins** | Allows you to adjust the number of bins when plotting a box plot. By default, this value is set by Plotly.
+
+#### Example of config
+```yaml
+CYCLOMATIC_COMPLEXITY:
+  line_chart:
+    x_axis_name: Cyclomatic complexity value
+  histigram:
+  common:
+    range_of_values: [0, 20]
+```
+
+The result will be two graphs: line chart and histogram. The values in both charts will be between 0 and 19 inclusive. In the line chart the x-axis will be named "Cyclomatic complexity value". 
+
+### Examples
+
+#### Line chart
+<img src="./examples/CYCLOMATIC_COMPLEXITY_line_chart.png" width="500">
+
+#### Box plot
+<img src="./examples/BEST_PRACTICES_box_plot.png" width="500">
+
+#### Histogram
+<img src="./examples/CODE_STYLE_ratio_histogram.png" width="500">
