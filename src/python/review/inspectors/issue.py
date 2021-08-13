@@ -1,4 +1,5 @@
 import abc
+import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
@@ -6,6 +7,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -178,7 +181,11 @@ class IssueDifficulty(Enum):
             IssueType.ARCHITECTURE: cls.HARD,
         }
 
-        return issue_type_to_difficulty.get(issue_type, cls.HARD)
+        if issue_type not in issue_type_to_difficulty:
+            logger.warning(f'IssueDifficulty: {issue_type} - unknown issue type.')
+            return cls.HARD
+
+        return issue_type_to_difficulty[issue_type]
 
 
 @dataclass(frozen=True, eq=True)
