@@ -1,4 +1,5 @@
 import abc
+import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
@@ -6,6 +7,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -118,6 +121,7 @@ class IssueData(Enum):
     # Additional fields
     ISSUE_TYPE = 'type'
     DESCRIPTION = 'description'
+    DIFFICULTY = 'difficulty'
 
     LINE_LEN = 'line_len'
     FUNCTION_LEN = 'func_len'
@@ -142,6 +146,48 @@ class IssueData(Enum):
         }
 
 
+@unique
+class IssueDifficulty(Enum):
+    EASY = 'EASY'
+    MEDIUM = 'MEDIUM'
+    HARD = 'HARD'
+
+    @classmethod
+    def get_by_issue_type(cls, issue_type: IssueType) -> 'IssueDifficulty':
+        issue_type_to_difficulty = {
+            # Easy
+            IssueType.CODE_STYLE: cls.EASY,
+            IssueType.LINE_LEN: cls.EASY,
+            IssueType.FUNC_LEN: cls.EASY,
+            IssueType.BOOL_EXPR_LEN: cls.EASY,
+            IssueType.INFO: cls.EASY,  # Because INFO should always be shown on the platforms
+
+            # Medium
+            IssueType.BEST_PRACTICES: cls.MEDIUM,
+
+            # Hard
+            IssueType.CLASS_RESPONSE: cls.HARD,
+            IssueType.METHOD_NUMBER: cls.HARD,
+            IssueType.ERROR_PRONE: cls.HARD,
+            IssueType.COMPLEXITY: cls.HARD,
+            IssueType.CYCLOMATIC_COMPLEXITY: cls.HARD,
+            IssueType.INHERITANCE_DEPTH: cls.HARD,
+            IssueType.CHILDREN_NUMBER: cls.HARD,
+            IssueType.WEIGHTED_METHOD: cls.HARD,
+            IssueType.COUPLING: cls.HARD,
+            IssueType.COHESION: cls.HARD,
+            IssueType.MAINTAINABILITY: cls.HARD,
+            IssueType.UNDEFINED: cls.HARD,
+            IssueType.ARCHITECTURE: cls.HARD,
+        }
+
+        if issue_type not in issue_type_to_difficulty:
+            logger.warning(f'IssueDifficulty: {issue_type} - unknown issue type.')
+            return cls.HARD
+
+        return issue_type_to_difficulty[issue_type]
+
+
 @dataclass(frozen=True, eq=True)
 class ShortIssue:
     origin_class: str
@@ -158,6 +204,7 @@ class BaseIssue(ShortIssue):
     column_no: int
 
     inspector_type: InspectorType
+    difficulty: IssueDifficulty
 
 
 class Measurable(abc.ABC):

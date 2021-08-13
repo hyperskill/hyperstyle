@@ -9,7 +9,7 @@ from src.python.review.common.java_compiler import javac, javac_project
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
 
 logger = logging.getLogger(__name__)
 
@@ -101,4 +101,5 @@ class SpotbugsInspector(BaseInspector):
             origin_class=issue_class,
             description=short_desc,
             inspector_type=cls.inspector_type,
+            difficulty=IssueDifficulty.get_by_issue_type(IssueType.ERROR_PRONE),
         )

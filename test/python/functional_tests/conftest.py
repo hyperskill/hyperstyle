@@ -5,6 +5,7 @@ from typing import List, Optional
 
 import pytest
 from src.python import MAIN_FOLDER
+from src.python.common.tool_arguments import RunToolArgument
 
 DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
 
@@ -22,34 +23,46 @@ class LocalCommandBuilder:
     start_line: Optional[int] = None
     end_line: Optional[int] = None
     new_format: bool = False
+    group_by_difficulty: bool = False
+    history: Optional[str] = None
 
     def build(self) -> List[str]:
         assert self.path is not None
 
-        command = ['python3', (MAIN_FOLDER.parent / 'review/run_tool.py'), f'-v{self.verbosity}']
+        command = [
+            'python3', (MAIN_FOLDER.parent / 'review/run_tool.py'),
+            RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
+        ]
+
         if self.disable:
-            command.extend(['-d', ','.join(self.disable)])
+            command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
 
         if self.allow_duplicates:
-            command.append('--allow-duplicates')
+            command.append(RunToolArgument.DUPLICATES.value.long_name)
 
         if self.language_version is not None:
-            command.extend(['--language-version', self.language_version])
+            command.extend([RunToolArgument.LANG_VERSION.value.long_name, self.language_version])
 
         if self.new_format:
-            command.append('--new-format')
+            command.append(RunToolArgument.NEW_FORMAT.value.long_name)
+
+        if self.history is not None:
+            command.extend([RunToolArgument.HISTORY.value.long_name, self.history])
+
+        if self.group_by_difficulty:
+            command.append(RunToolArgument.GROUP_BY_DIFFICULTY.value.long_name)
 
         command.extend([
-            '--n_cpu', str(self.n_cpu),
-            '-f', self.format,
+            RunToolArgument.CPU.value.long_name, str(self.n_cpu),
+            RunToolArgument.FORMAT.value.long_name, self.format,
             str(self.path),
         ])
 
         if self.start_line is not None:
-            command.extend(['-s', str(self.start_line)])
+            command.extend([RunToolArgument.START_LINE.value.long_name, str(self.start_line)])
 
         if self.end_line is not None:
-            command.extend(['-e', str(self.end_line)])
+            command.extend([RunToolArgument.END_LINE.value.long_name, str(self.end_line)])
 
         return command
 

@@ -10,7 +10,14 @@ import pytest
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.issues_statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType, LineLenIssue, MaintainabilityLackIssue
+from src.python.review.inspectors.issue import (
+    BaseIssue,
+    CodeIssue,
+    IssueDifficulty,
+    IssueType,
+    LineLenIssue,
+    MaintainabilityLackIssue,
+)
 
 ORIGINAL_DF_NAME = 'original_df'
 ORIGINAL_DF_CSV = f'{ORIGINAL_DF_NAME}.csv'
@@ -52,6 +59,7 @@ ISSUES_FOR_FILTERING = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="SwitchStmtsShouldHaveDefault",
@@ -61,6 +69,7 @@ ISSUES_FOR_FILTERING = [
         line_no=112,
         column_no=1,
         inspector_type=InspectorType.PMD,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="MagicNumberCheck",
@@ -70,6 +79,7 @@ ISSUES_FOR_FILTERING = [
         line_no=303,
         column_no=25,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.EASY,
     ),
     MaintainabilityLackIssue(
         origin_class="SomeMaintainabilityCheck",
@@ -80,16 +90,18 @@ ISSUES_FOR_FILTERING = [
         column_no=50,
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
+        difficulty=IssueDifficulty.HARD,
     ),
     LineLenIssue(
         origin_class="SomeLineLenCheck",
-        type=IssueType.MAINTAINABILITY,
+        type=IssueType.LINE_LEN,
         description="Some description",
         file_path=Path(""),
         line_no=139,
         column_no=24,
         inspector_type=InspectorType.CHECKSTYLE,
         line_len=10,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 
@@ -102,6 +114,7 @@ ISSUES_WITHOUT_DUPLICATES = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="MagicNumberCheck",
@@ -111,6 +124,7 @@ ISSUES_WITHOUT_DUPLICATES = [
         line_no=303,
         column_no=25,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.EASY,
     ),
     MaintainabilityLackIssue(
         origin_class="SomeMaintainabilityCheck",
@@ -121,16 +135,18 @@ ISSUES_WITHOUT_DUPLICATES = [
         column_no=50,
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
+        difficulty=IssueDifficulty.HARD,
     ),
     LineLenIssue(
         origin_class="SomeLineLenCheck",
-        type=IssueType.MAINTAINABILITY,
+        type=IssueType.LINE_LEN,
         description="Some description",
         file_path=Path(""),
         line_no=139,
         column_no=24,
         inspector_type=InspectorType.CHECKSTYLE,
         line_len=10,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 
@@ -143,6 +159,7 @@ ISSUES_WITHOUT_ZERO_MEASURE_ISSUES = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="SwitchStmtsShouldHaveDefault",
@@ -152,6 +169,7 @@ ISSUES_WITHOUT_ZERO_MEASURE_ISSUES = [
         line_no=112,
         column_no=1,
         inspector_type=InspectorType.PMD,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="MagicNumberCheck",
@@ -161,16 +179,18 @@ ISSUES_WITHOUT_ZERO_MEASURE_ISSUES = [
         line_no=303,
         column_no=25,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.EASY,
     ),
     LineLenIssue(
         origin_class="SomeLineLenCheck",
-        type=IssueType.MAINTAINABILITY,
+        type=IssueType.LINE_LEN,
         description="Some description",
         file_path=Path(""),
         line_no=139,
         column_no=24,
         inspector_type=InspectorType.CHECKSTYLE,
         line_len=10,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 
@@ -183,6 +203,7 @@ ISSUES_WITHOUT_INFO_CATEGORY = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.HARD,
     ),
     CodeIssue(
         origin_class="SwitchStmtsShouldHaveDefault",
@@ -192,6 +213,7 @@ ISSUES_WITHOUT_INFO_CATEGORY = [
         line_no=112,
         column_no=1,
         inspector_type=InspectorType.PMD,
+        difficulty=IssueDifficulty.HARD,
     ),
     MaintainabilityLackIssue(
         origin_class="SomeMaintainabilityCheck",
@@ -202,16 +224,18 @@ ISSUES_WITHOUT_INFO_CATEGORY = [
         column_no=50,
         inspector_type=InspectorType.CHECKSTYLE,
         maintainability_lack=0,
+        difficulty=IssueDifficulty.HARD,
     ),
     LineLenIssue(
         origin_class="SomeLineLenCheck",
-        type=IssueType.MAINTAINABILITY,
+        type=IssueType.LINE_LEN,
         description="Some description",
         file_path=Path(""),
         line_no=139,
         column_no=24,
         inspector_type=InspectorType.CHECKSTYLE,
         line_len=10,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 
@@ -224,16 +248,18 @@ FILTERED_ISSUES = [
         line_no=112,
         column_no=13,
         inspector_type=InspectorType.CHECKSTYLE,
+        difficulty=IssueDifficulty.HARD,
     ),
     LineLenIssue(
         origin_class="SomeLineLenCheck",
-        type=IssueType.MAINTAINABILITY,
+        type=IssueType.LINE_LEN,
         description="Some description",
         file_path=Path(""),
         line_no=139,
         column_no=24,
         inspector_type=InspectorType.CHECKSTYLE,
         line_len=10,
+        difficulty=IssueDifficulty.EASY,
     ),
 ]
 

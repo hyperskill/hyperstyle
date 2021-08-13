@@ -7,7 +7,7 @@ from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.evaluation.inspectors.diffs_between_df import find_diffs
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import IssueType
+from src.python.review.inspectors.issue import IssueDifficulty, IssueType
 
 RESOURCES_PATH = INSPECTORS_DIR_PATH / 'diffs_between_df'
 
@@ -38,6 +38,7 @@ ISSUES = {
         file_path=Path(),
         inspector_type=InspectorType.UNDEFINED,
         influence_on_penalty=0,
+        difficulty=IssueDifficulty.EASY,
     ), PenaltyIssue(
         origin_class='E211',
         description='whitespace before \'(\'',
@@ -48,6 +49,7 @@ ISSUES = {
         file_path=Path(),
         inspector_type=InspectorType.UNDEFINED,
         influence_on_penalty=0,
+        difficulty=IssueDifficulty.EASY,
     ),
 }
 

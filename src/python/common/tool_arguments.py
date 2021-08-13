@@ -82,6 +82,9 @@ class RunToolArgument(Enum):
                                         'Without this flag, all issues will be categorized into 5 main categories: '
                                         'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.')
 
+    GROUP_BY_DIFFICULTY = ArgumentsInfo(None, '--group-by-difficulty',
+                                        'With this flag, the final grade will be grouped by the issue difficulty.')
+
     SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
                                         'Local XLSX-file or CSV-file path. '
                                         'Your file must include column-names: '

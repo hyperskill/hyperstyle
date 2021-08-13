@@ -10,7 +10,7 @@ from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.intellij.issue_types import ISSUE_CLASS_TO_ISSUE_TYPE
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
 
 logger = logging.getLogger(__name__)
 
@@ -161,6 +161,7 @@ class IntelliJInspector(BaseInspector):
                             origin_class=issue_class,
                             inspector_type=cls.inspector_type,
                             type=issue_type,
+                            difficulty=IssueDifficulty.get_by_issue_type(issue_type),
                         ))
 
         return issues

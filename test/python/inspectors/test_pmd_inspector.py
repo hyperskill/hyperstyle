@@ -4,7 +4,7 @@ from typing import List
 
 import pytest
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import CodeIssue, IssueType
+from src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
 from src.python.review.inspectors.pmd.pmd import PMDInspector
 
 from .conftest import use_file_metadata
@@ -21,24 +21,28 @@ FILE_NAME_AND_ISSUES = [
                             "the first occurrence is on line 6",
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=6, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.MEDIUM,
             ),
             CodeIssue(
                 origin_class='UncommentedEmptyMethodBody', type=IssueType.BEST_PRACTICES,
                 description='Document empty method body',
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=12, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.MEDIUM,
             ),
             CodeIssue(
                 origin_class='UnusedLocalVariable', type=IssueType.BEST_PRACTICES,
                 description="Avoid unused local variables such as 'result'.",
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=31, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.MEDIUM,
             ),
             CodeIssue(
                 origin_class='UnusedPrivateMethod', type=IssueType.BEST_PRACTICES,
                 description="Avoid unused private methods such as 'emptyLoop()'.",
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=61, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.MEDIUM,
             ),
         ],
     ),
@@ -50,24 +54,28 @@ FILE_NAME_AND_ISSUES = [
                 description='Use equals() to compare object references.',
                 file_path=Path('/home/user/Desktop/some_project/main1.java'),
                 line_no=37, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.HARD,
             ),
             CodeIssue(
                 origin_class='SuspiciousEqualsMethodName', type=IssueType.ERROR_PRONE,
                 description='The method name and parameter number are suspiciously close to equals(Object)',
                 file_path=Path('/home/user/Desktop/some_project/main1.java'),
                 line_no=68, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.HARD,
             ),
             CodeIssue(
                 origin_class='UselessParentheses', type=IssueType.CODE_STYLE,
                 description='Useless parentheses.',
                 file_path=Path('/home/user/Desktop/some_project/main2.java'),
                 line_no=113, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.EASY,
             ),
             CodeIssue(
                 origin_class='EmptyIfStmt', type=IssueType.BEST_PRACTICES,
                 description='Avoid empty if statements',
                 file_path=Path('/home/user/Desktop/some_project/main2.java'),
                 line_no=131, column_no=1, inspector_type=InspectorType.PMD,
+                difficulty=IssueDifficulty.MEDIUM,
             ),
         ],
     ),

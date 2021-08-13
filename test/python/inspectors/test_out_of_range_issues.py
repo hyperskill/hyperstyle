@@ -1,20 +1,23 @@
 from pathlib import Path
 
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
 from src.python.review.reviewers.common import filter_out_of_range_issues
 
 DEFAULT_PATH = Path('test_out_of_range_issues.py')
 
 
 def create_code_issue_by_line(line_no: int) -> BaseIssue:
-    return CodeIssue(file_path=DEFAULT_PATH,
-                     line_no=line_no,
-                     description='',
-                     inspector_type=InspectorType.FLAKE8,
-                     type=IssueType.CODE_STYLE,
-                     column_no=1,
-                     origin_class='')
+    return CodeIssue(
+        file_path=DEFAULT_PATH,
+        line_no=line_no,
+        description='',
+        inspector_type=InspectorType.FLAKE8,
+        type=IssueType.CODE_STYLE,
+        column_no=1,
+        origin_class='',
+        difficulty=IssueDifficulty.EASY,
+    )
 
 
 def test_out_of_range_issues_when_no_issues() -> None:

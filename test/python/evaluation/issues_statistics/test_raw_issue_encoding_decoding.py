@@ -12,6 +12,7 @@ from src.python.review.inspectors.issue import (
     CohesionIssue,
     CyclomaticComplexityIssue,
     FuncLenIssue,
+    IssueDifficulty,
     IssueType,
     LineLenIssue,
     MaintainabilityLackIssue,
@@ -30,6 +31,7 @@ ISSUE_AND_JSON_ISSUE = [
             line_no=656,
             column_no=42,
             inspector_type=InspectorType.CHECKSTYLE,
+            difficulty=IssueDifficulty.EASY,
         ),
         f"""
         {{
@@ -39,7 +41,8 @@ ISSUE_AND_JSON_ISSUE = [
             "file_path": "{FILE_PATH}",
             "line_no": 656,
             "column_no": 42,
-            "inspector_type": "CHECKSTYLE"
+            "inspector_type": "CHECKSTYLE",
+            "difficulty": "EASY"
         }}
         """,
     ),
@@ -53,6 +56,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=428,
             inspector_type=InspectorType.DETEKT,
             bool_expr_len=975,
+            difficulty=IssueDifficulty.EASY,
         ),
         f"""
         {{
@@ -63,6 +67,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 983,
             "column_no": 428,
             "inspector_type": "DETEKT",
+            "difficulty": "EASY",
             "measure": 975
         }}
         """,
@@ -77,6 +82,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=487,
             inspector_type=InspectorType.ESLINT,
             func_len=909,
+            difficulty=IssueDifficulty.EASY,
         ),
         f"""
         {{
@@ -87,6 +93,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 790,
             "column_no": 487,
             "inspector_type": "ESLINT",
+            "difficulty": "EASY",
             "measure": 909
         }}
         """,
@@ -101,6 +108,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=383,
             inspector_type=InspectorType.PMD,
             line_len=383,
+            difficulty=IssueDifficulty.EASY,
         ),
         f"""
         {{
@@ -111,6 +119,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 154,
             "column_no": 383,
             "inspector_type": "PMD",
+            "difficulty": "EASY",
             "measure": 383
         }}
         """,
@@ -125,6 +134,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=78,
             inspector_type=InspectorType.INTELLIJ,
             cc_value=229,
+            difficulty=IssueDifficulty.HARD,
         ),
         f"""
         {{
@@ -135,6 +145,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 670,
             "column_no": 78,
             "inspector_type": "INTELLIJ",
+            "difficulty": "HARD",
             "measure": 229
         }}
         """,
@@ -149,6 +160,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=386,
             inspector_type=InspectorType.PYLINT,
             cohesion_lack=564,
+            difficulty=IssueDifficulty.HARD,
         ),
         f"""
         {{
@@ -159,6 +171,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 997,
             "column_no": 386,
             "inspector_type": "PYLINT",
+            "difficulty": "HARD",
             "measure": 564
         }}
         """,
@@ -173,6 +186,7 @@ ISSUE_AND_JSON_ISSUE = [
             column_no=542,
             inspector_type=InspectorType.RADON,
             maintainability_lack=431,
+            difficulty=IssueDifficulty.HARD,
         ),
         f"""
         {{
@@ -183,6 +197,7 @@ ISSUE_AND_JSON_ISSUE = [
             "line_no": 830,
             "column_no": 542,
             "inspector_type": "RADON",
+            "difficulty": "HARD",
             "measure": 431
         }}
         """,

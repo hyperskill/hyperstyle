@@ -2,13 +2,13 @@ import json
 import linecache
 from enum import Enum, unique
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.file_system import get_file_line
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from src.python.review.quality.model import QualityType
 from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult, ReviewResult
 
@@ -46,37 +46,60 @@ def print_review_result_as_text(review_result: GeneralReviewResult, path: Path, 
                       f'{line_text}: '
                       f'{issue.file_path}')
             print('-' * len(heading))
-            print(file_review_result.quality)
+            print(file_review_result.quality_by_difficulty[IssueDifficulty.HARD])
 
     print('*' * len(heading))
     print('General quality:')
-    print(review_result.quality, end='')
+    print(review_result.quality_by_difficulty[IssueDifficulty.HARD], end='')
 
 
-def _get_quality_without_penalty(review_result: ReviewResult) -> QualityType:
-    return review_result.quality.quality_type
+def _get_quality_without_penalty(review_result: ReviewResult) -> Dict[IssueDifficulty, QualityType]:
+    return {difficulty: quality.quality_type for difficulty, quality in review_result.quality_by_difficulty.items()}
 
 
-def _get_quality_with_penalty(review_result: ReviewResult) -> QualityType:
+def _get_quality_with_penalty(review_result: ReviewResult) -> Dict[IssueDifficulty, QualityType]:
     quality_without_penalty = _get_quality_without_penalty(review_result)
-    return review_result.punisher.get_quality_with_penalty(quality_without_penalty)
 
-
-def get_quality_json_dict(quality: QualityType) -> Dict:
     return {
-        OutputJsonFields.CODE.value: quality.value,
-        OutputJsonFields.TEXT.value: f'Code quality (beta): {quality.value}',
+        difficulty: punisher.get_quality_with_penalty(quality_without_penalty[difficulty])
+        for difficulty, punisher in review_result.punisher_by_difficulty.items()
     }
 
 
-def get_influence_on_penalty_json_dict(origin_class: str, review_result: ReviewResult) -> int:
+def get_quality_json_dict(quality: Dict[IssueDifficulty, QualityType], config: ApplicationConfig) -> Dict:
+    quality_json_dict = {
+        difficulty.value: {
+            OutputJsonFields.CODE.value: quality.value,
+            OutputJsonFields.TEXT.value: f'Code quality (beta): {quality.value}',
+        }
+        for difficulty, quality in quality.items()
+    }
+
+    if config.group_by_difficulty:
+        return quality_json_dict
+
+    return quality_json_dict[IssueDifficulty.HARD.value]
+
+
+def get_influence_on_penalty_json_dict(
+    origin_class: str,
+    review_result: ReviewResult,
+    config: ApplicationConfig,
+) -> Union[Dict[IssueDifficulty, int], int]:
     quality_without_penalty = _get_quality_without_penalty(review_result)
     quality_with_penalty = _get_quality_with_penalty(review_result)
 
-    if quality_with_penalty != quality_without_penalty:
-        return review_result.punisher.get_issue_influence_on_penalty(origin_class)
+    influence_on_penalty_json_dict = {
+        difficulty.value: punisher.get_issue_influence_on_penalty(origin_class)
+        if quality_with_penalty[difficulty] != quality_without_penalty[difficulty]
+        else 0
+        for difficulty, punisher in review_result.punisher_by_difficulty.items()
+    }
 
-    return 0
+    if config.group_by_difficulty:
+        return influence_on_penalty_json_dict
+
+    return influence_on_penalty_json_dict[IssueDifficulty.HARD.value]
 
 
 def convert_review_result_to_json_dict(review_result: ReviewResult, config: ApplicationConfig) -> Dict:
@@ -90,14 +113,16 @@ def convert_review_result_to_json_dict(review_result: ReviewResult, config: Appl
     if isinstance(review_result, FileReviewResult):
         output_json[OutputJsonFields.FILE_NAME.value] = str(review_result.file_path)
 
-    output_json[OutputJsonFields.QUALITY.value] = get_quality_json_dict(quality_with_penalty)
+    output_json[OutputJsonFields.QUALITY.value] = get_quality_json_dict(quality_with_penalty, config)
     output_json[OutputJsonFields.ISSUES.value] = []
 
     for issue in issues:
         json_issue = convert_issue_to_json(issue, config)
 
         json_issue[OutputJsonFields.INFLUENCE_ON_PENALTY.value] = get_influence_on_penalty_json_dict(
-            issue.origin_class, review_result,
+            issue.origin_class,
+            review_result,
+            config,
         )
 
         output_json[OutputJsonFields.ISSUES.value].append(json_issue)
@@ -119,7 +144,7 @@ def print_review_result_as_multi_file_json(review_result: GeneralReviewResult, c
     quality_with_penalty = _get_quality_with_penalty(review_result)
 
     output_json = {
-        OutputJsonFields.QUALITY.value: get_quality_json_dict(quality_with_penalty),
+        OutputJsonFields.QUALITY.value: get_quality_json_dict(quality_with_penalty, config),
         OutputJsonFields.FILE_REVIEW_RESULTS.value: file_review_result_jsons,
     }
 
@@ -140,6 +165,7 @@ class OutputJsonFields(Enum):
     COLUMN_NUMBER = 'column_number'
     CATEGORY = 'category'
     INFLUENCE_ON_PENALTY = 'influence_on_penalty'
+    DIFFICULTY = 'difficulty'
 
 
 def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig) -> Dict[str, Any]:
@@ -156,6 +182,7 @@ def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig) -> Dict[s
         OutputJsonFields.LINE_NUMBER.value: issue.line_no,
         OutputJsonFields.COLUMN_NUMBER.value: issue.column_no,
         OutputJsonFields.CATEGORY.value: issue_type.value,
+        OutputJsonFields.DIFFICULTY.value: issue.difficulty.value,
     }
 
 
@@ -174,6 +201,7 @@ def convert_json_to_issues(issues_json: List[dict]) -> List[PenaltyIssue]:
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
                 influence_on_penalty=issue.get(OutputJsonFields.INFLUENCE_ON_PENALTY.value, 0),
+                difficulty=IssueDifficulty(issue.get(OutputJsonFields.DIFFICULTY.value, IssueDifficulty.HARD.value)),
             ),
         )
     return issues

@@ -10,7 +10,7 @@ from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.common import remove_prefix
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
 from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
@@ -78,6 +78,7 @@ class PMDInspector(BaseInspector):
                     origin_class=row['Rule'],
                     description=row['Description'],
                     inspector_type=self.inspector_type,
+                    difficulty=IssueDifficulty.get_by_issue_type(self.choose_issue_type(row['Rule'])),
                 ) for row in reader]
 
     @classmethod

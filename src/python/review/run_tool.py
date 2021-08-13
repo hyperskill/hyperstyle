@@ -110,6 +110,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.WITH_ALL_CATEGORIES.value.description,
                         action='store_true')
 
+    parser.add_argument(RunToolArgument.GROUP_BY_DIFFICULTY.value.long_name,
+                        help=RunToolArgument.GROUP_BY_DIFFICULTY.value.description,
+                        action='store_true')
+
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
     if verbosity is VerbosityLevel.ERROR:
@@ -155,6 +159,7 @@ def main() -> int:
             new_format=args.new_format,
             history=args.history,
             with_all_categories=args.with_all_categories,
+            group_by_difficulty=args.group_by_difficulty,
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)

@@ -17,6 +17,7 @@ class ApplicationConfig:
     end_line: Optional[int] = None
     new_format: bool = False
     history: Optional[str] = None
+    group_by_difficulty: bool = False
 
 
 @unique

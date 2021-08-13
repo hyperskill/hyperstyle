@@ -7,6 +7,7 @@ from src.python.review.inspectors.issue import (
     CodeIssue,
     get_issue_class_by_issue_type,
     IssueData,
+    IssueDifficulty,
     IssueType,
     Measurable,
     MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME,
@@ -32,6 +33,7 @@ class RawIssueEncoder(json.JSONEncoder):
                 IssueData.LINE_NUMBER.value: obj.line_no,
                 IssueData.COLUMN_NUMBER.value: obj.column_no,
                 IssueData.INSPECTOR_TYPE.value: obj.inspector_type.value,
+                IssueData.DIFFICULTY.value: obj.difficulty.value,
             }
 
             if isinstance(obj, Measurable):
@@ -50,6 +52,10 @@ class RawIssueDecoder(json.JSONDecoder):
         json_dict[IssueData.ISSUE_TYPE.value] = IssueType(json_dict[IssueData.ISSUE_TYPE.value])
         json_dict[IssueData.INSPECTOR_TYPE.value] = InspectorType(json_dict[IssueData.INSPECTOR_TYPE.value])
         json_dict[IssueData.FILE_PATH.value] = Path(json_dict[IssueData.FILE_PATH.value])
+        # TODO: remove get after analyzing raw issue statistics
+        json_dict[IssueData.DIFFICULTY.value] = IssueDifficulty(
+            json_dict.get(IssueData.DIFFICULTY.value, IssueDifficulty.HARD.value),
+        )
 
         issue_type = json_dict[IssueData.ISSUE_TYPE.value]
         if issue_type in MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME.keys():

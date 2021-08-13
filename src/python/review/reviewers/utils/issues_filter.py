@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Dict, List, Tuple
 
 from src.python.review.common.language import Language
-from src.python.review.inspectors.issue import BaseIssue, IssueType, Measurable
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType, Measurable
 from src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG
@@ -130,3 +130,11 @@ def group_issues(issues: List[BaseIssue]) -> GroupedIssues:
         grouped_issues[file_path][line_no][inspector_name][issue_type].append(issue)
 
     return grouped_issues
+
+
+def group_issues_by_difficulty(issues: List[BaseIssue]) -> Dict[IssueDifficulty, List[BaseIssue]]:
+    return {
+        IssueDifficulty.EASY: [issue for issue in issues if issue.difficulty == IssueDifficulty.EASY],
+        IssueDifficulty.MEDIUM: [issue for issue in issues if issue.difficulty != IssueDifficulty.HARD],
+        IssueDifficulty.HARD: issues,
+    }

@@ -8,7 +8,7 @@ from src.python.review.common.file_system import get_all_file_system_items
 from src.python.review.common.language import Language
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, BoolExprLenIssue, FuncLenIssue, IssueType
+from src.python.review.inspectors.issue import BaseIssue, BoolExprLenIssue, FuncLenIssue, IssueDifficulty, IssueType
 from src.python.review.inspectors.tips import get_bool_expr_len_tip, get_func_len_tip
 
 BOOL_EXPR_LEN_ORIGIN_CLASS = 'C001'
@@ -32,6 +32,8 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
             if isinstance(inner_node, ast.BoolOp):
                 length += len(inner_node.values) - 1
 
+        issue_type = PythonAstInspector.choose_issue_type(BOOL_EXPR_LEN_ORIGIN_CLASS)
+
         self.bool_expression_lens.append(BoolExprLenIssue(
             file_path=self._file_path,
             line_no=node.lineno,
@@ -40,7 +42,8 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
             origin_class=BOOL_EXPR_LEN_ORIGIN_CLASS,
             inspector_type=self._inspector_type,
             bool_expr_len=length,
-            type=PythonAstInspector.choose_issue_type(BOOL_EXPR_LEN_ORIGIN_CLASS),
+            type=issue_type,
+            difficulty=IssueDifficulty.get_by_issue_type(issue_type),
         ))
 
 
@@ -61,6 +64,8 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 self._previous_node.lineno, node.lineno,
             )
 
+            issue_type = PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS)
+
             self._function_lens.append(FuncLenIssue(
                 file_path=self._file_path,
                 line_no=self._previous_node.lineno,
@@ -69,7 +74,8 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS),
+                type=issue_type,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
             ))
 
         self._previous_node = node
@@ -83,6 +89,8 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 self._previous_node.lineno, self._n_lines + 1,
             )
 
+            issue_type = PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS)
+
             self._function_lens.append(FuncLenIssue(
                 file_path=self._file_path,
                 line_no=self._previous_node.lineno,
@@ -91,7 +99,8 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
-                type=PythonAstInspector.choose_issue_type(FUNC_LEN_ORIGIN_CLASS),
+                type=issue_type,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
             ))
 
         self._previous_node = None
