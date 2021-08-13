@@ -52,7 +52,7 @@ class RawIssueDecoder(json.JSONDecoder):
         json_dict[IssueData.ISSUE_TYPE.value] = IssueType(json_dict[IssueData.ISSUE_TYPE.value])
         json_dict[IssueData.INSPECTOR_TYPE.value] = InspectorType(json_dict[IssueData.INSPECTOR_TYPE.value])
         json_dict[IssueData.FILE_PATH.value] = Path(json_dict[IssueData.FILE_PATH.value])
-        # TODO: remove get after some time
+        # TODO: remove get after analyzing raw issue statistics
         json_dict[IssueData.DIFFICULTY.value] = IssueDifficulty(
             json_dict.get(IssueData.DIFFICULTY.value, IssueDifficulty.HARD.value),
         )
