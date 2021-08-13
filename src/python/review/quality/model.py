@@ -1,4 +1,5 @@
 import abc
+import textwrap
 from enum import Enum, unique
 from functools import total_ordering
 from typing import List
@@ -19,7 +20,7 @@ class QualityType(Enum):
             QualityType.BAD: 0,
             QualityType.MODERATE: 1,
             QualityType.GOOD: 2,
-            QualityType.EXCELLENT: 3
+            QualityType.EXCELLENT: 3,
         }
 
         return order[self] < order[other]
@@ -49,7 +50,7 @@ class Quality:
     def next_quality_type(self) -> QualityType:
         return min(map(lambda rule: rule.next_level_type, self.rules), default=QualityType.EXCELLENT)
 
-    # TODO@nbirillo: why rule.quality_type == quality_type for next level????
+    # TODO: why rule.quality_type == quality_type for next level????
     @property
     def next_level_requirements(self) -> List[Rule]:
         quality_type = self.quality_type
@@ -80,8 +81,11 @@ class Quality:
         message_deltas_part = ''
 
         if self.quality_type != QualityType.EXCELLENT:
-            message_next_level_part = f'Next level: {self.next_quality_type.value}\n' \
-                                      f'Next level requirements:\n'
+            message_next_level_part = f"""\
+                Next level: {self.next_quality_type.value}
+                Next level requirements:
+            """
+            message_next_level_part = textwrap.dedent(message_next_level_part)
 
             for rule in self.next_level_requirements:
                 message_deltas_part += f'{rule.rule_type.value}: {rule.next_level_delta}\n'

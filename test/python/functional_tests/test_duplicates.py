@@ -1,6 +1,5 @@
 import re
 import subprocess
-
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
@@ -13,7 +12,7 @@ def test_allow_duplicates(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     stdout_allow_duplicates = process.stdout.decode()
 
@@ -22,7 +21,7 @@ def test_allow_duplicates(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     stdout_filter_duplicates = process.stdout.decode()
 

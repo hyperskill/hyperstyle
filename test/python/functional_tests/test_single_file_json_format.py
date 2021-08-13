@@ -1,9 +1,8 @@
 import json
 import subprocess
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 from jsonschema import validate
-
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 schema = {
     'type': 'object',
@@ -12,8 +11,8 @@ schema = {
             'type': 'object',
             'properties': {
                 'code': {'type': 'string'},
-                'text': {'type': 'string'}
-            }
+                'text': {'type': 'string'},
+            },
         },
         'issues': {
             'type': 'array',
@@ -25,11 +24,11 @@ schema = {
                     'column_number': {'type': 'number'},
                     'line': {'type': 'string'},
                     'line_number': {'type': 'number'},
-                    'text': {'type': 'string'}
-                }
-            }
-        }
-    }
+                    'text': {'type': 'string'},
+                },
+            },
+        },
+    },
 }
 
 
@@ -43,7 +42,7 @@ def test_json_format(local_command: LocalCommandBuilder):
     process = subprocess.run(
         local_command.build(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
     stdout = process.stdout.decode()
 

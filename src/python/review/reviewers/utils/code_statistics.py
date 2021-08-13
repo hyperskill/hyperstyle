@@ -1,7 +1,7 @@
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 from src.python.review.common.file_system import get_content_from_file
 from src.python.review.inspectors.issue import BaseIssue, IssueType
@@ -16,6 +16,8 @@ class CodeStatistics:
     method_number: int
 
     max_cyclomatic_complexity: int
+    max_cohesion_lack: int
+    max_maintainability_lack: int
     max_func_len: int
     max_bool_expr_len: int
 
@@ -38,6 +40,8 @@ class CodeStatistics:
             IssueType.METHOD_NUMBER: self.method_number,
 
             IssueType.CYCLOMATIC_COMPLEXITY: self.max_cyclomatic_complexity,
+            IssueType.COHESION: self.max_cohesion_lack,
+            IssueType.MAINTAINABILITY: self.max_maintainability_lack,
             IssueType.FUNC_LEN: self.max_func_len,
             IssueType.BOOL_EXPR_LEN: self.max_bool_expr_len,
 
@@ -45,7 +49,7 @@ class CodeStatistics:
             IssueType.INHERITANCE_DEPTH: self.inheritance_depth,
             IssueType.COUPLING: self.coupling,
             IssueType.CLASS_RESPONSE: self.class_response,
-            IssueType.WEIGHTED_METHOD: self.weighted_method_complexities
+            IssueType.WEIGHTED_METHOD: self.weighted_method_complexities,
         }
 
 
@@ -71,7 +75,7 @@ def get_code_style_lines(issues: List[BaseIssue]) -> int:
 def __get_max_measure_by_issue_type(issue_type: IssueType, issues: List[BaseIssue]) -> int:
     return max(map(
         lambda issue: issue.measure(),
-        filter(lambda issue: issue.type == issue_type, issues)
+        filter(lambda issue: issue.type == issue_type, issues),
     ), default=0)
 
 
@@ -82,6 +86,8 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
     bool_expr_lens = __get_max_measure_by_issue_type(IssueType.BOOL_EXPR_LEN, issues)
     func_lens = __get_max_measure_by_issue_type(IssueType.FUNC_LEN, issues)
     cyclomatic_complexities = __get_max_measure_by_issue_type(IssueType.CYCLOMATIC_COMPLEXITY, issues)
+    cohesion_lacks = __get_max_measure_by_issue_type(IssueType.COHESION, issues)
+    maintainabilities = __get_max_measure_by_issue_type(IssueType.MAINTAINABILITY, issues)
 
     # Actually, we expect only one issue with each of the following metrics.
     inheritance_depths = __get_max_measure_by_issue_type(IssueType.INHERITANCE_DEPTH, issues)
@@ -97,6 +103,8 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         max_bool_expr_len=bool_expr_lens,
         max_func_len=func_lens,
         n_line_len=issue_type_counter[IssueType.LINE_LEN],
+        max_cohesion_lack=cohesion_lacks,
+        max_maintainability_lack=maintainabilities,
         max_cyclomatic_complexity=cyclomatic_complexities,
         inheritance_depth=inheritance_depths,
         class_response=class_responses,
@@ -104,5 +112,5 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         weighted_method_complexities=weighted_method_complexities,
         method_number=method_numbers,
         total_lines=__get_total_lines(path),
-        code_style_lines=get_code_style_lines(issues)
+        code_style_lines=get_code_style_lines(issues),
     )

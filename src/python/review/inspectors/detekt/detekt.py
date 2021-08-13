@@ -27,7 +27,7 @@ class DetektInspector(BaseInspector):
         'ComplexCondition':
             r'This condition is too complex \((\d+)\)',
         'ComplexMethod':
-            r'The function .* appears to be too complex \((\d+)\)'
+            r'The function .* appears to be too complex \((\d+)\)',
     }
 
     @classmethod
@@ -38,7 +38,7 @@ class DetektInspector(BaseInspector):
             '--config', PATH_DETEKT_CONFIG,
             '--plugins', PATH_DETEKT_PLUGIN,
             '--report', f'xml:{output_path}',
-            '--input', str(path)
+            '--input', str(path),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:

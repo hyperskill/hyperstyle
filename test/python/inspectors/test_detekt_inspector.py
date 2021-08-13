@@ -1,10 +1,10 @@
-import pytest
+from test.python.inspectors import KOTLIN_DATA_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 
+import pytest
 from src.python.review.common.language import Language
 from src.python.review.inspectors.detekt.detekt import DetektInspector
 from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-from test.python.inspectors import KOTLIN_DATA_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ('case0_good_program.kt', 0),
@@ -23,6 +23,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case16_redundant_unit.kt', 1),
     ('case18_redundant_braces.kt', 3),
     ('case20_cyclomatic_complexity.kt', 0),
+    ('case21_cyclomatic_complexity_bad.kt', 2),
     ('case22_too_many_arguments.kt', 1),
     ('case23_bad_range_performance.kt', 3),
     ('case24_duplicate_when_bug.kt', 1),

@@ -15,20 +15,20 @@ class CyclomaticComplexityRuleConfig:
 LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG = {
     Language.JAVA: CyclomaticComplexityRuleConfig(
         cc_value_bad=14,
-        cc_value_moderate=13
+        cc_value_moderate=13,
     ),
     Language.KOTLIN: CyclomaticComplexityRuleConfig(
         cc_value_bad=12,
-        cc_value_moderate=11
+        cc_value_moderate=11,
     ),
     Language.PYTHON: CyclomaticComplexityRuleConfig(
         cc_value_bad=10,
-        cc_value_moderate=9
+        cc_value_moderate=9,
     ),
     Language.JS: CyclomaticComplexityRuleConfig(
         cc_value_bad=14,
-        cc_value_moderate=13
-    )
+        cc_value_moderate=13,
+    ),
 }
 
 

@@ -17,6 +17,7 @@ class Person:
         self.age -= value
 
 class AnotherClass:
-    pass
+    def do_something(self):
+        print(1)
 
-print(10 + 20)
+print(10)

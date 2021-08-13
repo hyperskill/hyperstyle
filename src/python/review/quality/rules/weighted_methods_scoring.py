@@ -16,7 +16,7 @@ class WeightedMethodsRuleConfig:
 common_weighted_methods_rule_config = WeightedMethodsRuleConfig(
     weighted_methods_bad=105,
     weighted_methods_moderate=85,
-    weighted_methods_good=70
+    weighted_methods_good=70,
 )
 
 LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG = {
@@ -58,7 +58,7 @@ class WeightedMethodsRule(Rule):
         config = WeightedMethodsRuleConfig(
             min(self.config.weighted_methods_bad, other.config.weighted_methods_bad),
             min(self.config.weighted_methods_moderate, other.config.weighted_methods_moderate),
-            min(self.config.weighted_methods_good, other.config.weighted_methods_good)
+            min(self.config.weighted_methods_good, other.config.weighted_methods_good),
         )
         result_rule = WeightedMethodsRule(config)
         result_rule.apply(max(self.weighted_methods, other.weighted_methods))

@@ -12,6 +12,7 @@ from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.inspectors.pmd.pmd import PMDInspector
 from src.python.review.inspectors.pyast.python_ast import PythonAstInspector
 from src.python.review.inspectors.pylint.pylint import PylintInspector
+from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.quality.evaluate_quality import evaluate_quality
 from src.python.review.quality.model import Quality
 from src.python.review.reviewers.review_result import FileReviewResult, ReviewResult
@@ -24,6 +25,7 @@ LANGUAGE_TO_INSPECTORS = {
         PylintInspector(),
         Flake8Inspector(),
         PythonAstInspector(),
+        RadonInspector(),
     ],
     Language.JAVA: [
         CheckstyleInspector(),
@@ -36,7 +38,7 @@ LANGUAGE_TO_INSPECTORS = {
     ],
     Language.JS: [
         ESLintInspector(),
-    ]
+    ],
 }
 
 
@@ -76,12 +78,12 @@ def perform_language_review(metadata: Metadata,
         file_review_results.append(FileReviewResult(
             file_metadata.path,
             issues,
-            quality
+            quality,
         ))
 
     return ReviewResult(
         file_review_results,
-        general_quality
+        general_quality,
     )
 
 

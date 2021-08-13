@@ -1,16 +1,15 @@
 import json
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 import pytest
-
 from src.python.review.common.subprocess_runner import run_in_subprocess
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 PATH_TO_FILE = DATA_PATH / 'lines_range' / 'code_with_multiple_issues.py'
 
 EXPECTED_JSON = {
     'quality': {
         'code': 'BAD',
-        'text': 'Code quality (beta): BAD'
+        'text': 'Code quality (beta): BAD',
     },
     'issues': [{
         'category': 'CODE_STYLE',
@@ -30,16 +29,16 @@ EXPECTED_JSON = {
          'column_number': 2,
          'line': 'c=a + b',
          'line_number': 4,
-         'text': 'missing whitespace around operator'
-         }
-    ]
+         'text': 'missing whitespace around operator',
+         },
+    ],
 }
 
 NO_ISSUES_JSON = {
     'quality': {
         'code': 'EXCELLENT',
         'text': 'Code quality (beta): EXCELLENT'},
-    'issues': []
+    'issues': [],
 }
 
 
@@ -85,8 +84,8 @@ def test_range_filter_when_start_line_is_not_first(
             'line': 'c=a + b',
             'line_number': 4,
             'column_number': 2,
-            'category': 'CODE_STYLE'
-        }]
+            'category': 'CODE_STYLE',
+        }],
     }
 
     assert output_json == expected_json_with_one_issue
@@ -145,7 +144,7 @@ def test_range_filter_when_end_line_is_first(
     expected_json_with_one_issue = {
         'quality': {
             'code': 'MODERATE',
-            'text': 'Code quality (beta): MODERATE'
+            'text': 'Code quality (beta): MODERATE',
         },
         'issues': [{
             'code': 'E225',
@@ -153,8 +152,8 @@ def test_range_filter_when_end_line_is_first(
             'line': 'a=10',
             'line_number': 1,
             'column_number': 2,
-            'category': 'CODE_STYLE'
-        }]
+            'category': 'CODE_STYLE',
+        }],
     }
 
     assert output_json == expected_json_with_one_issue
@@ -211,7 +210,7 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
     expected_json = {
         'quality': {
             'code': 'BAD',
-            'text': 'Code quality (beta): BAD'
+            'text': 'Code quality (beta): BAD',
         },
         'issues': [{
             'code': 'E225',
@@ -219,15 +218,15 @@ def test_range_filter_when_both_start_and_end_lines_specified_not_equal_borders(
             'line': 'b=20',
             'line_number': 2,
             'column_number': 2,
-            'category': 'CODE_STYLE'
+            'category': 'CODE_STYLE',
         }, {
             'code': 'E225',
             'text': 'missing whitespace around operator',
             'line': 'c=a + b',
             'line_number': 4,
             'column_number': 2,
-            'category': 'CODE_STYLE'
-        }]
+            'category': 'CODE_STYLE',
+        }],
     }
 
     assert output_json == expected_json

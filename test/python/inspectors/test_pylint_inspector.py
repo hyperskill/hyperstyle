@@ -1,15 +1,17 @@
-import pytest
+import textwrap
+from test.python.inspectors import PYTHON_DATA_FOLDER
 
+import pytest
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.inspectors.pylint.pylint import PylintInspector
-from test.python.inspectors import PYTHON_DATA_FOLDER
+
 from .conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ('case0_spaces.py', 0),
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 3),
-    ('case3_redefining_builtin.py', 1),
+    ('case3_redefining_builtin.py', 0),
     ('case4_naming.py', 3),
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 4),
@@ -30,6 +32,8 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case25_django.py', 0),
     ('case27_using_requests.py', 0),
     ('case30_allow_else_return.py', 0),
+    ('case36_unpacking.py', 0),
+    ('case37_wildcard_import.py', 1),
 ]
 
 
@@ -46,8 +50,11 @@ def test_file_with_issues(file_name: str, n_issues: int):
 
 def test_parse():
     file_name = 'test.py'
-    output = 'test.py:1:11:R0123:test 1\n' \
-             'test.py:2:12:C1444:test 2'
+    output = f"""\
+        {file_name}:1:11:R0123:test 1
+        {file_name}:2:12:C1444:test 2
+    """
+    output = textwrap.dedent(output)
 
     issues = PylintInspector.parse(output)
 
@@ -67,7 +74,7 @@ def test_choose_issue_type():
         IssueType.BEST_PRACTICES,
         IssueType.BEST_PRACTICES,
         IssueType.CODE_STYLE,
-        IssueType.ERROR_PRONE
+        IssueType.ERROR_PRONE,
     ]
 
     issue_types = list(

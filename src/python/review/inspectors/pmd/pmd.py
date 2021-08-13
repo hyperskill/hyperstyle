@@ -8,15 +8,17 @@ from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
+from src.python.review.inspectors.common import remove_prefix
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueType
-from src.python.review.inspectors.pmd.issue_types import RULE_TO_ISSUE_TYPE
+from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
 
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
 PATH_TOOLS_PMD_SHELL_SCRIPT = PATH_TOOLS_PMD_FILES / 'bin' / 'run.sh'
 PATH_TOOLS_PMD_RULES_SET = PATH_TOOLS_PMD_FILES / 'bin' / 'basic.xml'
+DEFAULT_JAVA_VERSION = LanguageVersion.JAVA_11
 
 
 class PMDInspector(BaseInspector):
@@ -28,16 +30,16 @@ class PMDInspector(BaseInspector):
     @classmethod
     def _create_command(cls, path: Path,
                         output_path: Path,
-                        java_version: LanguageVersion,
+                        language_version: LanguageVersion,
                         n_cpu: int) -> List[str]:
         return [
             PATH_TOOLS_PMD_SHELL_SCRIPT,
             'pmd', '-d', str(path), '-no-cache',
             '-R', PATH_TOOLS_PMD_RULES_SET,
             '-language', 'java',
-            '-version', java_version.value,
+            '-version', cls._get_java_version(language_version),
             '-f', 'csv', '-r', str(output_path),
-            '-t', str(n_cpu)
+            '-t', str(n_cpu),
         ]
 
     def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
@@ -46,13 +48,21 @@ class PMDInspector(BaseInspector):
 
             language_version = config.get('language_version')
             if language_version is None:
-                language_version = LanguageVersion.JAVA_11
+                logger.info(
+                    f"The version of Java is not passed. The version to be used is: {DEFAULT_JAVA_VERSION.value}.",
+                )
+                language_version = DEFAULT_JAVA_VERSION
 
             command = self._create_command(path, output_path, language_version, config['n_cpu'])
             run_in_subprocess(command)
             return self.parse_output(output_path)
 
     def parse_output(self, output_path: Path) -> List[BaseIssue]:
+        """
+        Parses the PMD output, which is a csv file, and returns a list of the issues found there.
+
+        If the passed path is not a file, an empty list is returned.
+        """
         if not output_path.is_file():
             logger.error('%s: error - no output file' % self.inspector_type.value)
             return []
@@ -65,17 +75,37 @@ class PMDInspector(BaseInspector):
                     line_no=int(row['Line']),
                     column_no=1,
                     type=self.choose_issue_type(row['Rule']),
-                    origin_class=row['Rule set'],
+                    origin_class=row['Rule'],
                     description=row['Description'],
                     inspector_type=self.inspector_type,
                 ) for row in reader]
 
     @classmethod
     def choose_issue_type(cls, rule: str) -> IssueType:
-        issue_type = RULE_TO_ISSUE_TYPE.get(rule)
+        """
+        Defines IssueType by PMD rule name using config.
+        """
+        issue_type = PMD_RULE_TO_ISSUE_TYPE.get(rule)
         if not issue_type:
             logger.warning('%s: %s - unknown rule' %
                            (cls.inspector_type.value, rule))
             return IssueType.BEST_PRACTICES
 
         return issue_type
+
+    @staticmethod
+    def _get_java_version(language_version: LanguageVersion) -> str:
+        """
+        Converts language_version to the version of Java that PMD can work with.
+
+        For example, java11 will be converted to 11.
+        """
+        java_version = language_version.value
+
+        if not language_version.is_java():
+            logger.warning(
+                f"The version passed is not the Java version. The version to be used is: {DEFAULT_JAVA_VERSION.value}.",
+            )
+            java_version = DEFAULT_JAVA_VERSION.value
+
+        return remove_prefix(java_version, "java")

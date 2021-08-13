@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Optional, Set, List
+from typing import List, Optional, Set
 
+from src.python.review.common.file_system import Extension
 from src.python.review.inspectors.inspector_type import InspectorType
 
 
@@ -22,7 +23,30 @@ class LanguageVersion(Enum):
     JAVA_8 = 'java8'
     JAVA_9 = 'java9'
     JAVA_11 = 'java11'
+    PYTHON_3 = 'python3'
+    KOTLIN = 'kotlin'
 
     @classmethod
     def values(cls) -> List[str]:
         return [member.value for member in cls.__members__.values()]
+
+    @classmethod
+    def language_to_extension_dict(cls) -> dict:
+        return {cls.PYTHON_3.value: Extension.PY.value,
+                cls.JAVA_7.value: Extension.JAVA.value,
+                cls.JAVA_8.value: Extension.JAVA.value,
+                cls.JAVA_9.value: Extension.JAVA.value,
+                cls.JAVA_11.value: Extension.JAVA.value,
+                cls.KOTLIN.value: Extension.KT.value}
+
+    @classmethod
+    def language_by_extension(cls, lang: str) -> str:
+        return cls.language_to_extension_dict()[lang]
+
+    def is_java(self) -> bool:
+        return (
+            self == LanguageVersion.JAVA_7
+            or self == LanguageVersion.JAVA_8
+            or self == LanguageVersion.JAVA_9
+            or self == LanguageVersion.JAVA_11
+        )

@@ -33,7 +33,10 @@ Python language:
 - [x]  Pylint [GNU LGPL v2]
     * [Site and docs](https://www.pylint.org/)
     * [Repository](https://github.com/PyCQA/pylint)
-  
+   
+- [x] Radon [MIT]
+    * [Site and docs](https://radon.readthedocs.io/en/latest/)
+    * [Repository](https://github.com/rubik/radon)
 
 Java language:
 
@@ -92,7 +95,7 @@ Argument | Description
 --- | ---
 **&#8209;h**, **&#8209;&#8209;help**      |  show the help message and exit.
 **&#8209;v**, **&#8209;&#8209;verbosity** |  choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).
-**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/). Example: `-d pylint,flake8`.
+**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/). Example: `-d pylint,flake8`.
 **&#8209;&#8209;allow-duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
 **&#8209;&#8209;language-version**, **&#8209;&#8209;language_version**  |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`. **Note**: **&#8209;&#8209;language_version** is deprecated. Will be deleted in the future.
 **&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**  |  specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.
@@ -193,7 +196,7 @@ __Note__: If you have `ModuleNotFoundError` while you try to run tests, please c
 
 __Note__: We use [eslint](https://eslint.org/) and [open-jdk 11](https://openjdk.java.net/projects/jdk/11/)
 in the tests. Please, set up the environment before running the tests. 
-You can see en example of the environment configuration in 
+You can see en example of the environment configuration in
 the [Dockerfile](Dockerfile) file.
 
 Use `pytest` from the root directory to run __ALL__ tests.

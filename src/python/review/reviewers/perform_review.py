@@ -14,7 +14,7 @@ from src.python.review.reviewers.utils.metadata_exploration import explore_file,
 from src.python.review.reviewers.utils.print_review import (
     print_review_result_as_json,
     print_review_result_as_multi_file_json,
-    print_review_result_as_text
+    print_review_result_as_text,
 )
 
 logger: Final = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ language_to_reviewer = {
     Language.PYTHON: perform_python_review,
     Language.JAVA: partial(perform_language_review, language=Language.JAVA),
     Language.KOTLIN: partial(perform_language_review, language=Language.KOTLIN),
-    Language.JS: partial(perform_language_review, language=Language.JS)
+    Language.JS: partial(perform_language_review, language=Language.JS),
 }
 
 
