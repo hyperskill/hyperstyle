@@ -207,3 +207,14 @@ xpath
 yanchor
 yaxes
 yaxis
+D3
+G10
+T10
+DARK2
+DARK24
+SET2
+SET3
+PASTEL2
+LIGHT24
+SET1
+textangle
