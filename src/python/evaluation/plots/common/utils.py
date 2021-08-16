@@ -52,6 +52,7 @@ def create_box_trace(
 
 def create_box_plot(
     df: pd.DataFrame,
+    *,
     x_axis: Optional[str],
     y_axis: Optional[str],
     margin: MARGIN = None,

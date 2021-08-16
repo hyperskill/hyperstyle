@@ -151,4 +151,11 @@ def get_penalty_influence_distribution(
     )
     df = df.explode(y_axis_name)
 
-    return create_box_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
+    return create_box_plot(
+        df,
+        x_axis=x_axis_name,
+        y_axis=y_axis_name,
+        margin=margin,
+        sort_order=sort_order,
+        color=color,
+    )
