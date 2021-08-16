@@ -45,7 +45,7 @@ class COLORWAY(Enum):  # noqa: N801
     LIGHT24 = px.colors.qualitative.Light24
     SET1 = px.colors.qualitative.Set1
     PASTEL1 = px.colors.qualitative.Pastel1
-    DARK2 = px.colors.qualitative.Dark24
+    DARK2 = px.colors.qualitative.Dark2
     SET2 = px.colors.qualitative.Set2
     PASTEL2 = px.colors.qualitative.Pastel2
     SET3 = px.colors.qualitative.Set3

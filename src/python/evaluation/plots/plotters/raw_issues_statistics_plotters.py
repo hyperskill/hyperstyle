@@ -101,10 +101,10 @@ def plot_line_chart(
             stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
             plots[lang] = create_line_chart(
                 stats,
-                x_axis_name,
-                y_axis_name,
+                x_axis=x_axis_name,
+                y_axis=y_axis_name,
                 color=config.color,
-                margin=config.color,
+                margin=config.margin,
                 vertical_lines=config.boundaries,
             )
         return plots
@@ -112,14 +112,13 @@ def plot_line_chart(
     plot = go.Figure()
     for lang, stats in stats_by_lang.items():
         stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
-        trace = create_scatter_trace(stats, x_axis_name, y_axis_name, color=config.color)
+        trace = create_scatter_trace(stats, x_column=x_axis_name, y_column=y_axis_name)
         trace.name = lang
         plot.add_trace(trace)
 
     update_figure(
         plot,
         margin=config.margin,
-        color=config.color,
         vertical_lines=config.boundaries,
         x_axis_name=x_axis_name,
         y_axis_name=y_axis_name,

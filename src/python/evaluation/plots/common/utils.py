@@ -24,6 +24,7 @@ def get_supported_extensions() -> List[str]:
 
 def create_bar_plot(
     df: pd.DataFrame,
+    *,
     x_axis: str,
     y_axis: str,
     margin: MARGIN = None,
@@ -31,12 +32,13 @@ def create_bar_plot(
     color: COLOR = None,
 ) -> go.Figure:
     fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
-    update_figure(fig, margin, sort_order, color)
+    update_figure(fig, margin=margin, sort_order=sort_order, color=color)
     return fig
 
 
 def create_box_trace(
     df: pd.DataFrame,
+    *,
     x_column: Optional[str] = None,
     y_column: Optional[str] = None,
     color: COLOR = None,
@@ -57,7 +59,7 @@ def create_box_plot(
     color: COLOR = None,
     horizontal_lines: LINES = None,
 ) -> go.Figure:
-    fig = go.Figure(create_box_trace(df, x_axis, y_axis, color))
+    fig = go.Figure(create_box_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(
         fig,
         margin=margin,
@@ -71,6 +73,7 @@ def create_box_plot(
 
 def create_scatter_trace(
     df: pd.DataFrame,
+    *,
     x_column: str,
     y_column: str,
     color: COLOR = None,
@@ -84,13 +87,14 @@ def create_scatter_trace(
 
 def create_line_chart(
     df: pd.DataFrame,
+    *,
     x_axis: str,
     y_axis: str,
     margin: MARGIN = None,
     color: COLOR = None,
     vertical_lines: LINES = None,
 ) -> go.Figure:
-    fig = go.Figure(create_scatter_trace(df, x_axis, y_axis, color))
+    fig = go.Figure(create_scatter_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(fig, margin=margin, vertical_lines=vertical_lines)
     return fig
 
@@ -118,6 +122,7 @@ def create_histogram(
 
 def update_figure(
     fig: go.Figure,
+    *,
     margin: MARGIN = None,
     sort_order: SORT_ORDER = None,
     color: COLOR = None,
