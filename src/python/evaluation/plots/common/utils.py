@@ -96,7 +96,13 @@ def create_line_chart(
     vertical_lines: LINES = None,
 ) -> go.Figure:
     fig = go.Figure(create_scatter_trace(df, x_column=x_axis, y_column=y_axis, color=color))
-    update_figure(fig, margin=margin, vertical_lines=vertical_lines)
+    update_figure(
+        fig,
+        margin=margin,
+        vertical_lines=vertical_lines,
+        x_axis_name=x_axis,
+        y_axis_name=y_axis,
+    )
     return fig
 
 

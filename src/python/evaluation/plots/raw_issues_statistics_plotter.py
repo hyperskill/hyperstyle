@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 from enum import Enum, unique
 from pathlib import Path
@@ -136,6 +137,8 @@ def main():
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO)
 
     extension = Extension(args.file_extension)
     config = parse_yaml(args.config_path)
