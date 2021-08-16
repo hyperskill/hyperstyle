@@ -1,4 +1,14 @@
+D3
+DARK2
+DARK24
+G10
+LIGHT24
+PASTEL2
 Pastel1
+SET1
+SET2
+SET3
+T10
 abstractmethod
 arange
 astype
@@ -175,6 +185,7 @@ subdirs
 sublist
 svg
 sym
+textangle
 textposition
 textwrap
 tmp
@@ -207,14 +218,3 @@ xpath
 yanchor
 yaxes
 yaxis
-D3
-G10
-T10
-DARK2
-DARK24
-SET2
-SET3
-PASTEL2
-LIGHT24
-SET1
-textangle
