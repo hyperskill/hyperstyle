@@ -1,13 +1,26 @@
+import logging
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
-from src.python.evaluation.plots.common import plotly_consts
-from src.python.evaluation.plots.common.utils import create_box_plot, create_histogram, create_line_chart
+from src.python.evaluation.plots.common.utils import (
+    COLOR,
+    COLORWAY,
+    create_box_plot,
+    create_box_trace,
+    create_histogram,
+    create_line_chart,
+    create_scatter_trace,
+    LINES,
+    MARGIN,
+    update_figure,
+)
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -16,7 +29,7 @@ class PlotTypes(Enum):
     HISTOGRAM = 'histogram'
     BOX_PLOT = 'box_plot'
 
-    def to_plotter_function(self) -> Callable[..., go.Figure]:
+    def to_plotter_function(self) -> Callable[[Dict[str, pd.DataFrame], 'PlotConfig', bool], Dict[str, go.Figure]]:
         type_to_function = {
             PlotTypes.LINE_CHART: plot_line_chart,
             PlotTypes.HISTOGRAM: plot_histogram,
@@ -32,9 +45,10 @@ class PlotConfig:
     type: PlotTypes
     x_axis_name: Optional[str] = None
     y_axis_name: Optional[str] = None
-    margin: Optional[plotly_consts.MARGIN] = None
-    color: Optional[plotly_consts.COLOR] = None
-    boundaries: Optional[Dict[int, Optional[str]]] = None
+    margin: MARGIN = None
+    color: COLOR = None
+    colorway: COLORWAY = None
+    boundaries: LINES = None
     range_of_values: Optional[range] = None
     n_bins: Optional[int] = None
 
@@ -52,7 +66,10 @@ def _prepare_stats(stats: pd.DataFrame, config: PlotConfig, x_axis_name: str, y_
 
     # Fill in the missing intermediate values with zeros
     min_index, max_index = result_df.index.min(), result_df.index.max()
-    result_df = result_df.reindex(range(min_index, max_index + 1), fill_value=0)
+    if pd.isna(min_index) or pd.isna(max_index):
+        logger.warning(f'{config.column}: no data')
+    else:
+        result_df = result_df.reindex(range(min_index, max_index + 1), fill_value=0)
 
     result_df.reset_index(inplace=True)
 
@@ -71,54 +88,127 @@ def _get_axis_names(config: PlotConfig, default_x_axis_name: str, default_y_axis
     return x_axis_name, y_axis_name
 
 
-def plot_line_chart(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
-    x_axis_name, y_axis_name = _get_axis_names(
-        config, default_x_axis_name='Value', default_y_axis_name='Number of fragments',
-    )
+def plot_line_chart(
+    stats_by_lang: Dict[str, pd.DataFrame],
+    config: PlotConfig,
+    group_stats: bool,
+) -> Dict[str, go.Figure]:
+    x_axis_name, y_axis_name = _get_axis_names(config, default_x_axis_name='Value', default_y_axis_name='Quantity')
 
-    stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+    if not group_stats:
+        plots = {}
+        for lang, stats in stats_by_lang.items():
+            stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+            plots[lang] = create_line_chart(
+                stats,
+                x_axis_name,
+                y_axis_name,
+                color=config.color,
+                margin=config.color,
+                vertical_lines=config.boundaries,
+            )
+        return plots
 
-    return create_line_chart(
-        stats, x_axis_name, y_axis_name, margin=config.margin, color=config.color, vertical_lines=config.boundaries,
-    )
+    plot = go.Figure()
+    for lang, stats in stats_by_lang.items():
+        stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+        trace = create_scatter_trace(stats, x_axis_name, y_axis_name, color=config.color)
+        trace.name = lang
+        plot.add_trace(trace)
 
-
-def plot_histogram(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
-    x_axis_name, y_axis_name = _get_axis_names(
-        config, default_x_axis_name='Value', default_y_axis_name='Number of fragments',
-    )
-
-    stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
-
-    return create_histogram(
-        stats,
-        x_axis_name,
-        y_axis_name,
+    update_figure(
+        plot,
         margin=config.margin,
         color=config.color,
-        n_bins=config.n_bins,
         vertical_lines=config.boundaries,
+        x_axis_name=x_axis_name,
+        y_axis_name=y_axis_name,
+        colorway=config.colorway,
     )
 
-
-def _get_all_values_from_stats(stats: pd.DataFrame, column_name: str) -> List[int]:
-    result = []
-    stats.apply(lambda row: result.extend([row[VALUE]] * row[column_name]), axis=1)
-    return result
+    return {'grouped': plot}
 
 
-def plot_box_plot(stats: pd.DataFrame, config: PlotConfig) -> go.Figure:
+def plot_histogram(
+    stats_by_lang: Dict[str, pd.DataFrame],
+    config: PlotConfig,
+    group_stats: bool,
+) -> Dict[str, go.Figure]:
+    x_axis_name, y_axis_name = _get_axis_names(
+        config, default_x_axis_name='Value', default_y_axis_name='Quantity',
+    )
+
+    if group_stats:
+        logger.info(f'{config.column}: the histogram cannot be grouped.')
+
+    plots = {}
+    for lang, stats in stats_by_lang.items():
+        stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+        plots[lang] = create_histogram(
+            stats,
+            x_axis_name,
+            y_axis_name,
+            margin=config.margin,
+            color=config.color,
+            n_bins=config.n_bins,
+            vertical_lines=config.boundaries,
+        )
+
+    return plots
+
+
+def _get_values_df(stats: pd.DataFrame, config: PlotConfig, x_axis_name: str, y_axis_name: str):
+    values = []
+    stats.apply(lambda row: values.extend([row[VALUE]] * row[config.column]), axis=1)
+
+    if config.range_of_values is not None:
+        values = [elem for elem in values if elem in config.range_of_values]
+
+    return pd.DataFrame.from_dict({x_axis_name: config.column, y_axis_name: values})
+
+
+def plot_box_plot(
+    stats_by_lang: Dict[str, pd.DataFrame],
+    config: PlotConfig,
+    group_stats: bool,
+) -> Dict[str, go.Figure]:
     x_axis_name, y_axis_name = _get_axis_names(
         config,
-        default_x_axis_name="Category",
+        default_x_axis_name='Category',
         default_y_axis_name='Values',
     )
 
-    values = _get_all_values_from_stats(stats, config.column)
+    if not group_stats:
+        plots = {}
+        for lang, stats in stats_by_lang.items():
+            values_df = _get_values_df(stats, config, x_axis_name, y_axis_name)
 
-    if config.range_of_values is not None:
-        values = list(filter(lambda elem: elem in config.range_of_values, values))
+            plots[lang] = create_box_plot(
+                values_df,
+                x_axis=x_axis_name,
+                y_axis=y_axis_name,
+                color=config.color,
+                margin=config.margin,
+                horizontal_lines=config.boundaries,
+            )
+        return plots
 
-    values_df = pd.DataFrame.from_dict({x_axis_name: config.column, y_axis_name: values})
+    plot = go.Figure()
+    for lang, stats in stats_by_lang.items():
+        values_df = _get_values_df(stats, config, x_axis_name, y_axis_name)
 
-    return create_box_plot(values_df, x_axis_name, y_axis_name, horizontal_lines=config.boundaries)
+        trace = create_box_trace(values_df, y_column=y_axis_name)
+        trace.name = lang
+
+        plot.add_trace(trace)
+
+    update_figure(
+        plot,
+        margin=config.margin,
+        horizontal_lines=config.boundaries,
+        x_axis_name=x_axis_name,
+        y_axis_name=y_axis_name,
+        colorway=config.colorway,
+    )
+
+    return {'grouped': plot}
