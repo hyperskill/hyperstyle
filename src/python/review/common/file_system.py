@@ -38,6 +38,7 @@ class Extension(Enum):
     CSV = '.csv'
     PICKLE = '.pickle'
     JSON = '.json'
+    HTML = '.html'
 
     # Image extensions
     PNG = '.png'

@@ -31,7 +31,9 @@ def _get_dataframe_from_dict(
 
 
 def _extract_stats_from_issues_statistics(
-    statistics: IssuesStatistics, limit: int, only_unique: bool,
+    statistics: IssuesStatistics,
+    limit: int,
+    only_unique: bool,
 ) -> Dict[IssueType, int]:
     categorized_statistics = statistics.get_short_categorized_statistics()
 
@@ -61,7 +63,14 @@ def get_unique_issues_by_category(
         key_mapper=lambda issue_type: issue_type.name,
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
+    return create_bar_plot(
+        df,
+        x_axis=x_axis_name,
+        y_axis=y_axis_name,
+        margin=margin,
+        sort_order=sort_order,
+        color=color,
+    )
 
 
 def get_issues_by_category(
@@ -82,7 +91,14 @@ def get_issues_by_category(
         key_mapper=lambda issue_type: issue_type.name,
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
+    return create_bar_plot(
+        df,
+        x_axis=x_axis_name,
+        y_axis=y_axis_name,
+        margin=margin,
+        sort_order=sort_order,
+        color=color,
+    )
 
 
 def get_median_penalty_influence_by_category(
@@ -105,7 +121,14 @@ def get_median_penalty_influence_by_category(
         value_mapper=lambda influence: median(influence),
     )
 
-    return create_bar_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
+    return create_bar_plot(
+        df,
+        x_axis=x_axis_name,
+        y_axis=y_axis_name,
+        margin=margin,
+        sort_order=sort_order,
+        color=color,
+    )
 
 
 def get_penalty_influence_distribution(
@@ -128,4 +151,11 @@ def get_penalty_influence_distribution(
     )
     df = df.explode(y_axis_name)
 
-    return create_box_plot(df, x_axis_name, y_axis_name, margin, sort_order, color)
+    return create_box_plot(
+        df,
+        x_axis=x_axis_name,
+        y_axis=y_axis_name,
+        margin=margin,
+        sort_order=sort_order,
+        color=color,
+    )

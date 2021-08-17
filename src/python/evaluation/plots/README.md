@@ -96,18 +96,20 @@ The script can build the following charts:
 Run the [raw_issues_statistics_plotter.py](raw_issues_statistics_plotter.py) with the arguments from command line.
 
 **Required arguments**:
-1. `stats` — path to a file with stats that were founded by [get_raw_issues_statistics.py](../issues_statistics/get_raw_issues_statistics.py).
+1. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config-1).
 2. `save_dir` — directory where the plotted charts will be saved.
-3. `config_path` — path to the yaml file containing information about the charts to be plotted. A description of the config and its example is provided in [this section](#config-1).
 
 **Optional arguments**:
 
 Argument | Description
 --- | ---
 **&#8209;&#8209;file&#8209;extension** | Allows you to select the extension of output files. Available extensions: `.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`, `.pdf`, `.eps`, `.json`. Default is `.svg`.
+**&#8209;&#8209;group&#8209;stats** | If present, there will be several languages on the charts at once.
 
 ### Config
-The configuration file is a dictionary in yaml format, where for each column of the original dataset the types of graphs to be plotted are specified. You can also put the common parameters when plotting multiple graphs for one column in a separate `common` group.
+The configuration file is a dictionary in yaml format, where 
+1) paths to datasets with statistics are specified
+2) for each column of the original dataset, the types of graphs to be plotted are specified. You can also put the general parameters when plotting multiple graphs for one column in a separate `common` group.
 
 **Possible values of the charts**: 
 * `line_chart`
@@ -141,10 +143,18 @@ The result will be two graphs: line chart and histogram. The values in both char
 ### Examples
 
 #### Line chart
-<img src="./examples/CYCLOMATIC_COMPLEXITY_line_chart.png" width="500">
+<p align="middle">
+  <img src="./examples/CYCLOMATIC_COMPLEXITY_line_chart.png" width="49%" />
+  <img src="./examples/CYCLOMATIC_COMPLEXITY_line_chart_grouped.png" width="49%" />
+</p>
 
 #### Box plot
-<img src="./examples/BEST_PRACTICES_box_plot.png" width="500">
+<p align="middle">
+  <img src="./examples/BEST_PRACTICES_box_plot.png" width="49%" />
+  <img src="./examples/BEST_PRACTICES_box_plot_grouped.png" width="49%" />
+</p>
 
 #### Histogram
-<img src="./examples/CODE_STYLE_ratio_histogram.png" width="500">
+<p align="middle">
+  <img src="./examples/CODE_STYLE_ratio_histogram.png" width="49%" />
+</p>
