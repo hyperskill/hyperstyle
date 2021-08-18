@@ -53,11 +53,17 @@ class PlotConfig:
     n_bins: Optional[int] = None
 
 
-def _prepare_stats(stats: pd.DataFrame, config: PlotConfig, x_axis_name: str, y_axis_name: str) -> pd.DataFrame:
-    result_df = stats[[VALUE, config.column]]
+def prepare_stats(
+    stats: pd.DataFrame,
+    column: str,
+    range_of_values: Optional[range],
+    x_axis_name: str,
+    y_axis_name: str,
+) -> pd.DataFrame:
+    result_df = stats[[VALUE, column]]
 
-    if config.range_of_values is not None:
-        result_df = result_df[result_df[VALUE].isin(config.range_of_values)]
+    if range_of_values is not None:
+        result_df = result_df[result_df[VALUE].isin(range_of_values)]
 
     result_df.set_index(VALUE, inplace=True)
 
@@ -67,25 +73,31 @@ def _prepare_stats(stats: pd.DataFrame, config: PlotConfig, x_axis_name: str, y_
     # Fill in the missing intermediate values with zeros
     min_index, max_index = result_df.index.min(), result_df.index.max()
     if pd.isna(min_index) or pd.isna(max_index):
-        logger.warning(f'{config.column}: no data')
+        logger.warning(f'{column}: no data')
     else:
         result_df = result_df.reindex(range(min_index, max_index + 1), fill_value=0)
 
     result_df.reset_index(inplace=True)
 
-    return result_df.rename(columns={VALUE: x_axis_name, config.column: y_axis_name})
+    return result_df.rename(columns={VALUE: x_axis_name, column: y_axis_name})
 
 
-def _get_axis_names(config: PlotConfig, default_x_axis_name: str, default_y_axis_name: str) -> Tuple[str, str]:
-    x_axis_name = default_x_axis_name
-    if config.x_axis_name is not None:
-        x_axis_name = config.x_axis_name
+def _get_axis_names(
+    *,
+    x_axis_name: Optional[str],
+    y_axis_name: Optional[str],
+    default_x_axis_name: str,
+    default_y_axis_name: str,
+) -> Tuple[str, str]:
+    new_x_axis_name = default_x_axis_name
+    if x_axis_name is not None:
+        new_x_axis_name = x_axis_name
 
-    y_axis_name = default_y_axis_name
-    if config.y_axis_name is not None:
-        y_axis_name = config.y_axis_name
+    new_y_axis_name = default_y_axis_name
+    if y_axis_name is not None:
+        new_y_axis_name = y_axis_name
 
-    return x_axis_name, y_axis_name
+    return new_x_axis_name, new_y_axis_name
 
 
 def plot_line_chart(
@@ -93,12 +105,17 @@ def plot_line_chart(
     config: PlotConfig,
     group_stats: bool,
 ) -> Dict[str, go.Figure]:
-    x_axis_name, y_axis_name = _get_axis_names(config, default_x_axis_name='Value', default_y_axis_name='Quantity')
+    x_axis_name, y_axis_name = _get_axis_names(
+        x_axis_name=config.x_axis_name,
+        y_axis_name=config.y_axis_name,
+        default_x_axis_name='Value',
+        default_y_axis_name='Quantity',
+    )
 
     if not group_stats:
         plots = {}
         for lang, stats in stats_by_lang.items():
-            stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+            stats = prepare_stats(stats, config.column, config.range_of_values, x_axis_name, y_axis_name)
             plots[lang] = create_line_chart(
                 stats,
                 x_axis=x_axis_name,
@@ -111,7 +128,7 @@ def plot_line_chart(
 
     plot = go.Figure()
     for lang, stats in stats_by_lang.items():
-        stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+        stats = prepare_stats(stats, config.column, config.range_of_values, x_axis_name, y_axis_name)
         trace = create_scatter_trace(stats, x_column=x_axis_name, y_column=y_axis_name)
         trace.name = lang
         plot.add_trace(trace)
@@ -134,7 +151,10 @@ def plot_histogram(
     group_stats: bool,
 ) -> Dict[str, go.Figure]:
     x_axis_name, y_axis_name = _get_axis_names(
-        config, default_x_axis_name='Value', default_y_axis_name='Quantity',
+        x_axis_name=config.x_axis_name,
+        y_axis_name=config.y_axis_name,
+        default_x_axis_name='Value',
+        default_y_axis_name='Quantity',
     )
 
     if group_stats:
@@ -142,7 +162,7 @@ def plot_histogram(
 
     plots = {}
     for lang, stats in stats_by_lang.items():
-        stats = _prepare_stats(stats, config, x_axis_name, y_axis_name)
+        stats = prepare_stats(stats, config.column, config.range_of_values, x_axis_name, y_axis_name)
         plots[lang] = create_histogram(
             stats,
             x_axis_name,
@@ -172,7 +192,8 @@ def plot_box_plot(
     group_stats: bool,
 ) -> Dict[str, go.Figure]:
     x_axis_name, y_axis_name = _get_axis_names(
-        config,
+        x_axis_name=config.x_axis_name,
+        y_axis_name=config.y_axis_name,
         default_x_axis_name='Category',
         default_y_axis_name='Values',
     )
