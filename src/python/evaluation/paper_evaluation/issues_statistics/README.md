@@ -98,10 +98,10 @@ countable:
 <img src="./examples/measurable.png" width="1000">
 
 ### maintainability_and_cohesion.png
-<img src="./examples/maintainability_and_cohesion.png" width="1000">
+<img src="./examples/maintainability_and_cohesion.png" width="800">
 
 ### ratio.png
-<img src="./examples/ratio.png" width="1000">
+<img src="./examples/ratio.png" width="800">
 
 ### countable.png
 <img src="./examples/countable.png" width="1000">
