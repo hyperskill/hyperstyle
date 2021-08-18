@@ -95,13 +95,13 @@ countable:
 ```
 
 ### measurable.png
-<img src="./examples/measurable.png">
+<img src="./examples/measurable.png" width="1000">
 
 ### maintainability_and_cohesion.png
-<img src="./examples/maintainability_and_cohesion.png">
+<img src="./examples/maintainability_and_cohesion.png" width="1000">
 
 ### ratio.png
-<img src="./examples/ratio.png">
+<img src="./examples/ratio.png" width="1000">
 
 ### countable.png
-<img src="./examples/countable.png">
+<img src="./examples/countable.png" width="1000">
