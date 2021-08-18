@@ -107,6 +107,27 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _update_fig(fig: go.Figure, plot_config: PlotConfig) -> None:
+    fig.update_layout(
+        width=plot_config.width,
+        height=plot_config.height,
+        font_size=22,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        colorway=COLORWAY,
+    )
+
+    axes_common_params = {
+        'showline': True,
+        'linewidth': 1,
+        'linecolor': 'black',
+        'mirror': True,
+    }
+
+    fig.update_xaxes(title=plot_config.x_axis_name, **axes_common_params)
+    fig.update_yaxes(title=plot_config.y_axis_name, **axes_common_params)
+
+
 def build_subplots(df: pd.DataFrame, plot_config: PlotConfig, trace_configs: List[TraceConfig]) -> go.Figure:
     fig = make_subplots(
         rows=plot_config.rows,
@@ -117,16 +138,12 @@ def build_subplots(df: pd.DataFrame, plot_config: PlotConfig, trace_configs: Lis
     if plot_config.specs is None:
         plot_config.specs = [[{} for _ in range(plot_config.cols)] for _ in range(plot_config.rows)]
 
-    current_index = 0
-    current_row = 1
-    for row in plot_config.specs:
-        current_column = 1
-        for cell in row:
+    for row_index, row in enumerate(plot_config.specs, start=1):
+        for column_index, cell in enumerate(row, start=1):
             if cell is None:
-                current_column += 1
                 continue
 
-            trace_config = trace_configs[current_index]
+            trace_config = trace_configs.pop(0)
 
             stats = prepare_stats(
                 df,
@@ -139,42 +156,14 @@ def build_subplots(df: pd.DataFrame, plot_config: PlotConfig, trace_configs: Lis
             fig.add_scatter(
                 x=stats[plot_config.x_axis_name],
                 y=stats[plot_config.y_axis_name],
-                col=current_column,
-                row=current_row,
+                col=column_index,
+                row=row_index,
                 line={'width': 5},
                 marker={'size': 10},
                 name=trace_config.trace_name if trace_config.trace_name is not None else trace_config.column,
             )
 
-            current_column += 1
-            current_index += 1
-
-        current_row += 1
-
-    fig.update_layout(
-        width=plot_config.width,
-        height=plot_config.height,
-        font_size=22,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        colorway=COLORWAY,
-    )
-
-    fig.update_xaxes(
-        showline=True,
-        linewidth=1,
-        linecolor='black',
-        mirror=True,
-        title=plot_config.x_axis_name,
-    )
-
-    fig.update_yaxes(
-        showline=True,
-        linewidth=1,
-        linecolor='black',
-        mirror=True,
-        title=plot_config.y_axis_name,
-    )
+    _update_fig(fig, plot_config)
 
     return fig
 
@@ -204,8 +193,9 @@ def main():
         return 0
 
     except IndexError:
-        logger.error('The number of traces must be consistent with the number of rows and columns, '
-                     'as well as the specs.')
+        logger.error(
+            'The number of traces must be consistent with the number of rows and columns, as well as the specs.',
+        )
         return 2
 
     except Exception:
