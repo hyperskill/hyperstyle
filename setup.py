@@ -34,7 +34,7 @@ def get_requires() -> List[str]:
 
 
 setup(
-    name='review',
+    name='hyperstyle',
     version=get_version(),
     description='A tool for running a set of pre-configured linters and evaluating code quality.',
     long_description=get_long_description(),
