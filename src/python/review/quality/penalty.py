@@ -6,6 +6,12 @@ from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.quality.model import QualityType
 
+
+@dataclass(frozen=True, eq=True)
+class PenaltyIssue(BaseIssue):
+    influence_on_penalty: int
+
+
 # TODO: need testing
 ISSUE_TYPE_TO_PENALTY_COEFFICIENT = {
     IssueType.COHESION: 0.6,
