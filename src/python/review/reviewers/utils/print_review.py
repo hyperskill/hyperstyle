@@ -4,12 +4,12 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.review.application_config import ApplicationConfig
 from src.python.review.common.file_system import get_file_line
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from src.python.review.quality.model import QualityType
+from src.python.review.quality.penalty import PenaltyIssue
 from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult, ReviewResult
 
 

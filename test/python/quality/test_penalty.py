@@ -10,7 +10,7 @@ punisher = Punisher([], [])
 
 CURRENT_ISSUES = [
     BaseIssue(
-        file_path=Path("."),
+        file_path=Path(""),
         line_no=1,
         column_no=1,
         description="Possibly misspelt word",
@@ -20,7 +20,7 @@ CURRENT_ISSUES = [
         difficulty=IssueDifficulty.MEDIUM,
     ),
     BaseIssue(
-        file_path=Path("."),
+        file_path=Path(""),
         line_no=10,
         column_no=5,
         description="Lambda may not be necessary",

@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List, Optional
 
-from src.python.evaluation.common.util import ColumnName
 from src.python.review.application_config import LanguageVersion
 from src.python.review.inspectors.inspector_type import InspectorType
 
@@ -84,22 +83,3 @@ class RunToolArgument(Enum):
 
     GROUP_BY_DIFFICULTY = ArgumentsInfo(None, '--group-by-difficulty',
                                         'With this flag, the final grade will be grouped by the issue difficulty.')
-
-    SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
-                                        'Local XLSX-file or CSV-file path. '
-                                        'Your file must include column-names: '
-                                        f'"{ColumnName.CODE.value}" and '
-                                        f'"{ColumnName.LANG.value}". Acceptable values for '
-                                        f'"{ColumnName.LANG.value}" column are: '
-                                        f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
-                                        f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
-
-    DIFFS_FILE_PATH = ArgumentsInfo(None, 'diffs_file_path',
-                                    'Path to a file with serialized diffs that were founded by diffs_between_df.py')
-
-    QODANA_SOLUTIONS_FILE_PATH = ArgumentsInfo(None, 'solutions_file_path',
-                                               'Csv file with solutions. This file must be graded by Qodana.')
-
-    QODANA_INSPECTIONS_PATH = ArgumentsInfo(None, 'inspections_path', 'Path to a CSV file with inspections list.')
-
-    QODANA_DUPLICATES = ArgumentsInfo(None, '--remove-duplicates', 'Remove duplicates around inspections')
