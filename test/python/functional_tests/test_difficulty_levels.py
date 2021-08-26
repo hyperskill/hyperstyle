@@ -171,16 +171,6 @@ EASY_ISSUES = {
             'line_number': 10,
             'text': 'continuation line under-indented for hanging indent',
         },
-        {
-            'category': 'CODE_STYLE',
-            'code': 'WPS319',
-            'column_number': 21,
-            'difficulty': 'EASY',
-            'influence_on_penalty': {'EASY': 0, 'HARD': 0, 'MEDIUM': 0},
-            'line': '"Hello, World")',
-            'line_number': 10,
-            'text': 'Found bracket in wrong position',
-        },
     ],
 }
 
@@ -393,16 +383,6 @@ EASY_ISSUES_WITH_INFLUENCE = {
             'line': '"Hello, World")',
             'line_number': 10,
             'text': 'continuation line under-indented for hanging indent',
-        },
-        {
-            'category': 'CODE_STYLE',
-            'code': 'WPS319',
-            'column_number': 21,
-            'difficulty': 'EASY',
-            'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 0},
-            'line': '"Hello, World")',
-            'line_number': 10,
-            'text': 'Found bracket in wrong position',
         },
     ],
 }

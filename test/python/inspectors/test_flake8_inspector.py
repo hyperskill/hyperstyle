@@ -13,7 +13,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case1_simple_valid_program.py', 0),
     ('case2_boolean_expressions.py', 8),
     ('case3_redefining_builtin.py', 2),
-    ('case4_naming.py', 11),
+    ('case4_naming.py', 8),
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 3),
     ('case8_good_class.py', 0),
@@ -25,14 +25,17 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case14_returns_errors.py', 4),
     ('case16_comments.py', 0),
     ('case17_dangerous_default_value.py', 1),
-    # ('case18_comprehensions.py', 9),
+    ('case18_comprehensions.py', 9),
     ('case19_bad_indentation.py', 3),
     ('case21_imports.py', 2),
     ('case25_django.py', 0),
-    ('case31_line_break.py', 11),
+    ('case31_spellcheck.py', 0),
     ('case32_string_format.py', 34),
     ('case33_commas.py', 14),
-    # ('case34_cohesion.py', 1),
+    ('case34_cohesion.py', 1),
+    ('case35_line_break.py', 11),
+    ('case36_unpacking.py', 3),
+    ('case37_wildcard_import.py', 1),
 ]
 
 
@@ -43,7 +46,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
     path_to_file = PYTHON_DATA_FOLDER / file_name
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
-        issues = filter_low_measure_issues(issues, Language.PYTHON)
+        issues = list(filter(lambda i: i.type != IssueType.INFO, filter_low_measure_issues(issues, Language.PYTHON)))
 
         assert len(issues) == n_issues
 
@@ -69,12 +72,14 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
     ('case14_returns_errors.py', IssuesTestInfo(n_best_practices=1,
                                                 n_error_prone=3,
                                                 n_cc=4)),
-    ('case31_line_break.py', IssuesTestInfo(n_best_practices=1,
+    ('case35_line_break.py', IssuesTestInfo(n_best_practices=1,
                                             n_code_style=10,
                                             n_cc=1)),
     ('case32_string_format.py', IssuesTestInfo(n_error_prone=28, n_other_complexity=6)),
     ('case33_commas.py', IssuesTestInfo(n_code_style=14, n_cc=4)),
     ('case34_cohesion.py', IssuesTestInfo(n_cc=6, n_cohesion=2)),
+    ('case36_unpacking.py', IssuesTestInfo(n_error_prone=2, n_cc=1, n_other_complexity=1)),
+    ('case37_wildcard_import.py', IssuesTestInfo(n_best_practices=1, n_cc=1)),
 ]
 
 

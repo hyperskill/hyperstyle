@@ -36,9 +36,9 @@
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleStringLiterals">
-            <!-- Consistent with the AvoidDuplicateLiterals rule from PMD config -->
+            <!-- Consistent with AvoidDuplicateLiterals from PMD -->
             <property name="allowedDuplicates" value="3"/>
-            <property name="ignoreStringsRegexp" value="^.{1,2}$"/>
+            <property name="ignoreStringsRegexp" value='^".{0,2}"$'/>
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="NoFinalizer"/>
@@ -81,16 +81,42 @@
         <module name="AbbreviationAsWordInName"/>
         <module name="ConstantName">
             <property name="format" value="^log(ger)?$|^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use UPPER_CASE_SNAKE_CASE (checked pattern ''{1}'')."/>
         </module>
-        <module name="LambdaParameterName"/>
-        <module name="LocalFinalVariableName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName"/>
-        <module name="MethodName"/>
+        <module name="LambdaParameterName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="LocalFinalVariableName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="LocalVariableName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="MemberName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="MethodName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
         <module name="PackageName"/>
-        <module name="ParameterName"/>
-        <module name="StaticVariableName"/>
-        <module name="TypeName"/>
+        <module name="ParameterName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="StaticVariableName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use camelCase (checked pattern ''{1}'')."/>
+        </module>
+        <module name="TypeName">
+            <message key="name.invalidPattern"
+                     value="Name ''{0}'' must use PascalCase (checked pattern ''{1}'')."/>
+        </module>
 
         <!-- Size Violations -->
         <module name="ParameterNumber">
