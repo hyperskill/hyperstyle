@@ -49,7 +49,7 @@ HARD_ISSUES = {
             'influence_on_penalty': {'EASY': 0, 'HARD': 0, 'MEDIUM': 0},
             'line': 'class BadClass:',
             'line_number': 4,
-            'text': 'class has low (50.00%) cohesion',
+            'text': 'class has low (20.00%) cohesion',
         },
     ],
 }
@@ -200,7 +200,7 @@ ALL_DIFFICULTY_LEVEL_ISSUES = {
             'influence_on_penalty': {'EASY': 0, 'HARD': 0, 'MEDIUM': 0},
             'line': 'class BadClass:',
             'line_number': 5,
-            'text': 'class has low (50.00%) cohesion',
+            'text': 'class has low (20.00%) cohesion',
         },
         {
             'category': 'CODE_STYLE',
@@ -262,7 +262,7 @@ HARD_ISSUES_WITH_INFLUENCE = {
             'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 100},
             'line': 'class BadClass:',
             'line_number': 4,
-            'text': 'class has low (50.00%) cohesion',
+            'text': 'class has low (20.00%) cohesion',
         },
     ],
 }
@@ -412,7 +412,7 @@ ALL_DIFFICULTY_LEVEL_ISSUES_WITH_INFLUENCE = {
             'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 17},
             'line': 'class BadClass:',
             'line_number': 5,
-            'text': 'class has low (50.00%) cohesion',
+            'text': 'class has low (20.00%) cohesion',
         },
         {
             'category': 'CODE_STYLE',

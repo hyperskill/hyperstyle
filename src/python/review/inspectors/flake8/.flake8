@@ -23,6 +23,9 @@ ignore=W291,  # trailing whitespaces
        WPS112, # Forbid private name pattern.
        WPS114, # Forbid names with underscored numbers pattern.
        WPS125, # Forbid variable or module names which shadow builtin names. TODO: Collision with flake8-builtins
+       # WPS: Complexity
+       WPS200, # Forbid modules with complex lines. (Jones Complexity)
+       WPS221, # Forbid complex lines. (Jones Complexity)
        # WPS: Consistency
        WPS303, # Forbid underscores in numbers.
        WPS305, # Forbid f strings.
@@ -39,6 +42,7 @@ ignore=W291,  # trailing whitespaces
        WPS362, # Forbid assignment to a subscript slice.
        # WPS: Best practices
        WPS404, # Forbid complex defaults. TODO: Collision with "B006"
+       WPS414, # Forbid tuple unpacking with side-effects. (controversial)
        WPS420, # Forbid some python keywords.
        WPS421, # Forbid calling some built-in functions.(e.g., print)
        WPS429, # Forbid multiple assignments on the same line.

@@ -11,6 +11,7 @@ from src.python.review.inspectors.issue import BaseIssue, IssueType
 class CodeStatistics:
     n_best_practices_issue: int
     n_error_prone_issues: int
+    n_complexity_issues: int
     n_line_len: int
 
     method_number: int
@@ -35,6 +36,7 @@ class CodeStatistics:
         return {
             IssueType.BEST_PRACTICES: self.n_best_practices_issue,
             IssueType.ERROR_PRONE: self.n_error_prone_issues,
+            IssueType.COMPLEXITY: self.n_complexity_issues,
             IssueType.LINE_LEN: self.n_line_len,
 
             IssueType.METHOD_NUMBER: self.method_number,
@@ -87,6 +89,7 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         n_code_style_issues=issue_type_counter[IssueType.CODE_STYLE],
         n_best_practices_issue=issue_type_counter[IssueType.BEST_PRACTICES],
         n_error_prone_issues=issue_type_counter[IssueType.ERROR_PRONE],
+        n_complexity_issues=issue_type_counter[IssueType.COMPLEXITY],
         max_bool_expr_len=bool_expr_lens,
         max_func_len=func_lens,
         n_line_len=issue_type_counter[IssueType.LINE_LEN],

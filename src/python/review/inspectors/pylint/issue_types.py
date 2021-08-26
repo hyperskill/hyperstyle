@@ -9,6 +9,7 @@ from src.python.review.inspectors.issue import IssueType
 
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C0200': IssueType.BEST_PRACTICES,  # consider using enumerate
+    'C0113': IssueType.BEST_PRACTICES,
     'C0415': IssueType.BEST_PRACTICES,  # import-outside-toplevel
     'W0101': IssueType.ERROR_PRONE,  # unreachable code
     'W0102': IssueType.ERROR_PRONE,  # dangerous default value

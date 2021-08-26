@@ -14,7 +14,7 @@ class BestPracticesRuleConfig:
 
 
 common_best_practices_rule_config = BestPracticesRuleConfig(
-    n_best_practices_moderate=3,
+    n_best_practices_moderate=4,
     n_best_practices_good=1,
     n_files=1,
 )

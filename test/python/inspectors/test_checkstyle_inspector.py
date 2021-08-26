@@ -191,7 +191,7 @@ FILE_NAMES_AND_N_ISSUES = [
     # ("test_empty_lines_btw_members.java", 2),
     ('test_covariant_equals.java', 1),
     ('test_multi_statements.java', 7),
-    ('test_boolean_expr.java', 3),
+    ('test_boolean_expr.java', 4),
     ('test_code_with_comments.java', 2),
     ('test_too_long_method.java', 4),
     ('test_cyclomatic_complexity.java', 8),
