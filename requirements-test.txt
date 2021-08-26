@@ -2,4 +2,3 @@ pytest==6.2.3
 pytest-runner==5.2
 pytest-subtests==0.4.0
 jsonschema==3.2.0
-numpy==1.21.2
