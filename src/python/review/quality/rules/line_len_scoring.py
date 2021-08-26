@@ -8,11 +8,13 @@ from src.python.review.quality.model import QualityType, Rule
 @dataclass
 class LineLengthRuleConfig:
     n_line_len_bad: float
+    n_line_len_moderate: float
     n_line_len_good: float
 
 
 common_line_length_rule_config = LineLengthRuleConfig(
-    n_line_len_bad=0.05,
+    n_line_len_bad=0.07,
+    n_line_len_moderate=0.05,
     n_line_len_good=0.035,
 )
 
@@ -38,6 +40,9 @@ class LineLengthRule(Rule):
         if self.ratio > self.config.n_line_len_bad:
             self.quality_type = QualityType.BAD
             self.next_level_delta = n_line_len - self.config.n_line_len_bad
+        if self.ratio > self.config.n_line_len_moderate:
+            self.quality_type = QualityType.MODERATE
+            self.next_level_delta = n_line_len - self.config.n_line_len_moderate
         elif self.ratio > self.config.n_line_len_good:
             self.quality_type = QualityType.GOOD
             self.next_level_delta = n_line_len - self.config.n_line_len_good
@@ -54,6 +59,7 @@ class LineLengthRule(Rule):
     def merge(self, other: 'LineLengthRule') -> 'LineLengthRule':
         config = LineLengthRuleConfig(
             min(self.config.n_line_len_bad, other.config.n_line_len_bad),
+            min(self.config.n_line_len_moderate, other.config.n_line_len_moderate),
             min(self.config.n_line_len_good, other.config.n_line_len_good),
         )
         result_rule = LineLengthRule(config)

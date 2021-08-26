@@ -17,7 +17,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case5_returns.py', 1),
     ('case6_unused_variables.py', 3),
     ('case8_good_class.py', 0),
-    ('case7_empty_lines.py', 2),
+    ('case7_empty_lines.py', 1),
     ('case10_unused_variable_in_loop.py', 1),
     ('case13_complex_logic.py', 12),
     ('case13_complex_logic_2.py', 3),
