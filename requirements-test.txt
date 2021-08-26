@@ -2,8 +2,3 @@ pytest==6.2.3
 pytest-runner==5.2
 pytest-subtests==0.4.0
 jsonschema==3.2.0
-pandas==1.2.3
-django==3.2
-pylint==2.7.4
-requests==2.25.1
-setuptools==56.0.0
