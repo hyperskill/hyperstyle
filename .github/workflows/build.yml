@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install git
-          run: |
+        run: |
             apt-get update
             apt-get -y install git
 
@@ -31,7 +31,7 @@ jobs:
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
       - name: Sort whitelists
-          run: |
+        run: |
             for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
             do
             LC_ALL=C sort $file -o $file
