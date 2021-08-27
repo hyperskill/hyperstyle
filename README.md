@@ -168,6 +168,101 @@ The output examples:
 }
 ```
 
+3. Json `old format` (with **&#8209;&#8209;group&#8209;by&#8209;difficulty** argument):
+
+```json
+{
+  "quality": {
+    "EASY": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    },
+    "MEDIUM": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    },
+    "HARD": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    }
+  },
+  "issues": [
+    {
+      "code": "C002",
+      "text": "Too long function. Try to split it into smaller functions / methods.It will make your code easy to understand and less error prone.",
+      "line": "<the code line>",
+      "line_number": 54,
+      "column_number": 0,
+      "category": "FUNC_LEN",
+      "difficulty": "EASY",
+      "influence_on_penalty": {
+        "EASY": 0,
+        "MEDIUM": 0,
+        "HARD": 0
+      }
+    },
+    ...
+  ]
+}
+```
+
+4. Json `new format` (with **&#8209;&#8209;group&#8209;by&#8209;difficulty** argument)
+
+```json
+{
+  "quality": {
+    "EASY": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    },
+    "MEDIUM": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    },
+    "HARD": {
+      "code": "BAD",
+      "text": "Code quality (beta): BAD"
+    }
+  },
+  "file_review_results": [
+    {
+      "file_name": "<your file>",
+      "quality": {
+        "EASY": {
+          "code": "BAD",
+          "text": "Code quality (beta): BAD"
+        },
+        "MEDIUM": {
+          "code": "BAD",
+          "text": "Code quality (beta): BAD"
+        },
+        "HARD": {
+          "code": "BAD",
+          "text": "Code quality (beta): BAD"
+        }
+      },
+      "issues": [
+        {
+          "code": "W0703",
+          "text": "Catching too general exception Exception",
+          "line": "<the code line>",
+          "line_number": 174,
+          "column_number": 12,
+          "category": "BEST_PRACTICES",
+          "difficulty": "MEDIUM",
+          "influence_on_penalty": {
+            "EASY": 0,
+            "MEDIUM": 0,
+            "HARD": 0
+          }
+        },
+        ...
+      ]
+    }
+  ]
+}
+```
+
 3. Text format:
 
 ```text
