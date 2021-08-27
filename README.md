@@ -263,7 +263,7 @@ The output examples:
 }
 ```
 
-3. Text format:
+5. Text format:
 
 ```text
 Review of <path to your file or project> (N violations)
