@@ -236,3 +236,17 @@ xpath
 yanchor
 yaxes
 yaxis
+stdlib
+maxsplit
+xrange
+unichr
+maxint
+execfile
+setslice
+rdiv
+idiv
+getslice
+delslice
+redeclared
+xreadlines
+metaclass
