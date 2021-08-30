@@ -21,6 +21,7 @@ configs
 consts
 coord
 copysign
+coroutine
 csgraph
 ctime
 dataframe
@@ -31,6 +32,7 @@ decrypted
 dedent
 deque
 desc
+destructuring
 devs
 df
 dicts
@@ -74,6 +76,7 @@ iterrows
 kcal
 kcals
 lastname
+lateinit
 lemmatize
 lemmatizer
 lifes
@@ -86,6 +89,7 @@ lowercased
 lvl
 lxml
 matmul
+metaclass
 minsize
 multiline
 nbins
@@ -94,6 +98,7 @@ ndigits
 ndim
 nltk
 nrows
+nullable
 numpy
 nums
 ost
@@ -114,6 +119,7 @@ showline
 sigmoid
 sqrt
 src
+stdlib
 stemmer
 stepik
 subdicts
@@ -123,6 +129,7 @@ substr
 substring
 textposition
 textwrap
+throwable
 todos
 tokenize
 tokenized
@@ -132,6 +139,7 @@ toplevel
 tracklist
 truediv
 truthy
+unary
 uniformtext
 unpickled
 upd
@@ -145,11 +153,3 @@ xanchor
 xaxes
 yanchor
 yaxis
-metaclass
-stdlib
-coroutine
-throwable
-nullable
-lateinit
-unary
-destructuring
