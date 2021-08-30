@@ -236,3 +236,10 @@ xpath
 yanchor
 yaxes
 yaxis
+coroutine
+throwable
+nullable
+lateinit
+unary
+rbrace
+destructuring
