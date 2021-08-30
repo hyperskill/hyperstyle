@@ -13,9 +13,9 @@ from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkst
 logger = logging.getLogger(__name__)
 
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_DETEKT_JAR = PATH_TOOLS_PMD_FILES / 'detekt-cli-1.8.0-all.jar'
+PATH_DETEKT_JAR = PATH_TOOLS_PMD_FILES / 'detekt-cli-1.14.2-all.jar'
 PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
-PATH_DETEKT_PLUGIN = PATH_TOOLS_PMD_FILES / 'detekt-formatting-1.5.1.jar'
+PATH_DETEKT_PLUGIN = PATH_TOOLS_PMD_FILES / 'detekt-formatting-1.14.2.jar'
 
 
 class DetektInspector(BaseInspector):
