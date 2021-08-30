@@ -49,6 +49,7 @@ conftest
 const
 consts
 copytree
+coroutine
 coroutines
 csv
 ctor
@@ -63,6 +64,7 @@ datasets
 dedent
 delslice
 desc
+destructuring
 detekt
 df
 dicts
@@ -126,6 +128,7 @@ json
 jsons
 jsonschema
 kts
+lateinit
 lcom
 linecache
 linecolor
@@ -160,6 +163,7 @@ noc
 nom
 noqa
 nrows
+nullable
 num
 numpy
 oop
@@ -186,6 +190,7 @@ pyast
 pylint
 qodana
 qodanadataset
+rbrace
 rdiv
 readouterr
 redeclared
@@ -216,9 +221,11 @@ sym
 textangle
 textposition
 textwrap
+throwable
 tmp
 tokenizer
 toplevel
+unary
 uncommented
 unichr
 uniformtext
