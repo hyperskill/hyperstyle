@@ -73,6 +73,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'WPS419': IssueType.ERROR_PRONE,  # Forbid multiple returning paths with try / except case.
     'WPS424': IssueType.ERROR_PRONE,  # Forbid BaseException exception.
     'WPS426': IssueType.ERROR_PRONE,  # Forbid lambda inside loops.
+    'WPS428': IssueType.ERROR_PRONE,  # Forbid statements that do nothing.
     'WPS432': IssueType.INFO,  # Forbid magic numbers.
     'WPS433': IssueType.CODE_STYLE,  # Forbid imports nested in functions.
     'WPS439': IssueType.ERROR_PRONE,  # Forbid Unicode escape sequences in binary strings.
