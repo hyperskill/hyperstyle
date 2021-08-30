@@ -33,15 +33,15 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C0205': IssueType.ERROR_PRONE,  # Class __slots__ should be a non-string iterable
 
     # Design checker
-    'R0901': IssueType.COMPLEXITY,  # too-many-ancestors
-    'R0913': IssueType.COMPLEXITY,  # too-many-arguments
-    'R0916': IssueType.COMPLEXITY,  # too-many-boolean-expressions
-    'R0912': IssueType.COMPLEXITY,  # too-many-branches
-    'R0902': IssueType.COMPLEXITY,  # too-many-instance-attributes
-    'R0914': IssueType.COMPLEXITY,  # too-many-locals
-    'R0904': IssueType.COMPLEXITY,  # too-many-public-methods
-    'R0911': IssueType.COMPLEXITY,  # too-many-return-statements
-    'R0915': IssueType.COMPLEXITY,  # too-many-statements
+    'R0901': IssueType.COMPLEXITY,  # Too many ancestors
+    'R0913': IssueType.COMPLEXITY,  # Too many arguments
+    'R0916': IssueType.COMPLEXITY,  # Too many boolean expressions
+    'R0912': IssueType.COMPLEXITY,  # Too many branches
+    'R0902': IssueType.COMPLEXITY,  # Too many instance attributes
+    'R0914': IssueType.COMPLEXITY,  # Too many locals
+    'R0904': IssueType.COMPLEXITY,  # Too many public methods
+    'R0911': IssueType.COMPLEXITY,  # Too many return statements
+    'R0915': IssueType.COMPLEXITY,  # Too many statements
 
     # Exceptions checker
     'W0705': IssueType.ERROR_PRONE,  # Catching previously caught exception type
