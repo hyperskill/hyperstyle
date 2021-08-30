@@ -145,3 +145,11 @@ xanchor
 xaxes
 yanchor
 yaxis
+metaclass
+stdlib
+coroutine
+throwable
+nullable
+lateinit
+unary
+destructuring
