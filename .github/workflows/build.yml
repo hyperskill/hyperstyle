@@ -15,6 +15,12 @@ jobs:
             apt-get update
             apt-get -y install git
 
+      - name: Check env variables
+        run: |
+            echo $DETEKT_DIRECTORY && echo DETEKT_VERSION
+            echo CHECKSTYLE_DIRECTORY
+            echo PMD_DIRECTORY
+
       - name: Checkout
         uses: actions/checkout@v2
 
