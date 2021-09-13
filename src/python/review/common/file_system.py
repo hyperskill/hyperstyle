@@ -109,3 +109,8 @@ def get_total_code_lines_from_file(path: Path) -> int:
 def get_total_code_lines_from_code(code: str) -> int:
     lines = code.splitlines()
     return len(list(filter(lambda line: not __is_line_empty(line) and not __is_comment(line), lines)))
+
+
+def check_set_up_env_variable(variable_name: str):
+    if variable_name not in os.environ:
+        raise KeyError(f'{variable_name} was not set up!')

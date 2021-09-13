@@ -1,8 +1,9 @@
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-from src.python.review.common.file_system import new_temp_dir
+from src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.detekt.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
@@ -12,10 +13,16 @@ from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkst
 
 logger = logging.getLogger(__name__)
 
+DETEKT_DIRECTORY_ENV = 'DETEKT_DIRECTORY'
+check_set_up_env_variable(DETEKT_DIRECTORY_ENV)
+DETEKT_VERSION_ENV = 'DETEKT_VERSION'
+check_set_up_env_variable(DETEKT_VERSION_ENV)
+
+PATH_TO_DETEKT_CLI = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
+PATH_DETEKT_PLUGIN = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
+
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_DETEKT_JAR = PATH_TOOLS_PMD_FILES / 'detekt-cli-1.14.2-all.jar'
 PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
-PATH_DETEKT_PLUGIN = PATH_TOOLS_PMD_FILES / 'detekt-formatting-1.14.2.jar'
 
 
 class DetektInspector(BaseInspector):
@@ -32,14 +39,14 @@ class DetektInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
-        return [
-            'java', '-jar',
-            PATH_DETEKT_JAR,
+        command = [
+            PATH_TO_DETEKT_CLI,
             '--config', PATH_DETEKT_CONFIG,
             '--plugins', PATH_DETEKT_PLUGIN,
             '--report', f'xml:{output_path}',
             '--input', str(path),
         ]
+        return command
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
