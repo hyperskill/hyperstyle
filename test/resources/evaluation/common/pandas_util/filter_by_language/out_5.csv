@@ -1,5 +1,0 @@
-id,time,code,lang
-46846118,1617443943,"print("")",python3
-46846118,1617443943,"print("Hello")",python3
-46846118,1617443943,"System.out.println("");",java11
-46846118,1617443943,"System.out.println("Hello");",java11

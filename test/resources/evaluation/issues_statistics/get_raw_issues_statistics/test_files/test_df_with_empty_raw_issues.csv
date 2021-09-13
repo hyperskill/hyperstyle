@@ -1,4 +1,0 @@
-id,lang,code,raw_issues
-1,kotlin,"fun main() {
-    println(""Hello, World!"")
-}",[]
