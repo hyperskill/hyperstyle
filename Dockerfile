@@ -14,6 +14,10 @@ ENV CHECKSTYLE_DIRECTORY  ${LINTERS_DIRECTORY}/checkstyle
 ENV DETEKT_DIRECTORY  ${LINTERS_DIRECTORY}/detekt
 ENV PMD_DIRECTORY  ${LINTERS_DIRECTORY}/pmd
 
+# Install Curl and Unzip
+RUN apt -y install curl unzip
+
+# Install Detekt
 RUN curl -sSLO https://github.com/detekt/detekt/releases/download/v1.14.2/detekt-cli-1.14.2.zip \
     unzip detekt-cli-1.14.2.zip -d ${DETEKT_DIRECTORY}
 
