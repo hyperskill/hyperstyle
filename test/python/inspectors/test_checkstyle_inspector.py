@@ -16,7 +16,7 @@ from src.python.review.inspectors.issue import (
     IssueType,
     LineLenIssue,
 )
-from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkstyle_file_result
+from src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
 from src.python.review.inspectors.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
@@ -153,7 +153,7 @@ FILE_NAME_AND_ISSUES = [
 @pytest.mark.parametrize(('file_name', 'expected_issues'), FILE_NAME_AND_ISSUES)
 def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
     path_to_file = CHECKSTYLE_DATA_FOLDER / file_name
-    issues = parse_checkstyle_file_result(
+    issues = parse_xml_file_result(
         path_to_file,
         InspectorType.CHECKSTYLE,
         CheckstyleInspector.choose_issue_type,

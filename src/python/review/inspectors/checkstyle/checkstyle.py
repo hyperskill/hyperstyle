@@ -8,7 +8,7 @@ from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkstyle_file_result
+from src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +48,11 @@ class CheckstyleInspector(BaseInspector):
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
-            return parse_checkstyle_file_result(Path(output_path),
-                                                self.inspector_type,
-                                                self.choose_issue_type,
-                                                IssueDifficulty.get_by_issue_type,
-                                                self.origin_class_to_pattern)
+            return parse_xml_file_result(Path(output_path),
+                                         self.inspector_type,
+                                         self.choose_issue_type,
+                                         IssueDifficulty.get_by_issue_type,
+                                         self.origin_class_to_pattern)
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:

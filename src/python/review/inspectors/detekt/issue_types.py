@@ -2,7 +2,7 @@ from typing import Dict
 
 from src.python.review.inspectors.issue import IssueType
 
-DETECT_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+DETEKT_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # Comments
     # 'AbsentOrWrongFileLicense': IssueType.BEST_PRACTICES,
     # 'CommentOverPrivateFunction': IssueType.BEST_PRACTICES,
