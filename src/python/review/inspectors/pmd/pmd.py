@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import new_temp_dir, check_set_up_env_variable
+from src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.common import remove_prefix
