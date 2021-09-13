@@ -7,7 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
-    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
+#    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
+    container: nastyabirillo/hyperstyle:1.2.1
 
     steps:
       - name: Install git
@@ -17,7 +18,7 @@ jobs:
 
       - name: Check env variables
         run: |
-            echo ${{ env.DETEKT_DIRECTORY }} && echo $DETEKT_VERSION
+            echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
             echo $CHECKSTYLE_DIRECTORY
             echo $PMD_DIRECTORY
 
