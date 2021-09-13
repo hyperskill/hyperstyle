@@ -18,7 +18,6 @@ class InspectorType(Enum):
 
     # Kotlin language
     DETEKT = 'DETEKT'
-    INTELLIJ = 'INTELLIJ'
 
     # JavaScript language
     ESLINT = 'ESLINT'
