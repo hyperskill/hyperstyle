@@ -13,7 +13,6 @@ class InspectorType(Enum):
     # Java language
     PMD = 'PMD'
     CHECKSTYLE = 'CHECKSTYLE'
-    SPOTBUGS = 'SPOTBUGS'
     SPRINGLINT = 'SPRINGLINT'
 
     # Kotlin language

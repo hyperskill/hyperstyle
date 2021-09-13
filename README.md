@@ -47,10 +47,7 @@ Java language:
 - [x]  Checkstyle [GNU LGPL v2.1]
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
-  
-- [ ]  SpotBugs [GNU LGPL v2.1]
-    * [Site and docs](https://spotbugs.github.io/)
-    * [Repository](https://github.com/spotbugs/spotbugs)
+    
   
 - [ ]  SpringLint
     * [Repository](https://github.com/mauricioaniche/springlint)
