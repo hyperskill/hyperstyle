@@ -56,7 +56,7 @@ Java language:
 
 Kotlin language:
 
-- [x]  Detekt [Apache 2.0]
+- [x]  Detekt [Apache 2.0] (Version: 1.14.2)
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 

@@ -31,7 +31,6 @@ def __is_result_file_correct(file_path: Path, inspector_type: InspectorType) -> 
     """
     Check if the result of the inspectors is correct: it exists and it is not empty.
     """
-
     if not file_path.is_file():
         logger.error('%s: error - no output file' % inspector_type.value)
         return False
@@ -98,7 +97,7 @@ def __is_error(element: ElementTree) -> bool:
 
 
 # TODO: Needs refactoring
-def parse_checkstyle_file_result(
+def parse_xml_file_result(
         file_path: Path,
         inspector_type: InspectorType,
         issue_type_selector: Callable[[str], IssueType],
