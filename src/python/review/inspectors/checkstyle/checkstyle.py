@@ -1,8 +1,9 @@
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-from src.python.review.common.file_system import new_temp_dir
+from src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
@@ -12,8 +13,14 @@ from src.python.review.inspectors.parsers.xml_parser import parse_xml_file_resul
 
 logger = logging.getLogger(__name__)
 
+CHECKSTYLE_DIRECTORY_ENV = 'CHECKSTYLE_DIRECTORY'
+check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
+CHECKSTYLE_VERSION_ENV = 'CHECKSTYLE_VERSION'
+check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
+
+PATH_CHECKSTYLE_JAR = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
+
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_TOOLS_CHECKSTYLE_JAR = PATH_TOOLS_PMD_FILES / 'checkstyle.jar'
 PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_PMD_FILES / 'config.xml'
 
 
@@ -37,7 +44,7 @@ class CheckstyleInspector(BaseInspector):
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
         return [
-            'java', '-jar', PATH_TOOLS_CHECKSTYLE_JAR,
+            'java', '-jar', PATH_CHECKSTYLE_JAR,
             '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
             '-f', 'xml', '-o', output_path, str(path),
         ]

@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir \
     ./review
 
 ENV LINTERS_DIRECTORY      /opt/linters
+
+ENV CHECKSTYLE_VERSION  8.44
 ENV CHECKSTYLE_DIRECTORY  ${LINTERS_DIRECTORY}/checkstyle
 
 ENV DETEKT_VERSION  1.14.2
@@ -28,5 +30,10 @@ RUN apt -y install curl unzip
 RUN curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
     && unzip detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
     &&  curl -H "Accept: application/zip" https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar -o ${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar
+
+# Install Checkstyle
+RUN curl -H "Accept: application/zip" https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar -o ${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
+
+
 
 CMD ["/bin/bash"]
