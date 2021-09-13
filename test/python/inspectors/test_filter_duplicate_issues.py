@@ -78,16 +78,6 @@ def test_filter_duplicate_issues_when_several_inspectors() -> None:
         ),
         CodeIssue(
             file_path=Path('code.py'),
-            line_no=10,
-            description='',
-            inspector_type=InspectorType.INTELLIJ,
-            column_no=1,
-            origin_class='',
-            type=IssueType.COMPLEXITY,
-            difficulty=IssueDifficulty.HARD,
-        ),
-        CodeIssue(
-            file_path=Path('code.py'),
             line_no=11,
             description='',
             type=IssueType.CODE_STYLE,
@@ -106,21 +96,11 @@ def test_filter_duplicate_issues_when_several_inspectors() -> None:
             origin_class='',
             difficulty=IssueDifficulty.MEDIUM,
         ),
-        CodeIssue(
-            file_path=Path('code.py'),
-            line_no=11,
-            description='',
-            type=IssueType.ERROR_PRONE,
-            inspector_type=InspectorType.INTELLIJ,
-            column_no=1,
-            origin_class='',
-            difficulty=IssueDifficulty.HARD,
-        ),
     ]
 
     filtered_issues = filter_duplicate_issues(issues)
 
-    assert set(filtered_issues) == {issues[0], issues[3], issues[4], issues[5]}
+    assert set(filtered_issues) == {issues[0], issues[2], issues[3]}
 
 
 def test_filter_duplicate_issues_when_several_issues_in_line_no() -> None:
@@ -165,28 +145,8 @@ def test_filter_duplicate_issues_when_several_issues_in_line_no() -> None:
             type=IssueType.COMPLEXITY,
             difficulty=IssueDifficulty.HARD,
         ),
-        CodeIssue(
-            file_path=Path('code.py'),
-            line_no=10,
-            description='',
-            inspector_type=InspectorType.INTELLIJ,
-            column_no=1,
-            origin_class='',
-            type=IssueType.COMPLEXITY,
-            difficulty=IssueDifficulty.HARD,
-        ),
-        CodeIssue(
-            file_path=Path('code.py'),
-            line_no=10,
-            description='',
-            inspector_type=InspectorType.INTELLIJ,
-            column_no=1,
-            origin_class='',
-            type=IssueType.COMPLEXITY,
-            difficulty=IssueDifficulty.HARD,
-        ),
     ]
 
     filtered_issues = filter_duplicate_issues(issues)
 
-    assert set(filtered_issues) == {issues[1], issues[2], issues[4], issues[5]}
+    assert set(filtered_issues) == {issues[1], issues[2], issues[3]}
