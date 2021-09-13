@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import new_temp_dir
+from src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.common import remove_prefix
@@ -15,9 +15,14 @@ from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
 
+PMD_DIRECTORY_ENV = 'PMD_DIRECTORY'
+check_set_up_env_variable(PMD_DIRECTORY_ENV)
+PMD_VERSION_ENV = 'PMD_VERSION'
+check_set_up_env_variable(PMD_VERSION_ENV)
+PATH_TOOLS_PMD_SHELL_SCRIPT = f'{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh'
+
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_TOOLS_PMD_SHELL_SCRIPT = PATH_TOOLS_PMD_FILES / 'bin' / 'run.sh'
-PATH_TOOLS_PMD_RULES_SET = PATH_TOOLS_PMD_FILES / 'bin' / 'basic.xml'
+PATH_TOOLS_PMD_RULES_SET = PATH_TOOLS_PMD_FILES / 'config.xml'
 DEFAULT_JAVA_VERSION = LanguageVersion.JAVA_11
 
 
