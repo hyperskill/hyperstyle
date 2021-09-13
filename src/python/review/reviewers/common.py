@@ -35,8 +35,6 @@ LANGUAGE_TO_INSPECTORS = {
     Language.JAVA: [
         CheckstyleInspector(),
         PMDInspector(),
-        # SpotbugsInspector(),
-        # SpringlintInspector()  # TODO experimental
     ],
     Language.KOTLIN: [
         DetektInspector(),

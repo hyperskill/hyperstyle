@@ -44,13 +44,9 @@ Java language:
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
-- [x]  Checkstyle [GNU LGPL v2.1]
+- [x]  Checkstyle [GNU LGPL v2.1] (Version: 6.36.0)
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
-    
-  
-- [ ]  SpringLint
-    * [Repository](https://github.com/mauricioaniche/springlint)
 
 
 
@@ -64,7 +60,7 @@ Kotlin language:
 
 JavaScript language:
 
-- [x]  ESlint [MIT]
+- [x]  ESlint [MIT] (Version: 7.5.0)
     * [Site and docs](https://eslint.org/)
     * [Repository](https://github.com/eslint/eslint)
   
