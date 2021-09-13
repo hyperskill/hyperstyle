@@ -24,7 +24,7 @@ The source code of **hyperstyle** is distributed under the Apache 2.0 License.
 
 The 3rd party software we use in this project has its own licenses.
 
-Python language:
+Python language (all versions can be found in the (requirements.txt)[requirements.txt] file):
 
 - [x]  flake8 [MIT]
     * [Site and docs](https://flake8.pycqa.org/en/latest/)
@@ -40,11 +40,11 @@ Python language:
 
 Java language:
 
-- [x]  PMD [BSD]
+- [x]  PMD [BSD] 
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
-- [x]  Checkstyle [GNU LGPL v2.1] (Version: 6.36.0)
+- [x]  Checkstyle [GNU LGPL v2.1] (Version: 8.44)
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
 
