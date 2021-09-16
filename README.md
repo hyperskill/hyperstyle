@@ -73,6 +73,37 @@ Simply clone the repository and run the following commands:
 1. `pip install -r requirements.txt`
 2. `pip install -r requirements-test.txt` for tests
 
+Also, you should set up the environment with Java and Kotlin linters sources.
+You have to create set of environment variables:
+- `CHECKSTYLE_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `CHECKSTYLE_DIRECTORY` (the directory with `CHECKSTYLE` linter sources)
+- `DETEKT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `DETEKT_DIRECTORY` (the directory with `DETEKT` linter sources)
+- `PMD_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `PMD_DIRECTORY` (the directory with `PMD` linter sources)
+
+You can download all sources manually or by the following commands:
+- `CHECKSTYLE`: 
+```bash
+curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar > ${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
+```
+- `DETEKT`: 
+```bash
+curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
+&& unzip detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
+&&  curl -H "Accept: application/zip" https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar -o ${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar
+```
+- `PMD`: 
+```bash
+curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip \
+&& unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY}
+```
+
+_In the future we will add a bash script that will do it automatically._ 
+
+**Alternatively**, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
+Or use the public docker image, that we use in the [build.yml](.github/workflows/build.yml) file.
+
 ## Usage
 
 Run the [run_tool.py](./src/python/review/run_tool.py) with the arguments.
