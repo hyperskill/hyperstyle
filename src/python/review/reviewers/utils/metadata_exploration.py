@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Set, Union
 
-from src.python.review.common.file_system import get_all_file_system_items, get_extension_from_file
+from src.python.review.common.file_system import Extension, get_all_file_system_items
 from src.python.review.common.language import guess_file_language, Language
 
 
@@ -16,7 +16,7 @@ class FileMetadata:
 
     @property
     def extension(self) -> str:
-        return get_extension_from_file(self.path).value
+        return Extension.get_extension_from_file(self.path).value
 
 
 @dataclass
@@ -39,7 +39,7 @@ class ProjectMetadata:
     def extension_to_files(self) -> Dict[str, List[FileMetadata]]:
         extension_to_files = defaultdict(list)
         for file in self.inner_files:
-            extension_to_files[get_extension_from_file(file.path)].append(file)
+            extension_to_files[Extension.get_extension_from_file(file.path)].append(file)
         return extension_to_files
 
     @property

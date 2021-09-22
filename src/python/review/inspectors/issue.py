@@ -1,32 +1,111 @@
 import abc
+import logging
+from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from src.python.review.inspectors.inspector_type import InspectorType
+
+logger = logging.getLogger(__name__)
 
 
 @unique
 class IssueType(Enum):
+    # Code style issues
     CODE_STYLE = 'CODE_STYLE'
-    BEST_PRACTICES = 'BEST_PRACTICES'
-    ERROR_PRONE = 'ERROR_PRONE'
-    FUNC_LEN = 'FUNC_LEN'
     LINE_LEN = 'LINE_LEN'
-    CYCLOMATIC_COMPLEXITY = 'CYCLOMATIC_COMPLEXITY'
+
+    # Best practice issues
+    BEST_PRACTICES = 'BEST_PRACTICES'
+    FUNC_LEN = 'FUNC_LEN'
     BOOL_EXPR_LEN = 'BOOL_EXPR_LEN'
+    CLASS_RESPONSE = 'CLASS_RESPONSE'
+    METHOD_NUMBER = 'METHOD_NUMBER'
+
+    # Error-prone issues
+    ERROR_PRONE = 'ERROR_PRONE'
+
+    # Code complexity issues
     COMPLEXITY = 'COMPLEXITY'
-    ARCHITECTURE = 'ARCHITECTURE'
+    CYCLOMATIC_COMPLEXITY = 'CYCLOMATIC_COMPLEXITY'
     INHERITANCE_DEPTH = 'INHERITANCE_DEPTH'
     CHILDREN_NUMBER = 'CHILDREN_NUMBER'
     WEIGHTED_METHOD = 'WEIGHTED_METHOD'
     COUPLING = 'COUPLING'
     COHESION = 'COHESION'
-    CLASS_RESPONSE = 'CLASS_RESPONSE'
-    METHOD_NUMBER = 'METHOD_NUMBER'
     MAINTAINABILITY = 'MAINTAINABILITY'
+
+    # Info issues
     INFO = 'INFO'
+
+    # Others
+    UNDEFINED = 'UNDEFINED'
+    ARCHITECTURE = 'ARCHITECTURE'  # TODO: Distribute into one of the main types
+
+    def __str__(self) -> str:
+        return ' '.join(self.value.lower().split('_'))
+
+    def to_main_type(self) -> 'IssueType':
+        """
+        Converts the issue type to main issue type.
+        Main issue types: CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.
+        """
+        return get_main_category_by_issue_type(self)
+
+
+ISSUE_TYPE_TO_MAIN_CATEGORY = {
+    # CODE_STYLE
+    IssueType.CODE_STYLE: IssueType.CODE_STYLE,
+    IssueType.LINE_LEN: IssueType.CODE_STYLE,
+
+    # BEST_PRACTICES
+    IssueType.BEST_PRACTICES: IssueType.BEST_PRACTICES,
+    IssueType.FUNC_LEN: IssueType.BEST_PRACTICES,
+    IssueType.BOOL_EXPR_LEN: IssueType.BEST_PRACTICES,
+    IssueType.METHOD_NUMBER: IssueType.BEST_PRACTICES,
+    IssueType.CLASS_RESPONSE: IssueType.BEST_PRACTICES,
+
+    # ERROR_PRONE
+    IssueType.ERROR_PRONE: IssueType.ERROR_PRONE,
+
+    # COMPLEXITY
+    IssueType.COMPLEXITY: IssueType.COMPLEXITY,
+    IssueType.CYCLOMATIC_COMPLEXITY: IssueType.COMPLEXITY,
+    IssueType.WEIGHTED_METHOD: IssueType.COMPLEXITY,
+    IssueType.COUPLING: IssueType.COMPLEXITY,
+    IssueType.COHESION: IssueType.COMPLEXITY,
+    IssueType.MAINTAINABILITY: IssueType.COMPLEXITY,
+    IssueType.CHILDREN_NUMBER: IssueType.COMPLEXITY,
+    IssueType.INHERITANCE_DEPTH: IssueType.COMPLEXITY,
+    IssueType.ARCHITECTURE: IssueType.COMPLEXITY,
+
+    # INFO
+    IssueType.INFO: IssueType.INFO,
+}
+
+
+def get_main_category_by_issue_type(issue_type: IssueType) -> IssueType:
+    return ISSUE_TYPE_TO_MAIN_CATEGORY.get(issue_type, IssueType.UNDEFINED)
+
+
+def main_category_to_issue_type_list_dict() -> Dict[IssueType, List[IssueType]]:
+    main_category_to_issue_type = defaultdict(list)
+    for key, value in ISSUE_TYPE_TO_MAIN_CATEGORY.items():
+        main_category_to_issue_type[value].append(key)
+    return main_category_to_issue_type
+
+
+MAIN_CATEGORY_TO_ISSUE_TYPE_LIST = main_category_to_issue_type_list_dict()
+
+IssuesStat = Dict[IssueType, int]
+
+
+def get_default_issue_stat() -> IssuesStat:
+    stat = {issue: 0 for issue in set(ISSUE_TYPE_TO_MAIN_CATEGORY.values())}
+    stat[IssueType.UNDEFINED] = 0
+    return stat
 
 
 # Keys in results dictionary
@@ -42,6 +121,7 @@ class IssueData(Enum):
     # Additional fields
     ISSUE_TYPE = 'type'
     DESCRIPTION = 'description'
+    DIFFICULTY = 'difficulty'
 
     LINE_LEN = 'line_len'
     FUNCTION_LEN = 'func_len'
@@ -66,17 +146,65 @@ class IssueData(Enum):
         }
 
 
+@unique
+class IssueDifficulty(Enum):
+    EASY = 'EASY'
+    MEDIUM = 'MEDIUM'
+    HARD = 'HARD'
+
+    @classmethod
+    def get_by_issue_type(cls, issue_type: IssueType) -> 'IssueDifficulty':
+        issue_type_to_difficulty = {
+            # Easy
+            IssueType.CODE_STYLE: cls.EASY,
+            IssueType.LINE_LEN: cls.EASY,
+            IssueType.FUNC_LEN: cls.EASY,
+            IssueType.BOOL_EXPR_LEN: cls.EASY,
+            IssueType.INFO: cls.EASY,  # Because INFO should always be shown on the platforms
+
+            # Medium
+            IssueType.BEST_PRACTICES: cls.MEDIUM,
+
+            # Hard
+            IssueType.CLASS_RESPONSE: cls.HARD,
+            IssueType.METHOD_NUMBER: cls.HARD,
+            IssueType.ERROR_PRONE: cls.HARD,
+            IssueType.COMPLEXITY: cls.HARD,
+            IssueType.CYCLOMATIC_COMPLEXITY: cls.HARD,
+            IssueType.INHERITANCE_DEPTH: cls.HARD,
+            IssueType.CHILDREN_NUMBER: cls.HARD,
+            IssueType.WEIGHTED_METHOD: cls.HARD,
+            IssueType.COUPLING: cls.HARD,
+            IssueType.COHESION: cls.HARD,
+            IssueType.MAINTAINABILITY: cls.HARD,
+            IssueType.UNDEFINED: cls.HARD,
+            IssueType.ARCHITECTURE: cls.HARD,
+        }
+
+        if issue_type not in issue_type_to_difficulty:
+            logger.warning(f'IssueDifficulty: {issue_type} - unknown issue type.')
+            return cls.HARD
+
+        return issue_type_to_difficulty[issue_type]
+
+
 @dataclass(frozen=True, eq=True)
-class BaseIssue:
+class ShortIssue:
+    origin_class: str
+
+    type: IssueType
+
+
+@dataclass(frozen=True, eq=True)
+class BaseIssue(ShortIssue):
+    description: str
+
     file_path: Path
     line_no: int
     column_no: int
 
-    description: str
-    origin_class: str
-
     inspector_type: InspectorType
-    type: IssueType
+    difficulty: IssueDifficulty
 
 
 class Measurable(abc.ABC):
@@ -196,3 +324,33 @@ class MaintainabilityLackIssue(BaseIssue, Measurable):
 
     def measure(self) -> int:
         return self.maintainability_lack
+
+
+ISSUE_TYPE_TO_CLASS = {
+    IssueType.CODE_STYLE: CodeIssue,
+    IssueType.BEST_PRACTICES: CodeIssue,
+    IssueType.ERROR_PRONE: CodeIssue,
+    IssueType.COMPLEXITY: CodeIssue,
+    IssueType.INFO: CodeIssue,
+
+    IssueType.LINE_LEN: LineLenIssue,
+    IssueType.FUNC_LEN: FuncLenIssue,
+    IssueType.BOOL_EXPR_LEN: BoolExprLenIssue,
+    IssueType.CYCLOMATIC_COMPLEXITY: CyclomaticComplexityIssue,
+    IssueType.MAINTAINABILITY: MaintainabilityLackIssue,
+    IssueType.COHESION: CohesionIssue,
+}
+
+
+def get_issue_class_by_issue_type(issue_type: IssueType):
+    return ISSUE_TYPE_TO_CLASS.get(issue_type, CodeIssue)
+
+
+MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME = {
+    IssueType.LINE_LEN: IssueData.LINE_LEN.value,
+    IssueType.FUNC_LEN: IssueData.FUNCTION_LEN.value,
+    IssueType.BOOL_EXPR_LEN: IssueData.BOOL_EXPR_LEN.value,
+    IssueType.CYCLOMATIC_COMPLEXITY: IssueData.CYCLOMATIC_COMPLEXITY.value,
+    IssueType.MAINTAINABILITY: IssueData.MAINTAINABILITY_LACK.value,
+    IssueType.COHESION: IssueData.COHESION_LACK.value,
+}

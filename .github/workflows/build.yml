@@ -7,11 +7,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
-    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
+    # container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
+    container: nastyabirillo/hyperstyle:1.2.1
 
     steps:
+      - name: Install git
+        run: |
+            apt-get update
+            apt-get -y install git
+
+      - name: Check env variables
+        run: |
+            echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
+            echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
+            echo $PMD_DIRECTORY && echo PMD_VERSION
+
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install requirements
         run: |
@@ -22,7 +34,21 @@ jobs:
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
+          # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+
+      - name: Sort whitelists
+        run: |
+            for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
+            do
+            LC_ALL=C sort $file -o $file
+            done
+
+      - name: Commit sorted whitelists
+        uses: EndBug/add-and-commit@v7.2.1
+        with:
+          add: "['whitelist.txt', 'src/python/review/inspectors/flake8/whitelist.txt']"
+          message: 'Sort whitelists (Github Actions)'
 
       - name: Set up Eslint
         run: |

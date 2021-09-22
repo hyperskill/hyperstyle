@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.44">
+    <file name="/home/user/Desktop/some_project/main1.java"></file>
+    <file name="/home/user/Desktop/some_project/main2.java"></file>
+    <file name="/home/user/Desktop/some_project/main3.java"></file>
+    <file name="/home/user/Desktop/some_project/main4.java"></file>
+    <file name="/home/user/Desktop/some_project/main5.java"></file>
+    <file name="/home/user/Desktop/some_project/main6.java"></file>
+</checkstyle>

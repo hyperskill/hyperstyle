@@ -17,6 +17,7 @@ from src.python.review.quality.rules.cohesion_scoring import (
     CohesionRule,
     LANGUAGE_TO_COHESION_RULE_CONFIG,
 )
+from src.python.review.quality.rules.complexity_scoring import ComplexityRule, LANGUAGE_TO_COMPLEXITY_RULE_CONFIG
 from src.python.review.quality.rules.coupling_scoring import CouplingRule, LANGUAGE_TO_COUPLING_RULE_CONFIG
 from src.python.review.quality.rules.cyclomatic_complexity_scoring import (
     CyclomaticComplexityRule,
@@ -51,6 +52,7 @@ def __get_available_rules(language: Language) -> List[Rule]:
     return [
         ErrorProneRule(LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG[language]),
         BestPracticesRule(LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG[language]),
+        ComplexityRule(LANGUAGE_TO_COMPLEXITY_RULE_CONFIG[language]),
         CyclomaticComplexityRule(LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[language]),
         BooleanExpressionRule(LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG[language]),
         FunctionLengthRule(LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG[language]),

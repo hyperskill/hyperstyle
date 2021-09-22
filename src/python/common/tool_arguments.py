@@ -72,3 +72,14 @@ class RunToolArgument(Enum):
     NEW_FORMAT = ArgumentsInfo(None, '--new-format',
                                'The argument determines whether the tool '
                                'should use the new format')
+
+    HISTORY = ArgumentsInfo(None, '--history',
+                            'Json string, which contains lists of issues in the previous submissions '
+                            'for other tasks for one user.')
+
+    WITH_ALL_CATEGORIES = ArgumentsInfo(None, '--with-all-categories',
+                                        'Without this flag, all issues will be categorized into 5 main categories: '
+                                        'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.')
+
+    GROUP_BY_DIFFICULTY = ArgumentsInfo(None, '--group-by-difficulty',
+                                        'With this flag, the final grade will be grouped by the issue difficulty.')

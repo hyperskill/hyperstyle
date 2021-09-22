@@ -4,7 +4,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Union
+from typing import Callable, List, Tuple, Union
 
 
 @unique
@@ -30,6 +30,12 @@ class Extension(Enum):
     JS = '.js'
     KTS = '.kts'
 
+    # Not empty extensions are returned with a dot, for example, '.txt'
+    # If file has no extensions, an empty one ('') is returned
+    @classmethod
+    def get_extension_from_file(cls, file: Union[Path, str]) -> 'Extension':
+        return Extension(os.path.splitext(file)[1])
+
 
 ItemCondition = Callable[[str], bool]
 
@@ -40,8 +46,12 @@ def all_items_condition(name: str) -> bool:
 
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
-def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_items_condition,
-                              item_type: FileSystemItem = FileSystemItem.FILE) -> List[Path]:
+def get_all_file_system_items(
+    root: Path,
+    item_condition: ItemCondition = all_items_condition,
+    item_type: FileSystemItem = FileSystemItem.FILE,
+    without_subdirs: bool = False,
+) -> List[Path]:
     if not root.is_dir():
         raise ValueError(f'The {root} is not a directory')
 
@@ -50,6 +60,10 @@ def get_all_file_system_items(root: Path, item_condition: ItemCondition = all_it
         for item in fs_tuple[item_type.value]:
             if item_condition(item):
                 items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
+
+        if without_subdirs:
+            break
+
     return items
 
 
@@ -60,15 +74,8 @@ def new_temp_dir() -> Path:
         yield Path(temp_dir)
 
 
-# File should contain the full path and its extension.
-# Create all parents if necessary
-def create_file(file_path: Union[str, Path], content: str):
-    file_path = Path(file_path)
-
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, 'w+') as f:
-        f.writelines(content)
-        yield Path(file_path)
+def new_temp_file(suffix: Extension = Extension.EMPTY) -> Tuple[str, str]:
+    yield tempfile.mkstemp(suffix=suffix.value)
 
 
 def get_file_line(path: Path, line_number: int):
@@ -85,7 +92,25 @@ def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING
         return content if not to_strip_nl else content.rstrip('\n')
 
 
-# Not empty extensions are returned with a dot, for example, '.txt'
-# If file has no extensions, an empty one ('') is returned
-def get_extension_from_file(file: Path) -> Extension:
-    return Extension(os.path.splitext(file)[1])
+# Before using it, check that there are no line breaks in the string
+def __is_line_empty(line: str) -> bool:
+    return len(line.strip()) == 0
+
+
+def __is_comment(line: str) -> bool:
+    return line.strip().startswith(('#', '//'))
+
+
+def get_total_code_lines_from_file(path: Path) -> int:
+    code = get_content_from_file(path, to_strip_nl=False)
+    return get_total_code_lines_from_code(code)
+
+
+def get_total_code_lines_from_code(code: str) -> int:
+    lines = code.splitlines()
+    return len(list(filter(lambda line: not __is_line_empty(line) and not __is_comment(line), lines)))
+
+
+def check_set_up_env_variable(variable_name: str):
+    if variable_name not in os.environ:
+        raise KeyError(f'{variable_name} was not set up!')

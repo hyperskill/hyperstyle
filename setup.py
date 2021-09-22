@@ -28,10 +28,15 @@ def get_inspectors_additional_files() -> List[str]:
     return result
 
 
+def get_requires() -> List[str]:
+    with open(current_dir / 'requirements.txt') as requirements_file:
+        return requirements_file.read().split('\n')
+
+
 setup(
-    name='review',
+    name='hyperstyle',
     version=get_version(),
-    description='review',
+    description='A tool for running a set of pre-configured linters and evaluating code quality.',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     url='https://github.com/hyperskill/hyperstyle',
@@ -47,7 +52,7 @@ setup(
     ],
     keywords='code review',
     python_requires='>=3.8, <4',
-    install_requires=['upsourceapi'],
+    install_requires=get_requires(),
     packages=find_packages(exclude=[
         '*.unit_tests',
         '*.unit_tests.*',

@@ -4,7 +4,6 @@ from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
 from src.python.review.application_config import ApplicationConfig
-from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.quality.model import QualityType
 from src.python.review.reviewers.perform_review import OutputFormat, PathNotExists, perform_and_print_review
 
@@ -20,10 +19,11 @@ Args = namedtuple('Args', [
 @pytest.fixture
 def config() -> ApplicationConfig:
     return ApplicationConfig(
-        disabled_inspectors={InspectorType.INTELLIJ},
+        disabled_inspectors=set(),
         allow_duplicates=False,
         n_cpu=1,
         inspectors_config={"n_cpu": 1},
+        with_all_categories=False,
     )
 
 

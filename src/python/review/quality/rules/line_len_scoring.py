@@ -8,11 +8,13 @@ from src.python.review.quality.model import QualityType, Rule
 @dataclass
 class LineLengthRuleConfig:
     n_line_len_bad: float
+    n_line_len_moderate: float
     n_line_len_good: float
 
 
 common_line_length_rule_config = LineLengthRuleConfig(
-    n_line_len_bad=0.05,
+    n_line_len_bad=0.07,
+    n_line_len_moderate=0.05,
     n_line_len_good=0.035,
 )
 
@@ -31,13 +33,16 @@ class LineLengthRule(Rule):
 
     # TODO: refactor
     def apply(self, n_line_len, n_lines):
-        self.ratio = n_line_len / max(n_lines, 1)
+        self.ratio = self.get_ratio(n_line_len, n_lines)
         self.n_line_len = n_line_len
         self.n_lines = n_lines
 
         if self.ratio > self.config.n_line_len_bad:
             self.quality_type = QualityType.BAD
             self.next_level_delta = n_line_len - self.config.n_line_len_bad
+        if self.ratio > self.config.n_line_len_moderate:
+            self.quality_type = QualityType.MODERATE
+            self.next_level_delta = n_line_len - self.config.n_line_len_moderate
         elif self.ratio > self.config.n_line_len_good:
             self.quality_type = QualityType.GOOD
             self.next_level_delta = n_line_len - self.config.n_line_len_good
@@ -54,9 +59,14 @@ class LineLengthRule(Rule):
     def merge(self, other: 'LineLengthRule') -> 'LineLengthRule':
         config = LineLengthRuleConfig(
             min(self.config.n_line_len_bad, other.config.n_line_len_bad),
+            min(self.config.n_line_len_moderate, other.config.n_line_len_moderate),
             min(self.config.n_line_len_good, other.config.n_line_len_good),
         )
         result_rule = LineLengthRule(config)
         result_rule.apply(self.n_line_len + other.n_line_len, self.n_lines + other.n_lines)
 
         return result_rule
+
+    @staticmethod
+    def get_ratio(n_line_len: int, n_lines: int) -> float:
+        return n_line_len / max(n_lines, 1)

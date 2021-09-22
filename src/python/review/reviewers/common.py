@@ -15,9 +15,14 @@ from src.python.review.inspectors.pylint.pylint import PylintInspector
 from src.python.review.inspectors.radon.radon import RadonInspector
 from src.python.review.quality.evaluate_quality import evaluate_quality
 from src.python.review.quality.model import Quality
-from src.python.review.reviewers.review_result import FileReviewResult, ReviewResult
+from src.python.review.quality.penalty import categorize, get_previous_issues_by_language, Punisher
+from src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult
 from src.python.review.reviewers.utils.code_statistics import gather_code_statistics
-from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues, filter_low_measure_issues
+from src.python.review.reviewers.utils.issues_filter import (
+    filter_duplicate_issues,
+    filter_low_measure_issues,
+    group_issues_by_difficulty,
+)
 from src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata
 
 LANGUAGE_TO_INSPECTORS = {
@@ -30,8 +35,6 @@ LANGUAGE_TO_INSPECTORS = {
     Language.JAVA: [
         CheckstyleInspector(),
         PMDInspector(),
-        # SpotbugsInspector(),
-        # SpringlintInspector()  # TODO experimental
     ],
     Language.KOTLIN: [
         DetektInspector(),
@@ -42,9 +45,7 @@ LANGUAGE_TO_INSPECTORS = {
 }
 
 
-def perform_language_review(metadata: Metadata,
-                            config: ApplicationConfig,
-                            language: Language) -> ReviewResult:
+def perform_language_review(metadata: Metadata, config: ApplicationConfig, language: Language) -> GeneralReviewResult:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
 
     issues = inspect_in_parallel(metadata.path, config, inspectors)
@@ -64,26 +65,55 @@ def perform_language_review(metadata: Metadata,
     for issue in issues:
         file_path_to_issues[issue.file_path].append(issue)
 
+    previous_issues = get_previous_issues_by_language(config.history, language)
+    categorize(previous_issues, issues)
+
+    issues_by_difficulty = group_issues_by_difficulty(issues)
+
+    general_punisher_by_difficulty = {
+        difficulty: Punisher(issues, previous_issues) for difficulty, issues in issues_by_difficulty.items()
+    }
+
+    general_quality_by_difficulty = {
+        difficulty: Quality([]) for difficulty in issues_by_difficulty.keys()
+    }
+
     file_review_results = []
-    general_quality = Quality([])
     for file_metadata in files_metadata:
-        issues = file_path_to_issues[file_metadata.path]
-        code_statistics = gather_code_statistics(issues, file_metadata.path)
-        code_statistics.total_lines = min(code_statistics.total_lines,
-                                          get_range_lines(config.start_line, config.end_line))
+        file_issues = file_path_to_issues[file_metadata.path]
+        file_issues_by_difficulty = group_issues_by_difficulty(file_issues)
 
-        quality = evaluate_quality(code_statistics, language)
-        general_quality = general_quality.merge(quality)
+        code_statistics_by_difficulty = {
+            difficulty: gather_code_statistics(file_issues, file_metadata.path)
+            for difficulty, file_issues in file_issues_by_difficulty.items()
+        }
 
-        file_review_results.append(FileReviewResult(
-            file_metadata.path,
-            issues,
-            quality,
-        ))
+        for code_statistics in code_statistics_by_difficulty.values():
+            code_statistics.total_lines = min(code_statistics.total_lines,
+                                              get_range_lines(config.start_line, config.end_line))
 
-    return ReviewResult(
+        punisher_by_difficulty = {
+            difficulty: Punisher(file_issues, previous_issues)
+            for difficulty, file_issues in file_issues_by_difficulty.items()
+        }
+
+        quality_by_difficulty = {
+            difficulty: evaluate_quality(code_statistics, language)
+            for difficulty, code_statistics in code_statistics_by_difficulty.items()
+        }
+
+        for difficulty, quality in quality_by_difficulty.items():
+            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
+
+        file_review_results.append(
+            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file_metadata.path),
+        )
+
+    return GeneralReviewResult(
+        general_quality_by_difficulty,
+        general_punisher_by_difficulty,
+        issues,
         file_review_results,
-        general_quality,
     )
 
 

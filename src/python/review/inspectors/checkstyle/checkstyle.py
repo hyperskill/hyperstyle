@@ -1,28 +1,31 @@
 import logging
+import os
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
-from src.python.review.common.file_system import new_temp_dir
+from src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
 from src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
-from src.python.review.inspectors.parsers.checkstyle_parser import parse_checkstyle_file_result
+from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
 
 logger = logging.getLogger(__name__)
 
+CHECKSTYLE_DIRECTORY_ENV = 'CHECKSTYLE_DIRECTORY'
+check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
+CHECKSTYLE_VERSION_ENV = 'CHECKSTYLE_VERSION'
+check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
+
+PATH_CHECKSTYLE_JAR = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
+
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_TOOLS_CHECKSTYLE_JAR = PATH_TOOLS_PMD_FILES / 'checkstyle.jar'
 PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_PMD_FILES / 'config.xml'
 
 
 class CheckstyleInspector(BaseInspector):
     inspector_type = InspectorType.CHECKSTYLE
-
-    skipped_issues = [
-        'EmptyLineSeparatorCheck',
-    ]
 
     origin_class_to_pattern = {
         'CyclomaticComplexityCheck':
@@ -41,28 +44,30 @@ class CheckstyleInspector(BaseInspector):
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
         return [
-            'java', '-jar', PATH_TOOLS_CHECKSTYLE_JAR,
+            'java', '-jar', PATH_CHECKSTYLE_JAR,
             '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
             '-f', 'xml', '-o', output_path, str(path),
         ]
 
-    def inspect(self, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / 'output.xml'
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
-            issues = parse_checkstyle_file_result(Path(output_path),
-                                                  self.inspector_type,
-                                                  self.choose_issue_type,
-                                                  self.origin_class_to_pattern)
-            return [
-                issue for issue in issues
-                if issue.origin_class not in self.skipped_issues
-            ]
+            return parse_xml_file_result(Path(output_path),
+                                         self.inspector_type,
+                                         self.choose_issue_type,
+                                         IssueDifficulty.get_by_issue_type,
+                                         self.origin_class_to_pattern)
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:
+        """
+        Defines IssueType by Checkstyle check class using config.
+        """
+
+        # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
         check_class_name = check_class.split('.')[-1]
         issue_type = CHECK_CLASS_NAME_TO_ISSUE_TYPE.get(check_class_name)
         if not issue_type:

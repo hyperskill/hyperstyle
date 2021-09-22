@@ -14,20 +14,20 @@ class BooleanExpressionRuleConfig:
 
 
 common_boolean_expression_rule_config = BooleanExpressionRuleConfig(
-    bool_expr_len_bad=10,
+    bool_expr_len_bad=6,
+    bool_expr_len_moderate=5,
+    bool_expr_len_good=3,
+)
+
+kotlin_boolean_expression_rule_config = BooleanExpressionRuleConfig(
+    bool_expr_len_bad=9,
     bool_expr_len_moderate=7,
     bool_expr_len_good=5,
 )
 
-java_boolean_expression_rule_config = BooleanExpressionRuleConfig(
-    bool_expr_len_bad=8,
-    bool_expr_len_moderate=6,
-    bool_expr_len_good=4,
-)
-
 LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG = {
-    Language.JAVA: java_boolean_expression_rule_config,
-    Language.KOTLIN: common_boolean_expression_rule_config,
+    Language.JAVA: common_boolean_expression_rule_config,
+    Language.KOTLIN: kotlin_boolean_expression_rule_config,
     Language.PYTHON: common_boolean_expression_rule_config,
     Language.JS: common_boolean_expression_rule_config,
 }

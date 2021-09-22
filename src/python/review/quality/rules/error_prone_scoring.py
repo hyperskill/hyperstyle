@@ -11,6 +11,10 @@ class ErrorProneRuleConfig:
     n_error_prone_bad: int
 
 
+# TODO: It is necessary to add subcategories where the following boundaries can be used:
+#       GOOD: 0
+#       MODERATE: 1
+#       BAD: 2
 common_error_prone_rule_config = ErrorProneRuleConfig(
     n_error_prone_bad=0,
 )

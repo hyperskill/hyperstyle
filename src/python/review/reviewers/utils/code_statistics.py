@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 
-from src.python.review.common.file_system import get_content_from_file
+from src.python.review.common.file_system import get_total_code_lines_from_file
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 
 
@@ -11,6 +11,7 @@ from src.python.review.inspectors.issue import BaseIssue, IssueType
 class CodeStatistics:
     n_best_practices_issue: int
     n_error_prone_issues: int
+    n_complexity_issues: int
     n_line_len: int
 
     method_number: int
@@ -35,6 +36,7 @@ class CodeStatistics:
         return {
             IssueType.BEST_PRACTICES: self.n_best_practices_issue,
             IssueType.ERROR_PRONE: self.n_error_prone_issues,
+            IssueType.COMPLEXITY: self.n_complexity_issues,
             IssueType.LINE_LEN: self.n_line_len,
 
             IssueType.METHOD_NUMBER: self.method_number,
@@ -51,19 +53,6 @@ class CodeStatistics:
             IssueType.CLASS_RESPONSE: self.class_response,
             IssueType.WEIGHTED_METHOD: self.weighted_method_complexities,
         }
-
-
-def __get_total_lines(path: Path) -> int:
-    lines = get_content_from_file(path, to_strip_nl=False).splitlines()
-    return len(list(filter(lambda line: not __is_empty(line) and not __is_comment(line), lines)))
-
-
-def __is_empty(line: str) -> bool:
-    return len(line.strip()) == 0
-
-
-def __is_comment(line: str) -> bool:
-    return line.strip().startswith(('#', '//'))
 
 
 def get_code_style_lines(issues: List[BaseIssue]) -> int:
@@ -100,6 +89,7 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         n_code_style_issues=issue_type_counter[IssueType.CODE_STYLE],
         n_best_practices_issue=issue_type_counter[IssueType.BEST_PRACTICES],
         n_error_prone_issues=issue_type_counter[IssueType.ERROR_PRONE],
+        n_complexity_issues=issue_type_counter[IssueType.COMPLEXITY],
         max_bool_expr_len=bool_expr_lens,
         max_func_len=func_lens,
         n_line_len=issue_type_counter[IssueType.LINE_LEN],
@@ -111,6 +101,6 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         coupling=couplings,
         weighted_method_complexities=weighted_method_complexities,
         method_number=method_numbers,
-        total_lines=__get_total_lines(path),
+        total_lines=get_total_code_lines_from_file(path),
         code_style_lines=get_code_style_lines(issues),
     )

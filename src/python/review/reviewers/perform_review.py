@@ -9,7 +9,7 @@ from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.reviewers.common import perform_language_review
 from src.python.review.reviewers.python import perform_python_review
-from src.python.review.reviewers.review_result import ReviewResult
+from src.python.review.reviewers.review_result import GeneralReviewResult
 from src.python.review.reviewers.utils.metadata_exploration import explore_file, explore_project
 from src.python.review.reviewers.utils.print_review import (
     print_review_result_as_json,
@@ -61,17 +61,17 @@ def perform_and_print_review(path: Path,
 
     if OutputFormat.JSON == output_format:
         if config.new_format:
-            print_review_result_as_multi_file_json(review_result)
+            print_review_result_as_multi_file_json(review_result, config)
         else:
-            print_review_result_as_json(review_result)
+            print_review_result_as_json(review_result, config)
     else:
-        print_review_result_as_text(review_result, path)
+        print_review_result_as_text(review_result, path, config)
 
     # Don't count INFO issues too
-    return len(list(filter(lambda issue: issue.type != IssueType.INFO, review_result.all_issues)))
+    return len(list(filter(lambda issue: issue.type != IssueType.INFO, review_result.issues)))
 
 
-def perform_review(path: Path, config: ApplicationConfig) -> ReviewResult:
+def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult:
     if not path.exists():
         raise PathNotExists
 

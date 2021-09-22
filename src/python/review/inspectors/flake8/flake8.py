@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.inspectors.base_inspector import BaseInspector
@@ -14,9 +14,11 @@ from src.python.review.inspectors.issue import (
     CohesionIssue,
     CyclomaticComplexityIssue,
     IssueData,
+    IssueDifficulty,
     IssueType,
+    LineLenIssue,
 )
-from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip
+from src.python.review.inspectors.tips import get_cyclomatic_complexity_tip, get_line_len_tip
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
     @classmethod
-    def inspect(cls, path: Path, config: dict) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         command = [
             'flake8',
             f'--format={FORMAT}',
@@ -51,6 +53,7 @@ class Flake8Inspector(BaseInspector):
         row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
         cc_description_re = re.compile(r"'(.+)' is too complex \((\d+)\)")
         cohesion_description_re = re.compile(r"class has low \((\d*\.?\d*)%\) cohesion")
+        line_len_description_re = re.compile(r"line too long \((\d+) > \d+ characters\)")
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(output):
@@ -58,6 +61,7 @@ class Flake8Inspector(BaseInspector):
             origin_class = groups[3]
             cc_match = cc_description_re.match(description)
             cohesion_match = cohesion_description_re.match(description)
+            line_len_match = line_len_description_re.match(description)
             file_path = Path(groups[0])
             line_no = int(groups[1])
 
@@ -68,20 +72,32 @@ class Flake8Inspector(BaseInspector):
                                                             column_number=column_number,
                                                             origin_class=origin_class)
             if cc_match is not None:  # mccabe: cyclomatic complexity
+                issue_type = IssueType.CYCLOMATIC_COMPLEXITY
                 issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
                 issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match.groups()[1])
-                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.CYCLOMATIC_COMPLEXITY
+                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif cohesion_match is not None:  # flake8-cohesion
+                issue_type = IssueType.COHESION
                 issue_data[IssueData.DESCRIPTION.value] = description  # TODO: Add tip
                 issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
                     float(cohesion_match.group(1)),
                 )
-                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.COHESION
+                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CohesionIssue(**issue_data))
+            elif line_len_match is not None:
+                issue_type = IssueType.LINE_LEN
+                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
+                issue_data[IssueData.LINE_LEN.value] = int(line_len_match.groups()[0])
+                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.LINE_LEN
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
+                issues.append(LineLenIssue(**issue_data))
             else:
                 issue_type = cls.choose_issue_type(origin_class)
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issue_data[IssueData.DESCRIPTION.value] = description
                 issues.append(CodeIssue(**issue_data))
 

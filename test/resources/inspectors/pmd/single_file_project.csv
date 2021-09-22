@@ -1,0 +1,5 @@
+"Problem","Package","File","Priority","Line","Description","Rule set","Rule"
+"1","","/home/user/Desktop/some_project/main.java","3","6","The String literal 'Howdy' appears 4 times in this file; the first occurrence is on line 6","Error Prone","AvoidDuplicateLiterals"
+"2","","/home/user/Desktop/some_project/main.java","3","12","Document empty method body","Documentation","UncommentedEmptyMethodBody"
+"3","","/home/user/Desktop/some_project/main.java","3","31","Avoid unused local variables such as 'result'.","Best Practices","UnusedLocalVariable"
+"4","","/home/user/Desktop/some_project/main.java","3","61","Avoid unused private methods such as 'emptyLoop()'.","Best Practices","UnusedPrivateMethod"

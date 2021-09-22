@@ -13,15 +13,15 @@ class InspectorType(Enum):
     # Java language
     PMD = 'PMD'
     CHECKSTYLE = 'CHECKSTYLE'
-    SPOTBUGS = 'SPOTBUGS'
-    SPRINGLINT = 'SPRINGLINT'
 
     # Kotlin language
     DETEKT = 'DETEKT'
-    INTELLIJ = 'INTELLIJ'
 
     # JavaScript language
     ESLINT = 'ESLINT'
+
+    UNDEFINED = 'UNDEFINED'
+    QODANA = 'QODANA'
 
     @classmethod
     def available_values(cls) -> List[str]:
