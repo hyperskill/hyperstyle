@@ -3,9 +3,9 @@ from collections import namedtuple
 from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
-from src.python.review.application_config import ApplicationConfig
-from src.python.review.quality.model import QualityType
-from src.python.review.reviewers.perform_review import OutputFormat, PathNotExists, perform_and_print_review
+from hyperstyle.src.python.review.application_config import ApplicationConfig
+from hyperstyle.src.python.review.quality.model import QualityType
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat, PathNotExists, perform_and_print_review
 
 Args = namedtuple('Args', [
     'path',

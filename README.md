@@ -106,7 +106,7 @@ Or use the public docker image, that we use in the [build.yml](.github/workflows
 
 ## Usage
 
-Run the [run_tool.py](./src/python/review/run_tool.py) with the arguments.
+Run the [run_tool.py](hyperstyle/src/python/review/run_tool.py) with the arguments.
 
 A simple configuration: `python run_tool.py <path>`.
 
