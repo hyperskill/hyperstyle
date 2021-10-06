@@ -25,6 +25,7 @@ ignore=W291,  # trailing whitespaces
        WPS125, # Forbid variable or module names which shadow builtin names. TODO: Collision with flake8-builtins
        # WPS: Complexity
        WPS200, # Forbid modules with complex lines. (Jones Complexity)
+       WPS210, # Too many local variables
        WPS221, # Forbid complex lines. (Jones Complexity)
        # WPS: Consistency
        WPS303, # Forbid underscores in numbers.

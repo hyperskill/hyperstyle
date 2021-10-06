@@ -19,10 +19,11 @@ def get_version() -> str:
 
 def get_inspectors_additional_files() -> List[str]:
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
+    configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            if not file.endswith('.py') and file.split('.')[-1] in ['xml', 'yml', 'eslintrc', 'flake8', 'txt']:
+            if not file.endswith('.py') and file.split('.')[-1] in configs:
                 result.append(str(Path(root) / file))
     return result
 
