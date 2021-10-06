@@ -49,7 +49,16 @@ HARD_ISSUES = {
             'influence_on_penalty': {'EASY': 0, 'HARD': 0, 'MEDIUM': 0},
             'line': 'class BadClass:',
             'line_number': 4,
-            'text': 'class has low (20.00%) cohesion',
+            'text': 'Class has low (20.00%) cohesion. Cohesion measures the '
+                    'strength of relationship between pieces of functionality '
+                    'within a given module. When cohesion is high, the '
+                    'methods and variables of the class are co-dependent and '
+                    'hang together as a logical whole. However, if the task '
+                    'requires implementing classes without methods, the '
+                    'cohesion always will be low since all variables will be '
+                    'in-dependent. Please, ignore this issue if the task '
+                    'requires implement an empty class (without any '
+                    'methods).',
         },
     ],
 }
@@ -174,7 +183,6 @@ EASY_ISSUES = {
     ],
 }
 
-
 ALL_DIFFICULTY_LEVEL_ISSUES = {
     'quality': {
         'EASY': {'code': 'GOOD', 'text': 'Code quality (beta): GOOD'},
@@ -200,7 +208,16 @@ ALL_DIFFICULTY_LEVEL_ISSUES = {
             'influence_on_penalty': {'EASY': 0, 'HARD': 0, 'MEDIUM': 0},
             'line': 'class BadClass:',
             'line_number': 5,
-            'text': 'class has low (20.00%) cohesion',
+            'text': 'Class has low (20.00%) cohesion. Cohesion measures the '
+                    'strength of relationship between pieces of functionality '
+                    'within a given module. When cohesion is high, the '
+                    'methods and variables of the class are co-dependent and '
+                    'hang together as a logical whole. However, if the task '
+                    'requires implementing classes without methods, the '
+                    'cohesion always will be low since all variables will be '
+                    'in-dependent. Please, ignore this issue if the task '
+                    'requires implement an empty class (without any '
+                    'methods).',
         },
         {
             'category': 'CODE_STYLE',
@@ -214,7 +231,6 @@ ALL_DIFFICULTY_LEVEL_ISSUES = {
         },
     ],
 }
-
 
 DIFFICULTY_LEVELS_TEST_DATA = [
     ('file_without_issues.py', WITHOUT_ISSUES),
@@ -262,7 +278,16 @@ HARD_ISSUES_WITH_INFLUENCE = {
             'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 100},
             'line': 'class BadClass:',
             'line_number': 4,
-            'text': 'class has low (20.00%) cohesion',
+            'text': 'Class has low (20.00%) cohesion. Cohesion measures the '
+                    'strength of relationship between pieces of functionality '
+                    'within a given module. When cohesion is high, the '
+                    'methods and variables of the class are co-dependent and '
+                    'hang together as a logical whole. However, if the task '
+                    'requires implementing classes without methods, the '
+                    'cohesion always will be low since all variables will be '
+                    'in-dependent. Please, ignore this issue if the task '
+                    'requires implement an empty class (without any '
+                    'methods).',
         },
     ],
 }
@@ -412,7 +437,16 @@ ALL_DIFFICULTY_LEVEL_ISSUES_WITH_INFLUENCE = {
             'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 17},
             'line': 'class BadClass:',
             'line_number': 5,
-            'text': 'class has low (20.00%) cohesion',
+            'text': 'Class has low (0.00%) cohesion. Cohesion measures the '
+                    'strength of relationship between pieces of functionality '
+                    'within a given module.When cohesion is high, the methods '
+                    'and variables of the class are co-dependent and hang '
+                    'together as a logical whole.However, if the task '
+                    'requires implementing classes without methods, the '
+                    'cohesion always will be low since all variables will be '
+                    'in-dependent. Please, ignore this issue if the task '
+                    'requires implement an empty class (without any '
+                    'methods).',
         },
         {
             'category': 'CODE_STYLE',

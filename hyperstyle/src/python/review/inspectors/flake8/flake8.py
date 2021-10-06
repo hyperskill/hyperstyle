@@ -82,7 +82,7 @@ class Flake8Inspector(BaseInspector):
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif cohesion_match is not None:  # flake8-cohesion
                 issue_type = IssueType.COHESION
-                issue_data[IssueData.DESCRIPTION.value] = get_cohesion_tip()
+                issue_data[IssueData.DESCRIPTION.value] = f'{get_cohesion_tip(f"{description.capitalize()}.")}'
                 issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
                     float(cohesion_match.group(1)),
                 )

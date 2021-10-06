@@ -65,12 +65,12 @@ def get_class_coupling_tip() -> str:
     )
 
 
-def get_cohesion_tip() -> str:
+def get_cohesion_tip(base_message: str) -> str:
     return (
-        'Class has low (0.00%) cohesion. '
-        'Cohesion measures the strength of relationship between pieces of functionality within a given module.'
+        f'{base_message} '
+        'Cohesion measures the strength of relationship between pieces of functionality within a given module. '
         'When cohesion is high, the methods and variables of the class are co-dependent '
-        'and hang together as a logical whole.'
+        'and hang together as a logical whole. '
         'However, if the task requires implementing classes without methods, the cohesion always will be low since '
         'all variables will be in-dependent. '
         'Please, ignore this issue if the task requires implement an empty class (without any methods).'
