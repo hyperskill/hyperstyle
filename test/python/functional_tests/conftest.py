@@ -4,8 +4,8 @@ from test.python import TEST_DATA_FOLDER
 from typing import List, Optional
 
 import pytest
-from src.python import MAIN_FOLDER
-from src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python import MAIN_FOLDER
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 
 DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
 

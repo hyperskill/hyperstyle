@@ -2,8 +2,8 @@ import textwrap
 from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
-from src.python.review.inspectors.issue import IssueType
-from src.python.review.inspectors.pylint.pylint import PylintInspector
+from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
 
 from .conftest import use_file_metadata
 

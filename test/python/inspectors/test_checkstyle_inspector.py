@@ -4,10 +4,10 @@ from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestI
 from typing import List
 
 import pytest
-from src.python.review.common.language import Language
-from src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import (
     BoolExprLenIssue,
     CodeIssue,
     CyclomaticComplexityIssue,
@@ -16,14 +16,14 @@ from src.python.review.inspectors.issue import (
     IssueType,
     LineLenIssue,
 )
-from src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
-from src.python.review.inspectors.tips import (
+from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
     get_line_len_tip,
 )
-from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAME_AND_ISSUES = [
     ('empty_file.xml', []),

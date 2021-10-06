@@ -2,7 +2,7 @@ import json
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 import pytest
-from src.python.review.common.subprocess_runner import run_in_subprocess
+from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
 PATH_TO_FILE = DATA_PATH / 'lines_range' / 'code_with_multiple_issues.py'
 
