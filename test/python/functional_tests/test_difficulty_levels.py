@@ -437,7 +437,7 @@ ALL_DIFFICULTY_LEVEL_ISSUES_WITH_INFLUENCE = {
             'influence_on_penalty': {'EASY': 0, 'MEDIUM': 0, 'HARD': 17},
             'line': 'class BadClass:',
             'line_number': 5,
-            'text': 'Class has low (0.00%) cohesion. Cohesion measures the '
+            'text': 'Class has low (20.00%) cohesion. Cohesion measures the '
                     'strength of relationship between pieces of functionality '
                     'within a given module.When cohesion is high, the methods '
                     'and variables of the class are co-dependent and hang '
