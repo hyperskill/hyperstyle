@@ -1,0 +1,69 @@
+[flake8]
+disable_noqa=True
+
+max-line-length=120
+
+dictionaries=en_US,python,technical,django
+
+ignore=W291,  # trailing whitespaces
+       W292,  # no newline at end of file
+       W293,  # blank line contains whitespaces
+       W503,  # line break before binary operator
+       C408,  # unnecessary (dict/list/tuple) call - rewrite as a literal
+       E800,  # commented out code
+       I101,  # order of imports within a line
+       I202,  # additional new line
+       Q000,
+       E301, E302, E303, E304, E305,  # problem with stepik templates
+       E402,  # module level import not at top of file
+       I100,  # Import statements are in the wrong order
+       # WPS: Naming
+       WPS110, # Forbid blacklisted variable names.
+       WPS111, # Forbid short variable or module names.
+       WPS112, # Forbid private name pattern.
+       WPS114, # Forbid names with underscored numbers pattern.
+       WPS125, # Forbid variable or module names which shadow builtin names. TODO: Collision with flake8-builtins
+       # WPS: Complexity
+       WPS200, # Forbid modules with complex lines. (Jones Complexity)
+       WPS210, # Too many local variables
+       WPS221, # Forbid complex lines. (Jones Complexity)
+       # WPS: Consistency
+       WPS303, # Forbid underscores in numbers.
+       WPS305, # Forbid f strings.
+       WPS306, # Forbid writing classes without base classes.
+       WPS317, # Forbid incorrect indentation for parameters. (Because of the unnecessary strictness)
+       WPS318, # Forbid extra indentation. TODO: Collision with standard flake8 indentation check
+       WPS319, # Forbid brackets in the wrong position. (Because of the unnecessary strictness)
+       WPS323, # Forbid % formatting on strings.
+       WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
+       WPS335, # Forbid wrong for loop iter targets.
+       WPS347, # Forbid imports that may cause confusion outside of the module. (controversial)
+       WPS358, # Forbid using float zeros: 0.0.
+       WPS359, # Forbids to unpack iterable objects to lists. (Because of its similarity to "WPS414")
+       WPS362, # Forbid assignment to a subscript slice.
+       # WPS: Best practices
+       WPS404, # Forbid complex defaults. TODO: Collision with "B006"
+       WPS414, # Forbid tuple unpacking with side-effects. (controversial)
+       WPS420, # Forbid some python keywords.
+       WPS421, # Forbid calling some built-in functions.(e.g., print)
+       WPS429, # Forbid multiple assignments on the same line.
+       WPS430, # Forbid nested functions.
+       WPS431, # Forbid nested classes.
+       WPS435, # Forbid multiplying lists.
+       WPS510, # Found `in` used with a non-set container
+       # WPS: Refactoring
+       WPS518, # Forbid implicit enumerate() calls. TODO: Collision with "C0200"
+       WPS527, # Require tuples as arguments for frozenset.
+       # WPS: OOP
+       WPS602, # Forbid @staticmethod decorator.
+       # flake8-string-format
+       P101, # format string does contain unindexed parameters
+       P102, # docstring does contain unindexed parameters
+       P103, # other string does contain unindexed parameters
+       F405, # Name may be undefined, or defined from star imports (Collision with the stricter "F403")
+       F522, # unused named arguments. TODO: Collision with "P302"
+       F523, # unused positional arguments. TODO: Collision with "P301"
+       F524, # missing argument. TODO: Collision with "P201" and "P202"
+       F525, # mixing automatic and manual numbering. TODO: Collision with "P205"
+       # flake8-commas
+       C814, # missing trailing comma in Python 2

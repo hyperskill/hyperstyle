@@ -3,10 +3,10 @@ from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestI
 from textwrap import dedent
 
 import pytest
-from src.python.review.common.language import Language
-from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from src.python.review.inspectors.issue import IssueType
-from src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
+from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAMES_AND_N_ISSUES = [
     ('case0_spaces.py', 5),

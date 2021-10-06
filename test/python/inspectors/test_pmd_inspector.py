@@ -3,9 +3,9 @@ from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
 from typing import List
 
 import pytest
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
-from src.python.review.inspectors.pmd.pmd import PMDInspector
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
 
 from .conftest import use_file_metadata
 

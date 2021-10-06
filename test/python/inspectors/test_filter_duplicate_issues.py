@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
-from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
 
 
 def test_filter_duplicate_issues_when_single_inspector() -> None:

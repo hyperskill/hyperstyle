@@ -1,0 +1,3 @@
+include VERSION.md
+include requirements.txt
+recursive-exclude __pycache__ *.pyc *.pyo *.orig

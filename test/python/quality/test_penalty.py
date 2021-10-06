@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import List, Set
 
 import pytest
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
 
 punisher = Punisher([], [])
 

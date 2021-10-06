@@ -39,7 +39,7 @@ jobs:
 
       - name: Sort whitelists
         run: |
-            for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
+            for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
             do
             LC_ALL=C sort $file -o $file
             done
@@ -47,7 +47,7 @@ jobs:
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:
-          add: "['whitelist.txt', 'src/python/review/inspectors/flake8/whitelist.txt']"
+          add: "['whitelist.txt', 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
 
       - name: Set up Eslint
@@ -57,7 +57,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest
+          pytest -vv
 
       - name: Install review module
         run: |
