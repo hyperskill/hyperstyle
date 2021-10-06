@@ -18,13 +18,12 @@ def get_version() -> str:
 
 
 def get_inspectors_additional_files() -> List[str]:
-    inspectors_path = current_dir / 'src' / 'python' / 'review' / 'inspectors'
+    inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
     result = []
     for root, _, files in os.walk(inspectors_path):
         for file in files:
-            if not file.endswith('.py'):
+            if not file.endswith('.py') and file.split('.')[-1] in ['xml', 'yml', 'eslintrc', 'flake8', 'txt']:
                 result.append(str(Path(root) / file))
-
     return result
 
 
@@ -53,6 +52,7 @@ setup(
     keywords='code review',
     python_requires='>=3.8, <4',
     install_requires=get_requires(),
+    include_package_data=True,
     packages=find_packages(exclude=[
         '*.unit_tests',
         '*.unit_tests.*',
