@@ -78,8 +78,6 @@ ignore =
   T001,
 # Subprocess call
   S603,
-# Found `in` used with a non-set container
-  WPS510,
 
 exclude = .git, */data, env/, venv/
 
