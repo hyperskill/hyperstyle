@@ -10,6 +10,7 @@ from hyperstyle.src.python.review.inspectors.checkstyle.issue_types import CHECK
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.tips import get_magic_number_tip
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,11 @@ class CheckstyleInspector(BaseInspector):
 
         'LineLengthCheck':
             r'Line is longer than \d+ characters \(found (\d+)\)',
+
+    }
+
+    origin_class_to_description = {
+        'MagicNumberCheck': get_magic_number_tip(),
     }
 
     @classmethod
@@ -59,7 +65,8 @@ class CheckstyleInspector(BaseInspector):
                                          self.inspector_type,
                                          self.choose_issue_type,
                                          IssueDifficulty.get_by_issue_type,
-                                         self.origin_class_to_pattern)
+                                         self.origin_class_to_pattern,
+                                         self.origin_class_to_description)
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:

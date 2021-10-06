@@ -159,6 +159,7 @@ def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
         CheckstyleInspector.choose_issue_type,
         IssueDifficulty.get_by_issue_type,
         CheckstyleInspector.origin_class_to_pattern,
+        {},
     )
     assert issues == expected_issues
 

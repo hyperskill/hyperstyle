@@ -58,7 +58,8 @@ class DetektInspector(BaseInspector):
                                          self.inspector_type,
                                          self.choose_issue_type,
                                          IssueDifficulty.get_by_issue_type,
-                                         self.origin_class_to_pattern)
+                                         self.origin_class_to_pattern,
+                                         {})
 
     @classmethod
     def choose_issue_type(cls, issue_class: str) -> IssueType:

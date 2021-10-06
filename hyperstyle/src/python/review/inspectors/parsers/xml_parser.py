@@ -102,6 +102,7 @@ def parse_xml_file_result(
         inspector_type: InspectorType,
         issue_type_selector: Callable[[str], IssueType],
         difficulty_selector: Callable[[IssueType], IssueDifficulty],
+        origin_class_to_pattern: Dict[str, str],
         origin_class_to_description: Dict[str, str]) -> List[BaseIssue]:
     """
     Parses the output, which is a xml file, and returns a list of the issues found there.
@@ -140,14 +141,14 @@ def parse_xml_file_result(
             issue_data[IssueData.ISSUE_TYPE.value] = issue_type
             issue_data[IssueData.DIFFICULTY.value] = difficulty_selector(issue_type)
 
-            if origin_class in origin_class_to_description:
-                pattern = origin_class_to_description.get(origin_class)
+            if origin_class in origin_class_to_pattern:
+                pattern = origin_class_to_pattern.get(origin_class)
                 measure_value = int(re.search(pattern, message,
                                               flags=re.IGNORECASE).groups()[0])
 
                 issue = __parse_measurable_issue(issue_data, issue_type, measure_value)
             else:
-                issue_data[IssueData.DESCRIPTION.value] = message
+                issue_data[IssueData.DESCRIPTION.value] = origin_class_to_description.get(origin_class, message)
                 issue = CodeIssue(**issue_data)
 
             if issue is not None:

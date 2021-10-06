@@ -18,7 +18,9 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueType,
     LineLenIssue,
 )
-from hyperstyle.src.python.review.inspectors.tips import get_cyclomatic_complexity_tip, get_line_len_tip
+from hyperstyle.src.python.review.inspectors.tips import (
+    get_cohesion_tip, get_cyclomatic_complexity_tip, get_line_len_tip, get_magic_number_tip,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +82,7 @@ class Flake8Inspector(BaseInspector):
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif cohesion_match is not None:  # flake8-cohesion
                 issue_type = IssueType.COHESION
-                issue_data[IssueData.DESCRIPTION.value] = description  # TODO: Add tip
+                issue_data[IssueData.DESCRIPTION.value] = get_cohesion_tip()
                 issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
                     float(cohesion_match.group(1)),
                 )
@@ -98,7 +100,11 @@ class Flake8Inspector(BaseInspector):
                 issue_type = cls.choose_issue_type(origin_class)
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issue_data[IssueData.DESCRIPTION.value] = description
+                # Magic number
+                if origin_class == 'WPS432':
+                    issue_data[IssueData.DESCRIPTION.value] = get_magic_number_tip(description)
+                else:
+                    issue_data[IssueData.DESCRIPTION.value] = description
                 issues.append(CodeIssue(**issue_data))
 
         return issues

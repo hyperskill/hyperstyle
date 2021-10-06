@@ -42,7 +42,8 @@ class ESLintInspector(BaseInspector):
                                            self.inspector_type,
                                            self.choose_issue_type,
                                            IssueDifficulty.get_by_issue_type,
-                                           self.origin_class_to_pattern)
+                                           self.origin_class_to_pattern,
+                                           {})
 
             output_path.unlink()
 
