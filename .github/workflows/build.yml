@@ -39,7 +39,7 @@ jobs:
 
       - name: Sort whitelists
         run: |
-            for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
+            for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
             do
             LC_ALL=C sort $file -o $file
             done
