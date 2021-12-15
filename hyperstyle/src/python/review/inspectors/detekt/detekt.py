@@ -34,8 +34,10 @@ class DetektInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
-        path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
-        path_detekt_plugin = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
+        path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
+                             f'/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
+        path_detekt_plugin = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
+                             f'/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
 
         command = [
             path_to_detekt_cli,

@@ -38,7 +38,7 @@ class PMDInspector(BaseInspector):
         path_tools_pmd_shell = f'{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh'
         if not self.has_access:
             os.chmod(path_tools_pmd_shell, 0o777)
-            has_access = True
+            self.has_access = True
         return [
             path_tools_pmd_shell,
             'pmd', '-d', str(path), '-no-cache',
