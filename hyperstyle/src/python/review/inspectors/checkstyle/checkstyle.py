@@ -17,9 +17,6 @@ logger = logging.getLogger(__name__)
 CHECKSTYLE_DIRECTORY_ENV = 'CHECKSTYLE_DIRECTORY'
 CHECKSTYLE_VERSION_ENV = 'CHECKSTYLE_VERSION'
 
-PATH_CHECKSTYLE_JAR = f'{os.environ.get(CHECKSTYLE_DIRECTORY_ENV, None)}/' \
-                      f'checkstyle-{os.environ.get(CHECKSTYLE_VERSION_ENV, None)}-all.jar '
-
 PATH_TOOLS_CHECKSTYLE_FILES = Path(__file__).parent / 'files'
 PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_CHECKSTYLE_FILES / 'config.xml'
 
@@ -48,8 +45,10 @@ class CheckstyleInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
+        path_checkstyle_jar = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/' \
+                              f'checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
         return [
-            'java', '-jar', PATH_CHECKSTYLE_JAR,
+            'java', '-jar', path_checkstyle_jar,
             '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
             '-f', 'xml', '-o', output_path, str(path),
         ]

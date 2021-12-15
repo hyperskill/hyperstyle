@@ -16,11 +16,6 @@ logger = logging.getLogger(__name__)
 DETEKT_DIRECTORY_ENV = 'DETEKT_DIRECTORY'
 DETEKT_VERSION_ENV = 'DETEKT_VERSION'
 
-PATH_TO_DETEKT_CLI = f'{os.environ.get(DETEKT_DIRECTORY_ENV, None)}/' \
-                     f'detekt-cli-{os.environ.get(DETEKT_VERSION_ENV, None)}/bin/detekt-cli '
-PATH_DETEKT_PLUGIN = f'{os.environ.get(DETEKT_DIRECTORY_ENV, None)}/' \
-                     f'detekt-formatting-{os.environ.get(DETEKT_VERSION_ENV, None)}.jar'
-
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
 PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
 
@@ -39,10 +34,13 @@ class DetektInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
+        path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
+        path_detekt_plugin = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
+
         command = [
-            PATH_TO_DETEKT_CLI,
+            path_to_detekt_cli,
             '--config', PATH_DETEKT_CONFIG,
-            '--plugins', PATH_DETEKT_PLUGIN,
+            '--plugins', path_detekt_plugin,
             '--report', f'xml:{output_path}',
             '--input', str(path),
         ]
