@@ -27,10 +27,6 @@ class PMDInspector(BaseInspector):
     inspector_type = InspectorType.PMD
     has_access = False
 
-    @classmethod
-    def is_pmd_set_up(cls) -> bool:
-        return check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)
-
     def _create_command(self, path: Path,
                         output_path: Path,
                         language_version: LanguageVersion,
@@ -50,7 +46,7 @@ class PMDInspector(BaseInspector):
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        if not self.is_pmd_set_up():
+        if not (check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)):
             return []
 
         with new_temp_dir() as temp_dir:
