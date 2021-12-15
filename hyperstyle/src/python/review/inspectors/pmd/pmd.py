@@ -16,10 +16,9 @@ from hyperstyle.src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_
 logger = logging.getLogger(__name__)
 
 PMD_DIRECTORY_ENV = 'PMD_DIRECTORY'
-check_set_up_env_variable(PMD_DIRECTORY_ENV)
 PMD_VERSION_ENV = 'PMD_VERSION'
-check_set_up_env_variable(PMD_VERSION_ENV)
-PATH_TOOLS_PMD_SHELL_SCRIPT = f'{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh'
+PATH_TOOLS_PMD_SHELL_SCRIPT = f'{os.environ.get(PMD_DIRECTORY_ENV, None)}/' \
+                              f'pmd-bin-{os.environ.get(PMD_VERSION_ENV, None)}/bin/run.sh'
 
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
 PATH_TOOLS_PMD_RULES_SET = PATH_TOOLS_PMD_FILES / 'config.xml'
@@ -48,6 +47,9 @@ class PMDInspector(BaseInspector):
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+        if not (check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)):
+            return []
+
         with new_temp_dir() as temp_dir:
             output_path = Path(temp_dir / 'out.csv')
 
