@@ -1,10 +1,13 @@
 import linecache
+import logging
 import os
 import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
 from typing import Callable, List, Tuple, Union
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -47,10 +50,10 @@ def all_items_condition(name: str) -> bool:
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
 def get_all_file_system_items(
-    root: Path,
-    item_condition: ItemCondition = all_items_condition,
-    item_type: FileSystemItem = FileSystemItem.FILE,
-    without_subdirs: bool = False,
+        root: Path,
+        item_condition: ItemCondition = all_items_condition,
+        item_type: FileSystemItem = FileSystemItem.FILE,
+        without_subdirs: bool = False,
 ) -> List[Path]:
     if not root.is_dir():
         raise ValueError(f'The {root} is not a directory')
@@ -111,6 +114,8 @@ def get_total_code_lines_from_code(code: str) -> int:
     return len(list(filter(lambda line: not __is_line_empty(line) and not __is_comment(line), lines)))
 
 
-def check_set_up_env_variable(variable_name: str):
+def check_set_up_env_variable(variable_name: str) -> bool:
     if variable_name not in os.environ:
-        raise KeyError(f'{variable_name} was not set up!')
+        logger.warning(f'{variable_name} was not set up!')
+        return False
+    return True

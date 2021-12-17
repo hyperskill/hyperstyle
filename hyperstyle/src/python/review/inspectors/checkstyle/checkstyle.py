@@ -15,14 +15,10 @@ from hyperstyle.src.python.review.inspectors.tips import get_magic_number_tip
 logger = logging.getLogger(__name__)
 
 CHECKSTYLE_DIRECTORY_ENV = 'CHECKSTYLE_DIRECTORY'
-check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
 CHECKSTYLE_VERSION_ENV = 'CHECKSTYLE_VERSION'
-check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
 
-PATH_CHECKSTYLE_JAR = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
-
-PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_PMD_FILES / 'config.xml'
+PATH_TOOLS_CHECKSTYLE_FILES = Path(__file__).parent / 'files'
+PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_CHECKSTYLE_FILES / 'config.xml'
 
 
 class CheckstyleInspector(BaseInspector):
@@ -49,13 +45,19 @@ class CheckstyleInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
+        path_checkstyle_jar = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/' \
+                              f'checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
         return [
-            'java', '-jar', PATH_CHECKSTYLE_JAR,
+            'java', '-jar', path_checkstyle_jar,
             '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
             '-f', 'xml', '-o', output_path, str(path),
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+        if not (check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV) and check_set_up_env_variable(
+                CHECKSTYLE_VERSION_ENV)):
+            return []
+
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / 'output.xml'
             command = self._create_command(path, output_path)

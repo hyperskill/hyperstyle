@@ -16,10 +16,7 @@ from hyperstyle.src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_
 logger = logging.getLogger(__name__)
 
 PMD_DIRECTORY_ENV = 'PMD_DIRECTORY'
-check_set_up_env_variable(PMD_DIRECTORY_ENV)
 PMD_VERSION_ENV = 'PMD_VERSION'
-check_set_up_env_variable(PMD_VERSION_ENV)
-PATH_TOOLS_PMD_SHELL_SCRIPT = f'{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh'
 
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
 PATH_TOOLS_PMD_RULES_SET = PATH_TOOLS_PMD_FILES / 'config.xml'
@@ -28,26 +25,30 @@ DEFAULT_JAVA_VERSION = LanguageVersion.JAVA_11
 
 class PMDInspector(BaseInspector):
     inspector_type = InspectorType.PMD
+    has_access = False
 
-    def __init__(self):
-        os.chmod(PATH_TOOLS_PMD_SHELL_SCRIPT, 0o777)
-
-    @classmethod
-    def _create_command(cls, path: Path,
+    def _create_command(self, path: Path,
                         output_path: Path,
                         language_version: LanguageVersion,
                         n_cpu: int) -> List[str]:
+        path_tools_pmd_shell = f'{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh'
+        if not self.has_access:
+            os.chmod(path_tools_pmd_shell, 0o777)
+            self.has_access = True
         return [
-            PATH_TOOLS_PMD_SHELL_SCRIPT,
+            path_tools_pmd_shell,
             'pmd', '-d', str(path), '-no-cache',
             '-R', PATH_TOOLS_PMD_RULES_SET,
             '-language', 'java',
-            '-version', cls._get_java_version(language_version),
+            '-version', self._get_java_version(language_version),
             '-f', 'csv', '-r', str(output_path),
             '-t', str(n_cpu),
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+        if not (check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)):
+            return []
+
         with new_temp_dir() as temp_dir:
             output_path = Path(temp_dir / 'out.csv')
 

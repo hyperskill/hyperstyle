@@ -14,12 +14,7 @@ from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml
 logger = logging.getLogger(__name__)
 
 DETEKT_DIRECTORY_ENV = 'DETEKT_DIRECTORY'
-check_set_up_env_variable(DETEKT_DIRECTORY_ENV)
 DETEKT_VERSION_ENV = 'DETEKT_VERSION'
-check_set_up_env_variable(DETEKT_VERSION_ENV)
-
-PATH_TO_DETEKT_CLI = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
-PATH_DETEKT_PLUGIN = f'{os.environ[DETEKT_DIRECTORY_ENV]}/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
 
 PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
 PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
@@ -39,16 +34,24 @@ class DetektInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
+        path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
+                             f'/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
+        path_detekt_plugin = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
+                             f'/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
+
         command = [
-            PATH_TO_DETEKT_CLI,
+            path_to_detekt_cli,
             '--config', PATH_DETEKT_CONFIG,
-            '--plugins', PATH_DETEKT_PLUGIN,
+            '--plugins', path_detekt_plugin,
             '--report', f'xml:{output_path}',
             '--input', str(path),
         ]
         return command
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+        if not (check_set_up_env_variable(DETEKT_DIRECTORY_ENV) and check_set_up_env_variable(DETEKT_VERSION_ENV)):
+            return []
+
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / 'output.xml'
             command = self._create_command(path, output_path)
