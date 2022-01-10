@@ -19,7 +19,8 @@ from hyperstyle.src.python.review.inspectors.issue import (
     LineLenIssue,
 )
 from hyperstyle.src.python.review.inspectors.tips import (
-    get_cohesion_tip, get_cyclomatic_complexity_tip, get_line_len_tip, get_magic_number_tip,
+    get_augmented_assign_pattern_tip, get_cohesion_tip, get_cyclomatic_complexity_tip, get_line_len_tip,
+    get_magic_number_tip,
 )
 
 logger = logging.getLogger(__name__)
@@ -103,6 +104,9 @@ class Flake8Inspector(BaseInspector):
                 # Magic number
                 if origin_class == 'WPS432':
                     issue_data[IssueData.DESCRIPTION.value] = get_magic_number_tip(description)
+                # Bad assign pattern
+                elif origin_class == 'WPS350':
+                    issue_data[IssueData.DESCRIPTION.value] = get_augmented_assign_pattern_tip()
                 else:
                     issue_data[IssueData.DESCRIPTION.value] = description
                 issues.append(CodeIssue(**issue_data))

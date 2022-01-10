@@ -57,6 +57,15 @@ def get_weighted_method_tip() -> str:
     )
 
 
+def get_augmented_assign_pattern_tip() -> str:
+    return (
+        'Found usable augmented assign pattern. '
+        'You can use shorthand notation if the left and right parts of '
+        'the expression have the same variable, '
+        'e.g. x = x + 2 is the same with x += 2.'
+    )
+
+
 def get_class_coupling_tip() -> str:
     return (
         'The class seems to depend on too many other classes. '
