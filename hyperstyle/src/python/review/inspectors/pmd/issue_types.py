@@ -221,7 +221,7 @@ PMD_RULE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'MethodWithSameNameAsEnclosingClass': IssueType.BEST_PRACTICES,
     'MisplacedNullCheck': IssueType.ERROR_PRONE,
     'MissingBreakInSwitch': IssueType.ERROR_PRONE,
-    'MissingSerialVersionUID': IssueType.ERROR_PRONE,
+    # 'MissingSerialVersionUID': IssueType.ERROR_PRONE,
     'MissingStaticMethodInNonInstantiatableClass': IssueType.ERROR_PRONE,
     'NonCaseLabelInSwitchStatement': IssueType.BEST_PRACTICES,
     'OverrideBothEqualsAndHashcode': IssueType.ERROR_PRONE,

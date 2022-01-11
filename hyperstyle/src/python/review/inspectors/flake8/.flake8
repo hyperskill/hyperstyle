@@ -46,6 +46,7 @@ ignore=W291,  # trailing whitespaces
        WPS414, # Forbid tuple unpacking with side-effects. (controversial)
        WPS420, # Forbid some python keywords.
        WPS421, # Forbid calling some built-in functions.(e.g., print)
+       WPS427, # Found unreachable code. TODO: Collision with "W0101"
        WPS429, # Forbid multiple assignments on the same line.
        WPS430, # Forbid nested functions.
        WPS431, # Forbid nested classes.
