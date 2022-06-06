@@ -36,6 +36,7 @@ FILE_NAMES_AND_N_ISSUES = [
     ('case35_line_break.py', 11),
     ('case36_unpacking.py', 0),
     ('case37_wildcard_import.py', 1),
+    ('case38_spellcheck.py', 0),
 ]
 
 
