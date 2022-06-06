@@ -51,6 +51,7 @@ fromkeys
 fromstring
 fullmatch
 gensim
+getchildren
 gmtime
 groupby
 halfs
