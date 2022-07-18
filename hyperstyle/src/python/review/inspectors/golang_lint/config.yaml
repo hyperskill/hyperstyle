@@ -1,0 +1,28 @@
+run:
+  tests: false
+
+output:
+  uniq-by-line: false
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  disable-all: true
+  enable:
+    - cyclop
+    - funlen
+    - lll
+    - maintidx
+    - gomnd
+
+linters-settings:
+  cyclop:
+    max-complexity: -1
+    skip-tests: true
+  funlen:
+    lines: 1
+    statements: -1
+  maintidx:
+    under: 100

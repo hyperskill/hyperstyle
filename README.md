@@ -24,7 +24,7 @@ The source code of **hyperstyle** is distributed under the Apache 2.0 License.
 
 The 3rd party software we use in this project has its own licenses.
 
-Python language (all versions can be found in the (requirements.txt)[requirements.txt] file):
+Python language (all versions can be found in the [requirements.txt](requirements.txt) file):
 
 - [x]  flake8 [MIT]
     * [Site and docs](https://flake8.pycqa.org/en/latest/)
@@ -64,6 +64,14 @@ JavaScript language:
     * [Site and docs](https://eslint.org/)
     * [Repository](https://github.com/eslint/eslint)
   
+
+
+
+Go language:
+
+- [x] golangci-lint [GNU GPL v3.0] (Version: 1.46.2)
+    * [Site and docs](https://golangci-lint.run/)
+    * [Repository](https://github.com/golangci/golangci-lint)
 ---
 
 ## Installation
@@ -81,6 +89,8 @@ You have to create set of environment variables:
 - `DETEKT_DIRECTORY` (the directory with `DETEKT` linter sources)
 - `PMD_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `PMD_DIRECTORY` (the directory with `PMD` linter sources)
+- `GOLANG_LINT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `GOLANG_LINT_DIRECTORY` (the directory with `GOLANG_LINT` linter sources)
 
 You can download all sources manually or by the following commands:
 - `CHECKSTYLE`: 
@@ -97,6 +107,10 @@ curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}
 ```bash
 curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip \
 && unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY}
+```
+- `GOLANG_LINT`:
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -b ${GOLANG_LINT_DIRECTORY} -s v${GOLANG_LINT_VERSION}
 ```
 
 _In the future we will add a bash script that will do it automatically._ 
@@ -119,7 +133,7 @@ Argument | Description
 --- | ---
 **&#8209;h**, **&#8209;&#8209;help**      |  show the help message and exit.
 **&#8209;v**, **&#8209;&#8209;verbosity** |  choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).
-**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/). Example: `-d pylint,flake8`.
+**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/); for **Go** language: `golang-lint` for [golangci-lint](https://golangci-lint.run/). Example: `-d pylint,flake8`.
 **&#8209;&#8209;allow-duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
 **&#8209;&#8209;language-version**, **&#8209;&#8209;language_version**  |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`, `java15`. **Note**: **&#8209;&#8209;language_version** is deprecated and will be deleted in the future.
 **&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**  |  specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.

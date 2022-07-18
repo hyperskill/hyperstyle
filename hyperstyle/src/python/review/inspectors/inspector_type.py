@@ -20,6 +20,9 @@ class InspectorType(Enum):
     # JavaScript language
     ESLINT = 'ESLINT'
 
+    # Go language
+    GOLANG_LINT = 'GOLANG_LINT'
+
     UNDEFINED = 'UNDEFINED'
     QODANA = 'QODANA'
 
@@ -41,4 +44,7 @@ class InspectorType(Enum):
 
             # JavaScript language
             cls.ESLINT.value,
+
+            # Go language
+            cls.GOLANG_LINT.value,
         ]
