@@ -12,6 +12,7 @@ class Language(Enum):
     PYTHON = 'PYTHON'
     KOTLIN = 'KOTLIN'
     JS = 'JAVASCRIPT'
+    GO = 'GO'
     UNKNOWN = 'UNKNOWN'
 
     @staticmethod
@@ -25,6 +26,7 @@ class Language(Enum):
             LanguageVersion.PYTHON_3: Language.PYTHON,
             LanguageVersion.KOTLIN: Language.KOTLIN,
             LanguageVersion.JS: Language.JS,
+            LanguageVersion.GO: Language.GO,
         }
 
         return version_to_lang.get(language_version, Language.UNKNOWN)
@@ -47,6 +49,7 @@ EXTENSION_TO_LANGUAGE = {
     Extension.KT: Language.KOTLIN,
     Extension.KTS: Language.KOTLIN,
     Extension.JS: Language.JS,
+    Extension.GO: Language.GO,
 }
 
 
