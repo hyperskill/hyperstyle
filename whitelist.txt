@@ -146,6 +146,7 @@ mccabe
 mcs
 measurer
 metaclass
+metalinter
 min
 minsize
 misrefactored
@@ -225,6 +226,7 @@ throwable
 tmp
 tokenizer
 toplevel
+typecheck
 unary
 uncommented
 unichr
@@ -257,5 +259,3 @@ xreadlines
 yanchor
 yaxes
 yaxis
-typecheck
-metalinter
