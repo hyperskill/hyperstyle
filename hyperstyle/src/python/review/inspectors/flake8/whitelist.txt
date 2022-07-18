@@ -81,6 +81,7 @@ lateinit
 lemmatize
 lemmatizer
 lifes
+lightbulb
 lim
 linalg
 linecolor
@@ -154,4 +155,3 @@ xanchor
 xaxes
 yanchor
 yaxis
-lightbulb
