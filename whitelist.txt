@@ -55,6 +55,7 @@ csv
 ctor
 cuda
 cyclomatic
+cyclop
 dataflow
 dataframe
 dataframes
@@ -94,6 +95,7 @@ formatter
 fs
 fullmatch
 func
+funlen
 getitem
 getline
 getroot
@@ -136,9 +138,11 @@ lineno
 linesep
 linewidth
 listdir
+lll
 loc
 logits
 maintainabilities
+maintidx
 matcher
 maxint
 maxsplit
@@ -259,7 +263,3 @@ xreadlines
 yanchor
 yaxes
 yaxis
-cyclop
-funlen
-lll
-maintidx
