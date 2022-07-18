@@ -112,28 +112,28 @@ class GolangLint(BaseInspector):
             line_len_match = line_len_description_re.findall(description)
             maintainability_match = maintainability_description_re.findall(description)
 
-            if cc_match:  #
+            if cc_match:  # cyclop
                 issue_type = IssueType.CYCLOMATIC_COMPLEXITY
                 issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
                 issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CyclomaticComplexityIssue(**issue_data))
-            elif func_len_match:
+            elif func_len_match:  # funlen
                 issue_type = IssueType.FUNC_LEN
                 issue_data[IssueData.DESCRIPTION.value] = get_func_len_tip()
                 issue_data[IssueData.FUNCTION_LEN.value] = int(func_len_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(FuncLenIssue(**issue_data))
-            elif line_len_match:
+            elif line_len_match:  # lll
                 issue_type = IssueType.LINE_LEN
                 issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
                 issue_data[IssueData.LINE_LEN.value] = int(line_len_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(LineLenIssue(**issue_data))
-            elif maintainability_match:
+            elif maintainability_match:  # maintidx
                 issue_type = IssueType.MAINTAINABILITY
                 maintainability_lack = convert_percentage_of_value_to_lack_of_value(float(maintainability_match[0]))
                 issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
