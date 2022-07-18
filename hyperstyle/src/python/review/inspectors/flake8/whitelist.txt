@@ -154,3 +154,4 @@ xanchor
 xaxes
 yanchor
 yaxis
+lightbulb
