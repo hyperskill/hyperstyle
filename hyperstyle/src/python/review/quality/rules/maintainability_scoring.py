@@ -30,6 +30,7 @@ LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG = {
     Language.PYTHON: common_maintainability_rule_config,
     Language.KOTLIN: common_maintainability_rule_config,
     Language.JS: common_maintainability_rule_config,
+    Language.GO: common_maintainability_rule_config,
 }
 
 

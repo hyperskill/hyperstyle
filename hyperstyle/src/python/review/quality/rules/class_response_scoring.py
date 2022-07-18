@@ -22,6 +22,7 @@ LANGUAGE_TO_RESPONSE_RULE_CONFIG = {
     Language.PYTHON: common_response_rule_config,
     Language.KOTLIN: common_response_rule_config,
     Language.JS: common_response_rule_config,
+    Language.GO: common_response_rule_config,
 }
 
 

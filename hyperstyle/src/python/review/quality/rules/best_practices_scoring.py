@@ -24,6 +24,7 @@ LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG = {
     Language.PYTHON: common_best_practices_rule_config,
     Language.KOTLIN: common_best_practices_rule_config,
     Language.JS: common_best_practices_rule_config,
+    Language.GO: common_best_practices_rule_config,
 }
 
 

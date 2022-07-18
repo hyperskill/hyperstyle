@@ -24,6 +24,10 @@ LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG = {
     Language.JS: FunctionLengthRuleConfig(
         func_len_bad=69,
     ),
+    # Using java config
+    Language.GO: FunctionLengthRuleConfig(
+        func_len_bad=69,
+    ),
 }
 
 

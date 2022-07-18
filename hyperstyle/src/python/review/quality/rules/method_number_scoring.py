@@ -24,6 +24,7 @@ LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG = {
     Language.PYTHON: common_method_number_rule_config,
     Language.KOTLIN: common_method_number_rule_config,
     Language.JS: common_method_number_rule_config,
+    Language.GO: common_method_number_rule_config,
 }
 
 

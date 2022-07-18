@@ -22,6 +22,7 @@ LANGUAGE_TO_COUPLING_RULE_CONFIG = {
     Language.PYTHON: common_coupling_rule_config,
     Language.KOTLIN: common_coupling_rule_config,
     Language.JS: common_coupling_rule_config,
+    Language.GO: common_coupling_rule_config,
 }
 
 
