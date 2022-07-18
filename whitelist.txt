@@ -257,3 +257,5 @@ xreadlines
 yanchor
 yaxes
 yaxis
+typecheck
+metalinter
