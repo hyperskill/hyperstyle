@@ -33,6 +33,7 @@ language_to_reviewer = {
     Language.JAVA: partial(perform_language_review, language=Language.JAVA),
     Language.KOTLIN: partial(perform_language_review, language=Language.KOTLIN),
     Language.JS: partial(perform_language_review, language=Language.JS),
+    Language.GO: partial(perform_language_review, language=Language.GO),
 }
 
 
