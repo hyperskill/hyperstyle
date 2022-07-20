@@ -12,8 +12,7 @@
     <!-- This config was created using the following table: https://bit.ly/2VC6E61 -->
 
     <!-- Best Practices -->
-    <!-- Disable due to https://github.com/hyperskill/hyperstyle/issues/151 -->
-    <!-- <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod"/>-->
+    <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod"/>
     <rule ref="category/java/bestpractices.xml/AccessorMethodGeneration"/>
     <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly"/>
     <rule ref="category/java/bestpractices.xml/AvoidMessageDigestField"/>
