@@ -83,7 +83,7 @@ echo
 read -p "Do you want to install Python requirements? (Y/n): " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Installing Python requirements..."
-  pip install --no-cache-dir -r requirements-test.txt -r requirements.txt .
+  pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
   check_return_code $? "Python requirements installed." "Python requirements installation failed."
 else
   echo "Python requirements installation skipped."
