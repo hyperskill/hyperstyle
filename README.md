@@ -76,7 +76,7 @@ You have to create set of environment variables:
 - `PMD_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `PMD_DIRECTORY` (the directory with `PMD` linter sources)
 
-### Script
+### Using script
 
 Just run the following command:
 ```bash
@@ -87,7 +87,7 @@ and install everything the script suggests.
 **Note**: You can also use this script to update linters. To do this, just update the corresponding 
 linter version variables, run the script, and reinstall only the necessary linters. 
 
-### Manual
+### Manually
 
 If you don't want to use the script, you can install the environment manually.
 
@@ -114,7 +114,7 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 && unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY}
 ```
 
-### Docker
+### Using docker
 
 Alternatively, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
 Or use the public docker image, that we use in the [build.yml](.github/workflows/build.yml) file.
