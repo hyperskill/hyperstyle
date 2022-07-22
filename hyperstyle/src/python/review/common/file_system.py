@@ -5,7 +5,7 @@ import tempfile
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +36,15 @@ class Extension(Enum):
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
     @classmethod
-    def get_extension_from_file(cls, file: Union[Path, str]) -> 'Extension':
-        return Extension(os.path.splitext(file)[1])
+    def from_file(cls, file: Union[Path, str]) -> Optional['Extension']:
+        try:
+            return Extension(get_extension_from_file(file))
+        except ValueError:
+            return None
+
+
+def get_extension_from_file(file: Union[Path, str]) -> str:
+    return os.path.splitext(file)[1]
 
 
 ItemCondition = Callable[[str], bool]
