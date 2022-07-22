@@ -48,6 +48,6 @@ def test_inspect_project_with_unknown_extensions_works(local_command: LocalComma
     output = process.stdout.decode()
 
     assert process.returncode == 1
-    assert 'file.kek' not in output
-    assert 'file.lol' not in output
+    assert 'file.abc' not in output
+    assert 'file.xyz' not in output
     assert 'file.py' in output
