@@ -14,20 +14,21 @@
 # If it is necessary to reinstall the linter, all files in the passed folder will be deleted.
 #
 # Arguments:
+#   Linter name, a string.
 #   Folder with the linter files, a path.
 # Returns:
 #   0 if the linter needs to be installed, 1 otherwise.
 #######################################
 function need_to_install_linter() {
-  if [[ -d $1 ]] && [[ -n $(ls -A "$1") ]]; then
-    read -p "The folder is not empty. Do you want to reinstall the linter? (Y/n): " -r
+  if [[ -d $2 ]] && [[ -n $(ls -A "$2") ]]; then
+    read -p "The folder with the $1 sources is not empty. Do you want to reinstall $1? (Y/n): " -r
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
       return 1 # 1=false
     fi
-    rm -rf "$1"
+    rm -rf "$2"
   fi
 
-  mkdir -p "$1"
+  mkdir -p "$2"
   return 0 # 0=true
 }
 
@@ -69,7 +70,29 @@ echo "The variables are defined."
 
 echo
 
-read -p "Do you want to install ESLint? (Y/n): " -r
+read -p "Do you want to install Python requirements for the Hyperstyle project? (Y/n): " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "Installing Python requirements..."
+  pip install --no-cache-dir -r requirements.txt
+  check_return_code $? "Python requirements installed." "Python requirements installation failed."
+else
+  echo "Python requirements installation skipped."
+fi
+
+echo
+
+read -p "Do you want to install Python test requirements for the Hyperstyle project? (Y/n): " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "Installing Python test requirements..."
+  pip install --no-cache-dir -r requirements-test.txt
+  check_return_code $? "Python test requirements installed." "Python test requirements installation failed."
+else
+  echo "Python test requirements installation skipped."
+fi
+
+echo
+
+read -p "Do you want to install ESLint? This is the linter for JavaScript. ESLint will be installed globally. (Y/n): " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Installing ESLint..."
   npm install eslint@7.5.0 -g && eslint --init
@@ -80,19 +103,8 @@ fi
 
 echo
 
-read -p "Do you want to install Python requirements? (Y/n): " -r
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  echo "Installing Python requirements..."
-  pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
-  check_return_code $? "Python requirements installed." "Python requirements installation failed."
-else
-  echo "Python requirements installation skipped."
-fi
-
-echo
-
 echo "Installing Checkstyle ${CHECKSTYLE_VERSION} ..."
-if need_to_install_linter "${CHECKSTYLE_DIRECTORY}"; then
+if need_to_install_linter "Checkstyle" "${CHECKSTYLE_DIRECTORY}"; then
   curl -SLO "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar" --output-dir "${CHECKSTYLE_DIRECTORY}"
   check_return_code $? "Checkstyle ${CHECKSTYLE_VERSION} installed." "Checkstyle ${CHECKSTYLE_VERSION} installation failed."
 else
@@ -102,7 +114,7 @@ fi
 echo
 
 echo "Installing detekt ${DETEKT_VERSION} ..."
-if need_to_install_linter "${DETEKT_DIRECTORY}"; then
+if need_to_install_linter "detekt" "${DETEKT_DIRECTORY}"; then
   curl -SLO "https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip" --output-dir "${DETEKT_DIRECTORY}" &&
     unzip "${DETEKT_DIRECTORY}/detekt-cli-${DETEKT_VERSION}.zip" -d "${DETEKT_DIRECTORY}" &&
     curl -H "Accept: application/zip" -SLO "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar" --output-dir "${DETEKT_DIRECTORY}"
@@ -114,7 +126,7 @@ fi
 echo
 
 echo "Installing PMD ${PMD_VERSION} ..."
-if need_to_install_linter "${PMD_DIRECTORY}"; then
+if need_to_install_linter "PMD" "${PMD_DIRECTORY}"; then
   curl -SLO "https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip" --output-dir "${PMD_DIRECTORY}" &&
     unzip "${PMD_DIRECTORY}/pmd-bin-${PMD_VERSION}.zip" -d "${PMD_DIRECTORY}"
   check_return_code $? "PMD ${PMD_VERSION} installed." "PMD ${PMD_VERSION} installation failed."
