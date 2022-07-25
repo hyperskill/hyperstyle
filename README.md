@@ -76,12 +76,6 @@ Go language:
 
 ## Installation
 
-Simply clone the repository and run the following commands:
-
-1. `pip install -r requirements.txt`
-2. `pip install -r requirements-test.txt` for tests
-
-Also, you should set up the environment with Java and Kotlin linters sources.
 You have to create set of environment variables:
 - `CHECKSTYLE_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `CHECKSTYLE_DIRECTORY` (the directory with `CHECKSTYLE` linter sources)
@@ -92,7 +86,28 @@ You have to create set of environment variables:
 - `GOLANG_LINT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `GOLANG_LINT_DIRECTORY` (the directory with `GOLANG_LINT` linter sources)
 
-You can download all sources manually or by the following commands:
+### Using script
+
+Just run the following command:
+```bash
+./setup_environment.sh
+```
+and install everything the script suggests. 
+
+**Note**: You can also use this script to update linters. To do this, just update the corresponding 
+linter version variables, run the script, and reinstall only the necessary linters. 
+
+### Manually
+
+If you don't want to use the script, you can install the environment manually.
+
+Simply clone the repository and run the following commands:
+
+1. `pip install -r requirements.txt`
+2. `pip install -r requirements-test.txt` for tests
+3. `npm install eslint@7.5.0 -g && eslint --init`
+
+You can download all linters sources manually or by the following commands:
 - `CHECKSTYLE`: 
 ```bash
 curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar > ${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
@@ -113,9 +128,9 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -b ${GOLANG_LINT_DIRECTORY} -s v${GOLANG_LINT_VERSION}
 ```
 
-_In the future we will add a bash script that will do it automatically._ 
+### Using docker
 
-**Alternatively**, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
+Alternatively, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
 Or use the public docker image, that we use in the [build.yml](.github/workflows/build.yml) file.
 
 ## Usage
