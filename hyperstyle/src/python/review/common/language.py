@@ -54,7 +54,12 @@ EXTENSION_TO_LANGUAGE = {
 
 
 def guess_file_language(file_path: Path) -> Language:
-    return EXTENSION_TO_LANGUAGE.get(Extension.get_extension_from_file(file_path), Language.UNKNOWN)
+    extension = Extension.from_file(file_path)
+
+    if extension is None:
+        return Language.UNKNOWN
+
+    return EXTENSION_TO_LANGUAGE.get(extension, Language.UNKNOWN)
 
 
 def filter_paths_by_language(file_paths: List[Path], language: Language) -> List[Path]:
