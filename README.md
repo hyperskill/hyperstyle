@@ -125,7 +125,7 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 ```
 - `GOLANG_LINT`:
 ```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -b ${GOLANG_LINT_DIRECTORY} -s v${GOLANG_LINT_VERSION}
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
 ```
 
 ### Using docker
