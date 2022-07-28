@@ -34,7 +34,7 @@ from hyperstyle.src.python.review.inspectors.tips import (
 )
 
 GOLANG_LINT_DIRECTORY_ENV = 'GOLANG_LINT_DIRECTORY'
-GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / 'config.yaml'
+GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / 'config.yml'
 
 logger = logging.getLogger(__name__)
 
