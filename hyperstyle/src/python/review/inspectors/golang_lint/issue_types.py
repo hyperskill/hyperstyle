@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from typing import Dict
 
 from hyperstyle.src.python.review.inspectors.issue import IssueType
