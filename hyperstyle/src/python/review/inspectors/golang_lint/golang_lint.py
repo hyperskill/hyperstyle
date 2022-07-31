@@ -43,7 +43,7 @@ class GolangLint(BaseInspector):
     inspector_type = InspectorType.GOLANG_LINT
 
     @classmethod
-    def _create_command(cls, input_path: Path, output_path: Path, working_directory: Path) -> List[str]:
+    def _create_command(cls, input_path: Path, output_path: Path, working_directory: Path, n_cpu: int) -> List[str]:
         path_to_golang_lint_cli = os.path.join(os.environ[GOLANG_LINT_DIRECTORY_ENV], 'golangci-lint')
         # In order to analyze a folder recursively, you must add '...'.
         input_path = input_path if input_path.is_file() else input_path / '...'
@@ -60,6 +60,8 @@ class GolangLint(BaseInspector):
             GOLANG_LINT_CONFIG_PATH,
             '--go',
             '1.18',
+            '--concurrency',
+            str(n_cpu),
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
@@ -70,7 +72,7 @@ class GolangLint(BaseInspector):
             output_path = temp_dir / 'output.json'
             working_directory = path.parent if path.is_file() else path
 
-            command = self._create_command(path, output_path, working_directory)
+            command = self._create_command(path, output_path, working_directory, config['n_cpu'])
             run_in_subprocess(command, working_directory)
 
             return self.parse(output_path)
