@@ -58,6 +58,8 @@ class GolangLint(BaseInspector):
             f'json:{output_path}',
             '-c',
             GOLANG_LINT_CONFIG_PATH,
+            '--go',
+            '1.18',
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
