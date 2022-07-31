@@ -168,7 +168,7 @@ class GolangLint(BaseInspector):
         if code in CODE_TO_ISSUE_TYPE:
             return CODE_TO_ISSUE_TYPE[code]
 
-        for code_prefix, issue_type in CODE_PREFIX_TO_ISSUE_TYPE:
+        for code_prefix, issue_type in CODE_PREFIX_TO_ISSUE_TYPE.items():
             if code.startswith(code_prefix):
                 return issue_type
 
