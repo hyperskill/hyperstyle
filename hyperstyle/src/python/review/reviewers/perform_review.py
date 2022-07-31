@@ -8,6 +8,7 @@ from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.reviewers.common import perform_language_review
+from hyperstyle.src.python.review.reviewers.go import perform_go_review
 from hyperstyle.src.python.review.reviewers.python import perform_python_review
 from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, explore_project
@@ -33,7 +34,7 @@ language_to_reviewer = {
     Language.JAVA: partial(perform_language_review, language=Language.JAVA),
     Language.KOTLIN: partial(perform_language_review, language=Language.KOTLIN),
     Language.JS: partial(perform_language_review, language=Language.JS),
-    Language.GO: partial(perform_language_review, language=Language.GO),
+    Language.GO: perform_go_review,
 }
 
 
