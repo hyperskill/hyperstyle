@@ -91,13 +91,26 @@ class GolangLint(BaseInspector):
         )
 
         issues = []
+        files_with_typecheck_issues = set()
         for issue_json_data in data['Issues']:
             origin_class = issue_json_data['FromLinter']
             description = issue_json_data['Text']
+            file_path = Path(issue_json_data['Pos']['Filename']).resolve()
 
-            # Skip typecheck errors, as they are related to syntax errors. Also, some inspections may show additional
-            # related information as a separate issue, so such issues are skipped.
-            if origin_class == 'typecheck' or '(related information)' in description:
+            # Skip 'typecheck' errors, as they are related to syntax errors.
+            if origin_class == 'typecheck':
+                # If we find 'typecheck' in the file for the first time, we should log an error message.
+                if file_path not in files_with_typecheck_issues:
+                    logger.error(
+                        f"{cls.inspector_type.value}: there is a syntax error in the file '{file_path}'. "
+                        f"Error message: {description}.",
+                    )
+                    files_with_typecheck_issues.add(file_path)
+
+                continue
+
+            # Some inspections may show additional related information as a separate issue, so such issues are skipped.
+            if '(related information)' in description:
                 continue
 
             # If the issue is from the metalinter, you need to extract
@@ -109,7 +122,7 @@ class GolangLint(BaseInspector):
                     origin_class += f'-{issue_code}'
 
             issue_data = IssueData.get_base_issue_data_dict(
-                file_path=Path(issue_json_data['Pos']['Filename']).resolve(),
+                file_path=file_path,
                 inspector_type=cls.inspector_type,
                 line_number=issue_json_data['Pos']['Line'],
                 column_number=issue_json_data['Pos']['Column'] if issue_json_data['Pos']['Column'] > 0 else 1,
