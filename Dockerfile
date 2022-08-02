@@ -1,16 +1,4 @@
-FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
-
-RUN apt -y update && apt -y upgrade
-
-# Install Curl and Unzip
-RUN apt -y install curl unzip
-
-# Install Golang
-RUN rm -rf /usr/local/go  \
-    && curl -sSLO https://go.dev/dl/go1.18.3.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go1.18.3.linux-amd64.tar.gz
-
-ENV PATH $PATH:/usr/local/go/bin
+FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
 
 RUN npm install eslint@7.5.0 -g \
     && eslint --init
@@ -35,10 +23,15 @@ ENV PMD_DIRECTORY  ${LINTERS_DIRECTORY}/pmd
 ENV GOLANG_LINT_VERSION  1.47.1
 ENV GOLANG_LINT_DIRECTORY  ${LINTERS_DIRECTORY}/golangci-lint
 
-RUN mkdir -p ${CHECKSTYLE_DIRECTORY}  \
-    && mkdir -p ${DETEKT_DIRECTORY}  \
-    && mkdir -p ${PMD_DIRECTORY}  \
-    && mkdir -p ${GOLANG_LINT_DIRECTORY}
+RUN mkdir -p ${CHECKSTYLE_DIRECTORY} &&  \
+    mkdir -p ${DETEKT_DIRECTORY} &&  \
+    mkdir -p ${PMD_DIRECTORY} &&  \
+    mkdir -p ${GOLANG_LINT_DIRECTORY}
+
+# Install Curl and Unzip
+RUN apt -y update &&  \
+    apt -y upgrade && \
+    apt -y install curl unzip
 
 # Install Detekt and Detekt-formatting
 RUN curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
