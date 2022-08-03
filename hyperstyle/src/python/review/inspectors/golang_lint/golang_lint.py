@@ -62,6 +62,7 @@ class GolangLint(BaseInspector):
             '1.18',
             '--concurrency',
             str(n_cpu),
+            '--allow-parallel-runners',
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
