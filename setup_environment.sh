@@ -105,7 +105,7 @@ echo
 
 echo "Installing Checkstyle ${CHECKSTYLE_VERSION} ..."
 if need_to_install_linter "Checkstyle" "${CHECKSTYLE_DIRECTORY}"; then
-  curl -SLO "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar" --output-dir "${CHECKSTYLE_DIRECTORY}"
+  curl -SL "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar" --output "${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar" --create-dirs
   check_return_code $? "Checkstyle ${CHECKSTYLE_VERSION} installed." "Checkstyle ${CHECKSTYLE_VERSION} installation failed."
 else
   echo "Checkstyle ${CHECKSTYLE_VERSION} installation skipped."
@@ -115,9 +115,9 @@ echo
 
 echo "Installing detekt ${DETEKT_VERSION} ..."
 if need_to_install_linter "detekt" "${DETEKT_DIRECTORY}"; then
-  curl -SLO "https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip" --output-dir "${DETEKT_DIRECTORY}" &&
+  curl -SL "https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip" --output "${DETEKT_DIRECTORY}/detekt-cli-${DETEKT_VERSION}.zip" --create-dirs &&
     unzip "${DETEKT_DIRECTORY}/detekt-cli-${DETEKT_VERSION}.zip" -d "${DETEKT_DIRECTORY}" &&
-    curl -H "Accept: application/zip" -SLO "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar" --output-dir "${DETEKT_DIRECTORY}"
+    curl -H "Accept: application/zip" -SL "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar" --output "${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar" --create-dirs
   check_return_code $? "Detekt ${DETEKT_VERSION} installed." "Detekt ${DETEKT_VERSION} installation failed."
 else
   echo "Detekt ${DETEKT_VERSION} installation skipped."
@@ -127,7 +127,7 @@ echo
 
 echo "Installing PMD ${PMD_VERSION} ..."
 if need_to_install_linter "PMD" "${PMD_DIRECTORY}"; then
-  curl -SLO "https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip" --output-dir "${PMD_DIRECTORY}" &&
+  curl -SL "https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip" --output "${PMD_DIRECTORY}/pmd-bin-${PMD_VERSION}.zip" --create-dirs &&
     unzip "${PMD_DIRECTORY}/pmd-bin-${PMD_VERSION}.zip" -d "${PMD_DIRECTORY}"
   check_return_code $? "PMD ${PMD_VERSION} installed." "PMD ${PMD_VERSION} installation failed."
 else
