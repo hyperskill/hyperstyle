@@ -93,7 +93,7 @@ linters-settings:
       - name: identical-branches
       - name: unexported-naming
   govet:
-    disable-all: false
+    disable-all: true
     enable:
       - atomic
       - bools
