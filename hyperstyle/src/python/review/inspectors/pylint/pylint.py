@@ -57,6 +57,14 @@ class PylintInspector(BaseInspector):
             description = groups[4]
             if origin_class == 'R0915':
                 description = add_complexity_tip(description)
+            elif origin_class == 'W1404':
+                description = 'Found implicit string concatenation. If you want to concatenate strings, use "+".'
+            elif origin_class == 'R1721':
+                description = (
+                    'Unnecessary use of a comprehension. Instead of using an identity comprehension, '
+                    'consider using the list, dict or set constructor. It is faster and simpler. '
+                    'For example, instead of {key: value for key, value in list_of_tuples} use dict(list_of_tuples).'
+                )
 
             issue_type = cls.choose_issue_type(groups[3])
             if issue_type not in cls.supported_issue_types:
