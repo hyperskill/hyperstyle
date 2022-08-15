@@ -155,3 +155,13 @@ xanchor
 xaxes
 yanchor
 yaxis
+chappie
+gryffindor
+ravenclaw
+slytherin
+hufflepuff
+inp
+treebank
+svd
+word2vec
+acc
