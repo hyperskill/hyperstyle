@@ -22,6 +22,7 @@ class Language(Enum):
             LanguageVersion.JAVA_9: Language.JAVA,
             LanguageVersion.JAVA_11: Language.JAVA,
             LanguageVersion.JAVA_15: Language.JAVA,
+            LanguageVersion.JAVA_17: Language.JAVA,
             LanguageVersion.PYTHON_3: Language.PYTHON,
             LanguageVersion.KOTLIN: Language.KOTLIN,
             LanguageVersion.JS: Language.JS,

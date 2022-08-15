@@ -27,6 +27,7 @@ class LanguageVersion(Enum):
     JAVA_9 = 'java9'
     JAVA_11 = 'java11'
     JAVA_15 = 'java15'
+    JAVA_17 = 'java17'
     PYTHON_3 = 'python3'
     KOTLIN = 'kotlin'
     JS = 'javascript'
@@ -43,6 +44,7 @@ class LanguageVersion(Enum):
             cls.JAVA_9: Extension.JAVA,
             cls.JAVA_11: Extension.JAVA,
             cls.JAVA_15: Extension.JAVA,
+            cls.JAVA_17: Extension.JAVA,
             cls.PYTHON_3: Extension.PY,
             cls.KOTLIN: Extension.KT,
             cls.JS: Extension.JS,
@@ -58,6 +60,7 @@ class LanguageVersion(Enum):
             or self == LanguageVersion.JAVA_9
             or self == LanguageVersion.JAVA_11
             or self == LanguageVersion.JAVA_15
+            or self == LanguageVersion.JAVA_17
         )
 
     @classmethod
