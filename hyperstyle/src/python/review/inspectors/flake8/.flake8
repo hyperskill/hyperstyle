@@ -55,6 +55,7 @@ ignore=W291,  # trailing whitespaces
        WPS430, # Forbid nested functions.
        WPS431, # Forbid nested classes.
        WPS435, # Forbid multiplying lists.
+       WPS442, # Forbid shadowing variables from outer scopes. Duplicates pylint's W0621
        WPS510, # Found `in` used with a non-set container
        # WPS: Refactoring
        WPS518, # Forbid implicit enumerate() calls. TODO: Collision with "C0200"
