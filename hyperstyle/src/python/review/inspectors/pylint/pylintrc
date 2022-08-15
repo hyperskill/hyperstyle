@@ -167,6 +167,7 @@ disable=invalid-name,
         W0614,
         W0622,
         W0511,
+        W0621,  # Duplicates flake8' WPS442
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
