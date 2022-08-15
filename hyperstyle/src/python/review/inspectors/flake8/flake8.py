@@ -107,6 +107,11 @@ class Flake8Inspector(BaseInspector):
                 # Bad assign pattern
                 elif origin_class == 'WPS350':
                     issue_data[IssueData.DESCRIPTION.value] = get_augmented_assign_pattern_tip()
+                elif origin_class == 'B007':
+                    issue_data[IssueData.DESCRIPTION.value] = (
+                        'Loop control variable not used within the loop body. '
+                        'If this is intended, replace it with an underscore.'
+                    )
                 else:
                     issue_data[IssueData.DESCRIPTION.value] = description
                 issues.append(CodeIssue(**issue_data))
