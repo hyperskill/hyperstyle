@@ -40,7 +40,7 @@ Python language (all versions can be found in the (requirements.txt)[requirement
 
 Java language:
 
-- [x]  PMD [BSD] (Version: 6.36.0)
+- [x]  PMD [BSD] (Version: 6.37.0)
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
