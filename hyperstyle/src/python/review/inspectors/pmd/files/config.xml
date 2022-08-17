@@ -36,6 +36,7 @@
     <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
     <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
+    <rule ref="category/java/bestpractices.xml/SimplifiableTestAssertion" />
     <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
     <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
     <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
@@ -106,7 +107,6 @@
     <rule ref="category/java/design.xml/GodClass"/>
     <rule ref="category/java/design.xml/LogicInversion"/>
     <rule ref="category/java/design.xml/SimplifiedTernary"/>
-    <rule ref="category/java/design.xml/SimplifyBooleanAssertion"/>
     <rule ref="category/java/design.xml/SimplifyBooleanExpressions"/>
     <rule ref="category/java/design.xml/SimplifyBooleanReturns"/>
     <rule ref="category/java/design.xml/SimplifyConditional"/>
@@ -171,16 +171,16 @@
     <rule ref="category/java/errorprone.xml/FinalizeOverloaded"/>
     <rule ref="category/java/errorprone.xml/FinalizeShouldBeProtected"/>
     <rule ref="category/java/errorprone.xml/IdempotentOperations"/>
+    <rule ref="category/java/errorprone.xml/ImplicitSwitchFallThrough" />
     <rule ref="category/java/errorprone.xml/InstantiationToGetClass"/>
     <rule ref="category/java/errorprone.xml/JumbledIncrementer"/>
     <rule ref="category/java/errorprone.xml/MethodWithSameNameAsEnclosingClass"/>
     <rule ref="category/java/errorprone.xml/MisplacedNullCheck"/>
-    <rule ref="category/java/errorprone.xml/MissingBreakInSwitch"/>
     <rule ref="category/java/errorprone.xml/MissingStaticMethodInNonInstantiatableClass"/>
     <rule ref="category/java/errorprone.xml/NonCaseLabelInSwitchStatement"/>
     <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode"/>
     <rule ref="category/java/errorprone.xml/ProperCloneImplementation"/>
-    <rule ref="category/java/errorprone.xml/ReturnEmptyArrayRatherThanNull"/>
+    <rule ref="category/java/errorprone.xml/ReturnEmptyCollectionRatherThanNull" />
     <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock"/>
     <rule ref="category/java/errorprone.xml/SimpleDateFormatNeedsLocale"/>
     <rule ref="category/java/errorprone.xml/SingleMethodSingleton"/>
@@ -214,7 +214,6 @@
     <rule ref="category/java/performance.xml/OptimizableToArrayCall"/>
     <rule ref="category/java/performance.xml/StringToString"/>
     <rule ref="category/java/performance.xml/TooFewBranchesForASwitchStatement"/>
-    <rule ref="category/java/performance.xml/UnnecessaryWrapperObjectCreation"/>
     <rule ref="category/java/performance.xml/UseArraysAsList"/>
     <rule ref="category/java/performance.xml/UselessStringValueOf"/>
     <rule ref="category/java/performance.xml/UseStringBufferLength"/>
