@@ -1,3 +1,4 @@
+acc
 aggfunc
 appendleft
 arange
@@ -15,6 +16,7 @@ calc
 capwords
 casefold
 caseless
+chappie
 concat
 config
 configs
@@ -54,14 +56,17 @@ gensim
 getchildren
 gmtime
 groupby
+gryffindor
 halfs
 hashable
 hline
 href
+hufflepuff
 hyp
 hyperskill
 iadd
 iloc
+inp
 inplace
 ints
 isalnum
@@ -111,6 +116,7 @@ pathlib
 popleft
 pos
 punct
+ravenclaw
 readline
 rfind
 rindex
@@ -119,6 +125,7 @@ schur
 scipy
 showline
 sigmoid
+slytherin
 sqrt
 src
 stdlib
@@ -129,6 +136,7 @@ subdir
 subdirs
 substr
 substring
+svd
 textposition
 textwrap
 throwable
@@ -139,6 +147,7 @@ tokenizer
 tolist
 toplevel
 tracklist
+treebank
 truediv
 truthy
 unary
@@ -150,6 +159,7 @@ utils
 vline
 webpage
 whitespaces
+word2vec
 writeback
 xanchor
 xaxes
