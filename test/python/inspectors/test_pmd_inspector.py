@@ -3,9 +3,10 @@ from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
 from typing import List
 
 import pytest
+from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
+from hyperstyle.src.python.review.inspectors.pmd.pmd import DEFAULT_JAVA_VERSION, PMDInspector
 
 from .conftest import use_file_metadata
 
@@ -90,42 +91,45 @@ def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
 
 
 FILE_NAMES_AND_N_ISSUES = [
-    ('test_algorithm_with_scanner.java', 0),
-    ('test_simple_valid_program.java', 0),
-    ('test_boolean_expr.java', 1),
-    ('test_class_with_booleans.java', 3),
-    ('test_closing_streams.java', 1),
-    ('test_code_with_comments.java', 0),
-    ('test_comparing_strings.java', 4),
-    ('test_constants.java', 4),
-    ('test_covariant_equals.java', 1),
-    ('test_curly_braces.java', 0),
-    ('test_double_checked_locking.java', 2),
-    ('test_for_loop.java', 2),
-    ('test_implementation_types.java', 0),
-    ('test_manual_array_copy.java', 1),
-    ('test_method_params.java', 2),
-    ('test_missing_default.java', 2),
-    ('test_multi_statements.java', 1),
-    ('test_reassigning_example.java', 2),
-    ('test_simple_valid_program.java', 0),
-    ('test_switch_statement.java', 5),
-    ('test_thread_run.java', 1),
-    ('test_unused_imports.java', 4),
-    ('test_valid_algorithm_1.java', 0),
-    ('test_valid_curly_braces.java', 0),
-    ('test_when_only_equals_overridden.java', 1),
-    ('test_valid_spaces.java', 0),
-    ('test_multiple_literals.java', 1),
+    ('test_algorithm_with_scanner.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_simple_valid_program.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_boolean_expr.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_class_with_booleans.java', 3, DEFAULT_JAVA_VERSION),
+    ('test_closing_streams.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_code_with_comments.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_comparing_strings.java', 4, DEFAULT_JAVA_VERSION),
+    ('test_constants.java', 4, DEFAULT_JAVA_VERSION),
+    ('test_covariant_equals.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_curly_braces.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_double_checked_locking.java', 2, DEFAULT_JAVA_VERSION),
+    ('test_for_loop.java', 2, DEFAULT_JAVA_VERSION),
+    ('test_implementation_types.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_manual_array_copy.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_method_params.java', 2, DEFAULT_JAVA_VERSION),
+    ('test_missing_default.java', 2, DEFAULT_JAVA_VERSION),
+    ('test_multi_statements.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_reassigning_example.java', 2, DEFAULT_JAVA_VERSION),
+    ('test_simple_valid_program.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_switch_statement.java', 5, DEFAULT_JAVA_VERSION),
+    ('test_thread_run.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_unused_imports.java', 4, DEFAULT_JAVA_VERSION),
+    ('test_valid_algorithm_1.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_valid_curly_braces.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_when_only_equals_overridden.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_valid_spaces.java', 0, DEFAULT_JAVA_VERSION),
+    ('test_multiple_literals.java', 1, DEFAULT_JAVA_VERSION),
+    ('test_pattern_matching.java', 1, LanguageVersion.JAVA_17),
+    ('test_records.java', 1, LanguageVersion.JAVA_17),
+    ('test_sealed_classes.java', 2, LanguageVersion.JAVA_17),
 ]
 
 
-@pytest.mark.parametrize(('file_name', 'n_issues'), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+@pytest.mark.parametrize(('file_name', 'n_issues', 'java_version'), FILE_NAMES_AND_N_ISSUES)
+def test_file_with_issues(file_name: str, n_issues: int, java_version: LanguageVersion):
     inspector = PMDInspector()
 
     path_to_file = JAVA_DATA_FOLDER / file_name
     with use_file_metadata(path_to_file) as file_metadata:
-        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1})
+        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1, 'language_version': java_version})
 
     assert len(issues) == n_issues
