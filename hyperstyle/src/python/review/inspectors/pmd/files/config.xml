@@ -36,7 +36,7 @@
     <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
     <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
-    <rule ref="category/java/bestpractices.xml/SimplifiableTestAssertion" />
+    <rule ref="category/java/bestpractices.xml/SimplifiableTestAssertion"/>
     <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
     <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
     <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
@@ -171,7 +171,7 @@
     <rule ref="category/java/errorprone.xml/FinalizeOverloaded"/>
     <rule ref="category/java/errorprone.xml/FinalizeShouldBeProtected"/>
     <rule ref="category/java/errorprone.xml/IdempotentOperations"/>
-    <rule ref="category/java/errorprone.xml/ImplicitSwitchFallThrough" />
+    <rule ref="category/java/errorprone.xml/ImplicitSwitchFallThrough"/>
     <rule ref="category/java/errorprone.xml/InstantiationToGetClass"/>
     <rule ref="category/java/errorprone.xml/JumbledIncrementer"/>
     <rule ref="category/java/errorprone.xml/MethodWithSameNameAsEnclosingClass"/>
@@ -180,7 +180,7 @@
     <rule ref="category/java/errorprone.xml/NonCaseLabelInSwitchStatement"/>
     <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode"/>
     <rule ref="category/java/errorprone.xml/ProperCloneImplementation"/>
-    <rule ref="category/java/errorprone.xml/ReturnEmptyCollectionRatherThanNull" />
+    <rule ref="category/java/errorprone.xml/ReturnEmptyCollectionRatherThanNull"/>
     <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock"/>
     <rule ref="category/java/errorprone.xml/SimpleDateFormatNeedsLocale"/>
     <rule ref="category/java/errorprone.xml/SingleMethodSingleton"/>
