@@ -1,4 +1,4 @@
-from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors import FLAKE_DATA_FOLDER, PYTHON_DATA_FOLDER
 from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 from textwrap import dedent
 
@@ -6,6 +6,12 @@ import pytest
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.tips import (
+    get_cohesion_tip,
+    get_cyclomatic_complexity_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+)
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAMES_AND_N_ISSUES = [
@@ -127,3 +133,42 @@ def test_choose_issue_type():
     issue_types = list(map(Flake8Inspector.choose_issue_type, error_codes))
 
     assert issue_types == expected_issue_types
+
+
+ISSUE_CONFIGS_TEST_DATA = [
+    ('WPS432', get_magic_number_tip(with_number_field=True).format(42)),
+    (
+        'WPS350',
+        'Found usable augmented assign pattern. You can use shorthand notation if the left and right '
+        'parts of the expression have the same variable, e.g. x = x + 2 is the same with x += 2.',
+    ),
+    (
+        'B007',
+        "Loop control variable 'i' not used within the loop body. If this is intended, replace it with an underscore.",
+    ),
+    (
+        'C901',
+        get_cyclomatic_complexity_tip().format(3),
+    ),
+    (
+        'H601',
+        get_cohesion_tip().format(0),
+    ),
+    (
+        'E501',
+        get_line_len_tip().format(121),
+    ),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_description'), ISSUE_CONFIGS_TEST_DATA)
+def test_issue_configs(origin_class: str, expected_description: str):
+    inspector = Flake8Inspector()
+
+    path_to_file = FLAKE_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.description == expected_description
