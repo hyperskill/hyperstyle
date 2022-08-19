@@ -332,7 +332,7 @@ ISSUE_TYPE_TO_CLASS = {
     IssueType.ERROR_PRONE: CodeIssue,
     IssueType.COMPLEXITY: CodeIssue,
     IssueType.INFO: CodeIssue,
-    #
+
     IssueType.LINE_LEN: LineLenIssue,
     IssueType.FUNC_LEN: FuncLenIssue,
     IssueType.BOOL_EXPR_LEN: BoolExprLenIssue,
