@@ -13,7 +13,7 @@ from hyperstyle.src.python.review.inspectors.tips import (
     get_magic_number_tip,
 )
 
-IssueConfigs = [
+ISSUE_CONFIGS = [
     IssueConfig(
         origin_class='WPS432',
         new_description=get_magic_number_tip(with_number_field=True),

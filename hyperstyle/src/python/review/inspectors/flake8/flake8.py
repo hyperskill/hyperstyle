@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.flake8.issue_configs import IssueConfigs
+from hyperstyle.src.python.review.inspectors.flake8.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
@@ -50,7 +50,7 @@ class Flake8Inspector(BaseInspector):
     @classmethod
     def parse(cls, output: str) -> List[BaseIssue]:
         row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
-        issues_handler = IssueConfigsHandler(*IssueConfigs)
+        issues_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(output):
