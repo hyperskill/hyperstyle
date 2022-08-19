@@ -264,13 +264,18 @@ def test_parse_measure(
 CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING = [
     IssueConfig(
         origin_class='I',
-        new_description='{0}',
+        new_description='There is only one field: {0}.',
         parser=IssueDescriptionParser(re.compile(r'This is an description')),
     ),
     IssueConfig(
         origin_class='J',
-        new_description='{0}',
+        new_description='There is only one field: {0}.',
         parser=IssueDescriptionParser(re.compile(r'Name: (.+), Age: (\d+)')),
+    ),
+    IssueConfig(
+        origin_class='K',
+        new_description='There are two fields: {0}, {1}.',
+        parser=IssueDescriptionParser(re.compile(r'Name: (.+)')),
     ),
 ]
 
@@ -287,7 +292,13 @@ GET_DESCRIPTION_TEST_DATA = [
     (CONFIGS, 'E', 'Metric: 42', 'This is a new dynamic description with a metric: 42.'),
     (CONFIGS, 'unknown_issue', 'This is an description.', 'This is an description.'),
     (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'I', 'This is an description.', 'This is an description.'),
-    (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'J', 'Name: Aboba, Age: 69', 'Aboba'),
+    (
+        CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING,
+        'J',
+        'Name: Aboba, Age: 69',
+        'There is only one field: Aboba.',
+    ),
+    (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'K', 'Name: Aboba', 'Name: Aboba'),
 ]
 
 
