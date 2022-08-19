@@ -1,5 +1,4 @@
 import pytest
-
 from hyperstyle.src.python.review.inspectors.common import is_fstring
 
 IS_FSTRING_TEST_DATA = [
@@ -8,10 +7,10 @@ IS_FSTRING_TEST_DATA = [
     ('{{}}', False),
     ('{{0}}', False),
     ('{{false}}', False),
-    ('{}', True),
+    ('{}', True),  # noqa: P103
     ('{2}', True),
     ('{abc}', True),
-    ('{} {{}} {0} {abc}', True),
+    ('{} {{}} {0} {abc}', True),  # noqa: P103
     ('This is a {f}-string!', True),
 ]
 
