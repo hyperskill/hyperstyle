@@ -1,4 +1,5 @@
 from math import floor
+from string import Formatter
 
 
 def convert_percentage_of_value_to_lack_of_value(percentage_of_value: float) -> int:
@@ -21,3 +22,13 @@ def remove_prefix(text: str, prefix: str) -> str:
     if text.startswith(prefix):
         return text[len(prefix):]
     return text
+
+
+def is_fstring(input_string: str) -> bool:
+    """
+    Check that the input string is a format string.
+
+    :param input_string: A string that needs to be checked whether it is a format string or not.
+    :return: Whether the input string is a format string or not.
+    """
+    return len([elem[1] for elem in Formatter().parse(input_string) if elem[1] is not None]) > 0
