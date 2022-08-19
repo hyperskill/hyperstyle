@@ -65,7 +65,7 @@ PARSE_TEST_DATA = [
     (MATCH_NAMED_AND_UNNAMED_GROUPS, float, '|1.2| (3.4) |5.6| {7.8} |9.0|', (1.2, 3.4, 5.6, 7.8, 9.0)),
     (MATCH_NAMED_AND_UNNAMED_GROUPS, float, '|1.2| (bc) |d| {ef} |g|', None),
     (MATCH_NAMED_AND_UNNAMED_GROUPS, {}, '|a| (bc) |d| {ef} |g|', ('bc', 'ef')),
-    (MATCH_NAMED_AND_UNNAMED_GROUPS, {'unknown_key': int}, '|a| (bc) |d| {ef} |g|', ('bc', 'ef')),
+    (MATCH_NAMED_AND_UNNAMED_GROUPS, {'unknown_name': int}, '|a| (bc) |d| {ef} |g|', ('bc', 'ef')),
     (MATCH_NAMED_AND_UNNAMED_GROUPS, {'parentheses_group': int}, '|a| (123) |d| {456} |g|', (123, '456')),
     (
         MATCH_NAMED_AND_UNNAMED_GROUPS,
@@ -279,7 +279,7 @@ GET_DESCRIPTION_TEST_DATA = [
     (CONFIGS, 'G', 'Metric: 42', 'This is a new static description.'),
     (CONFIGS, 'H', 'This is an description.', 'This is an description.'),
     (CONFIGS, 'H', 'Metric: 42', 'This is a new dynamic description with a metric: 42.'),
-    (CONFIGS, 'unknown_key', 'This is an description.', 'This is an description.'),
+    (CONFIGS, 'unknown_issue', 'This is an description.', 'This is an description.'),
 ]
 
 
