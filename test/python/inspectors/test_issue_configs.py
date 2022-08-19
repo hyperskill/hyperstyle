@@ -198,27 +198,14 @@ def test_parse_description(
     assert IssueConfigsHandler(*issue_configs)._parse_description(origin_class, description) == expected_tuple
 
 
-CONFIGS_WITH_BAD_MEASURE_POSITION = [
+CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION = [
     MeasurableIssueConfig(
-        origin_class='MIC-bad-default',
-        parser=IssueDescriptionParser(
-            regexp=re.compile(r"Metric: (\d+)"),
-            converter=int,
-        ),
-        measure_position=42,
+        origin_class='MIC-good-position',
+        parser=IssueDescriptionParser(re.compile(r"Name: (.+), Metric: (\d+)")),
+        measure_position=1,
     ),
     MeasurableIssueConfig(
-        origin_class='MIC-bad-static',
-        new_description='This is a new static description.',
-        parser=IssueDescriptionParser(
-            regexp=re.compile(r"Metric: (\d+)"),
-            converter=int,
-        ),
-        measure_position=42,
-    ),
-    MeasurableIssueConfig(
-        origin_class='MIC-bad-dynamic',
-        new_description='This is a new dynamic description with a metric: {0}.',
+        origin_class='MIC-bad-position',
         parser=IssueDescriptionParser(
             regexp=re.compile(r"Metric: (\d+)"),
             converter=int,
@@ -239,12 +226,10 @@ PARSE_MEASURE_TEST_DATA = [
     (CONFIGS, 'MIC-dynamic', 'This is an description.', None),
     (CONFIGS, 'MIC-dynamic', 'Metric: 42', 42),
     (CONFIGS, 'unknown_issue', 'This is an description.', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-default', 'This is an description.', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-default', 'Metric: 42', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-static', 'This is an description.', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-static', 'Metric: 42', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-dynamic', 'This is an description.', None),
-    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'MIC-bad-dynamic', 'Metric: 42', None),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'Name: Aboba, Metric: 42', '42'),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'This is an description.', None),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-bad-position', 'Metric: 42', None),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-bad-position', 'This is an description.', None),
 ]
 
 
