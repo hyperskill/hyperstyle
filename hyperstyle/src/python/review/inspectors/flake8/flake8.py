@@ -5,23 +5,19 @@ from typing import Any, Dict, List
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
+from hyperstyle.src.python.review.inspectors.flake8.issue_configs import IssueConfigs
 from hyperstyle.src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
-    CodeIssue,
-    CohesionIssue,
-    CyclomaticComplexityIssue,
+    get_issue_class_by_issue_type,
+    get_measure_name_by_measurable_issue_type,
     IssueData,
     IssueDifficulty,
     IssueType,
-    LineLenIssue,
+    Measurable,
 )
-from hyperstyle.src.python.review.inspectors.tips import (
-    get_augmented_assign_pattern_tip, get_cohesion_tip, get_cyclomatic_complexity_tip, get_line_len_tip,
-    get_magic_number_tip,
-)
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 
@@ -54,67 +50,38 @@ class Flake8Inspector(BaseInspector):
     @classmethod
     def parse(cls, output: str) -> List[BaseIssue]:
         row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
-        cc_description_re = re.compile(r"'(.+)' is too complex \((\d+)\)")
-        cohesion_description_re = re.compile(r"class has low \((\d*\.?\d*)%\) cohesion")
-        line_len_description_re = re.compile(r"line too long \((\d+) > \d+ characters\)")
+        issues_handler = IssueConfigsHandler(*IssueConfigs)
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(output):
-            description = groups[4]
             origin_class = groups[3]
-            cc_match = cc_description_re.match(description)
-            cohesion_match = cohesion_description_re.match(description)
-            line_len_match = line_len_description_re.match(description)
-            file_path = Path(groups[0])
-            line_no = int(groups[1])
+            description = groups[4]
 
-            column_number = int(groups[2]) if int(groups[2]) > 0 else 1
-            issue_data = IssueData.get_base_issue_data_dict(file_path,
-                                                            cls.inspector_type,
-                                                            line_number=line_no,
-                                                            column_number=column_number,
-                                                            origin_class=origin_class)
-            if cc_match is not None:  # mccabe: cyclomatic complexity
-                issue_type = IssueType.CYCLOMATIC_COMPLEXITY
-                issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
-                issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match.groups()[1])
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(CyclomaticComplexityIssue(**issue_data))
-            elif cohesion_match is not None:  # flake8-cohesion
-                issue_type = IssueType.COHESION
-                issue_data[IssueData.DESCRIPTION.value] = f'{get_cohesion_tip(f"{description.capitalize()}.")}'
-                issue_data[IssueData.COHESION_LACK.value] = convert_percentage_of_value_to_lack_of_value(
-                    float(cohesion_match.group(1)),
-                )
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(CohesionIssue(**issue_data))
-            elif line_len_match is not None:
-                issue_type = IssueType.LINE_LEN
-                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
-                issue_data[IssueData.LINE_LEN.value] = int(line_len_match.groups()[0])
-                issue_data[IssueData.ISSUE_TYPE.value] = IssueType.LINE_LEN
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(LineLenIssue(**issue_data))
-            else:
-                issue_type = cls.choose_issue_type(origin_class)
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                # Magic number
-                if origin_class == 'WPS432':
-                    issue_data[IssueData.DESCRIPTION.value] = get_magic_number_tip(description)
-                # Bad assign pattern
-                elif origin_class == 'WPS350':
-                    issue_data[IssueData.DESCRIPTION.value] = get_augmented_assign_pattern_tip()
-                elif origin_class == 'B007':
-                    issue_data[IssueData.DESCRIPTION.value] = (
-                        'Loop control variable not used within the loop body. '
-                        'If this is intended, replace it with an underscore.'
-                    )
-                else:
-                    issue_data[IssueData.DESCRIPTION.value] = description
-                issues.append(CodeIssue(**issue_data))
+            issue_data = IssueData.get_base_issue_data_dict(
+                Path(groups[0]),
+                cls.inspector_type,
+                line_number=int(groups[1]),
+                column_number=int(groups[2]) if int(groups[2]) > 0 else 1,
+                origin_class=origin_class,
+            )
+
+            issue_type = cls.choose_issue_type(origin_class)
+
+            issue_data[IssueData.ISSUE_TYPE.value] = issue_type
+            issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
+            issue_class = get_issue_class_by_issue_type(issue_type)
+
+            if issubclass(issue_class, Measurable):
+                measure = issues_handler.parse_measure(origin_class, description)
+                if measure is None:
+                    logger.error(f'{cls.inspector_type.value} - unable to parse measure.')
+                    continue
+
+                issue_data[get_measure_name_by_measurable_issue_type(issue_type)] = measure
+
+            issue_data[IssueData.DESCRIPTION.value] = issues_handler.get_description(origin_class, description)
+
+            issues.append(issue_class(**issue_data))
 
         return issues
 
