@@ -169,6 +169,36 @@ CONFIGS = [
             converter=int,
         ),
     ),
+]
+
+PARSE_DESCRIPTION_TEST_DATA = [
+    (CONFIGS, 'A', 'This is an description.', None),
+    (CONFIGS, 'B', 'This is an description.', None),
+    (CONFIGS, 'B', 'Name: abcdef', ('abcdef',)),
+    (CONFIGS, 'C', 'This is an description.', None),
+    (CONFIGS, 'C', 'Metric: 42', (42,)),
+    (CONFIGS, 'D', 'This is an description.', None),
+    (CONFIGS, 'D', 'Metric: 42', (42,)),
+    (CONFIGS, 'E', 'This is an description.', None),
+    (CONFIGS, 'E', 'Metric: 42', (42,)),
+    (CONFIGS, 'unknown_issue', 'This is an description.', None),
+]
+
+
+@pytest.mark.parametrize(
+    ('issue_configs', 'origin_class', 'description', 'expected_tuple'),
+    PARSE_DESCRIPTION_TEST_DATA,
+)
+def test_parse_description(
+    issue_configs: List[IssueConfig],
+    origin_class: str,
+    description: str,
+    expected_tuple: Optional[Tuple],
+):
+    assert IssueConfigsHandler(*issue_configs)._parse_description(origin_class, description) == expected_tuple
+
+
+CONFIGS_WITH_BAD_MEASURE_POSITION = [
     MeasurableIssueConfig(
         origin_class='F',
         parser=IssueDescriptionParser(
@@ -197,38 +227,6 @@ CONFIGS = [
     ),
 ]
 
-PARSE_DESCRIPTION_TEST_DATA = [
-    (CONFIGS, 'A', 'This is an description.', None),
-    (CONFIGS, 'B', 'This is an description.', None),
-    (CONFIGS, 'B', 'Name: abcdef', ('abcdef',)),
-    (CONFIGS, 'C', 'This is an description.', None),
-    (CONFIGS, 'C', 'Metric: 42', (42,)),
-    (CONFIGS, 'D', 'This is an description.', None),
-    (CONFIGS, 'D', 'Metric: 42', (42,)),
-    (CONFIGS, 'E', 'This is an description.', None),
-    (CONFIGS, 'E', 'Metric: 42', (42,)),
-    (CONFIGS, 'F', 'This is an description.', None),
-    (CONFIGS, 'F', 'Metric: 42', (42,)),
-    (CONFIGS, 'G', 'This is an description.', None),
-    (CONFIGS, 'G', 'Metric: 42', (42,)),
-    (CONFIGS, 'H', 'This is an description.', None),
-    (CONFIGS, 'H', 'Metric: 42', (42,)),
-    (CONFIGS, 'unknown_issue', 'This is an description.', None),
-]
-
-
-@pytest.mark.parametrize(
-    ('issue_configs', 'origin_class', 'description', 'expected_tuple'),
-    PARSE_DESCRIPTION_TEST_DATA,
-)
-def test_parse_description(
-    issue_configs: List[IssueConfig],
-    origin_class: str,
-    description: str,
-    expected_tuple: Optional[Tuple],
-):
-    assert IssueConfigsHandler(*issue_configs)._parse_description(origin_class, description) == expected_tuple
-
 
 PARSE_MEASURE_TEST_DATA = [
     (CONFIGS, 'A', 'This is an description.', None),
@@ -240,13 +238,13 @@ PARSE_MEASURE_TEST_DATA = [
     (CONFIGS, 'D', 'Metric: 42', 42),
     (CONFIGS, 'E', 'This is an description.', None),
     (CONFIGS, 'E', 'Metric: 42', 42),
-    (CONFIGS, 'F', 'This is an description.', None),
-    (CONFIGS, 'F', 'Metric: 42', None),
-    (CONFIGS, 'G', 'This is an description.', None),
-    (CONFIGS, 'G', 'Metric: 42', None),
-    (CONFIGS, 'H', 'This is an description.', None),
-    (CONFIGS, 'H', 'Metric: 42', None),
     (CONFIGS, 'unknown_issue', 'This is an description.', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'F', 'This is an description.', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'F', 'Metric: 42', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'G', 'This is an description.', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'G', 'Metric: 42', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'H', 'This is an description.', None),
+    (CONFIGS_WITH_BAD_MEASURE_POSITION, 'H', 'Metric: 42', None),
 ]
 
 
@@ -263,6 +261,20 @@ def test_parse_measure(
     assert IssueConfigsHandler(*issue_configs).parse_measure(origin_class, description) == expected_measure
 
 
+CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING = [
+    IssueConfig(
+        origin_class='I',
+        new_description='{0}',
+        parser=IssueDescriptionParser(re.compile(r'This is an description')),
+    ),
+    IssueConfig(
+        origin_class='J',
+        new_description='{0}',
+        parser=IssueDescriptionParser(re.compile(r'Name: (.+), Age: (\d+)')),
+    ),
+]
+
+
 GET_DESCRIPTION_TEST_DATA = [
     (CONFIGS, 'A', 'This is an description.', 'This is a new static description.'),
     (CONFIGS, 'B', 'This is an description.', 'This is an description.'),
@@ -273,13 +285,9 @@ GET_DESCRIPTION_TEST_DATA = [
     (CONFIGS, 'D', 'Metric: 42', 'This is a new static description.'),
     (CONFIGS, 'E', 'This is an description.', 'This is an description.'),
     (CONFIGS, 'E', 'Metric: 42', 'This is a new dynamic description with a metric: 42.'),
-    (CONFIGS, 'F', 'This is an description.', 'This is an description.'),
-    (CONFIGS, 'F', 'Metric: 42', 'Metric: 42'),
-    (CONFIGS, 'G', 'This is an description.', 'This is a new static description.'),
-    (CONFIGS, 'G', 'Metric: 42', 'This is a new static description.'),
-    (CONFIGS, 'H', 'This is an description.', 'This is an description.'),
-    (CONFIGS, 'H', 'Metric: 42', 'This is a new dynamic description with a metric: 42.'),
     (CONFIGS, 'unknown_issue', 'This is an description.', 'This is an description.'),
+    (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'I', 'This is an description.', 'This is an description.'),
+    (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'J', 'Name: Aboba, Age: 69', 'Aboba'),
 ]
 
 
