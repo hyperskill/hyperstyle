@@ -3,7 +3,11 @@ from typing import Dict
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
-    'E800': IssueType.BEST_PRACTICES,  # flake8-eradicate
+    # Line length
+    'E501': IssueType.LINE_LEN,
+
+    # flake8-eradicate
+    'E800': IssueType.BEST_PRACTICES,
 
     # flake8-bugbear
     'B001': IssueType.BEST_PRACTICES,  # do not use bare except
@@ -26,6 +30,12 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'C816': IssueType.CODE_STYLE,
     'C818': IssueType.CODE_STYLE,
     'C819': IssueType.CODE_STYLE,
+
+    # Cyclomatic complexity
+    'C901': IssueType.CYCLOMATIC_COMPLEXITY,
+
+    # Cohesion
+    'H601': IssueType.COHESION,
 
     # The categorization for WPS was created using the following document: https://bit.ly/3yms06n
 
