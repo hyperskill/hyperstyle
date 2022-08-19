@@ -63,7 +63,7 @@ def __parse_measurable_issue(issue_data: Dict[str, Any], issue_type: IssueType,
 
     if issue_type == IssueType.CYCLOMATIC_COMPLEXITY:
         issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
+        issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip().format(measure_value)
         return CyclomaticComplexityIssue(**issue_data)
     elif issue_type == IssueType.FUNC_LEN:
         issue_data[IssueData.FUNCTION_LEN.value] = measure_value
@@ -75,7 +75,7 @@ def __parse_measurable_issue(issue_data: Dict[str, Any], issue_type: IssueType,
         return BoolExprLenIssue(**issue_data)
     elif issue_type == IssueType.LINE_LEN:
         issue_data[IssueData.LINE_LEN.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
+        issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip().format(measure_value)
         return LineLenIssue(**issue_data)
     return None
 

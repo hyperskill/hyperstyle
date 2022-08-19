@@ -67,7 +67,7 @@ FILE_NAME_AND_ISSUES = [
             ),
             CyclomaticComplexityIssue(
                 origin_class='CyclomaticComplexityCheck', type=IssueType.CYCLOMATIC_COMPLEXITY,
-                description=get_cyclomatic_complexity_tip(),
+                description=get_cyclomatic_complexity_tip().format(69),
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=5, column_no=5, inspector_type=InspectorType.CHECKSTYLE,
                 cc_value=69, difficulty=IssueDifficulty.HARD,
@@ -133,7 +133,7 @@ FILE_NAME_AND_ISSUES = [
             ),
             LineLenIssue(
                 origin_class='LineLengthCheck', type=IssueType.LINE_LEN,
-                description=get_line_len_tip(),
+                description=get_line_len_tip().format(228),
                 file_path=Path('/home/user/Desktop/some_project/main2.java'),
                 line_no=62, column_no=1, inspector_type=InspectorType.CHECKSTYLE, line_len=228,
                 difficulty=IssueDifficulty.EASY,
