@@ -290,5 +290,5 @@ def test_choose_issue_type():
         IssueType.BEST_PRACTICES,
     ]
 
-    issue_types = set(map(GolangLintInspector.choose_issue_type, error_codes))
+    issue_types = list(map(GolangLintInspector.choose_issue_type, error_codes))
     assert issue_types == expected_issue_types
