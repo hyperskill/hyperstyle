@@ -1,0 +1,544 @@
+{
+  "Issues": [
+    {
+      "FromLinter": "deadcode",
+      "Text": "`hypotenuse` is unused",
+      "Severity": "",
+      "SourceLines": [
+        "func hypotenuse(a int, b int) float64 {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/b.go",
+        "Offset": 39,
+        "Line": 7,
+        "Column": 6
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "funlen",
+      "Text": "Function 'hello' is too long (6 \u003e 1)",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 0,
+        "Line": 5,
+        "Column": 0
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "funlen",
+      "Text": "Function 'main' is too long (3 \u003e 1)",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 0,
+        "Line": 14,
+        "Column": 0
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "revive",
+      "Text": "indent-error-flow: if block ends with a return statement, so drop this else and outdent its block",
+      "Severity": "",
+      "SourceLines": [
+        "\t} else {",
+        "\t\treturn \"Hello, non-Jerry!\"",
+        "\t}"
+      ],
+      "Replacement": null,
+      "LineRange": {
+        "From": 8,
+        "To": 10
+      },
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 116,
+        "Line": 8,
+        "Column": 9
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "cyclop",
+      "Text": "calculated cyclomatic complexity for function hello is 2, max is -1",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 28,
+        "Line": 5,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "cyclop",
+      "Text": "calculated cyclomatic complexity for function main is 1, max is -1",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 170,
+        "Line": 14,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "cyclop",
+      "Text": "calculated cyclomatic complexity for function hypotenuse is 1, max is -1",
+      "Severity": "",
+      "SourceLines": [
+        "func hypotenuse(a int, b int) float64 {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/b.go",
+        "Offset": 34,
+        "Line": 7,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "unreachable: unreachable code",
+      "Severity": "",
+      "SourceLines": [
+        "\treturn \"Hello?\""
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 151,
+        "Line": 11,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "maintidx",
+      "Text": "Function name: hello, Cyclomatic Complexity: 2, Halstead Volume: 76.15, Maintainability Index: 66",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 28,
+        "Line": 5,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "maintidx",
+      "Text": "Function name: main, Cyclomatic Complexity: 1, Halstead Volume: 58.81, Maintainability Index: 72",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 170,
+        "Line": 14,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "maintidx",
+      "Text": "Function name: hypotenuse, Cyclomatic Complexity: 1, Halstead Volume: 106.61, Maintainability Index: 75",
+      "Severity": "",
+      "SourceLines": [
+        "func hypotenuse(a int, b int) float64 {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/b.go",
+        "Offset": 34,
+        "Line": 7,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "stylecheck",
+      "Text": "ST1017: don't use Yoda conditions",
+      "Severity": "",
+      "SourceLines": [
+        "\tif \"Jerry\" == name {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 65,
+        "Line": 6,
+        "Column": 5
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    }
+  ],
+  "Report": {
+    "Linters": [
+      {
+        "Name": "asasalint"
+      },
+      {
+        "Name": "asciicheck",
+        "Enabled": true
+      },
+      {
+        "Name": "bidichk"
+      },
+      {
+        "Name": "bodyclose",
+        "Enabled": true
+      },
+      {
+        "Name": "containedctx"
+      },
+      {
+        "Name": "contextcheck"
+      },
+      {
+        "Name": "cyclop",
+        "Enabled": true
+      },
+      {
+        "Name": "decorder"
+      },
+      {
+        "Name": "deadcode",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "depguard"
+      },
+      {
+        "Name": "dogsled",
+        "Enabled": true
+      },
+      {
+        "Name": "dupl"
+      },
+      {
+        "Name": "durationcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "errcheck",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "errchkjson"
+      },
+      {
+        "Name": "errname",
+        "Enabled": true
+      },
+      {
+        "Name": "errorlint",
+        "Enabled": true
+      },
+      {
+        "Name": "execinquery",
+        "Enabled": true
+      },
+      {
+        "Name": "exhaustive",
+        "Enabled": true
+      },
+      {
+        "Name": "exhaustivestruct"
+      },
+      {
+        "Name": "exhaustruct"
+      },
+      {
+        "Name": "exportloopref"
+      },
+      {
+        "Name": "forbidigo"
+      },
+      {
+        "Name": "forcetypeassert"
+      },
+      {
+        "Name": "funlen",
+        "Enabled": true
+      },
+      {
+        "Name": "gci"
+      },
+      {
+        "Name": "gochecknoglobals",
+        "Enabled": true
+      },
+      {
+        "Name": "gochecknoinits"
+      },
+      {
+        "Name": "gocognit",
+        "Enabled": true
+      },
+      {
+        "Name": "goconst",
+        "Enabled": true
+      },
+      {
+        "Name": "gocritic",
+        "Enabled": true
+      },
+      {
+        "Name": "gocyclo"
+      },
+      {
+        "Name": "godot"
+      },
+      {
+        "Name": "godox"
+      },
+      {
+        "Name": "goerr113"
+      },
+      {
+        "Name": "gofmt"
+      },
+      {
+        "Name": "gofumpt"
+      },
+      {
+        "Name": "goheader"
+      },
+      {
+        "Name": "goimports"
+      },
+      {
+        "Name": "golint"
+      },
+      {
+        "Name": "gomnd",
+        "Enabled": true
+      },
+      {
+        "Name": "gomoddirectives"
+      },
+      {
+        "Name": "gomodguard"
+      },
+      {
+        "Name": "goprintffuncname"
+      },
+      {
+        "Name": "gosec"
+      },
+      {
+        "Name": "gosimple",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "govet",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "grouper"
+      },
+      {
+        "Name": "ifshort"
+      },
+      {
+        "Name": "importas"
+      },
+      {
+        "Name": "ineffassign",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "interfacer"
+      },
+      {
+        "Name": "ireturn"
+      },
+      {
+        "Name": "lll",
+        "Enabled": true
+      },
+      {
+        "Name": "maintidx",
+        "Enabled": true
+      },
+      {
+        "Name": "makezero"
+      },
+      {
+        "Name": "maligned"
+      },
+      {
+        "Name": "misspell",
+        "Enabled": true
+      },
+      {
+        "Name": "nakedret"
+      },
+      {
+        "Name": "nestif"
+      },
+      {
+        "Name": "nilerr",
+        "Enabled": true
+      },
+      {
+        "Name": "nilnil"
+      },
+      {
+        "Name": "nlreturn"
+      },
+      {
+        "Name": "noctx"
+      },
+      {
+        "Name": "nonamedreturns"
+      },
+      {
+        "Name": "nosnakecase"
+      },
+      {
+        "Name": "nosprintfhostport"
+      },
+      {
+        "Name": "paralleltest"
+      },
+      {
+        "Name": "prealloc"
+      },
+      {
+        "Name": "predeclared",
+        "Enabled": true
+      },
+      {
+        "Name": "promlinter"
+      },
+      {
+        "Name": "revive",
+        "Enabled": true
+      },
+      {
+        "Name": "rowserrcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "scopelint"
+      },
+      {
+        "Name": "sqlclosecheck",
+        "Enabled": true
+      },
+      {
+        "Name": "staticcheck",
+        "Enabled": true,
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "structcheck",
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "stylecheck",
+        "Enabled": true
+      },
+      {
+        "Name": "tagliatelle"
+      },
+      {
+        "Name": "tenv"
+      },
+      {
+        "Name": "testpackage"
+      },
+      {
+        "Name": "thelper"
+      },
+      {
+        "Name": "tparallel"
+      },
+      {
+        "Name": "typecheck",
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "unconvert",
+        "Enabled": true
+      },
+      {
+        "Name": "unparam",
+        "Enabled": true
+      },
+      {
+        "Name": "unused",
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "varcheck",
+        "EnabledByDefault": true
+      },
+      {
+        "Name": "varnamelen",
+        "Enabled": true
+      },
+      {
+        "Name": "wastedassign"
+      },
+      {
+        "Name": "whitespace",
+        "Enabled": true
+      },
+      {
+        "Name": "wrapcheck"
+      },
+      {
+        "Name": "wsl"
+      },
+      {
+        "Name": "nolintlint"
+      }
+    ]
+  }
+}

@@ -65,3 +65,20 @@ def test_all_java_inspectors(local_command: LocalCommandBuilder):
     assert process.returncode == 1
     assert 'First.java' in output
     assert 'Second.java' in output
+
+
+def test_go(local_command: LocalCommandBuilder):
+    file_path = DATA_PATH / 'different_languages' / 'go'
+
+    local_command.path = file_path
+    local_command.disable = []
+    process = subprocess.run(
+        local_command.build(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    output = process.stdout.decode()
+
+    assert process.returncode == 1
+    assert 'a.go' in output
+    assert 'b.go' in output
