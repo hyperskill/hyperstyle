@@ -8,7 +8,7 @@ from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import Checks
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLint
+from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
 from hyperstyle.src.python.review.inspectors.pyast.python_ast import PythonAstInspector
@@ -44,7 +44,7 @@ LANGUAGE_TO_INSPECTORS = {
         ESLintInspector(),
     ],
     Language.GO: [
-        GolangLint(),
+        GolangLintInspector(),
     ],
 }
 
