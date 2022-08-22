@@ -1,4 +1,11 @@
+import logging
 from math import floor
+from pathlib import Path
+
+from hyperstyle.src.python.review.common.file_system import get_content_from_file
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+
+logger = logging.getLogger(__name__)
 
 
 def convert_percentage_of_value_to_lack_of_value(percentage_of_value: float) -> int:
@@ -21,3 +28,19 @@ def remove_prefix(text: str, prefix: str) -> str:
     if text.startswith(prefix):
         return text[len(prefix):]
     return text
+
+
+def is_result_file_correct(file_path: Path, inspector_type: InspectorType) -> bool:
+    """
+    Check if the result of the inspectors is correct: it exists and it is not empty.
+    """
+    if not file_path.is_file():
+        logger.error(f'{inspector_type.value}: error - no output file')
+        return False
+
+    file_content = get_content_from_file(file_path)
+    if not file_content:
+        logger.error(f'{inspector_type.value}: error - empty file')
+        return False
+
+    return True
