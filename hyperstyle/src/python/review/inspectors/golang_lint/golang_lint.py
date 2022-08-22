@@ -8,7 +8,10 @@ from typing import Any, Dict, List
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common import convert_percentage_of_value_to_lack_of_value
+from hyperstyle.src.python.review.inspectors.common import (
+    convert_percentage_of_value_to_lack_of_value,
+    is_result_file_correct,
+)
 from hyperstyle.src.python.review.inspectors.golang_lint.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
@@ -39,7 +42,7 @@ GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / 'config.yml'
 logger = logging.getLogger(__name__)
 
 
-class GolangLint(BaseInspector):
+class GolangLintInspector(BaseInspector):
     inspector_type = InspectorType.GOLANG_LINT
 
     @classmethod
@@ -80,10 +83,13 @@ class GolangLint(BaseInspector):
 
     @classmethod
     def parse(cls, output_path: Path) -> List[BaseIssue]:
+        if not is_result_file_correct(output_path, cls.inspector_type):
+            return []
+
         with open(output_path) as file:
             data = json.load(file)
 
-        description_re = re.compile(r'^([A-Za-z\-]+\d*):(.*)$')
+        description_re = re.compile(r'^([A-Za-z\-]+\d*): (.*)$')
         cc_description_re = re.compile(r'^calculated cyclomatic complexity for function .* is (\d+), max is -1$')
         func_len_description_re = re.compile(r"^Function '.*' is too long \((\d+) > 1\)$")
         line_len_description_re = re.compile(r'^line is (\d+) characters$')
@@ -114,12 +120,13 @@ class GolangLint(BaseInspector):
             if '(related information)' in description:
                 continue
 
-            # If the issue is from the metalinter, you need to extract
+            # If the issue is from the metalinter, we need to extract
             # the issue code from the description and add it to origin_class.
             if origin_class in {'govet', 'revive', 'gocritic', 'gosimple', 'staticcheck', 'stylecheck'}:
                 matches = description_re.findall(description)
                 if matches:
                     issue_code, description = matches[0]
+                    description = description[:1].upper() + description[1:]
                     origin_class += f'-{issue_code}'
 
             issue_data = IssueData.get_base_issue_data_dict(
