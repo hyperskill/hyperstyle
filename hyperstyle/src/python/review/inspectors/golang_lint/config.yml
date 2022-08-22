@@ -23,7 +23,6 @@ linters:
     - errorlint
     - execinquery
     - exhaustive
-    - exhaustruct
     - funlen
     - gochecknoglobals
     - gocognit
@@ -33,7 +32,6 @@ linters:
     - maintidx
     - misspell
     - nilerr
-    - nonamedreturns
     - predeclared
     - rowserrcheck
     - sqlclosecheck
@@ -52,6 +50,22 @@ linters:
     - stylecheck
 
 linters-settings:
+  gomnd:
+    ignored-numbers:
+      - "-1"
+      - "2"
+      - "10"
+    ignored-functions:
+      - "time.Sleep"
+  varnamelen:
+    max-distance: 10
+    min-name-length: 3
+    ignore-decls:
+      - c echo.Context
+      - t testing.T
+      - i int
+      - T any
+      - m map[string]int
   errcheck:
     check-type-assertions: true
     check-blank: true

@@ -25,12 +25,23 @@ common_maintainability_rule_config = MaintainabilityRuleConfig(
     maintainability_lack_bad=90,
 )
 
+
+# The boundaries are the same as in the common config,
+# but the boundary for the GOOD grade has been raised from 50 to 70,
+# because in Go the maintainability index is calculated differently.
+go_maintainability_rule_config = MaintainabilityRuleConfig(
+    maintainability_lack_good=70,
+    maintainability_lack_moderate=80,
+    maintainability_lack_bad=90,
+)
+
+
 LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG = {
     Language.JAVA: common_maintainability_rule_config,
     Language.PYTHON: common_maintainability_rule_config,
     Language.KOTLIN: common_maintainability_rule_config,
     Language.JS: common_maintainability_rule_config,
-    Language.GO: common_maintainability_rule_config,
+    Language.GO: go_maintainability_rule_config,
 }
 
 
