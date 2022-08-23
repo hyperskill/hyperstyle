@@ -36,7 +36,6 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'gci': IssueType.CODE_STYLE,
     'gochecknoglobals': IssueType.BEST_PRACTICES,
     # 'gochecknoinits': IssueType.BEST_PRACTICES,
-    'gocognit': IssueType.COMPLEXITY,
     'goconst': IssueType.COMPLEXITY,
     # 'gocyclo': IssueType.CYCLOMATIC_COMPLEXITY,
     # 'godot': IssueType.CODE_STYLE,

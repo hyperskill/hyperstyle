@@ -25,7 +25,6 @@ linters:
     - exhaustive
     - funlen
     - gochecknoglobals
-    - gocognit
     - goconst
     - gomnd
     - lll  # Metric: LINE_LEN
