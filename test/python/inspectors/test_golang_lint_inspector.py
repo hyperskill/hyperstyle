@@ -1,6 +1,6 @@
 from pathlib import Path
 from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
-from test.python.inspectors.conftest import IssuesTestInfo, gather_issues_test_info, use_file_metadata
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 from typing import List
 
 import pytest
