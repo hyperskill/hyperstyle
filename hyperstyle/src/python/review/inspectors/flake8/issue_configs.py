@@ -7,6 +7,7 @@ from hyperstyle.src.python.review.inspectors.issue_configs import (
     MeasurableIssueConfig,
 )
 from hyperstyle.src.python.review.inspectors.tips import (
+    get_augmented_assign_pattern_tip,
     get_cohesion_tip,
     get_cyclomatic_complexity_tip,
     get_line_len_tip,
@@ -21,10 +22,7 @@ ISSUE_CONFIGS = [
     ),
     IssueConfig(
         origin_class='WPS350',
-        new_description=(
-            'Found usable augmented assign pattern. You can use shorthand notation if the left and right parts of '
-            'the expression have the same variable, e.g. x = x + 2 is the same with x += 2.'
-        ),
+        new_description=get_augmented_assign_pattern_tip(),
     ),
     IssueConfig(
         origin_class='B007',

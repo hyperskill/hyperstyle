@@ -7,6 +7,7 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.inspectors.tips import (
+    get_augmented_assign_pattern_tip,
     get_cohesion_tip,
     get_cyclomatic_complexity_tip,
     get_line_len_tip,
@@ -137,11 +138,7 @@ def test_choose_issue_type():
 
 ISSUE_CONFIGS_TEST_DATA = [
     ('WPS432', get_magic_number_tip(with_number_field=True).format(42)),
-    (
-        'WPS350',
-        'Found usable augmented assign pattern. You can use shorthand notation if the left and right '
-        'parts of the expression have the same variable, e.g. x = x + 2 is the same with x += 2.',
-    ),
+    ('WPS350', get_augmented_assign_pattern_tip()),
     (
         'B007',
         "Loop control variable 'i' not used within the loop body. If this is intended, replace it with an underscore.",
