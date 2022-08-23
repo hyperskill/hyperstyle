@@ -1,8 +1,10 @@
 from pathlib import Path
-from test.python.inspectors import GOLANG_LINT_FOLDER
+from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 from typing import List
 
 import pytest
+from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
@@ -18,6 +20,37 @@ from hyperstyle.src.python.review.inspectors.tips import (
     get_func_len_tip,
     get_maintainability_index_tip,
 )
+from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+
+
+FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
+    ('case0_empty.go', 0),
+    ('case1_simple_valid_program.go', 0),
+    ('case2_program_with_syntax_errors.go', 0),
+    ('case3_issues_with_related_information.go', 1),
+    ('case4_cyclomatic_complexity.go', 1),
+    ('case5_function_length.go', 1),
+    ('case6_line_length.go', 1),
+    ('case7_maintainability.go', 3),
+    ('case8_govet_issues.go', 3),
+    ('case9_revive_issues.go', 3),
+    ('case10_gocritic_issues.go', 3),
+    ('case11_gosimple_issues.go', 3),
+    ('case12_stylecheck_issues.go', 2),
+    ('case13_staticcheck_issues.go', 3),
+]
+
+
+@pytest.mark.parametrize(('file_name', 'n_issues'), FILE_WITH_ISSUE_NUMBER_TEST_DATA)
+def test_file_with_issues(file_name: str, n_issues: int):
+    inspector = GolangLintInspector()
+
+    path_to_file = GO_DATA_FOLDER / file_name
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1})
+        issues = list(filter(lambda i: i.type != IssueType.INFO, filter_low_measure_issues(issues, Language.GO)))
+
+        assert len(issues) == n_issues
 
 
 OUTPUT_PARSING_TEST_DATA = [
