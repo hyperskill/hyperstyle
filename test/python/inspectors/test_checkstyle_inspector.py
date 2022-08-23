@@ -228,19 +228,19 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
      IssuesTestInfo(n_best_practices=5, n_func_len=1, n_cc=1)),
 
     ('test_switch_statement.java',
-     IssuesTestInfo(n_best_practices=1, n_error_prone=2, n_func_len=5, n_cc=5)),
+     IssuesTestInfo(n_best_practices=1, n_error_prone=2, n_func_len=5, n_cc=5, n_info=13)),
 
     ('test_boolean_expr.java',
-     IssuesTestInfo(n_best_practices=2, n_func_len=3, n_cc=3, n_bool_expr_len=4)),
+     IssuesTestInfo(n_best_practices=2, n_func_len=3, n_cc=3, n_bool_expr_len=4, n_info=1)),
 
     ('test_too_long_method.java',
-     IssuesTestInfo(n_func_len=3, n_cc=3)),
+     IssuesTestInfo(n_func_len=3, n_cc=3, n_info=3)),
 
     ('test_cyclomatic_complexity.java',
-     IssuesTestInfo(n_func_len=5, n_cc=5, n_bool_expr_len=1)),
+     IssuesTestInfo(n_func_len=5, n_cc=5, n_bool_expr_len=1, n_info=8)),
 
     ('test_cyclomatic_complexity_bad.java',
-     IssuesTestInfo(n_func_len=6, n_cc=6, n_bool_expr_len=9)),
+     IssuesTestInfo(n_func_len=6, n_cc=6, n_bool_expr_len=9, n_info=21)),
 ]
 
 
