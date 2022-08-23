@@ -123,26 +123,10 @@ class IssueConfigsHandler:
     It accepts error configs, turns them into dictionaries and handles requests for measures and descriptions.
     """
 
-    origin_class_to_new_description: Dict[str, str]
-    origin_class_to_parser: Dict[str, Callable]
-    origin_class_to_measure_position: Dict[str, int]
+    origin_class_to_config: Dict[str, IssueConfig]
 
     def __init__(self, *issue_configs: IssueConfig):
-        self.origin_class_to_new_description = {
-            issue_config.origin_class: issue_config.new_description
-            for issue_config in issue_configs
-            if issue_config.new_description is not None
-        }
-        self.origin_class_to_parser = {
-            issue_config.origin_class: issue_config.parser.parse
-            for issue_config in issue_configs
-            if issue_config.parser is not None
-        }
-        self.origin_class_to_measure_position = {
-            issue_config.origin_class: issue_config.measure_position
-            for issue_config in issue_configs
-            if isinstance(issue_config, MeasurableIssueConfig)
-        }
+        self.origin_class_to_config = {issue_config.origin_class: issue_config for issue_config in issue_configs}
 
     def _parse_description(self, origin_class: str, description: str) -> Optional[Tuple]:
         """
@@ -153,12 +137,14 @@ class IssueConfigsHandler:
         :return: A tuple of groups that were parsed from the description with the issue parser. If there is an error
         during parsing, None will be returned.
         """
-        parser = self.origin_class_to_parser.get(origin_class)
+        config = self.origin_class_to_config.get(origin_class)
+        parser = config.parser if config is not None else None
+
         if parser is None:
             logger.error(f'{origin_class}: The parser is undefined.')
             return None
 
-        args = parser(description)
+        args = parser.parse(description)
         if args is None:
             logger.error(f'{origin_class}: Unable to parse description.')
             return None
@@ -178,7 +164,9 @@ class IssueConfigsHandler:
         if args is None:
             return None
 
-        measure_position = self.origin_class_to_measure_position.get(origin_class)
+        config = self.origin_class_to_config.get(origin_class)
+        measure_position = config.measure_position if isinstance(config, MeasurableIssueConfig) else None
+
         if measure_position is None:
             logger.error(f'{origin_class}: The position of measure is undefined.')
             return None
@@ -203,7 +191,9 @@ class IssueConfigsHandler:
         :param description: An issue description.
         :return: An issue description.
         """
-        new_description = self.origin_class_to_new_description.get(origin_class)
+        config = self.origin_class_to_config.get(origin_class)
+        new_description = config.new_description if config is not None else None
+
         if new_description is None:
             return description
 
