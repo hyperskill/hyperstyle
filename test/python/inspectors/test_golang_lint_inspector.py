@@ -1,6 +1,6 @@
 from pathlib import Path
 from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
+from test.python.inspectors.conftest import IssuesTestInfo, gather_issues_test_info, use_file_metadata
 from typing import List
 
 import pytest
@@ -22,7 +22,6 @@ from hyperstyle.src.python.review.inspectors.tips import (
 )
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
-
 FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ('case0_empty.go', 0),
     ('case1_simple_valid_program.go', 0),
@@ -38,6 +37,10 @@ FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ('case11_gosimple_issues.go', 3),
     ('case12_stylecheck_issues.go', 2),
     ('case13_staticcheck_issues.go', 3),
+    ('case14_whitespace.go', 4),
+    ('case15_deadcode.go', 3),
+    ('case16_errcheck.go', 11),
+    ('case17_magic_numbers.go', 0),  # 0 because all INFO issues have been filtered out
 ]
 
 
@@ -51,6 +54,55 @@ def test_file_with_issues(file_name: str, n_issues: int):
         issues = list(filter(lambda i: i.type != IssueType.INFO, filter_low_measure_issues(issues, Language.GO)))
 
         assert len(issues) == n_issues
+
+
+FILE_WITH_ISSUE_INFO_TEST_DATA = [
+    ('case0_empty.go', IssuesTestInfo()),
+    ('case1_simple_valid_program.go', IssuesTestInfo(n_cc=1, n_maintainability=1)),
+    ('case2_program_with_syntax_errors.go', IssuesTestInfo()),
+    (
+        'case3_issues_with_related_information.go',
+        IssuesTestInfo(n_cc=2, n_maintainability=2, n_error_prone=1, n_func_len=1),
+    ),
+    ('case4_cyclomatic_complexity.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_info=3)),
+    ('case5_function_length.go', IssuesTestInfo(n_func_len=1, n_cc=2, n_maintainability=2, n_info=96)),
+    ('case6_line_length.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_line_len=1)),
+    ('case7_maintainability.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1)),
+    ('case8_govet_issues.go', IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_error_prone=3)),
+    (
+        'case9_revive_issues.go',
+        IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_code_style=1, n_best_practices=1, n_error_prone=1),
+    ),
+    ('case10_gocritic_issues.go', IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_best_practices=3)),
+    (
+        'case11_gosimple_issues.go',
+        IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_code_style=1, n_best_practices=2),
+    ),
+    (
+        'case12_stylecheck_issues.go',
+        IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_code_style=2),
+    ),
+    ('case13_staticcheck_issues.go', IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_error_prone=3)),
+    ('case14_whitespace.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=2, n_code_style=4)),
+    (
+        'case15_deadcode.go',
+        IssuesTestInfo(n_cc=3, n_maintainability=3, n_func_len=1, n_error_prone=2, n_best_practices=1),
+    ),
+    ('case16_errcheck.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_error_prone=11)),
+    ('case17_magic_numbers.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_info=2)),
+]
+
+
+@pytest.mark.parametrize(('file_name', 'expected_issues_info'), FILE_WITH_ISSUE_INFO_TEST_DATA)
+def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo):
+    inspector = GolangLintInspector()
+
+    path_to_file = GO_DATA_FOLDER / file_name
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1})
+
+    issues_info = gather_issues_test_info(issues)
+    assert issues_info == expected_issues_info
 
 
 OUTPUT_PARSING_TEST_DATA = [
