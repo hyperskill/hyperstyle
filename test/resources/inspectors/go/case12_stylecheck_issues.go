@@ -3,21 +3,21 @@ package main
 import "fmt"
 
 func main() {
-	var a int
-	_, _ = fmt.Scan(&a)
+	var input int
+	_, _ = fmt.Scan(&input)
 
 	// stylecheck-ST1017
-	if 1 == a {
-		fmt.Println("a == 1")
+	if 1 == input {
+		fmt.Println("input == 1")
 	}
 
 	// stylecheck-ST1015
 	switch {
-	case a > 0:
-		fmt.Println("a > 0")
+	case input > 0:
+		fmt.Println("input > 0")
 	default:
-		fmt.Println("a == 0")
-	case a < 0:
-		fmt.Println("a < 0")
+		fmt.Println("input == 0")
+	case input < 0:
+		fmt.Println("input < 0")
 	}
 }
