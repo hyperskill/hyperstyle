@@ -360,6 +360,9 @@ def test_choose_issue_type():
     error_codes = [
         'deadcode',
         'cyclop',
+        'lll',
+        'funlen',
+        'maintidx',
         'gomnd',
         'whitespace',
         'goconst',
@@ -369,6 +372,9 @@ def test_choose_issue_type():
     expected_issue_types = [
         IssueType.ERROR_PRONE,
         IssueType.CYCLOMATIC_COMPLEXITY,
+        IssueType.LINE_LEN,
+        IssueType.FUNC_LEN,
+        IssueType.MAINTAINABILITY,
         IssueType.INFO,
         IssueType.CODE_STYLE,
         IssueType.COMPLEXITY,
