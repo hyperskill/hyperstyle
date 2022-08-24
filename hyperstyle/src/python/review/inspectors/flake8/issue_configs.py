@@ -36,7 +36,10 @@ ISSUE_CONFIGS = [
     MeasurableIssueConfig(
         origin_class='C901',
         new_description=get_cyclomatic_complexity_tip(),
-        parser=IssueDescriptionParser(re.compile(r"'.+' is too complex \((\d+)\)"), int),
+        parser=IssueDescriptionParser(
+            regexp=re.compile(r"'.+' is too complex \((\d+)\)"),
+            converter={0: int},
+        ),
     ),
     # Cohesion
     MeasurableIssueConfig(
@@ -44,13 +47,16 @@ ISSUE_CONFIGS = [
         new_description=get_cohesion_tip(),
         parser=IssueDescriptionParser(
             regexp=re.compile(r"class has low \((\d*\.?\d*)%\) cohesion"),
-            converter=lambda match: convert_percentage_of_value_to_lack_of_value(float(match)),
+            converter={0: lambda match: convert_percentage_of_value_to_lack_of_value(float(match))},
         ),
     ),
     # Line len
     MeasurableIssueConfig(
         origin_class='E501',
         new_description=get_line_len_tip(),
-        parser=IssueDescriptionParser(re.compile(r"line too long \((\d+) > \d+ characters\)"), int),
+        parser=IssueDescriptionParser(
+            regexp=re.compile(r"line too long \((\d+) > \d+ characters\)"),
+            converter={0: int},
+        ),
     ),
 ]

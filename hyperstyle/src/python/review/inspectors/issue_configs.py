@@ -1,6 +1,6 @@
 import logging
-from dataclasses import dataclass
-from typing import Callable, Dict, Optional, Pattern, Tuple, Union
+from dataclasses import dataclass, field
+from typing import Callable, Dict, Optional, Pattern, Tuple
 
 from hyperstyle.src.python.review.inspectors.common import is_fstring
 
@@ -12,21 +12,14 @@ class IssueDescriptionParser:
     """
     Parser for an issue description.
 
-    The ``converter`` can be:
-
-    - A function --
-      In this case, all groups obtained from the description using the ``regexp`` will be converted using this function.
-
-    - A dictionary --
-      In this case, the corresponding converter will be applied to the named group obtained by the ``regexp``.
-      All groups in the ``regexp`` must be named, otherwise unnamed groups will be skipped.
-      For those groups for which no converter is defined, the default converter will be used.
+    The ``converter`` must be a dictionary, where the keys correspond to the position of the group
+    to which the converter specified as the dictionary value should be applied.
 
     By default, the converter is equal to the ``str`` function.
     """
 
     regexp: Pattern[str]
-    converter: Union[Callable, Dict[str, Callable]] = str
+    converter: Dict[int, Callable] = field(default_factory=lambda: {})
 
     def parse(self, description: str) -> Optional[Tuple]:
         """
@@ -41,10 +34,7 @@ class IssueDescriptionParser:
             return None
 
         try:
-            if isinstance(self.converter, dict):
-                args = tuple(self.converter.get(name, str)(group) for name, group in match.groupdict().items())
-            else:
-                args = tuple(self.converter(group) for group in match.groups())
+            args = tuple(self.converter.get(index, str)(group) for index, group in enumerate(match.groups()))
         except Exception as exception:
             logger.error(f'Unable to convert the groups: {exception}')
             return None
