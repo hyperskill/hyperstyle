@@ -136,7 +136,27 @@ def test_choose_issue_type():
     assert issue_types == expected_issue_types
 
 
-ISSUE_CONFIGS_TEST_DATA = [
+MEASURE_TEST_DATA = [
+    ('C901', 3),
+    ('H601', 0),
+    ('E501', 121),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_measure'), MEASURE_TEST_DATA)
+def test_measure_parse(origin_class: str, expected_measure: int):
+    inspector = Flake8Inspector()
+
+    path_to_file = FLAKE_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.measure() == expected_measure
+
+
+NEW_DESCRIPTION_TEST_DATA = [
     ('WPS432', get_magic_number_tip(with_number_field=True).format(42)),
     ('WPS350', get_augmented_assign_pattern_tip()),
     (
@@ -158,8 +178,8 @@ ISSUE_CONFIGS_TEST_DATA = [
 ]
 
 
-@pytest.mark.parametrize(('origin_class', 'expected_description'), ISSUE_CONFIGS_TEST_DATA)
-def test_issue_configs(origin_class: str, expected_description: str):
+@pytest.mark.parametrize(('origin_class', 'expected_description'), NEW_DESCRIPTION_TEST_DATA)
+def test_new_issue_description(origin_class: str, expected_description: str):
     inspector = Flake8Inspector()
 
     path_to_file = FLAKE_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
