@@ -73,14 +73,11 @@ class IssueConfig:
     """
 
     origin_class: str
+    new_description: str
 
-    new_description: Optional[str] = None
     parser: Optional[IssueDescriptionParser] = None
 
     def __post_init__(self):
-        if self.new_description is None:
-            raise TypeError('You must specify a new description.')
-
         if self.parser is None and is_fstring(self.new_description):
             raise TypeError('You need to specify a parser, since you are using a format string.')
 
@@ -96,17 +93,16 @@ class MeasurableIssueConfig(IssueConfig):
     Required fields:
 
     - ``origin_class`` -- An origin class of issue.
+    - ``new_description`` -- A new description for the issue. Can be a format string.
     - ``parser`` -- A description parser. Should parse the measure.
 
     Optional fields:
 
     - ``measure_position`` -- The index by which to find the measure in a regular expression pattern. This field will be
       useful if the parser parses not only the measure, but also other data. The default value is 0.
-    - ``new_description`` -- A new description for the issue. Can be a format string.
 
-    If you want to replace the issue description with a static one, specify the ``new_description``.
-    Otherwise, the ``new_description`` must be a format string and the number of groups in the regex must match
-    the number of fields in the ``new_description``.
+    If you want to replace the issue description with a dynamic one, the ``new_description`` must be a format string
+    and the number of groups in the regex must match the number of fields in the ``new_description``.
     """
 
     measure_position: int = 0
