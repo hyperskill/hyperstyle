@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Callable, Dict, Optional, Pattern, Tuple
 
-from hyperstyle.src.python.review.inspectors.common import is_fstring
+from hyperstyle.src.python.review.inspectors.common import contains_format_fields, contains_named_format_fields
 
 logger = logging.getLogger(__name__)
 
@@ -50,16 +50,19 @@ class IssueConfig:
     Required fields:
 
     - ``origin_class`` -- An origin class of issue.
-    - ``new_description`` -- A new description for the issue. Can be a format string, but in this case the ``parser``
-      must be specified.
+    - ``new_description`` -- A new description for the issue. It is a format string. In case it contains format fields,
+      the ``parser`` must be specified.
 
     Optional fields:
 
     - ``parser`` -- A description parser.
 
     If you just want to replace the issue description with a static one, specify only the ``new_description``.
-    Otherwise, the ``new_description`` must be a format string, the ``parser`` must be specified and
-    the number of groups in the regex must match the number of fields in the ``new_description``.
+    Otherwise, the ``new_description`` must contain format fields, the ``parser`` must be specified and
+    the number of groups in the regex must match the number of format fields in the ``new_description``.
+
+    **Note**: Since the ``new_description`` is a format string, some special characters need to be escaped.
+    **Note**: The ``new_description`` must not contain named format fields.
     """
 
     origin_class: str
@@ -68,11 +71,14 @@ class IssueConfig:
     parser: Optional[IssueDescriptionParser] = None
 
     def __post_init__(self):
-        if self.parser is None and is_fstring(self.new_description):
+        if self.parser is None and contains_format_fields(self.new_description):
             raise TypeError('You need to specify a parser, since you are using a format string.')
 
-        if self.parser is not None and not is_fstring(self.new_description):
+        if self.parser is not None and not contains_format_fields(self.new_description):
             raise TypeError('You specified the parser, but the new description is not a format string.')
+
+        if contains_named_format_fields(self.new_description):
+            raise TypeError('The new description contains named format fields.')
 
 
 @dataclass(frozen=True)
@@ -83,7 +89,7 @@ class MeasurableIssueConfig(IssueConfig):
     Required fields:
 
     - ``origin_class`` -- An origin class of issue.
-    - ``new_description`` -- A new description for the issue. Can be a format string.
+    - ``new_description`` --  A new description for the issue. It is a format string.
     - ``parser`` -- A description parser. Should parse the measure.
 
     Optional fields:
@@ -91,8 +97,11 @@ class MeasurableIssueConfig(IssueConfig):
     - ``measure_position`` -- The index by which to find the measure in a regular expression pattern. This field will be
       useful if the parser parses not only the measure, but also other data. The default value is 0.
 
-    If you want to replace the issue description with a dynamic one, the ``new_description`` must be a format string
-    and the number of groups in the regex must match the number of fields in the ``new_description``.
+    If you want to replace the issue description with a dynamic one, the ``new_description`` must contain format fields
+    and the number of groups in the regex must match the number of format fields in the ``new_description``.
+
+    **Note**: Since the ``new_description`` is a format string, some special characters need to be escaped.
+    **Note**: The ``new_description`` must not contain named format fields.
     """
 
     measure_position: int = 0
@@ -100,6 +109,9 @@ class MeasurableIssueConfig(IssueConfig):
     def __post_init__(self):
         if self.parser is None:
             raise TypeError('You must specify a parser.')
+
+        if self.parser is not None and contains_named_format_fields(self.new_description):
+            raise TypeError('The new description contains named format fields.')
 
 
 class IssueConfigsHandler:
@@ -183,8 +195,10 @@ class IssueConfigsHandler:
         if new_description is None:
             return description
 
-        if not is_fstring(new_description):
-            return new_description
+        if not contains_format_fields(new_description):
+            # Although the new_description does not contain format fields, it may contain escaped characters,
+            # so we use the format function to handle such characters.
+            return new_description.format()
 
         args = self._parse_description(origin_class, description)
         if args is None:

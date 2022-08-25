@@ -1,5 +1,6 @@
 from math import floor
 from string import Formatter
+from typing import List
 
 
 def convert_percentage_of_value_to_lack_of_value(percentage_of_value: float) -> int:
@@ -24,11 +25,31 @@ def remove_prefix(text: str, prefix: str) -> str:
     return text
 
 
-def is_fstring(input_string: str) -> bool:
+def _get_format_fields(input_string: str) -> List[str]:
     """
-    Check that the input string is a format string.
+    Get all format fields from the input string.
 
-    :param input_string: A string that needs to be checked whether it is a format string or not.
-    :return: Whether the input string is a format string or not.
+    :param input_string: A string from which all format fields need to be extracted.
+    :return: A list of format fields.
     """
-    return len([elem[1] for elem in Formatter().parse(input_string) if elem[1] is not None]) > 0
+    return [elem[1] for elem in Formatter().parse(input_string) if elem[1] is not None]
+
+
+def contains_format_fields(input_string: str) -> bool:
+    """
+    Check that the input string contains format fields.
+
+    :param input_string: A string for which you want to check whether it contains format fields or not.
+    :return: Whether the input string contains format fields or not.
+    """
+    return len(_get_format_fields(input_string)) > 0
+
+
+def contains_named_format_fields(input_string: str) -> bool:
+    """
+    Check that the input string contains named format fields.
+
+    :param input_string: A string for which you want to check whether it contains named format fields or not.
+    :return: Whether the input string contains named format fields or not.
+    """
+    return any(field != '' and not field.isdigit() for field in _get_format_fields(input_string))
