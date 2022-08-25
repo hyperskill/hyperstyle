@@ -4,15 +4,15 @@ from textwrap import dedent
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from hyperstyle.src.python.review.inspectors.issue import IssueType
-from hyperstyle.src.python.review.inspectors.tips import (
+from hyperstyle.src.python.review.inspectors.common.tips import (
     get_augmented_assign_pattern_tip,
     get_cohesion_tip,
     get_cyclomatic_complexity_tip,
     get_line_len_tip,
     get_magic_number_tip,
 )
+from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
+from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAMES_AND_N_ISSUES = [
