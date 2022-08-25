@@ -5,18 +5,11 @@ from typing import Any, Dict, List
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.flake8.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.flake8.issue_types import CODE_PREFIX_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
-    BaseIssue,
-    get_issue_class_by_issue_type,
-    get_measure_name_by_measurable_issue_type,
-    IssueData,
-    IssueDifficulty,
-    IssueType,
-    Measurable,
-)
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
@@ -50,38 +43,30 @@ class Flake8Inspector(BaseInspector):
     @classmethod
     def parse(cls, output: str) -> List[BaseIssue]:
         row_re = re.compile(r'^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$', re.M)
-        issues_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
+        issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(output):
             origin_class = groups[3]
-            description = groups[4]
-
-            issue_data = IssueData.get_base_issue_data_dict(
-                Path(groups[0]),
-                cls.inspector_type,
-                line_number=int(groups[1]),
-                column_number=int(groups[2]) if int(groups[2]) > 0 else 1,
-                origin_class=origin_class,
-            )
-
             issue_type = cls.choose_issue_type(origin_class)
 
-            issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-            issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-            issue_class = get_issue_class_by_issue_type(issue_type)
+            base_issue = BaseIssue(
+                origin_class=origin_class,
+                type=issue_type,
+                description=groups[4],
+                file_path=Path(groups[0]),
+                line_no=int(groups[1]),
+                column_no=int(groups[2]) if int(groups[2]) > 0 else 1,
+                inspector_type=cls.inspector_type,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
+            )
 
-            if issubclass(issue_class, Measurable):
-                measure = issues_handler.parse_measure(origin_class, description)
-                if measure is None:
-                    logger.error(f'{cls.inspector_type.value} - unable to parse measure.')
-                    continue
+            issue = convert_base_issue(base_issue, issue_configs_handler)
+            if issue is None:
+                logger.error(f'{cls.inspector_type.value}: an error occurred during converting base issue.')
+                continue
 
-                issue_data[get_measure_name_by_measurable_issue_type(issue_type)] = measure
-
-            issue_data[IssueData.DESCRIPTION.value] = issues_handler.get_description(origin_class, description)
-
-            issues.append(issue_class(**issue_data))
+            issues.append(issue)
 
         return issues
 
