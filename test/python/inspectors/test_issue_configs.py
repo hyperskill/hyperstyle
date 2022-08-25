@@ -86,7 +86,19 @@ ISSUE_CONFIG_INIT_TEST_DATA = [
         TypeError,
         'You specified the parser, but the new description is not a format string.',
     ),
+    (
+        IssueConfig,
+        ['IC', 'This is a format string with a named format field: {name}!', IssueDescriptionParser(re.compile(''))],
+        TypeError,
+        'The new description contains named format fields.',
+    ),
     (MeasurableIssueConfig, ['MIC', 'This is a simple string!'], TypeError, 'You must specify a parser.'),
+    (
+        MeasurableIssueConfig,
+        ['MIC', 'This is a format string with a named format field: {name}!', IssueDescriptionParser(re.compile(''))],
+        TypeError,
+        'The new description contains named format fields.',
+    ),
 ]
 
 
@@ -132,14 +144,14 @@ CONFIGS = [
 ]
 
 PARSE_DESCRIPTION_TEST_DATA = [
-    (CONFIGS, 'IC-static', 'This is an description.', None),
-    (CONFIGS, 'IC-dynamic', 'This is an description.', None),
+    (CONFIGS, 'IC-static', 'This is a description.', None),
+    (CONFIGS, 'IC-dynamic', 'This is a description.', None),
     (CONFIGS, 'IC-dynamic', 'Name: abcdef', ('abcdef',)),
-    (CONFIGS, 'MIC-static', 'This is an description.', None),
+    (CONFIGS, 'MIC-static', 'This is a description.', None),
     (CONFIGS, 'MIC-static', 'Metric: 42', (42,)),
-    (CONFIGS, 'MIC-dynamic', 'This is an description.', None),
+    (CONFIGS, 'MIC-dynamic', 'This is a description.', None),
     (CONFIGS, 'MIC-dynamic', 'Metric: 42', (42,)),
-    (CONFIGS, 'unknown_issue', 'This is an description.', None),
+    (CONFIGS, 'unknown_issue', 'This is a description.', None),
 ]
 
 
@@ -160,7 +172,10 @@ CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION = [
     MeasurableIssueConfig(
         origin_class='MIC-good-position',
         new_description='This is a new description.',
-        parser=IssueDescriptionParser(re.compile(r"Name: (.+), Metric: (\d+)")),
+        parser=IssueDescriptionParser(
+            regexp=re.compile(r"Name: (.+), Metric: (\d+)"),
+            converter={1: int},
+        ),
         measure_position=1,
     ),
     MeasurableIssueConfig(
@@ -176,18 +191,18 @@ CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION = [
 
 
 PARSE_MEASURE_TEST_DATA = [
-    (CONFIGS, 'IC-static', 'This is an description.', None),
-    (CONFIGS, 'IC-dynamic', 'This is an description.', None),
+    (CONFIGS, 'IC-static', 'This is a description.', None),
+    (CONFIGS, 'IC-dynamic', 'This is a description.', None),
     (CONFIGS, 'IC-dynamic', 'Name: abcdef', None),
-    (CONFIGS, 'MIC-static', 'This is an description.', None),
+    (CONFIGS, 'MIC-static', 'This is a description.', None),
     (CONFIGS, 'MIC-static', 'Metric: 42', 42),
-    (CONFIGS, 'MIC-dynamic', 'This is an description.', None),
+    (CONFIGS, 'MIC-dynamic', 'This is a description.', None),
     (CONFIGS, 'MIC-dynamic', 'Metric: 42', 42),
-    (CONFIGS, 'unknown_issue', 'This is an description.', None),
-    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'Name: Aboba, Metric: 42', '42'),
-    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'This is an description.', None),
+    (CONFIGS, 'unknown_issue', 'This is a description.', None),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'Name: Aboba, Metric: 42', 42),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-good-position', 'This is a description.', None),
     (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-bad-position', 'Metric: 42', None),
-    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-bad-position', 'This is an description.', None),
+    (CONFIGS_WITH_NON_DEFAULT_MEASURE_POSITION, 'MIC-bad-position', 'This is a description.', None),
 ]
 
 
@@ -208,7 +223,7 @@ CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING = [
     IssueConfig(
         origin_class='IC-empty-regexp',
         new_description='There is only one field: {0}.',
-        parser=IssueDescriptionParser(re.compile(r'This is an description')),
+        parser=IssueDescriptionParser(re.compile(r'This is a description')),
     ),
     IssueConfig(
         origin_class='IC-format-less-than-regexp',
@@ -223,20 +238,42 @@ CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING = [
 ]
 
 
+CONFIGS_WITH_ESCAPED_CHARACTERS = [
+    IssueConfig(
+        origin_class='IC-one-escaped-curly-bracket-static',
+        new_description='This is an escaped symbol: {{',
+    ),
+    IssueConfig(
+        origin_class='IC-paired-escaped-curly-bracket-static',
+        new_description='This is a paired escaped curly bracket: {{}}',
+    ),
+    IssueConfig(
+        origin_class='IC-one-escaped-curly-bracket-dynamic',
+        new_description='This is an escaped symbol {{ and this is a format field {0}',
+        parser=IssueDescriptionParser(re.compile(r'Name: (.+)')),
+    ),
+    IssueConfig(
+        origin_class='IC-paired-escaped-curly-bracket-dynamic',
+        new_description='This is an escaped symbol {{}} and this is a format field {0}',
+        parser=IssueDescriptionParser(re.compile(r'Name: (.+)')),
+    ),
+]
+
+
 GET_DESCRIPTION_TEST_DATA = [
-    (CONFIGS, 'IC-static', 'This is an description.', 'This is a new static description.'),
-    (CONFIGS, 'IC-dynamic', 'This is an description.', 'This is an description.'),
+    (CONFIGS, 'IC-static', 'This is a description.', 'This is a new static description.'),
+    (CONFIGS, 'IC-dynamic', 'This is a description.', 'This is a description.'),
     (CONFIGS, 'IC-dynamic', 'Name: abcdef', 'This is a new dynamic description: abcdef.'),
-    (CONFIGS, 'MIC-static', 'This is an description.', 'This is a new static description.'),
+    (CONFIGS, 'MIC-static', 'This is a description.', 'This is a new static description.'),
     (CONFIGS, 'MIC-static', 'Metric: 42', 'This is a new static description.'),
-    (CONFIGS, 'MIC-dynamic', 'This is an description.', 'This is an description.'),
+    (CONFIGS, 'MIC-dynamic', 'This is a description.', 'This is a description.'),
     (CONFIGS, 'MIC-dynamic', 'Metric: 42', 'This is a new dynamic description with a metric: 42.'),
-    (CONFIGS, 'unknown_issue', 'This is an description.', 'This is an description.'),
+    (CONFIGS, 'unknown_issue', 'This is a description.', 'This is a description.'),
     (
         CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING,
         'IC-empty-regexp',
-        'This is an description.',
-        'This is an description.',
+        'This is a description.',
+        'This is a description.',
     ),
     (
         CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING,
@@ -245,6 +282,30 @@ GET_DESCRIPTION_TEST_DATA = [
         'There is only one field: Aboba.',
     ),
     (CONFIGS_WITH_INCONSISTENT_PARSER_AND_FORMAT_STRING, 'IC-format-greater-than-regexp', 'Name: Aboba', 'Name: Aboba'),
+    (
+        CONFIGS_WITH_ESCAPED_CHARACTERS,
+        'IC-one-escaped-curly-bracket-static',
+        'This is a description.',
+        'This is an escaped symbol: {',
+    ),
+    (
+        CONFIGS_WITH_ESCAPED_CHARACTERS,
+        'IC-paired-escaped-curly-bracket-static',
+        'This is a description.',
+        'This is a paired escaped curly bracket: {}',  # noqa: P103
+    ),
+    (
+        CONFIGS_WITH_ESCAPED_CHARACTERS,
+        'IC-one-escaped-curly-bracket-dynamic',
+        'Name: Aboba',
+        'This is an escaped symbol { and this is a format field Aboba',
+    ),
+    (
+        CONFIGS_WITH_ESCAPED_CHARACTERS,
+        'IC-paired-escaped-curly-bracket-dynamic',
+        'Name: Aboba',
+        'This is an escaped symbol {} and this is a format field Aboba',  # noqa: P103
+    ),
 ]
 
 
