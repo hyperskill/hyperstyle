@@ -1,5 +1,5 @@
 import textwrap
-from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors import PYLINT_DATA_FOLDER, PYTHON_DATA_FOLDER
 
 import pytest
 from hyperstyle.src.python.review.inspectors.issue import IssueType
@@ -81,3 +81,30 @@ def test_choose_issue_type():
         map(PylintInspector.choose_issue_type, error_categories))
 
     assert issue_types == expected_issue_types
+
+
+NEW_DESCRIPTION_TEST_DATA = [
+    (
+        'W1404',
+        'Found implicit string concatenation. If you want to concatenate strings, use "+".',
+    ),
+    (
+        'R1721',
+        'Unnecessary use of a comprehension. Instead of using an identity comprehension, '
+        'consider using the list, dict or set constructor. It is faster and simpler. '
+        'For example, instead of {key: value for key, value in list_of_tuples} use dict(list_of_tuples).',
+    ),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_description'), NEW_DESCRIPTION_TEST_DATA)
+def test_new_issue_description(origin_class: str, expected_description: str):
+    inspector = PylintInspector()
+
+    path_to_file = PYLINT_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.description == expected_description
