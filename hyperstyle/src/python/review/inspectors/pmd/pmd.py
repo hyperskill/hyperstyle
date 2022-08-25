@@ -8,9 +8,12 @@ from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.utils import remove_prefix
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.pmd.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
@@ -73,19 +76,34 @@ class PMDInspector(BaseInspector):
             logger.error('%s: error - no output file' % self.inspector_type.value)
             return []
 
+        issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with open(str(output_path)) as out_file:
             reader = csv.DictReader(out_file)
-            return [
-                CodeIssue(
+
+            issues = []
+            for row in reader:
+                origin_class = row['Rule']
+                issue_type = self.choose_issue_type(origin_class)
+
+                base_issue = BaseIssue(
+                    origin_class=origin_class,
+                    type=issue_type,
+                    description=row['Description'],
                     file_path=Path(row['File']),
                     line_no=int(row['Line']),
                     column_no=1,
-                    type=self.choose_issue_type(row['Rule']),
-                    origin_class=row['Rule'],
-                    description=row['Description'],
                     inspector_type=self.inspector_type,
-                    difficulty=IssueDifficulty.get_by_issue_type(self.choose_issue_type(row['Rule'])),
-                ) for row in reader]
+                    difficulty=IssueDifficulty.get_by_issue_type(issue_type),
+                )
+
+                issue = convert_base_issue(base_issue, issue_configs_handler)
+                if issue is None:
+                    logger.error(f'{self.inspector_type.value}: an error occurred during converting base issue.')
+                    continue
+
+                issues.append(issue)
+
+            return issues
 
     @classmethod
     def choose_issue_type(cls, rule: str) -> IssueType:
