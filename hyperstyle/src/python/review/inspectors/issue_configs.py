@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Callable, Dict, Optional, Pattern, Tuple
 
-from hyperstyle.src.python.review.inspectors.common import contains_format_fields, contains_named_format_fields
+from hyperstyle.src.python.review.inspectors.common.utils import contains_format_fields, contains_named_format_fields
 
 logger = logging.getLogger(__name__)
 
@@ -207,5 +207,5 @@ class IssueConfigsHandler:
         try:
             return new_description.format(*args)
         except Exception as exception:
-            logger.error(f'{origin_class}: Unable to format the new description: {exception}')
+            logger.error(f'{origin_class}: Unable to format the new description. {exception}')
             return description

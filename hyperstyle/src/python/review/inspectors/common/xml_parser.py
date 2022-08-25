@@ -5,6 +5,12 @@ from typing import Any, Callable, Dict, List, Optional
 from xml.etree import ElementTree
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
+from hyperstyle.src.python.review.inspectors.common.tips import (
+    get_bool_expr_len_tip,
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+)
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
@@ -16,12 +22,6 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueDifficulty,
     IssueType,
     LineLenIssue,
-)
-from hyperstyle.src.python.review.inspectors.tips import (
-    get_bool_expr_len_tip,
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
 )
 
 logger = logging.getLogger(__name__)

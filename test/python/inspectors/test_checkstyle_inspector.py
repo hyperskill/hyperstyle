@@ -6,6 +6,13 @@ from typing import List
 import pytest
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
+from hyperstyle.src.python.review.inspectors.common.tips import (
+    get_bool_expr_len_tip,
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+)
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
     BoolExprLenIssue,
@@ -15,13 +22,6 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueDifficulty,
     IssueType,
     LineLenIssue,
-)
-from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.tips import (
-    get_bool_expr_len_tip,
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
 )
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 

@@ -7,10 +7,10 @@ from hyperstyle.src.python.review.common.file_system import check_set_up_env_var
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.common.tips import get_magic_number_tip
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.tips import get_magic_number_tip
 
 logger = logging.getLogger(__name__)
 

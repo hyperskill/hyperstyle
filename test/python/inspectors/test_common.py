@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from hyperstyle.src.python.review.inspectors.common import (
+from hyperstyle.src.python.review.inspectors.common.utils import (
     _get_format_fields,
     contains_format_fields,
     contains_named_format_fields,
