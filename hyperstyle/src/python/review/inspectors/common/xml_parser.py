@@ -1,28 +1,14 @@
 import logging
 import re
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Callable, List
 from xml.etree import ElementTree
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
-from hyperstyle.src.python.review.inspectors.common.tips import (
-    get_bool_expr_len_tip,
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
-)
+from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
-    BaseIssue,
-    BoolExprLenIssue,
-    CodeIssue,
-    CyclomaticComplexityIssue,
-    FuncLenIssue,
-    IssueData,
-    IssueDifficulty,
-    IssueType,
-    LineLenIssue,
-)
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 
@@ -43,43 +29,6 @@ def __is_result_file_correct(file_path: Path, inspector_type: InspectorType) -> 
     return True
 
 
-def __parse_error_message(element: ElementTree) -> str:
-    """
-    Extracts the error message from the tree element and
-    removes the substring '(max allowed is \\d+)' from it, if possible.
-    """
-
-    message = element.attrib['message']
-    return re.sub(r'\(max allowed is \d+\). ', '', message)
-
-
-# Measurable means that the issue has integer measure,
-# e.g. BoolExprLenIssue, CyclomaticComplexityIssue and so on
-def __parse_measurable_issue(issue_data: Dict[str, Any], issue_type: IssueType,
-                             measure_value: int) -> Optional[BaseIssue]:
-    """
-    Depending on the issue_type creates a corresponding measurable issue.
-    """
-
-    if issue_type == IssueType.CYCLOMATIC_COMPLEXITY:
-        issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip().format(measure_value)
-        return CyclomaticComplexityIssue(**issue_data)
-    elif issue_type == IssueType.FUNC_LEN:
-        issue_data[IssueData.FUNCTION_LEN.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_func_len_tip()
-        return FuncLenIssue(**issue_data)
-    elif issue_type == IssueType.BOOL_EXPR_LEN:
-        issue_data[IssueData.BOOL_EXPR_LEN.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_bool_expr_len_tip()
-        return BoolExprLenIssue(**issue_data)
-    elif issue_type == IssueType.LINE_LEN:
-        issue_data[IssueData.LINE_LEN.value] = measure_value
-        issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip().format(measure_value)
-        return LineLenIssue(**issue_data)
-    return None
-
-
 def __should_handle_element(element: ElementTree) -> bool:
     """
     Checks if a tree element is a file.
@@ -96,20 +45,24 @@ def __is_error(element: ElementTree) -> bool:
     return element.tag == 'error'
 
 
-# TODO: Needs refactoring
 def parse_xml_file_result(
-        file_path: Path,
-        inspector_type: InspectorType,
-        issue_type_selector: Callable[[str], IssueType],
-        difficulty_selector: Callable[[IssueType], IssueDifficulty],
-        origin_class_to_pattern: Dict[str, str],
-        origin_class_to_description: Dict[str, str]) -> List[BaseIssue]:
+    file_path: Path,
+    inspector_type: InspectorType,
+    issue_type_selector: Callable[[str], IssueType],
+    difficulty_selector: Callable[[IssueType], IssueDifficulty],
+    issue_configs_handler: IssueConfigsHandler,
+) -> List[BaseIssue]:
     """
-    Parses the output, which is a xml file, and returns a list of the issues found there.
-    issue_type_selector determines the IssueType of an inspection.
-    origin_class_to_description allows to parse measurable errors.
+    Parse the output, which is a xml file, and returns a list of the issues found there.
 
     If the passed path is not a correct file, an empty list is returned.
+
+    :param file_path: A path to a xml file.
+    :param inspector_type: An inspector type.
+    :param issue_type_selector: Determines the issue type of an inspection.
+    :param difficulty_selector: Determines the difficulty of an inspection.
+    :param issue_configs_handler: A handler of issue configurations.
+    :return: A list of parsed issues.
     """
 
     if not __is_result_file_correct(file_path, inspector_type):
@@ -128,30 +81,26 @@ def parse_xml_file_result(
             if not __is_error(inner_element):
                 continue
 
-            message = __parse_error_message(inner_element)
             # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
             origin_class = inner_element.attrib['source'].split('.')[-1]
-            issue_data = IssueData.get_base_issue_data_dict(code_file_path, inspector_type,
-                                                            line_number=int(inner_element.attrib['line']),
-                                                            column_number=int(
-                                                                inner_element.attrib.get('column', 1)),
-                                                            origin_class=origin_class)
-
             issue_type = issue_type_selector(origin_class)
-            issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-            issue_data[IssueData.DIFFICULTY.value] = difficulty_selector(issue_type)
 
-            if origin_class in origin_class_to_pattern:
-                pattern = origin_class_to_pattern.get(origin_class)
-                measure_value = int(re.search(pattern, message,
-                                              flags=re.IGNORECASE).groups()[0])
+            base_issue = BaseIssue(
+                origin_class=origin_class,
+                type=issue_type,
+                description=inner_element.attrib['message'],
+                file_path=code_file_path,
+                line_no=int(inner_element.attrib['line']),
+                column_no=int(inner_element.attrib.get('column', 1)),
+                inspector_type=inspector_type,
+                difficulty=difficulty_selector(issue_type),
+            )
 
-                issue = __parse_measurable_issue(issue_data, issue_type, measure_value)
-            else:
-                issue_data[IssueData.DESCRIPTION.value] = origin_class_to_description.get(origin_class, message)
-                issue = CodeIssue(**issue_data)
+            issue = convert_base_issue(base_issue, issue_configs_handler)
+            if issue is None:
+                logger.error(f'{inspector_type.value}: an error occurred during converting base issue.')
+                continue
 
-            if issue is not None:
-                issues.append(issue)
+            issues.append(issue)
 
     return issues
