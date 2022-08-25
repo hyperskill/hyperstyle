@@ -63,7 +63,7 @@ FILE_NAME_AND_ISSUES = [
         [
             FuncLenIssue(
                 origin_class='JavaNCSSCheck', type=IssueType.FUNC_LEN,
-                description=get_func_len_tip(),
+                description=get_func_len_tip().format(42),
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=5, column_no=5, inspector_type=InspectorType.CHECKSTYLE,
                 func_len=42, difficulty=IssueDifficulty.EASY,
@@ -129,7 +129,7 @@ FILE_NAME_AND_ISSUES = [
             ),
             BoolExprLenIssue(
                 origin_class='BooleanExpressionComplexityCheck', type=IssueType.BOOL_EXPR_LEN,
-                description=get_bool_expr_len_tip(),
+                description=get_bool_expr_len_tip().format(77),
                 file_path=Path('/home/user/Desktop/some_project/main1.java'),
                 line_no=112, column_no=9, inspector_type=InspectorType.CHECKSTYLE, bool_expr_len=77,
                 difficulty=IssueDifficulty.EASY,
