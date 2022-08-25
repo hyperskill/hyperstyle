@@ -1,10 +1,10 @@
-def get_bool_expr_len_tip() -> str:
-    return 'Too long boolean expression. Try to split it into smaller expressions.'
+def get_bool_expr_len_tip(unit_name: str = 'operators') -> str:
+    return f'Too long boolean expression ({{0}} {unit_name}). Try to split it into smaller expressions.'
 
 
 def get_func_len_tip() -> str:
     return (
-        'Too long function. Try to split it into smaller functions / methods. '
+        'Too long function ({0} lines). Try to split it into smaller functions / methods. '
         'It will make your code easy to understand and less error prone.'
     )
 
