@@ -28,7 +28,7 @@ ISSUE_CONFIGS = [
             converter={0: int},
         ),
     ),
-    # Line length
+    # Function length
     MeasurableIssueConfig(
         origin_class='JavaNCSSCheck',
         new_description=get_func_len_tip(),
