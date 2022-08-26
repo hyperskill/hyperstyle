@@ -98,7 +98,7 @@ def get_maintainability_index_tip() -> str:
     return 'The maintainability index is too low.'
 
 
-def get_magic_number_tip(with_number_field: bool = False) -> str:
+def get_magic_number_tip(with_number_field: bool = True) -> str:
     base_message = 'Found a magic number'
     if with_number_field:
         base_message += ': {0}'

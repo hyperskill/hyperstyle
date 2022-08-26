@@ -16,7 +16,7 @@ from hyperstyle.src.python.review.inspectors.issue_configs import (
 ISSUE_CONFIGS = [
     IssueConfig(
         origin_class='MagicNumberCheck',
-        new_description=get_magic_number_tip(with_number_field=True),
+        new_description=get_magic_number_tip(),
         parser=IssueDescriptionParser(re.compile(r"'(.+)' is a magic number")),
     ),
     # Cyclomatic complexity

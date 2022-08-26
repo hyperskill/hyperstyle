@@ -157,7 +157,7 @@ def test_measure_parse(origin_class: str, expected_measure: int):
 
 
 NEW_DESCRIPTION_TEST_DATA = [
-    ('WPS432', get_magic_number_tip(with_number_field=True).format(42)),
+    ('WPS432', get_magic_number_tip().format(42)),
     ('WPS350', get_augmented_assign_pattern_tip()),
     (
         'B007',

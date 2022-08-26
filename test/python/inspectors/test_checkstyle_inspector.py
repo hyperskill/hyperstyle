@@ -286,7 +286,7 @@ NEW_DESCRIPTION_TEST_DATA = [
     ('JavaNCSSCheck', get_func_len_tip().format(14)),
     ('BooleanExpressionComplexityCheck', get_bool_expr_len_tip().format(3)),
     ('CyclomaticComplexityCheck', get_cyclomatic_complexity_tip().format(13)),
-    ('MagicNumberCheck', get_magic_number_tip(with_number_field=True).format(42)),
+    ('MagicNumberCheck', get_magic_number_tip().format(42)),
 ]
 
 
