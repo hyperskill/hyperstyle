@@ -71,14 +71,14 @@ class IssueConfig:
     parser: Optional[IssueDescriptionParser] = None
 
     def __post_init__(self):
+        if contains_named_format_fields(self.new_description):
+            raise TypeError('The new description contains named format fields.')
+
         if self.parser is None and contains_format_fields(self.new_description):
             raise TypeError('You need to specify a parser, since you are using a format string.')
 
         if self.parser is not None and not contains_format_fields(self.new_description):
             raise TypeError('You specified the parser, but the new description is not a format string.')
-
-        if contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
 
 
 @dataclass(frozen=True)
@@ -107,18 +107,18 @@ class MeasurableIssueConfig(IssueConfig):
     measure_position: int = 0
 
     def __post_init__(self):
+        if contains_named_format_fields(self.new_description):
+            raise TypeError('The new description contains named format fields.')
+
         if self.parser is None:
             raise TypeError('You must specify a parser.')
-
-        if self.parser is not None and contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
 
 
 class IssueConfigsHandler:
     """
-    A class that handles error configs.
+    A class that handles issue configs.
 
-    It accepts error configs, turns them into dictionaries and handles requests for measures and descriptions.
+    It accepts issue configs and handles requests for getting new descriptions and parsing measures.
     """
 
     origin_class_to_config: Dict[str, IssueConfig]
@@ -179,10 +179,10 @@ class IssueConfigsHandler:
         """
         Get an issue description.
 
-        If a new description is defined for an issue, it will be returned. If necessary, the passed
-        description will be parsed and all extracted elements will be formatted into a new description.
+        If a new description is defined for the issue, it will be returned. If necessary, the passed
+        description will be parsed and all extracted elements will be formatted into the new description.
 
-        If no new description is defined for an issue, or an error occurs during parsing or formatting,
+        If no new description is defined for the issue, or an error occurs during parsing or formatting,
         the original description will be returned.
 
         :param origin_class: An origin class of issue.
