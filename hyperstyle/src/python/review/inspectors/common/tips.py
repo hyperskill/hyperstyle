@@ -93,7 +93,7 @@ def get_method_number_tip() -> str:
     )
 
 
-# TODO: Need to improve the tip.
+# TODO: Need to improve the tip and add a measure field.
 def get_maintainability_index_tip() -> str:
     return 'The maintainability index is too low.'
 
