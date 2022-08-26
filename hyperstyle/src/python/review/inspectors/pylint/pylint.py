@@ -48,7 +48,7 @@ class PylintInspector(BaseInspector):
         row_re = re.compile(r'^(.*):(\d+):(\d+):([IRCWEF]\d+):(.*)$', re.M)
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
-        issues: List[BaseIssue] = []
+        issues = []
         for groups in row_re.findall(output):
             if groups[1] == INFO_CATEGORY:
                 continue
