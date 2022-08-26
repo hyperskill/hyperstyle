@@ -6,7 +6,8 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
-    get_func_len_tip, get_magic_number_tip,
+    get_func_len_tip,
+    get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
