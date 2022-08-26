@@ -3,7 +3,8 @@ import re
 from hyperstyle.src.python.review.inspectors.common.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
-    get_func_len_tip, get_magic_number_tip,
+    get_func_len_tip,
+    get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.issue_configs import (
     IssueConfig,
