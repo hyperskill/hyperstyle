@@ -5,8 +5,11 @@ from hyperstyle.src.python.review.inspectors.common.tips import (
     get_cyclomatic_complexity_tip,
     get_func_len_tip, get_magic_number_tip,
 )
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfig, IssueDescriptionParser, \
-    MeasurableIssueConfig
+from hyperstyle.src.python.review.inspectors.issue_configs import (
+    IssueConfig,
+    IssueDescriptionParser,
+    MeasurableIssueConfig,
+)
 
 
 ISSUE_CONFIGS = [
