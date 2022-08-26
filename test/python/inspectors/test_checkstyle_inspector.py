@@ -205,6 +205,9 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_indentation_with_tabs.java', 5),
     ('test_indentation_google_style.java', 6),
     ('test_multiple_literals.java', 1),
+    ('test_pattern_matching.java', 2),
+    ('test_records.java', 2),
+    ('test_sealed_classes.java', 5),
 ]
 
 
