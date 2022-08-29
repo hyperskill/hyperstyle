@@ -3,29 +3,13 @@ from pathlib import Path
 from typing import Callable, List
 from xml.etree import ElementTree
 
-from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
-
-
-def __is_result_file_correct(file_path: Path, inspector_type: InspectorType) -> bool:
-    """
-    Check if the result of the inspectors is correct: it exists and it is not empty.
-    """
-    if not file_path.is_file():
-        logger.error('%s: error - no output file' % inspector_type.value)
-        return False
-
-    file_content = get_content_from_file(file_path)
-    if not file_content:
-        logger.error('%s: error - empty file' % inspector_type.value)
-        return False
-
-    return True
 
 
 def __should_handle_element(element: ElementTree) -> bool:
@@ -64,7 +48,7 @@ def parse_xml_file_result(
     :return: A list of parsed issues.
     """
 
-    if not __is_result_file_correct(file_path, inspector_type):
+    if not is_result_file_correct(file_path, inspector_type):
         return []
 
     # Parse result XML
