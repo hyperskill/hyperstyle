@@ -11,9 +11,9 @@ issues:
 linters:
   disable-all: true
   enable:
-    - deadcode
     - errcheck
     - ineffassign
+    - unused
     - asciicheck
     - bodyclose
     - cyclop

@@ -5,13 +5,10 @@ from typing import Dict
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
-    'deadcode': IssueType.ERROR_PRONE,
     'errcheck': IssueType.ERROR_PRONE,
     'ineffassign': IssueType.ERROR_PRONE,
-    # 'structcheck': IssueType.ERROR_PRONE,
     # 'typecheck': IssueType.ERROR_PRONE,
-    # 'unused': IssueType.ERROR_PRONE,
-    # 'varcheck': IssueType.ERROR_PRONE,
+    'unused': IssueType.ERROR_PRONE,
     # 'asasalint': IssueType.ERROR_PRONE,
     'asciicheck': IssueType.ERROR_PRONE,
     # 'bidichk': IssueType.ERROR_PRONE,
@@ -51,7 +48,6 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'goprintffuncname': IssueType.CODE_STYLE,
     # 'gosec': IssueType.ERROR_PRONE,
     # 'grouper': IssueType.CODE_STYLE,
-    # 'ifshort': IssueType.CODE_STYLE,
     # 'importas': IssueType.CODE_STYLE,
     # 'ireturn': IssueType.BEST_PRACTICES,
     'lll': IssueType.LINE_LEN,
@@ -65,7 +61,6 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'nlreturn': IssueType.CODE_STYLE,
     # 'noctx': IssueType.ERROR_PRONE,
     # 'nolintlint': IssueType.CODE_STYLE,
-    # 'nosnakecase': IssueType.CODE_STYLE,
     # 'nosprintfhostport': IssueType.ERROR_PRONE,
     # 'paralleltest': IssueType.ERROR_PRONE,
     # 'prealloc': IssueType.BEST_PRACTICES,
