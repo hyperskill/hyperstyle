@@ -1,3 +1,5 @@
+# The configuration was made using the following table: https://bit.ly/3Kvz0nK
+
 run:
   tests: false
 
@@ -50,6 +52,18 @@ linters:
     - stylecheck
 
 linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  cyclop: # Metric: CYCLOMATIC_COMPLEXITY
+    max-complexity: -1
+    skip-tests: true
+  funlen: # Metric: FUNC_LEN
+    lines: 1
+    statements: -1
+  goconst:
+    ignore-calls: false
+    ignore-tests: true
   gomnd:
     ignored-numbers:
       - "-1"
@@ -57,6 +71,8 @@ linters-settings:
       - "10"
     ignored-functions:
       - "time.Sleep"
+  maintidx: # Metric: MAINTAINABILITY
+    under: 100
   usestdlibvars:
     http-method: true
     http-status-code: true
@@ -74,20 +90,6 @@ linters-settings:
       - i int
       - T any
       - m map[string]int
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
-  cyclop: # Metric: CYCLOMATIC_COMPLEXITY
-    max-complexity: -1
-    skip-tests: true
-  funlen: # Metric: FUNC_LEN
-    lines: 1
-    statements: -1
-  goconst:
-    ignore-calls: false
-    ignore-tests: true
-  maintidx: # Metric: MAINTAINABILITY
-    under: 100
   # ===============
   #   Metalinters
   # ===============
