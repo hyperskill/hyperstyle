@@ -8,33 +8,16 @@ from typing import Any, Dict, List
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.utils import (
-    convert_percentage_of_value_to_lack_of_value,
-    is_result_file_correct,
-)
+from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
+from hyperstyle.src.python.review.inspectors.golang_lint.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.golang_lint.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
 )
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
-    BaseIssue,
-    CodeIssue,
-    CyclomaticComplexityIssue,
-    FuncLenIssue,
-    IssueData,
-    IssueDifficulty,
-    IssueType,
-    LineLenIssue,
-    MaintainabilityLackIssue,
-)
-from hyperstyle.src.python.review.inspectors.common.tips import (
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
-    get_magic_number_tip,
-    get_maintainability_index_tip,
-)
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 GOLANG_LINT_DIRECTORY_ENV = 'GOLANG_LINT_DIRECTORY'
 GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / 'config.yml'
@@ -89,13 +72,8 @@ class GolangLintInspector(BaseInspector):
         with open(output_path) as file:
             data = json.load(file)
 
-        description_re = re.compile(r'^([A-Za-z\-]+\d*): (.*)$')
-        cc_description_re = re.compile(r'^calculated cyclomatic complexity for function .* is (\d+), max is -1$')
-        func_len_description_re = re.compile(r"^Function '.*' is too long \((\d+) > 1\)$")
-        line_len_description_re = re.compile(r'^line is (\d+) characters$')
-        maintainability_description_re = re.compile(
-            r'^Function name: .*, Cyclomatic Complexity: .*, Halstead Volume: .*, Maintainability Index: (.+)$',
-        )
+        metalinter_description_re = re.compile(r'^([A-Za-z\-]+\d*): (.*)$')
+        issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
         issues = []
         files_with_typecheck_issues = set()
@@ -123,64 +101,31 @@ class GolangLintInspector(BaseInspector):
             # If the issue is from the metalinter, we need to extract
             # the issue code from the description and add it to origin_class.
             if origin_class in {'govet', 'revive', 'gocritic', 'gosimple', 'staticcheck', 'stylecheck'}:
-                matches = description_re.findall(description)
+                matches = metalinter_description_re.search(description)
                 if matches:
-                    issue_code, description = matches[0]
+                    issue_code, description = matches.groups()
                     description = description[:1].upper() + description[1:]
                     origin_class += f'-{issue_code}'
 
-            issue_data = IssueData.get_base_issue_data_dict(
-                file_path=file_path,
-                inspector_type=cls.inspector_type,
-                line_number=issue_json_data['Pos']['Line'],
-                column_number=issue_json_data['Pos']['Column'] if issue_json_data['Pos']['Column'] > 0 else 1,
+            issue_type = cls.choose_issue_type(origin_class)
+
+            base_issue = BaseIssue(
                 origin_class=origin_class,
+                type=issue_type,
+                description=description,
+                file_path=file_path,
+                line_no=issue_json_data['Pos']['Line'],
+                column_no=issue_json_data['Pos']['Column'] if issue_json_data['Pos']['Column'] > 0 else 1,
+                inspector_type=cls.inspector_type,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
             )
 
-            cc_match = cc_description_re.findall(description)
-            func_len_match = func_len_description_re.findall(description)
-            line_len_match = line_len_description_re.findall(description)
-            maintainability_match = maintainability_description_re.findall(description)
+            issue = convert_base_issue(base_issue, issue_configs_handler)
+            if issue is None:
+                logger.error(f'{cls.inspector_type.value}: an error occurred during converting base issue.')
+                continue
 
-            if cc_match:  # cyclop
-                issue_type = IssueType.CYCLOMATIC_COMPLEXITY
-                issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip().format(cc_match[0])
-                issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match[0])
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(CyclomaticComplexityIssue(**issue_data))
-            elif func_len_match:  # funlen
-                issue_type = IssueType.FUNC_LEN
-                issue_data[IssueData.DESCRIPTION.value] = get_func_len_tip().format(func_len_match[0])
-                issue_data[IssueData.FUNCTION_LEN.value] = int(func_len_match[0])
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(FuncLenIssue(**issue_data))
-            elif line_len_match:  # lll
-                issue_type = IssueType.LINE_LEN
-                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip().format(line_len_match[0])
-                issue_data[IssueData.LINE_LEN.value] = int(line_len_match[0])
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(LineLenIssue(**issue_data))
-            elif maintainability_match:  # maintidx
-                issue_type = IssueType.MAINTAINABILITY
-                maintainability_lack = convert_percentage_of_value_to_lack_of_value(float(maintainability_match[0]))
-                issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
-                issue_data[IssueData.MAINTAINABILITY_LACK.value] = maintainability_lack
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-                issues.append(MaintainabilityLackIssue(**issue_data))
-            else:
-                issue_type = cls.choose_issue_type(origin_class)
-                issue_data[IssueData.ISSUE_TYPE.value] = issue_type
-                issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
-
-                if origin_class == 'gomnd':
-                    description = get_magic_number_tip(with_number_field=False)
-
-                issue_data[IssueData.DESCRIPTION.value] = description
-                issues.append(CodeIssue(**issue_data))
+            issues.append(issue)
 
         return issues
 
