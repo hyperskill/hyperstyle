@@ -49,8 +49,10 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'gosec': IssueType.ERROR_PRONE,
     # 'grouper': IssueType.CODE_STYLE,
     # 'importas': IssueType.CODE_STYLE,
+    # 'interfacebloat': IssueType.COMPLEXITY,
     # 'ireturn': IssueType.BEST_PRACTICES,
     'lll': IssueType.LINE_LEN,
+    # 'logrlint': IssueType.ERROR_PRONE,
     'maintidx': IssueType.MAINTAINABILITY,
     # 'makezero': IssueType.ERROR_PRONE,
     'misspell': IssueType.INFO,
@@ -66,6 +68,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'prealloc': IssueType.BEST_PRACTICES,
     'predeclared': IssueType.ERROR_PRONE,
     # 'promlinter': IssueType.CODE_STYLE,
+    # 'reassign': IssueType.ERROR_PRONE,
     'rowserrcheck': IssueType.ERROR_PRONE,
     'sqlclosecheck': IssueType.ERROR_PRONE,
     # 'tagliatelle': IssueType.CODE_STYLE,
@@ -75,6 +78,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'tparallel': IssueType.BEST_PRACTICES,
     'unconvert': IssueType.ERROR_PRONE,
     'unparam': IssueType.ERROR_PRONE,
+    'usestdlibvars': IssueType.INFO,
     'varnamelen': IssueType.INFO,
     # 'wastedassign': IssueType.ERROR_PRONE,
     'whitespace': IssueType.CODE_STYLE,
@@ -231,6 +235,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'gocritic-stringConcatSimplify': IssueType.COMPLEXITY,
     'gocritic-switchTrue': IssueType.BEST_PRACTICES,
     # 'gocritic-timeExprSimplify': IssueType.COMPLEXITY,
+    # 'gocritic-timeCmpSimplify': IssueType.COMPLEXITY,
     # 'gocritic-tooManyResultsChecker': IssueType.COMPLEXITY,
     # 'gocritic-typeAssertChain': IssueType.COMPLEXITY,
     # 'gocritic-typeDefFirst': IssueType.BEST_PRACTICES,
@@ -285,7 +290,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # -- stylecheck --
     # ----------------
     # 'stylecheck-ST1001': IssueType.BEST_PRACTICES,
-    # 'stylecheck-ST1013': IssueType.BEST_PRACTICES,
+    # 'stylecheck-ST1013': IssueType.INFO,
     # 'stylecheck-ST1018': IssueType.ERROR_PRONE,
     # 'stylecheck-ST1019': IssueType.ERROR_PRONE,
 }
