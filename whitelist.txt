@@ -84,6 +84,7 @@ eslint
 etree
 eval
 exc
+excinfo
 execfile
 expr
 exprs
@@ -93,6 +94,7 @@ filemode
 fillna
 formatter
 fs
+fstring
 fullmatch
 func
 funlen
@@ -103,6 +105,7 @@ getslice
 getuid
 gradle
 groupby
+groupdict
 hashtable
 hline
 hyperstyle

@@ -1,0 +1,15 @@
+fun main() {
+    println("H")
+    println("e")
+    println("l")
+    println("l")
+    println("o")
+    println(",")
+    println(" ")
+    println("W")
+    println("o")
+    println("r")
+    println("l")
+    println("d")
+    println("!")
+}

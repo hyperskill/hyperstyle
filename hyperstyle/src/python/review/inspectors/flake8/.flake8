@@ -9,6 +9,7 @@ ignore=W291,  # trailing whitespaces
        W292,  # no newline at end of file
        W293,  # blank line contains whitespaces
        W503,  # line break before binary operator
+       W605,  # Invalid escape sequence. Duplicates pylint's W1401
        C408,  # unnecessary (dict/list/tuple) call - rewrite as a literal
        E800,  # commented out code
        I101,  # order of imports within a line
@@ -27,6 +28,7 @@ ignore=W291,  # trailing whitespaces
        WPS200, # Forbid modules with complex lines. (Jones Complexity)
        WPS210, # Too many local variables
        WPS221, # Forbid complex lines. (Jones Complexity)
+       WPS229, # Forbid try blocks with bodies that are too long.
        # WPS: Consistency
        WPS303, # Forbid underscores in numbers.
        WPS305, # Forbid f strings.
@@ -37,6 +39,8 @@ ignore=W291,  # trailing whitespaces
        WPS323, # Forbid % formatting on strings.
        WPS324, # Enforce consistent return statements. TODO: Collision with flake8-return
        WPS335, # Forbid wrong for loop iter targets.
+       WPS326, # Forbid implicit string concatenation. Disabled due to the unnecessary strictness and due to duplication of pylint's W1404
+       WPS345, # Forbid meaningless math operations with 0 and 1. Disabled because some tasks require multiplication by 1.
        WPS347, # Forbid imports that may cause confusion outside of the module. (controversial)
        WPS358, # Forbid using float zeros: 0.0.
        WPS359, # Forbids to unpack iterable objects to lists. (Because of its similarity to "WPS414")
@@ -51,6 +55,7 @@ ignore=W291,  # trailing whitespaces
        WPS430, # Forbid nested functions.
        WPS431, # Forbid nested classes.
        WPS435, # Forbid multiplying lists.
+       WPS442, # Forbid shadowing variables from outer scopes. Duplicates pylint's W0621
        WPS510, # Found `in` used with a non-set container
        # WPS: Refactoring
        WPS518, # Forbid implicit enumerate() calls. TODO: Collision with "C0200"

@@ -1,9 +1,16 @@
-from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors import FLAKE_DATA_FOLDER, PYTHON_DATA_FOLDER
 from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 from textwrap import dedent
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.common.tips import (
+    get_augmented_assign_pattern_tip,
+    get_cohesion_tip,
+    get_cyclomatic_complexity_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+)
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
@@ -127,3 +134,58 @@ def test_choose_issue_type():
     issue_types = list(map(Flake8Inspector.choose_issue_type, error_codes))
 
     assert issue_types == expected_issue_types
+
+
+MEASURE_TEST_DATA = [
+    ('C901', 3),
+    ('H601', 0),
+    ('E501', 121),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_measure'), MEASURE_TEST_DATA)
+def test_measure_parse(origin_class: str, expected_measure: int):
+    inspector = Flake8Inspector()
+
+    path_to_file = FLAKE_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.measure() == expected_measure
+
+
+NEW_DESCRIPTION_TEST_DATA = [
+    ('WPS432', get_magic_number_tip().format(42)),
+    ('WPS350', get_augmented_assign_pattern_tip()),
+    (
+        'B007',
+        "Loop control variable 'i' not used within the loop body. If this is intended, replace it with an underscore.",
+    ),
+    (
+        'C901',
+        get_cyclomatic_complexity_tip().format(3),
+    ),
+    (
+        'H601',
+        get_cohesion_tip().format(0),
+    ),
+    (
+        'E501',
+        get_line_len_tip().format(121),
+    ),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_description'), NEW_DESCRIPTION_TEST_DATA)
+def test_new_issue_description(origin_class: str, expected_description: str):
+    inspector = Flake8Inspector()
+
+    path_to_file = FLAKE_DATA_FOLDER / 'issues' / f'{origin_class.lower()}.py'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.description == expected_description

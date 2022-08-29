@@ -6,6 +6,15 @@ from typing import List
 import pytest
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
+from hyperstyle.src.python.review.inspectors.checkstyle.issue_configs import ISSUE_CONFIGS
+from hyperstyle.src.python.review.inspectors.common.tips import (
+    get_bool_expr_len_tip,
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+)
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
     BoolExprLenIssue,
@@ -16,13 +25,7 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueType,
     LineLenIssue,
 )
-from hyperstyle.src.python.review.inspectors.parsers.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.tips import (
-    get_bool_expr_len_tip,
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
-)
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAME_AND_ISSUES = [
@@ -60,14 +63,14 @@ FILE_NAME_AND_ISSUES = [
         [
             FuncLenIssue(
                 origin_class='JavaNCSSCheck', type=IssueType.FUNC_LEN,
-                description=get_func_len_tip(),
+                description=get_func_len_tip().format(42),
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=5, column_no=5, inspector_type=InspectorType.CHECKSTYLE,
                 func_len=42, difficulty=IssueDifficulty.EASY,
             ),
             CyclomaticComplexityIssue(
                 origin_class='CyclomaticComplexityCheck', type=IssueType.CYCLOMATIC_COMPLEXITY,
-                description=get_cyclomatic_complexity_tip(),
+                description=get_cyclomatic_complexity_tip().format(69),
                 file_path=Path('/home/user/Desktop/some_project/main.java'),
                 line_no=5, column_no=5, inspector_type=InspectorType.CHECKSTYLE,
                 cc_value=69, difficulty=IssueDifficulty.HARD,
@@ -126,14 +129,14 @@ FILE_NAME_AND_ISSUES = [
             ),
             BoolExprLenIssue(
                 origin_class='BooleanExpressionComplexityCheck', type=IssueType.BOOL_EXPR_LEN,
-                description=get_bool_expr_len_tip(),
+                description=get_bool_expr_len_tip().format(77),
                 file_path=Path('/home/user/Desktop/some_project/main1.java'),
                 line_no=112, column_no=9, inspector_type=InspectorType.CHECKSTYLE, bool_expr_len=77,
                 difficulty=IssueDifficulty.EASY,
             ),
             LineLenIssue(
                 origin_class='LineLengthCheck', type=IssueType.LINE_LEN,
-                description=get_line_len_tip(),
+                description=get_line_len_tip().format(228),
                 file_path=Path('/home/user/Desktop/some_project/main2.java'),
                 line_no=62, column_no=1, inspector_type=InspectorType.CHECKSTYLE, line_len=228,
                 difficulty=IssueDifficulty.EASY,
@@ -153,13 +156,13 @@ FILE_NAME_AND_ISSUES = [
 @pytest.mark.parametrize(('file_name', 'expected_issues'), FILE_NAME_AND_ISSUES)
 def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
     path_to_file = CHECKSTYLE_DATA_FOLDER / file_name
+    issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
     issues = parse_xml_file_result(
         path_to_file,
         InspectorType.CHECKSTYLE,
         CheckstyleInspector.choose_issue_type,
         IssueDifficulty.get_by_issue_type,
-        CheckstyleInspector.origin_class_to_pattern,
-        {},
+        issue_configs_handler,
     )
     assert issues == expected_issues
 
@@ -202,6 +205,9 @@ FILE_NAMES_AND_N_ISSUES = [
     ('test_indentation_with_tabs.java', 5),
     ('test_indentation_google_style.java', 6),
     ('test_multiple_literals.java', 1),
+    ('test_pattern_matching.java', 2),
+    ('test_records.java', 2),
+    ('test_sealed_classes.java', 5),
 ]
 
 
@@ -255,3 +261,46 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
 
     issues_info = gather_issues_test_info(issues)
     assert issues_info == expected_issues_info
+
+
+MEASURE_TEST_DATA = [
+    ('LineLengthCheck', 134),
+    ('JavaNCSSCheck', 14),
+    ('BooleanExpressionComplexityCheck', 3),
+    ('CyclomaticComplexityCheck', 13),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_measure'), MEASURE_TEST_DATA)
+def test_measure_parse(origin_class: str, expected_measure: int):
+    inspector = CheckstyleInspector()
+
+    path_to_file = CHECKSTYLE_DATA_FOLDER / 'issues' / f'{origin_class}.java'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.measure() == expected_measure
+
+
+NEW_DESCRIPTION_TEST_DATA = [
+    ('LineLengthCheck', get_line_len_tip().format(134)),
+    ('JavaNCSSCheck', get_func_len_tip().format(14)),
+    ('BooleanExpressionComplexityCheck', get_bool_expr_len_tip().format(3)),
+    ('CyclomaticComplexityCheck', get_cyclomatic_complexity_tip().format(13)),
+    ('MagicNumberCheck', get_magic_number_tip().format(42)),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_description'), NEW_DESCRIPTION_TEST_DATA)
+def test_new_issue_description(origin_class: str, expected_description: str):
+    inspector = CheckstyleInspector()
+
+    path_to_file = CHECKSTYLE_DATA_FOLDER / 'issues' / f'{origin_class}.java'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.description == expected_description
