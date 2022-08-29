@@ -8,7 +8,7 @@ from typing import Any, Dict, List
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common import (
+from hyperstyle.src.python.review.inspectors.common.utils import (
     convert_percentage_of_value_to_lack_of_value,
     is_result_file_correct,
 )
@@ -28,7 +28,7 @@ from hyperstyle.src.python.review.inspectors.issue import (
     LineLenIssue,
     MaintainabilityLackIssue,
 )
-from hyperstyle.src.python.review.inspectors.tips import (
+from hyperstyle.src.python.review.inspectors.common.tips import (
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
     get_line_len_tip,
@@ -144,21 +144,21 @@ class GolangLintInspector(BaseInspector):
 
             if cc_match:  # cyclop
                 issue_type = IssueType.CYCLOMATIC_COMPLEXITY
-                issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip()
+                issue_data[IssueData.DESCRIPTION.value] = get_cyclomatic_complexity_tip().format(cc_match[0])
                 issue_data[IssueData.CYCLOMATIC_COMPLEXITY.value] = int(cc_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(CyclomaticComplexityIssue(**issue_data))
             elif func_len_match:  # funlen
                 issue_type = IssueType.FUNC_LEN
-                issue_data[IssueData.DESCRIPTION.value] = get_func_len_tip()
+                issue_data[IssueData.DESCRIPTION.value] = get_func_len_tip().format(func_len_match[0])
                 issue_data[IssueData.FUNCTION_LEN.value] = int(func_len_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
                 issues.append(FuncLenIssue(**issue_data))
             elif line_len_match:  # lll
                 issue_type = IssueType.LINE_LEN
-                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip()
+                issue_data[IssueData.DESCRIPTION.value] = get_line_len_tip().format(line_len_match[0])
                 issue_data[IssueData.LINE_LEN.value] = int(line_len_match[0])
                 issue_data[IssueData.ISSUE_TYPE.value] = issue_type
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
@@ -177,7 +177,7 @@ class GolangLintInspector(BaseInspector):
                 issue_data[IssueData.DIFFICULTY.value] = IssueDifficulty.get_by_issue_type(issue_type)
 
                 if origin_class == 'gomnd':
-                    description = get_magic_number_tip(description)
+                    description = get_magic_number_tip(with_number_field=False)
 
                 issue_data[IssueData.DESCRIPTION.value] = description
                 issues.append(CodeIssue(**issue_data))
