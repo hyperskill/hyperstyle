@@ -5,6 +5,13 @@ from typing import List
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.common.tips import (
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+    get_maintainability_index_tip,
+)
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
@@ -14,11 +21,6 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueDifficulty,
     IssueType,
     MaintainabilityLackIssue,
-)
-from hyperstyle.src.python.review.inspectors.common.tips import (
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_maintainability_index_tip,
 )
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
@@ -385,3 +387,46 @@ def test_choose_issue_type():
 
     issue_types = list(map(GolangLintInspector.choose_issue_type, error_codes))
     assert issue_types == expected_issue_types
+
+
+MEASURE_TEST_DATA = [
+    ('cyclop', 13),
+    ('funlen', 13),
+    ('lll', 121),
+    ('maintidx', 79),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_measure'), MEASURE_TEST_DATA)
+def test_measure_parse(origin_class: str, expected_measure: int):
+    inspector = GolangLintInspector()
+
+    path_to_file = GOLANG_LINT_FOLDER / 'issues' / f'{origin_class.lower()}.go'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.measure() == expected_measure
+
+
+NEW_DESCRIPTION_TEST_DATA = [
+    ('cyclop', get_cyclomatic_complexity_tip().format(13)),
+    ('funlen', get_func_len_tip().format(13)),
+    ('lll', get_line_len_tip().format(121)),
+    ('maintidx', get_maintainability_index_tip()),
+    ('gomnd', get_magic_number_tip().format(42)),
+]
+
+
+@pytest.mark.parametrize(('origin_class', 'expected_description'), NEW_DESCRIPTION_TEST_DATA)
+def test_new_issue_description(origin_class: str, expected_description: str):
+    inspector = GolangLintInspector()
+
+    path_to_file = GOLANG_LINT_FOLDER / 'issues' / f'{origin_class.lower()}.go'
+    with use_file_metadata(path_to_file) as file_metadata:
+        issues = inspector.inspect(file_metadata.path, {'n_cpu': 1})
+
+    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+
+    assert issue.description == expected_description
