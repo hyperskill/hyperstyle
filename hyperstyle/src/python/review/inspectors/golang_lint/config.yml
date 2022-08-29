@@ -36,6 +36,7 @@ linters:
     - sqlclosecheck
     - unconvert
     - unparam
+    - usestdlibvars
     - varnamelen
     - whitespace
     # ===============
@@ -56,6 +57,14 @@ linters-settings:
       - "10"
     ignored-functions:
       - "time.Sleep"
+  usestdlibvars:
+    http-method: true
+    http-status-code: true
+    time-weekday: true
+    time-month: true
+    time-layout: true
+    crypto-hash: true
+    default-rpc-path: true
   varnamelen:
     max-distance: 10
     min-name-length: 3
