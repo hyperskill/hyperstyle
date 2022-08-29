@@ -41,6 +41,7 @@ FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ('case15_deadcode.go', 3),
     ('case16_errcheck.go', 11),
     ('case17_magic_numbers.go', 0),  # 0 because all INFO issues have been filtered out
+    ('case18_generics.go', 1),
 ]
 
 
@@ -90,6 +91,7 @@ FILE_WITH_ISSUE_INFO_TEST_DATA = [
     ),
     ('case16_errcheck.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_error_prone=11)),
     ('case17_magic_numbers.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_info=2)),
+    ('case18_generics.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=2, n_code_style=1, n_info=4)),
 ]
 
 
