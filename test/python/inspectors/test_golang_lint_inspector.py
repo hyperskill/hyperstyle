@@ -15,7 +15,7 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueType,
     MaintainabilityLackIssue,
 )
-from hyperstyle.src.python.review.inspectors.tips import (
+from hyperstyle.src.python.review.inspectors.common.tips import (
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
     get_maintainability_index_tip,
