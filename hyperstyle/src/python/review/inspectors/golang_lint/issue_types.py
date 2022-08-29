@@ -4,6 +4,7 @@ from typing import Dict
 
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 
+# The configuration was made using the following table: https://bit.ly/3Kvz0nK
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'errcheck': IssueType.ERROR_PRONE,
     'ineffassign': IssueType.ERROR_PRONE,
@@ -26,6 +27,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'errorlint': IssueType.ERROR_PRONE,
     'execinquery': IssueType.BEST_PRACTICES,
     'exhaustive': IssueType.ERROR_PRONE,
+    # 'exhaustruct': IssueType.ERROR_PRONE,
     # 'exportloopref': IssueType.ERROR_PRONE,
     # 'forbidigo': IssueType.CODE_STYLE,
     # 'forcetypeassert': IssueType.ERROR_PRONE,
@@ -33,6 +35,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'gci': IssueType.CODE_STYLE,
     'gochecknoglobals': IssueType.BEST_PRACTICES,
     # 'gochecknoinits': IssueType.BEST_PRACTICES,
+    # 'gocognit': IssueType.COMPLEXITY,
     'goconst': IssueType.COMPLEXITY,
     # 'gocyclo': IssueType.CYCLOMATIC_COMPLEXITY,
     # 'godot': IssueType.CODE_STYLE,
@@ -63,6 +66,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'nlreturn': IssueType.CODE_STYLE,
     # 'noctx': IssueType.ERROR_PRONE,
     # 'nolintlint': IssueType.CODE_STYLE,
+    # 'nonamedreturns': IssueType.ERROR_PRONE,
     # 'nosprintfhostport': IssueType.ERROR_PRONE,
     # 'paralleltest': IssueType.ERROR_PRONE,
     # 'prealloc': IssueType.BEST_PRACTICES,
@@ -273,7 +277,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'gosimple-S1021': IssueType.CODE_STYLE,
     'gosimple-S1040': IssueType.ERROR_PRONE,
     # ------------------
-    # -- statickcheck --
+    # -- staticcheck --
     # ------------------
     'staticcheck-SA4021': IssueType.BEST_PRACTICES,
     'staticcheck-SA6000': IssueType.BEST_PRACTICES,
