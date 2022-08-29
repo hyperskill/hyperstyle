@@ -38,7 +38,7 @@ FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ('case12_stylecheck_issues.go', 2),
     ('case13_staticcheck_issues.go', 3),
     ('case14_whitespace.go', 4),
-    ('case15_deadcode.go', 3),
+    ('case15_deadcode.go', 4),
     ('case16_errcheck.go', 11),
     ('case17_magic_numbers.go', 0),  # 0 because all INFO issues have been filtered out
     ('case18_generics.go', 1),
@@ -87,7 +87,7 @@ FILE_WITH_ISSUE_INFO_TEST_DATA = [
     ('case14_whitespace.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=2, n_code_style=4)),
     (
         'case15_deadcode.go',
-        IssuesTestInfo(n_cc=3, n_maintainability=3, n_func_len=1, n_error_prone=2, n_best_practices=1),
+        IssuesTestInfo(n_cc=3, n_maintainability=3, n_func_len=1, n_error_prone=3, n_best_practices=1),
     ),
     ('case16_errcheck.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_error_prone=11)),
     ('case17_magic_numbers.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=1, n_info=2)),
@@ -220,9 +220,9 @@ OUTPUT_PARSING_TEST_DATA = [
         'multi_file_project_with_issues.json',
         [
             CodeIssue(
-                origin_class='deadcode',
+                origin_class='unused',
                 type=IssueType.ERROR_PRONE,
-                description="`hypotenuse` is unused",
+                description="func `hypotenuse` is unused",
                 file_path=Path('/home/user/some_project/b.go'),
                 line_no=7,
                 column_no=6,
@@ -360,7 +360,7 @@ def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
 
 def test_choose_issue_type():
     error_codes = [
-        'deadcode',
+        'unused',
         'cyclop',
         'lll',
         'funlen',
