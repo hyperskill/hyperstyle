@@ -66,10 +66,9 @@ JavaScript language:
   
 
 
-
 Go language:
 
-- [x] golangci-lint [GNU GPL v3.0] (Version: 1.47.1)
+- [x] golangci-lint [GNU GPL v3.0] (Version: 1.49.0)
     * [Site and docs](https://golangci-lint.run/)
     * [Repository](https://github.com/golangci/golangci-lint)
 ---
