@@ -7,11 +7,11 @@ from hyperstyle.src.python.review.common import language
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.tips import get_bool_expr_len_tip, get_func_len_tip
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue, BoolExprLenIssue, FuncLenIssue, IssueDifficulty, IssueType,
 )
-from hyperstyle.src.python.review.inspectors.tips import get_bool_expr_len_tip, get_func_len_tip
 
 BOOL_EXPR_LEN_ORIGIN_CLASS = 'C001'
 FUNC_LEN_ORIGIN_CLASS = 'C002'
@@ -40,7 +40,7 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
             file_path=self._file_path,
             line_no=node.lineno,
             column_no=node.col_offset,
-            description=get_bool_expr_len_tip(),
+            description=get_bool_expr_len_tip().format(length),
             origin_class=BOOL_EXPR_LEN_ORIGIN_CLASS,
             inspector_type=self._inspector_type,
             bool_expr_len=length,
@@ -72,7 +72,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 file_path=self._file_path,
                 line_no=self._previous_node.lineno,
                 column_no=self._previous_node.col_offset,
-                description=get_func_len_tip(),
+                description=get_func_len_tip().format(func_length),
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
@@ -97,7 +97,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
                 file_path=self._file_path,
                 line_no=self._previous_node.lineno,
                 column_no=self._previous_node.col_offset,
-                description=get_func_len_tip(),
+                description=get_func_len_tip().format(func_length),
                 origin_class=FUNC_LEN_ORIGIN_CLASS,
                 inspector_type=self._inspector_type,
                 func_len=func_length,
