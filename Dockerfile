@@ -49,4 +49,16 @@ RUN curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_V
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh  \
     | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
 
+# Install third party golang libraries and pre-cache them by compiling main.go
+# Taken from: https://github.com/StepicOrg/epicbox-images/blob/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/Dockerfile
+RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/go.mod && \
+    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/go.sum && \
+    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/main.go && \
+    go mod download && \
+    go mod verify && \
+    go mod tidy && \
+    go run main.go &&  \
+    rm main.go &&  \
+    chmod ugo-w go.mod go.sum
+
 CMD ["/bin/bash"]
