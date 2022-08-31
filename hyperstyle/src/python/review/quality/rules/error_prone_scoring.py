@@ -24,6 +24,7 @@ LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG = {
     Language.KOTLIN: common_error_prone_rule_config,
     Language.PYTHON: common_error_prone_rule_config,
     Language.JS: common_error_prone_rule_config,
+    Language.GO: common_error_prone_rule_config,
 }
 
 

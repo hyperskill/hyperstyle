@@ -23,6 +23,7 @@ LANGUAGE_TO_LINE_LENGTH_RULE_CONFIG = {
     Language.KOTLIN: common_line_length_rule_config,
     Language.PYTHON: common_line_length_rule_config,
     Language.JS: common_line_length_rule_config,
+    Language.GO: common_line_length_rule_config,
 }
 
 

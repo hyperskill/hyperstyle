@@ -31,6 +31,7 @@ class LanguageVersion(Enum):
     PYTHON_3 = 'python3'
     KOTLIN = 'kotlin'
     JS = 'javascript'
+    GO = 'go'
 
     @classmethod
     def values(cls) -> List[str]:
@@ -48,6 +49,7 @@ class LanguageVersion(Enum):
             cls.PYTHON_3: Extension.PY,
             cls.KOTLIN: Extension.KT,
             cls.JS: Extension.JS,
+            cls.GO: Extension.GO,
         }
 
     def extension_by_language(self) -> Extension:

@@ -66,6 +66,9 @@ echo "Checking variables..."
 : "${PMD_VERSION:?Variable is not defined}"
 : "${PMD_DIRECTORY:?Variable is not defined}"
 
+: "${GOLANG_LINT_VERSION:?Variable is not defined}"
+: "${GOLANG_LINT_DIRECTORY:?Variable is not defined}"
+
 echo "The variables are defined."
 
 echo
@@ -132,4 +135,15 @@ if need_to_install_linter "PMD" "${PMD_DIRECTORY}"; then
   check_return_code $? "PMD ${PMD_VERSION} installed." "PMD ${PMD_VERSION} installation failed."
 else
   echo "PMD ${PMD_VERSION} installation skipped."
+fi
+
+echo
+
+echo "Installing golangci-lint ${GOLANG_LINT_VERSION} ..."
+if need_to_install_linter "golangci-lint" "${GOLANG_LINT_DIRECTORY}"; then
+  curl -SL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh |
+    sh -s -- -b "${GOLANG_LINT_DIRECTORY}" "v${GOLANG_LINT_VERSION}"
+  check_return_code $? "Golangci-lint ${GOLANG_LINT_VERSION} installed." "Golangci-lint ${GOLANG_LINT_VERSION} installation failed."
+else
+  echo "Golangci-lint ${GOLANG_LINT_VERSION} installation skipped."
 fi

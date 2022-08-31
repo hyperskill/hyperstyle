@@ -20,6 +20,7 @@ LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG = {
     Language.PYTHON: common_inheritance_depth_rule_config,
     Language.KOTLIN: common_inheritance_depth_rule_config,
     Language.JS: common_inheritance_depth_rule_config,
+    Language.GO: common_inheritance_depth_rule_config,
 }
 
 

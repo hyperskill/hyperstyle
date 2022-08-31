@@ -27,6 +27,7 @@ LANGUAGE_TO_COHESION_RULE_CONFIG = {
     Language.PYTHON: common_cohesion_rule_config,
     Language.KOTLIN: common_cohesion_rule_config,
     Language.JS: common_cohesion_rule_config,
+    Language.GO: common_cohesion_rule_config,
 }
 
 

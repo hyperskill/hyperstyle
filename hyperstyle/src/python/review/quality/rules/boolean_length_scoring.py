@@ -30,6 +30,7 @@ LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG = {
     Language.KOTLIN: kotlin_boolean_expression_rule_config,
     Language.PYTHON: common_boolean_expression_rule_config,
     Language.JS: common_boolean_expression_rule_config,
+    Language.GO: common_boolean_expression_rule_config,
 }
 
 

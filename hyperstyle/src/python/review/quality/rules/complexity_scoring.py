@@ -24,6 +24,7 @@ LANGUAGE_TO_COMPLEXITY_RULE_CONFIG = {
     Language.PYTHON: common_complexity_rule_config,
     Language.KOTLIN: common_complexity_rule_config,
     Language.JS: common_complexity_rule_config,
+    Language.GO: common_complexity_rule_config,
 }
 
 

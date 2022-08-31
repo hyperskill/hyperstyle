@@ -1,0 +1,163 @@
+{
+  "Issues": [
+    {
+      "FromLinter": "funlen",
+      "Text": "Function 'hello' is too long (6 \u003e 1)",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 0,
+        "Line": 5,
+        "Column": 0
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "funlen",
+      "Text": "Function 'main' is too long (3 \u003e 1)",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 0,
+        "Line": 14,
+        "Column": 0
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "revive",
+      "Text": "indent-error-flow: if block ends with a return statement, so drop this else and outdent its block",
+      "Severity": "warning",
+      "SourceLines": [
+        "\t} else {",
+        "\t\treturn \"Hello, non-Jerry!\"",
+        "\t}"
+      ],
+      "Replacement": null,
+      "LineRange": {
+        "From": 8,
+        "To": 10
+      },
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 116,
+        "Line": 8,
+        "Column": 9
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "cyclop",
+      "Text": "calculated cyclomatic complexity for function hello is 2, max is -1",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 28,
+        "Line": 5,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "cyclop",
+      "Text": "calculated cyclomatic complexity for function main is 1, max is -1",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 170,
+        "Line": 14,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "unreachable: unreachable code",
+      "Severity": "",
+      "SourceLines": [
+        "\treturn \"Hello?\""
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 151,
+        "Line": 11,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "maintidx",
+      "Text": "Function name: hello, Cyclomatic Complexity: 2, Halstead Volume: 76.15, Maintainability Index: 66",
+      "Severity": "",
+      "SourceLines": [
+        "func hello(name string) string {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 28,
+        "Line": 5,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "maintidx",
+      "Text": "Function name: main, Cyclomatic Complexity: 1, Halstead Volume: 58.81, Maintainability Index: 72",
+      "Severity": "",
+      "SourceLines": [
+        "func main() {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 170,
+        "Line": 14,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "stylecheck",
+      "Text": "ST1017: don't use Yoda conditions",
+      "Severity": "",
+      "SourceLines": [
+        "\tif \"Jerry\" == name {"
+      ],
+      "Replacement": null,
+      "Pos": {
+        "Filename": "/home/user/some_project/a.go",
+        "Offset": 65,
+        "Line": 6,
+        "Column": 5
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    }
+  ]
+}

@@ -32,6 +32,7 @@ class Extension(Enum):
     KT = '.kt'
     JS = '.js'
     KTS = '.kts'
+    GO = '.go'
 
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned

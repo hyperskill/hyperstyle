@@ -29,6 +29,11 @@ LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG = {
         cc_value_bad=14,
         cc_value_moderate=13,
     ),
+    # Using java config
+    Language.GO: CyclomaticComplexityRuleConfig(
+        cc_value_bad=14,
+        cc_value_moderate=13,
+    ),
 }
 
 
