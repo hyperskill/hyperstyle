@@ -4,9 +4,9 @@ from textwrap import dedent
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.common.tips import get_maintainability_index_tip
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.inspectors.radon.radon import RadonInspector
-from hyperstyle.src.python.review.inspectors.tips import get_maintainability_index_tip
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 

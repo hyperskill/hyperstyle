@@ -4,7 +4,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 
@@ -342,7 +342,7 @@ ISSUE_TYPE_TO_CLASS = {
 }
 
 
-def get_issue_class_by_issue_type(issue_type: IssueType):
+def get_issue_class_by_issue_type(issue_type: IssueType) -> Type[BaseIssue]:
     return ISSUE_TYPE_TO_CLASS.get(issue_type, CodeIssue)
 
 
@@ -354,3 +354,7 @@ MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME = {
     IssueType.MAINTAINABILITY: IssueData.MAINTAINABILITY_LACK.value,
     IssueType.COHESION: IssueData.COHESION_LACK.value,
 }
+
+
+def get_measure_name_by_measurable_issue_type(issue_type: IssueType) -> str:
+    return MEASURABLE_ISSUE_TYPE_TO_MEASURE_NAME[issue_type]

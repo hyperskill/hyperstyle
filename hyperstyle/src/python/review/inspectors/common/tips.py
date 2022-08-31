@@ -1,29 +1,21 @@
-def get_bool_expr_len_tip() -> str:
-    return (
-        'Too long boolean expression. '
-        'Try to split it into smaller expressions.'
-    )
+def get_bool_expr_len_tip(unit_name: str = 'operators') -> str:
+    return f'Too long boolean expression ({{0}} {unit_name}). Try to split it into smaller expressions.'
 
 
 def get_func_len_tip() -> str:
     return (
-        'Too long function. '
-        'Try to split it into smaller functions / methods. '
+        'Too long function ({0} lines). Try to split it into smaller functions / methods. '
         'It will make your code easy to understand and less error prone.'
     )
 
 
 def get_line_len_tip() -> str:
-    return (
-        'Too long line. '
-        'Try to split it into smaller lines. '
-        'It will make your code easy to understand.'
-    )
+    return 'Too long line ({0} symbols). Try to split it into smaller lines. It will make your code easy to understand.'
 
 
 def get_cyclomatic_complexity_tip() -> str:
     return (
-        'Too complex function. You can figure out how to simplify this code '
+        'Cyclomatic complexity is too high ({0}). You can figure out how to simplify this code '
         'or split it into a set of small functions / methods. '
         'It will make your code easy to understand and less error prone.'
     )
@@ -33,9 +25,11 @@ def add_complexity_tip(description: str) -> str:
     description = description.strip()
     description = description[:-1] if description.endswith('.') else description
     description = description.replace('NCSS', 'Non Commenting Source Statements metric')
-    return description + ('. You can figure out how to simplify this code '
-                          'or split it into a set of small functions / methods. '
-                          'It will make your code easy to understand and less error prone.')
+    return (
+        f'{description}. You can figure out how to simplify this code '
+        'or split it into a set of small functions / methods. '
+        'It will make your code easy to understand and less error prone.'
+    )
 
 
 def get_inheritance_depth_tip() -> str:
@@ -59,10 +53,8 @@ def get_weighted_method_tip() -> str:
 
 def get_augmented_assign_pattern_tip() -> str:
     return (
-        'Found usable augmented assign pattern. '
-        'You can use shorthand notation if the left and right parts of '
-        'the expression have the same variable, '
-        'e.g. x = x + 2 is the same with x += 2.'
+        'Found usable augmented assign pattern. You can use shorthand notation if the left and right parts of '
+        'the expression have the same variable, e.g. x = x + 2 is the same with x += 2.'
     )
 
 
@@ -74,14 +66,13 @@ def get_class_coupling_tip() -> str:
     )
 
 
-def get_cohesion_tip(base_message: str) -> str:
+def get_cohesion_tip() -> str:
     return (
-        f'{base_message} '
+        'Lack of cohesion is too high ({0}%). '
         'Cohesion measures the strength of relationship between pieces of functionality within a given module. '
-        'When cohesion is high, the methods and variables of the class are co-dependent '
-        'and hang together as a logical whole. '
-        'However, if the task requires implementing classes without methods, the cohesion always will be low since '
-        'all variables will be in-dependent. '
+        'When lack of cohesion is low, the methods and variables of the class are co-dependent '
+        'and hang together as a logical whole. However, if the task requires implementing classes without methods, '
+        'the lack of cohesion always will be high since all variables will be in-dependent. '
         'Please, ignore this issue if the task requires implement an empty class (without any methods).'
     )
 
@@ -102,16 +93,19 @@ def get_method_number_tip() -> str:
     )
 
 
-# TODO: Need to improve the tip.
+# TODO: Need to improve the tip and add a measure field.
 def get_maintainability_index_tip() -> str:
     return 'The maintainability index is too low.'
 
 
-def get_magic_number_tip(base_message: str = "Found a magic number") -> str:
+def get_magic_number_tip(with_number_field: bool = True) -> str:
+    base_message = 'Found a magic number'
+    if with_number_field:
+        base_message += ': {0}'
+
     return (
-        f'{base_message}. '
-        'The use of unnamed magic numbers in code hides the developers\' intent in choosing that number, '
-        'increases opportunities for subtle errors and makes it more difficult for the program to be adapted '
-        'and extended in the future.\n'
-        'However, for small programs it can be allowed, but it is better to use constants instead of magic numbers.'
+        f'{base_message}. The use of unnamed magic numbers in code hides the developers\' intent '
+        'in choosing that number, increases opportunities for subtle errors and makes it more difficult '
+        'for the program to be adapted and extended in the future. However, for small programs it can be allowed, '
+        'but it is better to use constants instead of magic numbers.'
     )

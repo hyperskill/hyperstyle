@@ -3,6 +3,7 @@ from test.python.inspectors import PYTHON_AST_DATA_FOLDER, PYTHON_DATA_FOLDER
 from test.python.inspectors.conftest import use_file_metadata
 
 import pytest
+from hyperstyle.src.python.review.inspectors.common.tips import get_bool_expr_len_tip, get_func_len_tip
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.pyast.python_ast import (
     BoolExpressionLensGatherer,
@@ -57,6 +58,7 @@ def test_bool_expr_len_gatherer_one_expr():
     assert len(gatherer.bool_expression_lens) == 1
     assert gatherer.bool_expression_lens[0].bool_expr_len == 5
     assert gatherer.bool_expression_lens[0].line_no == 2
+    assert gatherer.bool_expression_lens[0].description == get_bool_expr_len_tip().format(5)
 
 
 def test_bool_expr_len_gatherer_many_exprs():
@@ -69,6 +71,7 @@ def test_bool_expr_len_gatherer_many_exprs():
 
     assert len(gatherer.bool_expression_lens) == 3
     assert all(issue.bool_expr_len == 1 for issue in gatherer.bool_expression_lens)
+    assert all(issue.description == get_bool_expr_len_tip().format(1) for issue in gatherer.bool_expression_lens)
 
 
 def test_function_lens_gatherer():
@@ -81,3 +84,4 @@ def test_function_lens_gatherer():
 
     assert len(gatherer.function_lens) == 1
     assert gatherer.function_lens[0].func_len == 15
+    assert gatherer.function_lens[0].description == get_func_len_tip().format(15)
