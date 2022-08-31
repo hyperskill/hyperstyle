@@ -100,7 +100,7 @@ class GolangLintInspector(BaseInspector):
 
             # If the issue is from the metalinter, we need to extract
             # the issue code from the description and add it to origin_class.
-            if origin_class in {'govet', 'revive', 'gocritic', 'gosimple', 'staticcheck', 'stylecheck'}:
+            if cls._is_metalinter_issue(origin_class):
                 matches = metalinter_description_re.search(description)
                 if matches:
                     issue_code, description = matches.groups()
@@ -140,3 +140,8 @@ class GolangLintInspector(BaseInspector):
 
         logger.warning(f'{cls.inspector_type.value}: {code} - unknown error code')
         return IssueType.BEST_PRACTICES
+
+    @staticmethod
+    def _is_metalinter_issue(origin_class: str) -> bool:
+        return origin_class in {'govet', 'revive', 'gocritic', 'gosimple', 'staticcheck', 'stylecheck'}
+
