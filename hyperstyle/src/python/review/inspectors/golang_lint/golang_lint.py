@@ -144,4 +144,3 @@ class GolangLintInspector(BaseInspector):
     @staticmethod
     def _is_metalinter_issue(origin_class: str) -> bool:
         return origin_class in {'govet', 'revive', 'gocritic', 'gosimple', 'staticcheck', 'stylecheck'}
-
