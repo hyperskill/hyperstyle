@@ -3,6 +3,7 @@
 In this document you will find a detailed description of how to add new functionality to Hyperstyle.
 
 ## Contents
+
 1. [Adding a new inspector for an existing language](#adding-a-new-inspector-for-an-existing-language).
 2. [Adding a new inspector for a new language](#adding-a-new-inspector-for-a-new-language).
 
@@ -63,4 +64,22 @@ A sample checklist for adding a new inspector looks like this:
 
 ## Adding a new inspector for a new language
 
+Before you can add a new inspector, you must add support for a new language to Hyperstyle. To do this, you must do the following:
+1. Add a new language in the [`Language`](hyperstyle/src/python/review/common/language.py#L10) class.
+2. Add a version of the new language in the [`LanguageVersion`](hyperstyle/src/python/review/application_config.py#L24) class.
+3. Add file extensions of the new language in the [`Extension`](hyperstyle/src/python/review/common/file_system.py#L28) class.
+4. Define configurations for the new language in the [`rules`](hyperstyle/src/python/review/quality/rules/) module.
+5. Add an entry for the new language in the [`language_to_reviewer`](hyperstyle/src/python/review/reviewers/perform_review.py#L31) dictionary.
+
+Next, use the "[Adding a new inspector for an existing language](#adding-a-new-inspector-for-an-existing-language)" guideline.
+
 ### Checklist
+
+A sample checklist for adding a new linter looks like this:
+- [ ] I've added a new language to the `Language` class, updated the [`from_language_version`](hyperstyle/src/python/review/common/language.py#L18) function and the [`EXTENSION_TO_LANGUAGE`](hyperstyle/src/python/review/common/language.py#L45) dictionary.
+- [ ] I've added a version of the new language to `LanguageVersion`.
+- [ ] I've added new language file extensions to the `Extensions` class and updated the [`language_to_extension_dict`](#hyperstyle/src/python/review/application_config.py#L40) dictionary.
+- [ ] I've defined rule configs for the new language.
+- [ ] I've added functional tests for the new language.
+
+And all the items from the "[Adding a new inspector for an existing language](#adding-a-new-inspector-for-an-existing-language)" checklist.
