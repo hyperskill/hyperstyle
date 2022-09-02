@@ -70,6 +70,7 @@ Before you can add a new inspector, you must add support for a new language to H
 3. Add file extensions of the new language in the [`Extension`](hyperstyle/src/python/review/common/file_system.py#L28) class.
 4. Define configurations for the new language in the [`rules`](hyperstyle/src/python/review/quality/rules/) module.
 5. Add an entry for the new language in the [`language_to_reviewer`](hyperstyle/src/python/review/reviewers/perform_review.py#L31) dictionary.
+6. Install all necessary files for the new language in the [Dockerfile.base](Dockerfile.base).
 
 Next, use the "[Adding a new inspector for an existing language](#adding-a-new-inspector-for-an-existing-language)" guideline.
 
@@ -81,5 +82,6 @@ A sample checklist for adding a new linter looks like this:
 - [ ] I've added new language file extensions to the `Extensions` class and updated the [`language_to_extension_dict`](hyperstyle/src/python/review/application_config.py#L40) dictionary.
 - [ ] I've defined rule configs for the new language.
 - [ ] I've added functional tests for the new language.
+- [ ] I've installed all necessary files for the new language in the Dockerfile.base. 
 
 And all the items from the "[Adding a new inspector for an existing language](#adding-a-new-inspector-for-an-existing-language)" checklist.
