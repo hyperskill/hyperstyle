@@ -78,7 +78,7 @@ Next, use the "[Adding a new inspector for an existing language](#adding-a-new-i
 A sample checklist for adding a new linter looks like this:
 - [ ] I've added a new language to the `Language` class, updated the [`from_language_version`](hyperstyle/src/python/review/common/language.py#L18) function and the [`EXTENSION_TO_LANGUAGE`](hyperstyle/src/python/review/common/language.py#L45) dictionary.
 - [ ] I've added a version of the new language to `LanguageVersion`.
-- [ ] I've added new language file extensions to the `Extensions` class and updated the [`language_to_extension_dict`](#hyperstyle/src/python/review/application_config.py#L40) dictionary.
+- [ ] I've added new language file extensions to the `Extensions` class and updated the [`language_to_extension_dict`](hyperstyle/src/python/review/application_config.py#L40) dictionary.
 - [ ] I've defined rule configs for the new language.
 - [ ] I've added functional tests for the new language.
 
