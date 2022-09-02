@@ -22,6 +22,12 @@ Usually the third-party linter needs a configuration file to run. This file shou
 
 An example of inspectors that are implemented in such a way: [`PMDInpsector`](hyperstyle/src/python/review/inspectors/pmd), [`GolangLintInspector`](hyperstyle/src/python/review/inspectors/golang_lint), [`Flake8Inspector`](hyperstyle/src/python/review/inspectors/flake8).
 
+If the inspector does not need the third-party linter (for example, if the inspector works with a code directly), then the above functions are not necessary. In this case, each such inspector is implemented uniquely. Currently, only one inspector of this kind is implemented in Hyperstyle: [`PythonAstInspector`](hyperstyle/src/python/review/inspectors/pyast).
+
+After implementing all the necessary functions, you need to add the inspector instance to the [`LANGUAGE_TO_INSPECTORS`](hyperstyle/src/python/review/reviewers/common.py#L28) dictionary, and update the main [README](README.md) file with a mention of the new inspector there.
+
+If you are implementing the inspector that uses the third-party linter, you must also update the [Dockerfile](Dockerfile) with necessary environment variables and commands to install the linter, and update the [README](README.md) file and the [`setup_environment.sh`](setup_environment.sh) script in the same way.
+
 ### Implementation of the `parse` function
 
 ### Checklist
