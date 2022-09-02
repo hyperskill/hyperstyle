@@ -30,6 +30,12 @@ If you are implementing the inspector that uses the third-party linter, you must
 
 ### Implementation of the `parse` function
 
+Usually, the `parse` function parses the result of the third-party linter line-by-line, then creates a base issue using the [`BaseIssue`](hyperstyle/src/python/review/inspectors/issue.py#L199) dataclass, which is later converted to either [`CodeIssue`](hyperstyle/src/python/review/inspectors/issue.py#L217) or one of the measurable issues using the [`convert_base_issue`](hyperstyle/src/python/review/inspectors/common/base_issue_converter.py#L17) function and an instance of the [`IssueConigsHandler`](hyperstyle/src/python/review/inspectors/issue_configs.py#L117) class. The resulting issue is added to the general list of found issues and this list is returned from the function after the parsing is finished.
+
+The `IssueConfigHandler` class handles custom issue descriptions and also parses metrics from their descriptions (examples of metrics are: line or function length, cyclomatic complexity, maintainability index).  It receives instances of [`IssueConfig`](hyperstyle/src/python/review/inspectors/issue_configs.py#L46) or [`MeasurableIssueConfig`](hyperstyle/src/python/review/inspectors/issue_configs.py#L85) classes as input, which should be stored in the `ISSUE_CONFIGS` list next to the inspector.
+
+Also, if the third-party linter supports output in "Checkstyle" format, you can use the [`parse_xml_file_result`](hyperstyle/src/python/review/inspectors/common/xml_parser.py#L47) function to parse the output file.
+
 ### Checklist
 
 ## Adding a new inspector for a new language
