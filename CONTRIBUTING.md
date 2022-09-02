@@ -38,6 +38,29 @@ Also, if the third-party linter supports output in "Checkstyle" format, you can 
 
 ### Checklist
 
+A sample checklist for adding a new inspector looks like this:
+- [ ] I've inherited from the `BaseInspector` class.
+- [ ] I've implemented the `inspect` function and _if needed_ I've added a check for the existence of third-party linter environment variables using the [`check_set_up_env_variable`](hyperstyle/src/python/review/common/file_system.py#L124) function.
+- [ ] I've added a new inspector type to the `InspectorType` class, updated the [`available_values`](hyperstyle/src/python/review/inspectors/inspector_type.py#L27) function and defined the inspector type.
+- [ ] _If needed_. I've added a config to run the third-party linter.
+- [ ] _If needed_. I've implemented the `create_command` function.
+- [ ] _if needed_. I've implemented the `parse` function and defined the `ISSUES_CONFIGS` list in a separate file.
+- [ ] _If needed_. I've implemented the `choose_issue_type` function and defined the `ORIGIN_CLASS_TO_ISSUE_TYPE` dictionary in a separate file.
+- [ ] I've added an instance of the new inspector to the `LANGUAGE_TO_INSPECTORS` dictionary.
+- [ ] I've updated the main README file: 
+	- [ ] I've added an information about the new inspector.
+	- [ ] I've updated a description of the `--disable` flag.
+	- [ ] _If needed_. I've added an information about the new linter environment variables.
+	- [ ] _If needed_. I've added a command to manually install the third-party linter.
+- [ ] _If needed_. I've updated the Dockerfile with the new linter environment variables and commands to install the third-party linter.
+- [ ] I've added tests to check the inspector:
+	- [ ] _If needed_. The linter's output parsing is working correctly.
+	- [ ] _If needed_. The issue categorization is working correctly.
+	- [ ] The total number of issues from a source code is collected correctly.
+	- [ ] The number of issues of each type from a source code is collected correctly.
+	- [ ] _If needed_. Metric issues are parsed correctly.
+	- [ ] _If needed_. Custom issues descriptions are added correctly.
+
 ## Adding a new inspector for a new language
 
 ### Checklist
