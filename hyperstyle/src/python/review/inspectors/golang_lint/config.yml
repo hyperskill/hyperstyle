@@ -84,6 +84,9 @@ linters-settings:
   varnamelen:
     max-distance: 10
     min-name-length: 3
+    ignore-names:
+      - db
+      - tx
     ignore-decls:
       - c echo.Context
       - t testing.T
