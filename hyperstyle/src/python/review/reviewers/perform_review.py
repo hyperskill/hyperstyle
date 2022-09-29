@@ -11,7 +11,8 @@ from hyperstyle.src.python.review.reviewers.common import perform_language_revie
 from hyperstyle.src.python.review.reviewers.go import perform_go_review
 from hyperstyle.src.python.review.reviewers.python import perform_python_review
 from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
-from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, explore_project
+from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, explore_project, \
+    explore_in_memory_metadata, Metadata
 from hyperstyle.src.python.review.reviewers.utils.print_review import (
     print_review_result_as_json,
     print_review_result_as_multi_file_json,
@@ -89,8 +90,15 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
             logger.error(f'Unsupported language. Extensions {metadata.extensions} for project {path}')
             raise UnsupportedLanguage(path, metadata.extensions)
         languages = list(metadata.languages.difference({Language.UNKNOWN}))
+    return _preform_review(metadata, languages, config)
 
+
+def _preform_review(metadata: Metadata, languages: List[Language], config: ApplicationConfig) -> GeneralReviewResult:
     # TODO start review for several languages and do something with the results
     reviewer = language_to_reviewer[languages[0]]
-
     return reviewer(metadata, config)
+
+
+def preform_review(code: str, language: Language, config: ApplicationConfig) -> GeneralReviewResult:
+    metadata = explore_in_memory_metadata(code)
+    return _preform_review(metadata, [language], config)
