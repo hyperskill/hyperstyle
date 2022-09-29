@@ -34,9 +34,10 @@ BASE_COMMAND = [
 class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
-    # We don't support in-memory inspection for Flake8 yet
-    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        return []
+    @classmethod
+    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        output = run_in_subprocess(BASE_COMMAND + ['-'], subprocess_input=code)
+        return cls.parse(output)
 
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:

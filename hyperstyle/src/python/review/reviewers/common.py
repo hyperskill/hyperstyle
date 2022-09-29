@@ -66,13 +66,6 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
     return inspect_in_parallel(run_inspector, metadata.path, config, inspectors)
 
 
-def _group_issues_by_files(issues: List[BaseIssue]) -> Dict[Path, List[BaseIssue]]:
-    file_path_to_issues = defaultdict(list)
-    for issue in issues:
-        file_path_to_issues[issue.file_path].append(issue)
-    return file_path_to_issues
-
-
 def perform_language_review(metadata: Metadata, config: ApplicationConfig, language: Language) -> GeneralReviewResult:
     issues = _inspect_code(metadata, config, language)
     if issues:
@@ -81,7 +74,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         if not config.allow_duplicates:
             issues = filter_duplicate_issues(issues)
 
-    file_path_to_issues = _group_issues_by_files(issues)
+    file_path_to_issues = defaultdict(list)
+    for issue in issues:
+        file_path_to_issues[issue.file_path].append(issue)
 
     if isinstance(metadata, FileMetadata):
         current_files = [metadata.path]
@@ -109,12 +104,12 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     }
 
     file_review_results = []
-    for file_metadata in current_files:
-        file_issues = file_path_to_issues[file_metadata]
+    for file in current_files:
+        file_issues = file_path_to_issues[file]
         file_issues_by_difficulty = group_issues_by_difficulty(file_issues)
 
         code_statistics_by_difficulty = {
-            difficulty: gather_code_statistics(file_issues, file_metadata)
+            difficulty: gather_code_statistics(file_issues, file)
             for difficulty, file_issues in file_issues_by_difficulty.items()
         }
 
@@ -136,7 +131,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
             general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
 
         file_review_results.append(
-            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file_metadata),
+            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file),
         )
 
     return GeneralReviewResult(

@@ -31,7 +31,8 @@ class PMDInspector(BaseInspector):
     has_access = False
 
     # We don't support in-memory inspection for PMD yet
-    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    @classmethod
+    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
         return []
 
     def _create_command(self, path: Path,

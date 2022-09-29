@@ -31,7 +31,8 @@ class PylintInspector(BaseInspector):
     )
 
     # We don't support in-memory inspection for Pylint yet
-    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    @classmethod
+    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
         return []
 
     @classmethod

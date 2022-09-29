@@ -85,6 +85,11 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
     weighted_method_complexities = __get_max_measure_by_issue_type(IssueType.WEIGHTED_METHOD, issues)
     method_numbers = __get_max_measure_by_issue_type(IssueType.METHOD_NUMBER, issues)
 
+    if path.exists():
+        total_lines = get_total_code_lines_from_file(path)
+    else:
+        total_lines = 0
+
     return CodeStatistics(
         n_code_style_issues=issue_type_counter[IssueType.CODE_STYLE],
         n_best_practices_issue=issue_type_counter[IssueType.BEST_PRACTICES],
@@ -101,6 +106,6 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
         coupling=couplings,
         weighted_method_complexities=weighted_method_complexities,
         method_number=method_numbers,
-        total_lines=get_total_code_lines_from_file(path),
+        total_lines=total_lines,
         code_style_lines=get_code_style_lines(issues),
     )
