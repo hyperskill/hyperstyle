@@ -3,7 +3,7 @@ import itertools
 import logging
 import multiprocessing
 from pathlib import Path
-from typing import List, Callable, Any, Dict
+from typing import Any, Callable, Dict, List
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
@@ -55,4 +55,3 @@ def inspect_in_parallel(inspector_runner: Callable[[Any, ApplicationConfig, Base
         )
 
     return list(itertools.chain(*issues))
-

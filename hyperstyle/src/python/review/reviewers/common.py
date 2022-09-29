@@ -3,8 +3,11 @@ from typing import List, Optional
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.common.parallel_runner import inspect_in_parallel, run_inspector_in_memory, \
-    run_inspector
+from hyperstyle.src.python.review.common.parallel_runner import (
+    inspect_in_parallel,
+    run_inspector,
+    run_inspector_in_memory,
+)
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
@@ -25,7 +28,7 @@ from hyperstyle.src.python.review.reviewers.utils.issues_filter import (
     filter_low_measure_issues,
     group_issues_by_difficulty,
 )
-from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import FileMetadata, Metadata, InMemoryMetadata
+from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import FileMetadata, InMemoryMetadata, Metadata
 
 LANGUAGE_TO_INSPECTORS = {
     Language.PYTHON: [

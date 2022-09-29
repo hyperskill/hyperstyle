@@ -11,8 +11,12 @@ from hyperstyle.src.python.review.reviewers.common import perform_language_revie
 from hyperstyle.src.python.review.reviewers.go import perform_go_review
 from hyperstyle.src.python.review.reviewers.python import perform_python_review
 from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
-from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, explore_project, \
-    explore_in_memory_metadata, Metadata
+from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import (
+    explore_file,
+    explore_in_memory_metadata,
+    explore_project,
+    Metadata,
+)
 from hyperstyle.src.python.review.reviewers.utils.print_review import (
     print_review_result_as_json,
     print_review_result_as_multi_file_json,
