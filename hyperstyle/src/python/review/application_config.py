@@ -70,12 +70,12 @@ class LanguageVersion(Enum):
 
     def is_java(self) -> bool:
         return (
-                self == LanguageVersion.JAVA_7
-                or self == LanguageVersion.JAVA_8
-                or self == LanguageVersion.JAVA_9
-                or self == LanguageVersion.JAVA_11
-                or self == LanguageVersion.JAVA_15
-                or self == LanguageVersion.JAVA_17
+            self == LanguageVersion.JAVA_7
+            or self == LanguageVersion.JAVA_8
+            or self == LanguageVersion.JAVA_9
+            or self == LanguageVersion.JAVA_11
+            or self == LanguageVersion.JAVA_15
+            or self == LanguageVersion.JAVA_17
         )
 
     @classmethod

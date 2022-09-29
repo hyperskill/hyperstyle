@@ -135,6 +135,11 @@ def print_review_result_as_json(review_result: GeneralReviewResult, config: Appl
 
 
 def print_review_result_as_multi_file_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> None:
+    output_json = get_review_result_as_multi_file_json(review_result, config)
+    print(json.dumps(output_json))
+
+
+def get_review_result_as_multi_file_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> dict:
     review_result.file_review_results.sort(key=lambda result: result.file_path)
 
     file_review_result_jsons = []
@@ -143,12 +148,10 @@ def print_review_result_as_multi_file_json(review_result: GeneralReviewResult, c
 
     quality_with_penalty = _get_quality_with_penalty(review_result)
 
-    output_json = {
+    return {
         OutputJsonFields.QUALITY.value: get_quality_json_dict(quality_with_penalty, config),
         OutputJsonFields.FILE_REVIEW_RESULTS.value: file_review_result_jsons,
     }
-
-    print(json.dumps(output_json))
 
 
 @unique
