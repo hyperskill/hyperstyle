@@ -78,16 +78,16 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         file_path_to_issues[issue.file_path].append(issue)
 
     if isinstance(metadata, FileMetadata):
-        current_files = [metadata.path]
+        current_files = [metadata]
         issues = filter_out_of_range_issues(issues, config.start_line, config.end_line)
-    elif isinstance(metadata, ProjectMetadata):
-        current_files = metadata.language_to_files[language]
     else:
-        files = file_path_to_issues.keys()
-        if len(files) == 0:
-            current_files = []
-        else:
-            current_files = files
+        current_files = metadata.language_to_files[language]
+    # else:
+    #     files = file_path_to_issues.keys()
+    #     if len(files) == 0:
+    #         current_files = []
+    #     else:
+    #         current_files = files
 
     previous_issues = get_previous_issues_by_language(config.history, language)
     categorize(previous_issues, issues)
@@ -104,11 +104,11 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
 
     file_review_results = []
     for file in current_files:
-        file_issues = file_path_to_issues[file]
+        file_issues = file_path_to_issues[file.path]
         file_issues_by_difficulty = group_issues_by_difficulty(file_issues)
 
         code_statistics_by_difficulty = {
-            difficulty: gather_code_statistics(file_issues, file)
+            difficulty: gather_code_statistics(file_issues, file.path)
             for difficulty, file_issues in file_issues_by_difficulty.items()
         }
 
@@ -130,7 +130,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
             general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
 
         file_review_results.append(
-            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file),
+            FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file.path),
         )
 
     return GeneralReviewResult(
