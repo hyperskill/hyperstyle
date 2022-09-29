@@ -21,6 +21,14 @@ PATH_FLAKE8_CONFIG = Path(__file__).parent / '.flake8'
 PATH_FLAKE8_SPELLCHECK_WHITELIST = Path(__file__).parent / 'whitelist.txt'
 FORMAT = '%(path)s:%(row)d:%(col)d:%(code)s:%(text)s'
 INSPECTOR_NAME = 'flake8'
+BASE_COMMAND = [
+    'flake8',
+    f'--format={FORMAT}',
+    f'--config={PATH_FLAKE8_CONFIG}',
+    f'--whitelist={PATH_FLAKE8_SPELLCHECK_WHITELIST}',
+    '--max-complexity', '0',
+    '--cohesion-below', '100',
+]
 
 
 class Flake8Inspector(BaseInspector):
@@ -32,16 +40,7 @@ class Flake8Inspector(BaseInspector):
 
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        command = [
-            'flake8',
-            f'--format={FORMAT}',
-            f'--config={PATH_FLAKE8_CONFIG}',
-            f'--whitelist={PATH_FLAKE8_SPELLCHECK_WHITELIST}',
-            '--max-complexity', '0',
-            '--cohesion-below', '100',
-            path,
-        ]
-        output = run_in_subprocess(command)
+        output = run_in_subprocess(BASE_COMMAND + [str(path)])
         return cls.parse(output)
 
     @classmethod
