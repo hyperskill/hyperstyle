@@ -103,6 +103,6 @@ def _preform_review(metadata: Metadata, languages: List[Language], config: Appli
     return reviewer(metadata, config)
 
 
-def preform_review(code: str, language: Language, config: ApplicationConfig) -> GeneralReviewResult:
+def preform_review_in_memory(code: str, language: Language, config: ApplicationConfig) -> GeneralReviewResult:
     metadata = explore_in_memory_metadata(code)
     return _preform_review(metadata, [language], config)

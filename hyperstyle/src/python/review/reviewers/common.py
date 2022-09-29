@@ -29,8 +29,12 @@ from hyperstyle.src.python.review.reviewers.utils.issues_filter import (
     filter_low_measure_issues,
     group_issues_by_difficulty,
 )
-from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import FileMetadata, InMemoryMetadata, Metadata, \
-    ProjectMetadata
+from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import (
+    FileMetadata,
+    InMemoryMetadata,
+    Metadata,
+    ProjectMetadata,
+)
 
 LANGUAGE_TO_INSPECTORS = {
     Language.PYTHON: [
@@ -85,7 +89,11 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     elif isinstance(metadata, ProjectMetadata):
         current_files = metadata.language_to_files[language]
     else:
-        current_files = [file_path_to_issues.keys()[0]]
+        files = file_path_to_issues.keys()
+        if len(files) == 0:
+            current_files = []
+        else:
+            current_files = files
 
     previous_issues = get_previous_issues_by_language(config.history, language)
     categorize(previous_issues, issues)

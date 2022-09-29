@@ -19,6 +19,19 @@ class ApplicationConfig:
     history: Optional[str] = None
     group_by_difficulty: bool = False
 
+    @staticmethod
+    def get_default_config() -> 'ApplicationConfig':
+        return ApplicationConfig(
+            disabled_inspectors=set(),
+            allow_duplicates=False,
+            n_cpu=1,
+            inspectors_config={'n_cpu': 1},
+            with_all_categories=True,
+            start_line=1,
+            new_format=False,
+            group_by_difficulty=False,
+        )
+
 
 @unique
 class LanguageVersion(Enum):
@@ -57,12 +70,12 @@ class LanguageVersion(Enum):
 
     def is_java(self) -> bool:
         return (
-            self == LanguageVersion.JAVA_7
-            or self == LanguageVersion.JAVA_8
-            or self == LanguageVersion.JAVA_9
-            or self == LanguageVersion.JAVA_11
-            or self == LanguageVersion.JAVA_15
-            or self == LanguageVersion.JAVA_17
+                self == LanguageVersion.JAVA_7
+                or self == LanguageVersion.JAVA_8
+                or self == LanguageVersion.JAVA_9
+                or self == LanguageVersion.JAVA_11
+                or self == LanguageVersion.JAVA_15
+                or self == LanguageVersion.JAVA_17
         )
 
     @classmethod
