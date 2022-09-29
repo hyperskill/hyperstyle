@@ -25,6 +25,10 @@ PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
 class DetektInspector(BaseInspector):
     inspector_type = InspectorType.DETEKT
 
+    # We don't support in-memory inspection for Detekt yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
         path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \

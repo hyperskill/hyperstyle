@@ -28,6 +28,10 @@ logger = logging.getLogger(__name__)
 class GolangLintInspector(BaseInspector):
     inspector_type = InspectorType.GOLANG_LINT
 
+    # We don't support in-memory inspection for Golang yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def _create_command(cls, input_path: Path, output_path: Path, working_directory: Path, n_cpu: int) -> List[str]:
         path_to_golang_lint_cli = os.path.join(os.environ[GOLANG_LINT_DIRECTORY_ENV], 'golangci-lint')

@@ -25,6 +25,10 @@ PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_CHECKSTYLE_FILES / 'config.xml'
 class CheckstyleInspector(BaseInspector):
     inspector_type = InspectorType.CHECKSTYLE
 
+    # We don't support in-memory inspection for Checkstyle yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
         path_checkstyle_jar = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/' \

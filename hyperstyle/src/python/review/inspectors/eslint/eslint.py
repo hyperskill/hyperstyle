@@ -17,6 +17,10 @@ PATH_ESLINT_CONFIG = Path(__file__).parent / '.eslintrc'
 class ESLintInspector(BaseInspector):
     inspector_type = InspectorType.ESLINT
 
+    # We don't support in-memory inspection for ESLint yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
         local_path = 'node_modules/.bin/eslint'  # used only in local dev environment

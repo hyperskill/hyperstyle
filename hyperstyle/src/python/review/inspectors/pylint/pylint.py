@@ -30,6 +30,10 @@ class PylintInspector(BaseInspector):
         IssueType.ERROR_PRONE,
     )
 
+    # We don't support in-memory inspection for Pylint yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         command = [

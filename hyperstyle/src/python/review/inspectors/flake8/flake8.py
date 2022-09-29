@@ -26,6 +26,10 @@ INSPECTOR_NAME = 'flake8'
 class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
+    # We don't support in-memory inspection for Flake8 yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         command = [

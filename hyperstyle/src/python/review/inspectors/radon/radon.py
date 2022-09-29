@@ -22,6 +22,10 @@ MAINTAINABILITY_ORIGIN_CLASS = 'RAD100'
 class RadonInspector(BaseInspector):
     inspector_type = InspectorType.RADON
 
+    # We don't support in-memory inspection for Radon yet
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         mi_command = [
