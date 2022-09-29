@@ -1,6 +1,5 @@
 from collections import defaultdict
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
