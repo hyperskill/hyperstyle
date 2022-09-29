@@ -43,10 +43,10 @@ class ProjectMetadata:
         return extension_to_files
 
     @property
-    def language_to_files(self) -> Dict[Language, List[FileMetadata]]:
+    def language_to_files(self) -> Dict[Language, List[Path]]:
         language_to_files = defaultdict(list)
         for file in self.inner_files:
-            language_to_files[file.language].append(file)
+            language_to_files[file.language].append(file.path)
         return language_to_files
 
     @property
