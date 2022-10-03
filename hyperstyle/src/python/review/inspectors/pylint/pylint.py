@@ -20,6 +20,13 @@ PATH_PYLINT_CONFIG = Path(__file__).parent / 'pylintrc'
 FATAL_CATEGORY = 'F'
 INFO_CATEGORY = 'I'
 
+BASE_COMMAND = [
+            'pylint',
+            '--load-plugins', 'pylint_django',
+            f'--rcfile={PATH_PYLINT_CONFIG}',
+            f'--msg-template={MSG_TEMPLATE}',
+            ]
+
 
 class PylintInspector(BaseInspector):
     inspector_type = InspectorType.PYLINT
@@ -33,17 +40,16 @@ class PylintInspector(BaseInspector):
     # We don't support in-memory inspection for Pylint yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        return []
+        command = BASE_COMMAND
+        command.append('--from-stdin')
+
+        output = run_in_subprocess(command, subprocess_input=code)
+        return cls.parse(output)
 
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        command = [
-            'pylint',
-            '--load-plugins', 'pylint_django',
-            f'--rcfile={PATH_PYLINT_CONFIG}',
-            f'--msg-template={MSG_TEMPLATE}',
-            str(path),
-        ]
+        command = BASE_COMMAND
+        command.append(str(path))
 
         output = run_in_subprocess(command)
         return cls.parse(output)
