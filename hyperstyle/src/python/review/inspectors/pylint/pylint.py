@@ -21,11 +21,11 @@ FATAL_CATEGORY = 'F'
 INFO_CATEGORY = 'I'
 
 BASE_COMMAND = [
-            'pylint',
-            '--load-plugins', 'pylint_django',
-            f'--rcfile={PATH_PYLINT_CONFIG}',
-            f'--msg-template={MSG_TEMPLATE}',
-            ]
+    'pylint',
+    '--load-plugins', 'pylint_django',
+    f'--rcfile={PATH_PYLINT_CONFIG}',
+    f'--msg-template={MSG_TEMPLATE}',
+]
 
 
 class PylintInspector(BaseInspector):
