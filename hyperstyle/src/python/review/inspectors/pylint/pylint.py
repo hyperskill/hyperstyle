@@ -37,21 +37,14 @@ class PylintInspector(BaseInspector):
         IssueType.ERROR_PRONE,
     )
 
-    # We don't support in-memory inspection for Pylint yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        command = BASE_COMMAND
-        command.append('--from-stdin')
-
-        output = run_in_subprocess(command, subprocess_input=code)
+        output = run_in_subprocess(BASE_COMMAND + ['--from-stdin'], subprocess_input=code)
         return cls.parse(output)
 
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        command = BASE_COMMAND
-        command.append(str(path))
-
-        output = run_in_subprocess(command)
+        output = run_in_subprocess(BASE_COMMAND + [str(path)])
         return cls.parse(output)
 
     @classmethod
