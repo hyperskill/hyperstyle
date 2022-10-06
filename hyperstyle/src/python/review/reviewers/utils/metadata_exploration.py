@@ -43,10 +43,10 @@ class ProjectMetadata:
         return extension_to_files
 
     @property
-    def language_to_files(self) -> Dict[Language, List[FileMetadata]]:
+    def language_to_files(self) -> Dict[Language, List[Path]]:
         language_to_files = defaultdict(list)
         for file in self.inner_files:
-            language_to_files[file.language].append(file)
+            language_to_files[file.language].append(file.path)
         return language_to_files
 
     @property
@@ -54,7 +54,12 @@ class ProjectMetadata:
         return set(self.extension_to_files)
 
 
-Metadata = Union[FileMetadata, ProjectMetadata]
+@dataclass
+class InMemoryMetadata:
+    code: str
+
+
+Metadata = Union[FileMetadata, ProjectMetadata, InMemoryMetadata]
 
 
 def explore_file(path: Path) -> FileMetadata:
@@ -75,3 +80,7 @@ def explore_project(path: Path) -> ProjectMetadata:
         inner_files.append(explore_file(file_path))
 
     return ProjectMetadata(path, inner_files)
+
+
+def explore_in_memory_metadata(code: str) -> InMemoryMetadata:
+    return InMemoryMetadata(code)
