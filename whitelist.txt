@@ -55,6 +55,7 @@ csv
 ctor
 cuda
 cyclomatic
+cyclop
 dataflow
 dataframe
 dataframes
@@ -96,6 +97,7 @@ fs
 fstring
 fullmatch
 func
+funlen
 getitem
 getline
 getroot
@@ -139,9 +141,11 @@ lineno
 linesep
 linewidth
 listdir
+lll
 loc
 logits
 maintainabilities
+maintidx
 matcher
 maxint
 maxsplit
@@ -149,6 +153,7 @@ mccabe
 mcs
 measurer
 metaclass
+metalinter
 min
 minsize
 misrefactored
@@ -228,6 +233,7 @@ throwable
 tmp
 tokenizer
 toplevel
+typecheck
 unary
 uncommented
 unichr

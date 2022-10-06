@@ -24,6 +24,7 @@ LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG = {
     Language.PYTHON: common_weighted_methods_rule_config,
     Language.KOTLIN: common_weighted_methods_rule_config,
     Language.JS: common_weighted_methods_rule_config,
+    Language.GO: common_weighted_methods_rule_config,
 }
 
 

@@ -43,7 +43,16 @@ js_code_style_rule_config = CodeStyleRuleConfig(
     n_code_style_moderate=0.17,
     n_code_style_good=0,
     n_code_style_lines_bad=10,
-    language=Language.JAVA,
+    language=Language.JS,
+)
+
+# Using java config
+go_code_style_rule_config = CodeStyleRuleConfig(
+    n_code_style_bad=0.23,
+    n_code_style_moderate=0.17,
+    n_code_style_good=0,
+    n_code_style_lines_bad=10,
+    language=Language.GO,
 )
 
 LANGUAGE_TO_CODE_STYLE_RULE_CONFIG = {
@@ -51,6 +60,7 @@ LANGUAGE_TO_CODE_STYLE_RULE_CONFIG = {
     Language.KOTLIN: kotlin_code_style_rule_config,
     Language.PYTHON: python_code_style_rule_config,
     Language.JS: js_code_style_rule_config,
+    Language.GO: go_code_style_rule_config,
 }
 
 

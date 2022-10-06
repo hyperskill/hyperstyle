@@ -68,7 +68,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
                                                     n_cc=8,
                                                     n_other_complexity=1)),
     ('case3_redefining_builtin.py', IssuesTestInfo(n_error_prone=2)),
-    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_cc=5, n_cohesion=1)),
+    ('case4_naming.py', IssuesTestInfo(n_code_style=7, n_cc=5, n_cohesion=1, n_info=3)),
     ('case6_unused_variables.py', IssuesTestInfo(n_best_practices=3,
                                                  n_cc=1)),
     ('case8_good_class.py', IssuesTestInfo(n_cc=1, n_cohesion=1)),

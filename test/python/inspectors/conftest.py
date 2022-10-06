@@ -74,6 +74,8 @@ class IssuesTestInfo:
     n_other_complexity: int = 0
     n_cohesion: int = 0
     n_maintainability: int = 0
+    n_line_len: int = 0
+    n_info: int = 0
 
 
 def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
@@ -89,6 +91,8 @@ def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
         n_other_complexity=counter[IssueType.COMPLEXITY],
         n_cohesion=counter[IssueType.COHESION],
         n_maintainability=counter[IssueType.MAINTAINABILITY],
+        n_line_len=counter[IssueType.LINE_LEN],
+        n_info=counter[IssueType.INFO],
     )
 
 
