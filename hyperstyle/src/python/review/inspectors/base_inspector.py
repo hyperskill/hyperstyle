@@ -18,6 +18,9 @@ class BaseInspector(abc.ABC):
 
     Typically, the <inspect> function launches a linter and parses its output (XML or JSON) to get a list of BaseIssue.
 
+    Also, if you need to launch inspectors in memory (without using/creating a file with code, you need to implement
+    <inspect_in_memory> function.
+
     Some inspectors (internal) do not require creating a dictionary with IssueType.
     This is connected to the fact that they do not launch an additional analysis tool and work with the code directly,
     for example, the python AST inspector.
@@ -32,3 +35,7 @@ class BaseInspector(abc.ABC):
     @abc.abstractmethod
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         raise NotImplementedError('inspect method not implemented yet')
+
+    @abc.abstractmethod
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        raise NotImplementedError('inspect in memory method not implemented yet')

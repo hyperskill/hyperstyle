@@ -119,6 +119,11 @@ class FunctionLensGatherer(ast.NodeVisitor):
 class PythonAstInspector(BaseInspector):
     inspector_type = InspectorType.PYTHON_AST
 
+    # We don't support in-memory inspection for PythonAst yet
+    @classmethod
+    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return []
+
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         if path.is_file():
