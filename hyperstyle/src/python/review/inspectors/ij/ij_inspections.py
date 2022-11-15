@@ -1,7 +1,9 @@
+import logging
 import os
-import requests
 from pathlib import Path
 from typing import Any, Dict, List
+
+import requests
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
@@ -16,6 +18,8 @@ LANGUAGE_TO_ID = {
 CODE_SERVER_HOST = "CODE_SERVER_HOST"
 CODE_SERVER_PORT = "CODE_SERVER_PORT"
 CODE_SERVER_ROOT = "CODE_SERVER_ROOT"
+
+logger = logging.getLogger(__name__)
 
 
 class IJInspector(BaseInspector):
@@ -39,6 +43,10 @@ class IJInspector(BaseInspector):
             headers={"Content-Type": "application/json"},
             data=IJCode(code, self.languageId).to_json(),
         )
+
+        if response.status_code != 200:
+            logger.error(f'Inspector failed to connect to code server.', response)
+            return []
 
         result = IJInspectionResult.from_json(response.text)
 
