@@ -54,11 +54,3 @@ class IJInspector(BaseInspector):
         except Exception as e:
             logger.error('Inspector failed to connect to code server.', e)
             return []
-
-
-if __name__ == '__main__':
-    inspector = IJInspector(Language.PYTHON)
-    inspections = inspector.inspect(
-        Path("/Users/tiginamaria1999/PycharmProjects/hyperstyle/hyperstyle/src/python/review/inspectors/ij/model.py"), {})
-
-    print(inspections)
