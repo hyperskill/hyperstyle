@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json, LetterCase
 from pathlib import Path
 from typing import List
-from dataclasses_json import dataclass_json, LetterCase
 
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType

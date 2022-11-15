@@ -1,7 +1,7 @@
 import os
+import requests
 from pathlib import Path
 from typing import Any, Dict, List
-import requests
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
