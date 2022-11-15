@@ -9,8 +9,8 @@ ECMA
 EXPR
 G10
 IGNORECASE
-INTELLIJ
 IJ
+INTELLIJ
 Intelli
 JS
 KTS
@@ -113,8 +113,8 @@ hyperstyle
 idiv
 idx
 ignorecase
-iloc
 ij
+iloc
 inerop
 initializer
 inplace
