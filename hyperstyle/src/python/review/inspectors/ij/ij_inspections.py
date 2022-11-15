@@ -38,16 +38,27 @@ class IJInspector(BaseInspector):
         return self.inspect_in_memory(code, config)
 
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        response = requests.get(
-            f"http://{self.host}:{self.port}/{self.root}/inspect",
-            headers={"Content-Type": "application/json"},
-            data=IJCode(code, self.languageId).to_json(),
-        )
+        try:
+            response = requests.get(
+                f"http://{self.host}:{self.port}/{self.root}inspect",
+                headers={"Content-Type": "application/json"},
+                data=IJCode(code, self.languageId).to_json(),
+            )
 
-        if response.status_code != 200:
-            logger.error('Inspector failed to connect to code server.', response)
+            if response.status_code != 200:
+                logger.error('Inspector failed to connect to code server.', response)
+                return []
+
+            return IJInspectionResult.from_json(response.text).to_base_issues()
+
+        except Exception as e:
+            logger.error('Inspector failed to connect to code server.', e)
             return []
 
-        result = IJInspectionResult.from_json(response.text)
 
-        return result.to_base_issues()
+if __name__ == '__main__':
+    inspector = IJInspector(Language.PYTHON)
+    inspections = inspector.inspect(
+        Path("/Users/tiginamaria1999/PycharmProjects/hyperstyle/hyperstyle/src/python/review/inspectors/ij/model.py"), {})
+
+    print(inspections)
