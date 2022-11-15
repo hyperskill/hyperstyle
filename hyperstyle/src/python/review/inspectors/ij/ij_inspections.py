@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -13,25 +14,29 @@ LANGUAGE_TO_ID = {
     Language.PYTHON: "Python",
 }
 
+CODE_SERVER_HOST = "CODE_SERVER_HOST"
+CODE_SERVER_PORT = "CODE_SERVER_PORT"
+CODE_SERVER_ROOT = "CODE_SERVER_ROOT"
+
 
 class IJInspector(BaseInspector):
     inspector_type = InspectorType.IJ
 
-    def __init__(self, language: Language,
-                 host: str = "0.0.0.0",
-                 port: int = 8080,
-                 root_path: str = "code/server/api/v1/"):
-        self.host = host
-        self.port = port
-        self.root_path = root_path
+    def __init__(self, language: Language):
+        self.host = os.environ.get(CODE_SERVER_HOST, "0.0.0.0")
+        self.port = os.environ.get(CODE_SERVER_PORT, 8080)
+        self.root = os.environ.get(CODE_SERVER_PORT, "code/server/api/v1/")
         self.languageId = LANGUAGE_TO_ID[language]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        pass
+        with open(path, "r") as code_file:
+            code = code_file.read()
+
+        return self.inspect_in_memory(code, config)
 
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
         response = requests.get(
-            f"http://{self.host}:{self.port}/{self.root_path}/inspect",
+            f"http://{self.host}:{self.port}/{self.root}/inspect",
             headers={"Content-Type": "application/json"},
             data=IJCode(code, self.languageId).to_json(),
         )
