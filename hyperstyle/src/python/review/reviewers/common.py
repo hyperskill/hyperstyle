@@ -42,7 +42,7 @@ LANGUAGE_TO_INSPECTORS = {
         Flake8Inspector(),
         PythonAstInspector(),
         RadonInspector(),
-        IJInspector(Language.PYTHON)
+        IJInspector(Language.PYTHON),
     ],
     Language.JAVA: [
         CheckstyleInspector(),
