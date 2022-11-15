@@ -45,7 +45,7 @@ class IJInspector(BaseInspector):
         )
 
         if response.status_code != 200:
-            logger.error(f'Inspector failed to connect to code server.', response)
+            logger.error('Inspector failed to connect to code server.', response)
             return []
 
         result = IJInspectionResult.from_json(response.text)
