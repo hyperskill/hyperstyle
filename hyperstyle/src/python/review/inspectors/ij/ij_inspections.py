@@ -46,11 +46,13 @@ class IJInspector(BaseInspector):
             )
 
             if response.status_code != 200:
-                logger.error('Inspector failed to connect to code server.', response)
+                # TODO: replace with error when ass mock server into tests
+                logger.info('Inspector failed to connect to code server.', response)
                 return []
 
             return IJInspectionResult.from_json(response.text).to_base_issues()
 
         except Exception as e:
-            logger.error('Inspector failed to connect to code server.', e)
+            # TODO: replace with error when ass mock server into tests
+            logger.info('Inspector failed to connect to code server.', e)
             return []
