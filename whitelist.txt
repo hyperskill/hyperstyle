@@ -10,6 +10,7 @@ EXPR
 G10
 IGNORECASE
 INTELLIJ
+IJ
 Intelli
 JS
 KTS
@@ -113,6 +114,7 @@ idiv
 idx
 ignorecase
 iloc
+ij
 inerop
 initializer
 inplace

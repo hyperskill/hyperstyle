@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from typing import Any, Dict, List
-
 import requests
 
 from hyperstyle.src.python.review.common.language import Language
