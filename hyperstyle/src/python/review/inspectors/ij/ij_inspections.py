@@ -1,0 +1,41 @@
+from pathlib import Path
+from typing import Any, Dict, List
+
+import requests
+
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.ij.model import IJCode, IJInspectionResult
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+
+LANGUAGE_TO_ID = {
+    Language.PYTHON: "Python",
+}
+
+
+class IJInspector(BaseInspector):
+    inspector_type = InspectorType.IJ
+
+    def __init__(self, language: Language,
+                 host: str = "0.0.0.0",
+                 port: int = 8080,
+                 root_path: str = "code/server/api/v1/"):
+        self.host = host
+        self.port = port
+        self.root_path = root_path
+        self.languageId = LANGUAGE_TO_ID[language]
+
+    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+        pass
+
+    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        response = requests.get(
+            f"http://{self.host}:{self.port}/{self.root_path}/inspect",
+            headers={"Content-Type": "application/json"},
+            data=IJCode(code, self.languageId).to_json(),
+        )
+
+        result = IJInspectionResult.from_json(response.text)
+
+        return result.to_base_issues()

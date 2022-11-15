@@ -9,6 +9,7 @@ class InspectorType(Enum):
     PYTHON_AST = 'PYTHON_AST'
     FLAKE8 = 'FLAKE8'
     RADON = 'RADON'
+    IJ = 'IJ'
 
     # Java language
     PMD = 'PMD'
