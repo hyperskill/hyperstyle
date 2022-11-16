@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 
 import requests
 
+from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.ij.model import IJCode, IJInspectionResult
@@ -32,12 +33,13 @@ class IJInspector(BaseInspector):
         self.languageId = LANGUAGE_TO_ID[language]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        with open(path, "r") as code_file:
-            code = code_file.read()
-
-        return self.inspect_in_memory(code, config)
+        code = get_content_from_file(path)
+        return self._get_inspection_result(code).to_base_issues(path)
 
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+        return self._get_inspection_result(code).to_base_issues(Path(""))
+
+    def _get_inspection_result(self, code: str) -> IJInspectionResult:
         try:
             response = requests.get(
                 f"http://{self.host}:{self.port}/{self.root}inspect",
@@ -46,13 +48,11 @@ class IJInspector(BaseInspector):
             )
 
             if response.status_code != 200:
-                # TODO: replace with error when add mock server into tests
-                logger.info('Inspector failed to connect to code server.', response)
-                return []
+                raise Exception(f'Code server request status code: {response.status_code}')
 
-            return IJInspectionResult.from_json(response.text).to_base_issues()
+            return IJInspectionResult.from_json(response.text)
 
         except Exception as e:
             # TODO: replace with error when add mock server into tests
             logger.info('Inspector failed to connect to code server.', e)
-            return []
+            return IJInspectionResult([])

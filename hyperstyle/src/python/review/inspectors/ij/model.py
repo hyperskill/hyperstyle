@@ -23,12 +23,12 @@ class IJProblem:
     offset: int
     length: int
 
-    def to_base_issue(self) -> BaseIssue:
+    def to_base_issue(self, file_path: Path) -> BaseIssue:
         return BaseIssue(
             origin_class='',
             type=IssueType.CODE_STYLE,  # TODO: make mapping
             description=self.name,
-            file_path=Path(),  # TODO: make optional?
+            file_path=file_path,
             line_no=self.line_number,
             column_no=self.offset,
             inspector_type=InspectorType.IJ,
@@ -41,5 +41,5 @@ class IJProblem:
 class IJInspectionResult:
     problems: List[IJProblem]
 
-    def to_base_issues(self) -> List[BaseIssue]:
-        return [problem.to_base_issue() for problem in self.problems]
+    def to_base_issues(self, file_path: Path) -> List[BaseIssue]:
+        return [problem.to_base_issue(file_path) for problem in self.problems]
