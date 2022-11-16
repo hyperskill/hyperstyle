@@ -53,12 +53,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         choices=VerbosityLevel.values(),
                         type=int)
 
-    # Usage example: -d Flake8,Intelli
+    # Usage example: -d Flake8,IntelliJ
     parser.add_argument(RunToolArgument.DISABLE.value.short_name,
                         RunToolArgument.DISABLE.value.long_name,
                         help=RunToolArgument.DISABLE.value.description,
                         type=parse_disabled_inspectors,
-                        default=set())
+                        default=set('ij'))  # TODO: Remove before adding to production
 
     parser.add_argument(RunToolArgument.DUPLICATES.value.long_name,
                         action='store_true',
