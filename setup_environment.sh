@@ -69,6 +69,10 @@ echo "Checking variables..."
 : "${GOLANG_LINT_VERSION:?Variable is not defined}"
 : "${GOLANG_LINT_DIRECTORY:?Variable is not defined}"
 
+: "${CODE_SERVER_HOST:?Variable is not defined}"
+: "${CODE_SERVER_PORT:?Variable is not defined}"
+: "${CODE_SERVER_ROOT:?Variable is not defined}"
+
 echo "The variables are defined."
 
 echo

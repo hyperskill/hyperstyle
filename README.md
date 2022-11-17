@@ -24,6 +24,7 @@ The source code of **hyperstyle** is distributed under the Apache 2.0 License.
 
 The 3rd party software we use in this project has its own licenses.
 
+
 Python language (all versions can be found in the [requirements.txt](requirements.txt) file):
 
 - [x]  flake8 [MIT]
@@ -37,6 +38,12 @@ Python language (all versions can be found in the [requirements.txt](requirement
 - [x] Radon [MIT]
     * [Site and docs](https://radon.readthedocs.io/en/latest/)
     * [Repository](https://github.com/rubik/radon)
+
+- [x] IJ Inspections
+    * [Site and docs](https://www.jetbrains.com/help/pycharm/disabling-and-enabling-inspections.html)
+    * [Repository is private, for more information contact dev team]()
+
+
 
 Java language:
 
@@ -84,6 +91,10 @@ You have to create set of environment variables:
 - `PMD_DIRECTORY` (the directory with `PMD` linter sources)
 - `GOLANG_LINT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `GOLANG_LINT_DIRECTORY` (the directory with `GOLANG_LINT` linter sources)
+- `CODE_SERVER_HOST` (host for code server, default is "0.0.0.0", the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `CODE_SERVER_PORT` (port of code server, default is 8080, the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+- `CODE_SERVER_ROOT` (root of code server, default is "code/server/api/v1/", the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
+
 
 ### Using script
 
@@ -147,7 +158,7 @@ Argument | Description
 --- | ---
 **&#8209;h**, **&#8209;&#8209;help**      |  show the help message and exit.
 **&#8209;v**, **&#8209;&#8209;verbosity** |  choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).
-**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/); for **Go** language: `golang_lint` for [golangci-lint](https://golangci-lint.run/). Example: `-d pylint,flake8`.
+**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST, `ij` for ij inspections (disabled by default); for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/); for **Go** language: `golang_lint` for [golangci-lint](https://golangci-lint.run/). Example: `-d pylint,flake8`.
 **&#8209;&#8209;allow-duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
 **&#8209;&#8209;language-version**, **&#8209;&#8209;language_version**  |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`, `java15`, `java17`. **Note**: **&#8209;&#8209;language_version** is deprecated and will be deleted in the future.
 **&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**  |  specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.
