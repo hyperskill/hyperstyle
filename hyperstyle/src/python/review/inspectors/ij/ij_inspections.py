@@ -45,6 +45,7 @@ class IJInspector(BaseInspector):
                 f"http://{self.host}:{self.port}/{self.root}inspect",
                 headers={"Content-Type": "application/json"},
                 data=IJCode(code, self.languageId).to_json(),
+                timeout=30,
             )
 
             if response.status_code != 200:
