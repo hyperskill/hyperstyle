@@ -174,7 +174,7 @@ The output examples:
 
 (_New format_ means separating the result by the files to allow getting quality and observed issues for each file separately)
 
-1. Json `old format` (without **&#8209;&#8209;new_format** argument):
+1. Json `old format` (without **&#8209;&#8209;new-format** argument):
 
 ```json
 {
@@ -198,7 +198,7 @@ The output examples:
 }
 ```
 
-2. Json `new format` (with **&#8209;&#8209;new_format** argument):
+2. Json `new format` (with **&#8209;&#8209;new-format** argument):
 
 ```json
 {

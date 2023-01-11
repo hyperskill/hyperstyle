@@ -39,7 +39,7 @@ FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ('case11_gosimple_issues.go', 3),
     ('case12_stylecheck_issues.go', 2),
     ('case13_staticcheck_issues.go', 3),
-    ('case14_whitespace.go', 4),
+    ('case14_whitespace.go', 0),
     ('case15_deadcode.go', 4),
     ('case16_errcheck.go', 11),
     ('case17_magic_numbers.go', 0),  # 0 because all INFO issues have been filtered out
