@@ -40,7 +40,6 @@ linters:
     - unparam
     - usestdlibvars
     - varnamelen
-    - whitespace
     # ===============
     #   Metalinters
     # ===============
