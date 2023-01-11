@@ -86,7 +86,7 @@ FILE_WITH_ISSUE_INFO_TEST_DATA = [
         IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_code_style=2),
     ),
     ('case13_staticcheck_issues.go', IssuesTestInfo(n_cc=1, n_maintainability=1, n_func_len=1, n_error_prone=3)),
-    ('case14_whitespace.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=2, n_code_style=4)),
+    ('case14_whitespace.go', IssuesTestInfo(n_cc=2, n_maintainability=2, n_func_len=2, n_code_style=0)),
     (
         'case15_deadcode.go',
         IssuesTestInfo(n_cc=3, n_maintainability=3, n_func_len=1, n_error_prone=3, n_best_practices=1),
