@@ -29,6 +29,10 @@ jobs:
         run: |
           pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
 
+      - name: Set up git rights
+        run: |
+          git config --global --add safe.directory *
+
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
