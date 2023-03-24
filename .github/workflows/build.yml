@@ -37,19 +37,6 @@ jobs:
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
-      - name: Sort whitelists
-        run: |
-            for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
-            do
-            LC_ALL=C sort $file -o $file
-            done
-
-      - name: Commit sorted whitelists
-        uses: EndBug/add-and-commit@v7.2.1
-        with:
-          add: "['whitelist.txt', 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt']"
-          message: 'Sort whitelists (Github Actions)'
-
       - name: Set up Eslint
         run: |
           # Consistent with eslint version in Dockerfile
