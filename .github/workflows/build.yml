@@ -31,7 +31,7 @@ jobs:
 
       - name: Set up git rights
         run: |
-          git config --global --add safe.directory *
+          git config --global --add safe.directory '*'
 
       - name: Lint with flake8
         run: |
