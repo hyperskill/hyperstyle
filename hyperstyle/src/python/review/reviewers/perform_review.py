@@ -99,7 +99,11 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
 
 def _preform_review(metadata: Metadata, languages: List[Language], config: ApplicationConfig) -> GeneralReviewResult:
     # TODO start review for several languages and do something with the results
-    reviewer = language_to_reviewer[languages[0]]
+    if config.inspectors_config['language'] == Language.UNKNOWN:
+        language = languages[0]
+    else:
+        language = config.inspectors_config['language']
+    reviewer = language_to_reviewer[language]
     return reviewer(metadata, config)
 
 

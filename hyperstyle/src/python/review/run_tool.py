@@ -10,6 +10,7 @@ from typing import Set
 sys.path.append('')
 sys.path.append('../../../..')
 
+from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument, VerbosityLevel
 from hyperstyle.src.python.review.application_config import ApplicationConfig, LanguageVersion
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
@@ -63,6 +64,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(RunToolArgument.DUPLICATES.value.long_name,
                         action='store_true',
                         help=RunToolArgument.DUPLICATES.value.description)
+
+    parser.add_argument(RunToolArgument.LANG.value.long_name,
+                        help=RunToolArgument.LANG.value.description,
+                        default=None,
+                        choices=[l.lower() for l in Language.values()],
+                        type=str)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
     parser.add_argument('--language_version',
@@ -151,6 +158,7 @@ def main() -> int:
             start_line = 1
 
         inspectors_config = {
+            "language": Language(args.language.upper()),
             'language_version': LanguageVersion(args.language_version) if args.language_version is not None else None,
             'n_cpu': n_cpu,
         }
