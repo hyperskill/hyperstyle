@@ -10,9 +10,9 @@ from typing import Set
 sys.path.append('')
 sys.path.append('../../../..')
 
-from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument, VerbosityLevel
 from hyperstyle.src.python.review.application_config import ApplicationConfig, LanguageVersion
+from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
 from hyperstyle.src.python.review.reviewers.perform_review import (
@@ -68,7 +68,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(RunToolArgument.LANG.value.long_name,
                         help=RunToolArgument.LANG.value.description,
                         default=None,
-                        choices=[l.lower() for l in Language.values()],
+                        choices=[lang.lower() for lang in Language.values()],
                         type=str)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
