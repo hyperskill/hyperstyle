@@ -159,7 +159,6 @@ def main() -> int:
             start_line = 1
 
         inspectors_config = {
-            "language": Language(args.language.upper()),
             'language_version': LanguageVersion(args.language_version) if args.language_version is not None else None,
             'n_cpu': n_cpu,
         }
@@ -167,6 +166,7 @@ def main() -> int:
         config = ApplicationConfig(
             args.disable, args.allow_duplicates,
             n_cpu, inspectors_config,
+            language=Language(args.language.upper()) if args.language is not None else None,
             start_line=start_line,
             end_line=args.end_line,
             new_format=args.new_format,
