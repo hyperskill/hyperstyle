@@ -11,7 +11,8 @@ sys.path.append('')
 sys.path.append('../../../..')
 
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument, VerbosityLevel
-from hyperstyle.src.python.review.application_config import ApplicationConfig, LanguageVersion
+from hyperstyle.src.python.review.application_config import ApplicationConfig
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config

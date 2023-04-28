@@ -94,16 +94,16 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
             logger.error(f'Unsupported language. Extensions {metadata.extensions} for project {path}')
             raise UnsupportedLanguage(path, metadata.extensions)
         languages = list(metadata.languages.difference({Language.UNKNOWN}))
+
+    if config.language is not None:
+        languages = [config.language]
+
     return _preform_review(metadata, languages, config)
 
 
 def _preform_review(metadata: Metadata, languages: List[Language], config: ApplicationConfig) -> GeneralReviewResult:
     # TODO start review for several languages and do something with the results
-    if config.inspectors_config['language'] == Language.UNKNOWN:
-        language = languages[0]
-    else:
-        language = config.inspectors_config['language']
-    reviewer = language_to_reviewer[language]
+    reviewer = language_to_reviewer[languages[0]]
     return reviewer(metadata, config)
 
 
