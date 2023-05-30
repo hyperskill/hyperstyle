@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
     # container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
-    container: stepik/hyperstyle:1.4.2
+    container: nastyabirillo/hyperstyle:1.4.3
 
     steps:
       - name: Install git
@@ -23,7 +23,7 @@ jobs:
             echo $PMD_DIRECTORY && echo PMD_VERSION
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install requirements
         run: |

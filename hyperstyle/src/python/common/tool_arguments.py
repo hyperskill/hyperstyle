@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List, Optional
 
-from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 
 
@@ -50,8 +51,13 @@ class RunToolArgument(Enum):
                                'Allow duplicate issues found by different linters. '
                                'By default, duplicates are skipped.')
 
+    LANG = ArgumentsInfo(None, '--language',
+                         'Specify the language to inspect. The tool will check all languages by default. '
+                         'Available values are: '
+                         f'{", ".join([l.lower() for l in Language.values()])}.')
+
     LANG_VERSION = ArgumentsInfo(None, '--language-version',
-                                 'Specify the language version for JAVA inspectors.'
+                                 'Specify the language version for JAVA inspectors. '
                                  'Available values are: '
                                  f'{LanguageVersion.PYTHON_3.value}, {LanguageVersion.JAVA_8.value}, '
                                  f'{LanguageVersion.JAVA_11.value}, {LanguageVersion.KOTLIN.value}.')
