@@ -2,8 +2,8 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import List
 
-from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 
 
 @unique

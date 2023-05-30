@@ -1,5 +1,5 @@
-from enum import unique, Enum
-from typing import List, Dict
+from enum import Enum, unique
+from typing import Dict, List
 
 from hyperstyle.src.python.review.common.file_system import Extension
 

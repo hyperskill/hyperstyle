@@ -93,7 +93,7 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
         if metadata.languages == {Language.UNKNOWN}:
             logger.error(f'Unsupported language. Extensions {metadata.extensions} for project {path}')
             raise UnsupportedLanguage(path, metadata.extensions)
-        languages = list(metadata.languages.difference({Language.UNKNOWN}))
+        languages = list(metadata.languages.difference({Language.UNKNOWN})).sort()
 
     if config.language is not None:
         languages = [config.language]

@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List, Optional
 
-from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 
 
