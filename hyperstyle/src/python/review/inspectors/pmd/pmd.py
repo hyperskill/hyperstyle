@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector

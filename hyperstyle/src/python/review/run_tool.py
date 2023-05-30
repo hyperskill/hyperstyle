@@ -11,7 +11,9 @@ sys.path.append('')
 sys.path.append('../../../..')
 
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument, VerbosityLevel
-from hyperstyle.src.python.review.application_config import ApplicationConfig, LanguageVersion
+from hyperstyle.src.python.review.application_config import ApplicationConfig
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
+from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
 from hyperstyle.src.python.review.reviewers.perform_review import (
@@ -63,6 +65,12 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(RunToolArgument.DUPLICATES.value.long_name,
                         action='store_true',
                         help=RunToolArgument.DUPLICATES.value.description)
+
+    parser.add_argument(RunToolArgument.LANG.value.long_name,
+                        help=RunToolArgument.LANG.value.description,
+                        default=None,
+                        choices=[lang.lower() for lang in Language.values()],
+                        type=str)
 
     # TODO: deprecated argument: language_version. Delete after several releases.
     parser.add_argument('--language_version',
@@ -158,6 +166,7 @@ def main() -> int:
         config = ApplicationConfig(
             args.disable, args.allow_duplicates,
             n_cpu, inspectors_config,
+            language=Language(args.language.upper()) if args.language is not None else None,
             start_line=start_line,
             end_line=args.end_line,
             new_format=args.new_format,
