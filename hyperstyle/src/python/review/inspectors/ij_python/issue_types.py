@@ -39,7 +39,7 @@ IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'PyComparisonWithNoneInspection': IssueType.ERROR_PRONE,
     'PyDictDuplicateKeysInspection': IssueType.ERROR_PRONE,
     'PyExceptClausesOrderInspection': IssueType.ERROR_PRONE,
-    'PyFinalInspection': IssueType.ERROR_PRONE, # TODO: add exceptions to the model
+    'PyFinalInspection': IssueType.ERROR_PRONE,
     'PyGlobalUndefinedInspection': IssueType.ERROR_PRONE,
     'PyArgumentListInspection': IssueType.ERROR_PRONE,
     'PyMethodFirstArgAssignmentInspection': IssueType.ERROR_PRONE,
@@ -68,10 +68,12 @@ IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
 ISSUE_TYPE_EXCEPTIONS = {
     'PyDataclassInspection': {
         'is useless until ''__post_init__'' is declared': IssueType.BEST_PRACTICES,
-        'should take all init-only variables (incl. inherited) in the same order as they are defined': IssueType.BEST_PRACTICES,
-        'would not be called until \'init\' parameter is set to True \'__attrs_post_init__\' should not take any parameters except \'self\'': IssueType.BEST_PRACTICES,
+        'should take all init-only variables (incl. inherited) in the same order as they are defined':
+            IssueType.BEST_PRACTICES,
+        'would not be called until \'init\' parameter is set to True \'__attrs_post_init__\' '
+        'should not take any parameters except \'self\'': IssueType.BEST_PRACTICES,
     },
     'PyFinalInspection': {
         'No need to mark method in \'Final\' class as \'@final\'': IssueType.BEST_PRACTICES,
-    }
+    },
 }

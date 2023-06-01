@@ -3,7 +3,8 @@ from dataclasses_json import dataclass_json, LetterCase
 from pathlib import Path
 from typing import List
 
-from hyperstyle.src.python.review.inspectors.ij_python.issue_types import IJ_PYTHON_CODE_TO_ISSUE_TYPE, ISSUE_TYPE_EXCEPTIONS
+from hyperstyle.src.python.review.inspectors.ij_python.issue_types import IJ_PYTHON_CODE_TO_ISSUE_TYPE, \
+    ISSUE_TYPE_EXCEPTIONS
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 
