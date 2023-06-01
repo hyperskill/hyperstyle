@@ -169,6 +169,7 @@ Argument | Description
 **&#8209;&#8209;history**                 |  JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"number\": 20}, {\"origin_class\": \"WPS314\", \"number\": 3}]}"`
 **&#8209;&#8209;with&#8209;all&#8209;categories** | Without this flag, all issues will be categorized into 5 main categories: `CODE_STYLE`, `BEST_PRACTICES`, `ERROR_PRONE`, `COMPLEXITY`, `INFO`.
 **&#8209;&#8209;group&#8209;by&#8209;difficulty** | With this flag, the final grade and influence on penalty will be grouped by the issue difficulty.
+**&#8209;&#8209;language** | Specify the language to inspect. The tool will check all languages by default. The default value is `None`.
 
 The output examples:
 

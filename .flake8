@@ -78,6 +78,8 @@ ignore =
   T001,
 # Subprocess call
   S603,
+# Import statements are in the wrong order.
+I100,
 
 exclude = .git, */data, env/, venv/
 

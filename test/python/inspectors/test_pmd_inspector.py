@@ -3,7 +3,7 @@ from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
 from typing import List
 
 import pytest
-from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.pmd.pmd import DEFAULT_JAVA_VERSION, PMDInspector

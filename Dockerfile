@@ -55,9 +55,9 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 
 # Install third party golang libraries and pre-cache them by compiling main.go
 # Taken from: https://github.com/StepicOrg/epicbox-images/blob/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/Dockerfile
-RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/go.mod && \
-    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/go.sum && \
-    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/master/epicbox-go/main.go && \
+RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/go.mod && \
+    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/go.sum && \
+    curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/main.go && \
     go mod download && \
     go mod verify && \
     go mod tidy && \

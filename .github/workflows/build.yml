@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
     # container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
-    container: nastyabirillo/hyperstyle:1.4.0
+    container: nastyabirillo/hyperstyle:1.4.3
 
     steps:
       - name: Install git
@@ -23,11 +23,15 @@ jobs:
             echo $PMD_DIRECTORY && echo PMD_VERSION
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install requirements
         run: |
           pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+
+      - name: Set up git rights
+        run: |
+          git config --global --add safe.directory '*'
 
       - name: Lint with flake8
         run: |
@@ -43,7 +47,6 @@ jobs:
             do
             LC_ALL=C sort $file -o $file
             done
-
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:
