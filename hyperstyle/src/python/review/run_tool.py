@@ -60,7 +60,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         RunToolArgument.DISABLE.value.long_name,
                         help=RunToolArgument.DISABLE.value.description,
                         type=parse_disabled_inspectors,
-                        default=set('ij'))  # TODO: Remove before adding to production
+                        default=set('ij_python'))  # TODO: Remove before adding to production
 
     parser.add_argument(RunToolArgument.DUPLICATES.value.long_name,
                         action='store_true',

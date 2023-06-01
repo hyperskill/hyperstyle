@@ -8,7 +8,7 @@ import requests
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.ij.model import IJCode, IJInspectionResult
+from hyperstyle.src.python.review.inspectors.ij_python.model import IJCode, IJInspectionResult
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 
@@ -24,12 +24,12 @@ logger = logging.getLogger(__name__)
 
 
 class IJInspector(BaseInspector):
-    inspector_type = InspectorType.IJ
+    inspector_type = InspectorType.IJ_PYTHON
 
     def __init__(self, language: Language):
         self.host = os.environ.get(CODE_SERVER_HOST, "0.0.0.0")
         self.port = os.environ.get(CODE_SERVER_PORT, 8080)
-        self.root = os.environ.get(CODE_SERVER_PORT, "code/server/api/v1/")
+        self.root = os.environ.get(CODE_SERVER_ROOT, "code/server/api/v1/")
         self.languageId = LANGUAGE_TO_ID[language]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
