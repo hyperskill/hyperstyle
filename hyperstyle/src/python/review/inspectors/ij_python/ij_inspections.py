@@ -28,7 +28,6 @@ class IJInspector(BaseInspector):
         if language != language.PYTHON:
             raise Exception(f"IJ inspector does not support {language} language now. Only python is supported now.")
         self.languageId = model_pb2.LanguageId.Python
-        self._init_server()
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         code = get_content_from_file(path)
@@ -36,14 +35,6 @@ class IJInspector(BaseInspector):
 
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
         return self._get_inspection_result(code, Path(""))
-
-    def _init_server(self):
-        client = IJClient(self.host, self.port)
-        service = model_pb2.Service()
-        service.name = "hyperstyle"
-        service.languageId = model_pb2.LanguageId.Python
-
-        client.init(service)
 
     @staticmethod
     def choose_issue_type(inspector: str, description: str) -> IssueType:
@@ -70,7 +61,7 @@ class IJInspector(BaseInspector):
                     file_path=file_path,
                     line_no=problem.lineNumber,
                     column_no=problem.offset,
-                    inspector_type=InspectorType.IJ,
+                    inspector_type=InspectorType.IJ_PYTHON,
                     difficulty=IssueDifficulty.get_by_issue_type(issue_type),
                 )
             )
@@ -94,8 +85,3 @@ class IJInspector(BaseInspector):
             # TODO: replace with error when add mock server into tests
             logger.info('Inspector failed to connect to code server.', e)
             return []
-
-
-if __name__ == '__main__':
-    result = IJInspector(Language.PYTHON).inspect_in_memory("x=12", {})
-    print(result)
