@@ -3,22 +3,18 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-import requests
-
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.ij_python.model import IJCode, IJInspectionResult
+from hyperstyle.src.python.review.inspectors.ij_python import model_pb2
+from hyperstyle.src.python.review.inspectors.ij_python.ij_client import IJClient
+from hyperstyle.src.python.review.inspectors.ij_python.issue_types import ISSUE_TYPE_EXCEPTIONS, \
+    IJ_PYTHON_CODE_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue
-
-LANGUAGE_TO_ID = {
-    Language.PYTHON: "Python",
-}
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType, IssueDifficulty
 
 CODE_SERVER_HOST = "CODE_SERVER_HOST"
 CODE_SERVER_PORT = "CODE_SERVER_PORT"
-CODE_SERVER_ROOT = "CODE_SERVER_ROOT"
 
 logger = logging.getLogger(__name__)
 
@@ -29,31 +25,77 @@ class IJInspector(BaseInspector):
     def __init__(self, language: Language):
         self.host = os.environ.get(CODE_SERVER_HOST, "0.0.0.0")
         self.port = os.environ.get(CODE_SERVER_PORT, 8080)
-        self.root = os.environ.get(CODE_SERVER_ROOT, "code/server/api/v1/")
-        self.languageId = LANGUAGE_TO_ID[language]
+        if language != language.PYTHON:
+            raise Exception(f"IJ inspector does not support {language} language now. Only python is supported now.")
+        self.languageId = model_pb2.LanguageId.Python
+        self._init_server()
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         code = get_content_from_file(path)
-        return self._get_inspection_result(code).to_base_issues(path)
+        return self._get_inspection_result(code, path)
 
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        return self._get_inspection_result(code).to_base_issues(Path(""))
+        return self._get_inspection_result(code, Path(""))
 
-    def _get_inspection_result(self, code: str) -> IJInspectionResult:
-        try:
-            response = requests.get(
-                f"http://{self.host}:{self.port}/{self.root}inspect",
-                headers={"Content-Type": "application/json"},
-                data=IJCode(code, self.languageId).to_json(),
-                timeout=30,
+    def _init_server(self):
+        client = IJClient(self.host, self.port)
+        service = model_pb2.Service()
+        service.name = "hyperstyle"
+        service.languageId = model_pb2.LanguageId.Python
+
+        client.init(service)
+
+    @staticmethod
+    def choose_issue_type(inspector: str, description: str) -> IssueType:
+        if inspector in ISSUE_TYPE_EXCEPTIONS:
+            for key, value in ISSUE_TYPE_EXCEPTIONS[inspector].items():
+                if description in key:
+                    return value
+
+        if inspector in IJ_PYTHON_CODE_TO_ISSUE_TYPE:
+            return IJ_PYTHON_CODE_TO_ISSUE_TYPE[inspector]
+
+        # PEP-8 inspection
+        return IssueType.CODE_STYLE
+
+    def convert_to_base_issues(self, inspection_result: model_pb2.InspectionResult, file_path: Path) -> List[BaseIssue]:
+        base_issues = []
+        for problem in inspection_result.problems:
+            issue_type = self.choose_issue_type(problem.inspector, problem.name)
+            base_issues.append(
+                BaseIssue(
+                    origin_class=problem.inspector,
+                    type=issue_type,
+                    description=problem.name,
+                    file_path=file_path,
+                    line_no=problem.lineNumber,
+                    column_no=problem.offset,
+                    inspector_type=InspectorType.IJ,
+                    difficulty=IssueDifficulty.get_by_issue_type(issue_type),
+                )
             )
 
-            if response.status_code != 200:
-                raise Exception(f'Code server request status code: {response.status_code}')
+        return base_issues
 
-            return IJInspectionResult.from_json(response.text)
+    def _get_inspection_result(self, code_text: str, file_path: Path) -> List[BaseIssue]:
+
+        try:
+            client = IJClient(self.host, self.port)
+
+            code = model_pb2.Code()
+            code.languageId = model_pb2.LanguageId.Python
+            code.text = code_text
+
+            inspection_result = client.inspect(code)
+
+            return self.convert_to_base_issues(inspection_result, file_path)
 
         except Exception as e:
             # TODO: replace with error when add mock server into tests
             logger.info('Inspector failed to connect to code server.', e)
-            return IJInspectionResult([])
+            return []
+
+
+if __name__ == '__main__':
+    result = IJInspector(Language.PYTHON).inspect_in_memory("x=12", {})
+    print(result)
