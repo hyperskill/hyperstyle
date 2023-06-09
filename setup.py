@@ -92,7 +92,7 @@ setup(
     extras_require={
         "dev": [
             "grpcio-tools",
-        ]
+        ],
     },
     entry_points={
         'console_scripts': [
