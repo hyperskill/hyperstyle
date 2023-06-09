@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hyperstyle.src.python.review.inspectors.ij_python;
+package hyperstyle.src.python.review.inspectors.ij_python.proto;
 
 service CodeInspectionService {
   rpc inspect (Code) returns (InspectionResult) {};

@@ -27,7 +27,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt .
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
 
       - name: Set up git rights
         run: |
@@ -58,10 +58,6 @@ jobs:
           # Consistent with eslint version in Dockerfile
           npm install eslint@7.5.0 -g && eslint --init
 
-      - name: Test with pytest
-        run: |
-          pytest -vv
-
       - name: Install review module
         run: |
           pip install .
@@ -77,3 +73,7 @@ jobs:
       - name: Check installed module can run js linters
         run: |
           review test/resources/inspectors/js/case0_no_issues.js
+
+      - name: Test with pytest
+        run: |
+          pytest -vv
