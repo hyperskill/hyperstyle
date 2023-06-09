@@ -41,12 +41,12 @@ class ProtoBuild(build_py):
     @staticmethod
     def _build_proto():
         proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
-        protoc_command = ["python3", "-m", "grpc_tools.protoc",
+        protoc_command = ['python3', '-m', 'grpc_tools.protoc',
                           f'--proto_path={proto_path / "proto"}',
                           f'--python_out={proto_path}',
                           f'--pyi_out={proto_path}',
                           f'--grpc_python_out={proto_path}',
-                          "model.proto"]
+                          'model.proto']
         subprocess.call(protoc_command)
 
     def run(self):
@@ -60,12 +60,12 @@ class ProtoClean(clean):
     def _clean_proto():
         proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
 
-        for (dir_path, dir_names, filenames) in os.walk(proto_path):
-            for filename in filenames:
-                print(filename)
-                filepath = os.path.join(dir_path, filename)
-                if "pb2" in filename:
-                    os.remove(filepath)
+        for (dir_path, _, file_names) in os.walk(proto_path):
+            for file_name in file_names:
+                print(file_name)
+                file_path = os.path.join(dir_path, file_name)
+                if 'pb2' in file_name:
+                    os.remove(file_path)
 
     def run(self):
         self._clean_proto()
