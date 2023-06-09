@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.ij_python import model_pb2
+import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2 as model_pb2
 from hyperstyle.src.python.review.inspectors.ij_python.ij_client import IJClient
 from hyperstyle.src.python.review.inspectors.ij_python.issue_types import IJ_PYTHON_CODE_TO_ISSUE_TYPE, \
     ISSUE_TYPE_EXCEPTIONS
