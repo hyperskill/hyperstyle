@@ -2,19 +2,6 @@ from typing import Dict
 
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 
-ISSUE_TYPE_EXCEPTIONS = {
-    'PyDataclassInspection': {
-        'is useless until ''__post_init__'' is declared': IssueType.BEST_PRACTICES,
-        'should take all init-only variables (incl. inherited) in the same order as they are defined':
-            IssueType.BEST_PRACTICES,
-        'would not be called until \'init\' parameter is set to True \'__attrs_post_init__\' '
-        'should not take any parameters except \'self\'': IssueType.BEST_PRACTICES,
-    },
-    'PyFinalInspection': {
-        'No need to mark method in \'Final\' class as \'@final\'': IssueType.BEST_PRACTICES,
-    },
-}
-
 # Synchronized with https://github.com/JetBrains-Research/code-quality-ij-server/tree/master/docs/inspections/python
 IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # BEST_PRACTICES
@@ -76,4 +63,17 @@ IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'PyTypedDictInspection': IssueType.ERROR_PRONE,
     'PyShadowingBuiltinsInspection': IssueType.ERROR_PRONE,
     'PyUnresolvedReferencesInspection': IssueType.ERROR_PRONE,
+}
+
+ISSUE_TYPE_EXCEPTIONS = {
+    'PyDataclassInspection': {
+        'is useless until ''__post_init__'' is declared': IssueType.BEST_PRACTICES,
+        'should take all init-only variables (incl. inherited) in the same order as they are defined':
+            IssueType.BEST_PRACTICES,
+        'would not be called until \'init\' parameter is set to True \'__attrs_post_init__\' '
+        'should not take any parameters except \'self\'': IssueType.BEST_PRACTICES,
+    },
+    'PyFinalInspection': {
+        'No need to mark method in \'Final\' class as \'@final\'': IssueType.BEST_PRACTICES,
+    },
 }

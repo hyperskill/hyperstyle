@@ -8,10 +8,10 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.ij_python import model_pb2
 from hyperstyle.src.python.review.inspectors.ij_python.ij_client import IJClient
-from hyperstyle.src.python.review.inspectors.ij_python.issue_types import ISSUE_TYPE_EXCEPTIONS, \
-    IJ_PYTHON_CODE_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.ij_python.issue_types import IJ_PYTHON_CODE_TO_ISSUE_TYPE, \
+    ISSUE_TYPE_EXCEPTIONS
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType, IssueDifficulty
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
 
 CODE_SERVER_HOST = "CODE_SERVER_HOST"
 CODE_SERVER_PORT = "CODE_SERVER_PORT"
