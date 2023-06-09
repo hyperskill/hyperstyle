@@ -63,7 +63,7 @@ class IJInspector(BaseInspector):
                     column_no=problem.offset,
                     inspector_type=InspectorType.IJ_PYTHON,
                     difficulty=IssueDifficulty.get_by_issue_type(issue_type),
-                )
+                ),
             )
 
         return base_issues
