@@ -34,7 +34,7 @@ def get_requires() -> List[str]:
         return requirements_file.read().split('\n')
 
 
-class ProtoBuild(Command):
+class GenerateProto(Command):
     description = "Generates client and classes for protobuf ij inspector"
 
     def initialize_options(self) -> None:
@@ -43,8 +43,7 @@ class ProtoBuild(Command):
     def finalize_options(self) -> None:
         pass
 
-    @staticmethod
-    def _build_proto():
+    def run(self):
         proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
         protoc_command = ['python3', '-m', 'grpc_tools.protoc',
                           f'--proto_path={proto_path / "proto"}',
@@ -53,28 +52,6 @@ class ProtoBuild(Command):
                           f'--grpc_python_out={proto_path}',
                           'model.proto']
         subprocess.call(protoc_command)
-
-    def run(self):
-        self._build_proto()
-        build_py.run(self)
-
-
-class ProtoClean(clean):
-
-    @staticmethod
-    def _clean_proto():
-        proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
-
-        for (dir_path, _, file_names) in os.walk(proto_path):
-            for file_name in file_names:
-                print(file_name)
-                file_path = os.path.join(dir_path, file_name)
-                if 'pb2' in file_name:
-                    os.remove(file_path)
-
-    def run(self):
-        self._clean_proto()
-        clean.run(self)
 
 
 setup(
@@ -124,6 +101,6 @@ setup(
         'distutils.commands': ["generate = ProtoBuild"],
     },
     cmdclass={
-        "generate": ProtoBuild,
+        "generate": GenerateProto,
     },
 )
