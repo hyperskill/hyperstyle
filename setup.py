@@ -51,7 +51,7 @@ class ProtoBuild(build_py):
 
     def run(self):
         self._build_proto()
-        _build_py.run(self)
+        build_py.run(self)
 
 
 class ProtoClean(clean):
@@ -69,7 +69,7 @@ class ProtoClean(clean):
 
     def run(self):
         self._clean_proto()
-        _clean.run(self)
+        clean.run(self)
 
 
 setup(
