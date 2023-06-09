@@ -64,7 +64,7 @@ jobs:
 
       - name: Check installed module can run python linters
         run: |
-            review setup.py
+            review test/resources/inspectors/python/case39_no_issues.py
 
       - name: Check installed module can run java linters
         run: |
