@@ -27,6 +27,8 @@ ENV CODE_SERVER_HOST 0.0.0.0
 ENV CODE_SERVER_PORT 8080
 ENV CODE_SERVER_ROOT code/server/api/v1/
 
+ENV PROTO_PATH="/review/hyperstyle/src/python/review/inspectors/ij_python"
+
 RUN mkdir -p ${CHECKSTYLE_DIRECTORY} &&  \
     mkdir -p ${DETEKT_DIRECTORY} &&  \
     mkdir -p ${PMD_DIRECTORY} &&  \

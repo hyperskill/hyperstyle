@@ -1,4 +1,7 @@
 import os
+import subprocess
+from distutils.command.build_py import build_py_2to3 as _build_py
+from distutils.command.clean import clean as _clean
 from pathlib import Path
 from typing import List
 
@@ -31,6 +34,42 @@ def get_inspectors_additional_files() -> List[str]:
 def get_requires() -> List[str]:
     with open(current_dir / 'requirements.txt') as requirements_file:
         return requirements_file.read().split('\n')
+
+
+class ProtoBuild(_build_py):
+
+    @staticmethod
+    def _build_proto():
+        proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
+        protoc_command = ["python3", "-m", "grpc_tools.protoc",
+                          f'--proto_path={proto_path / "proto"}',
+                          f'--python_out={proto_path}',
+                          f'--pyi_out={proto_path}',
+                          f'--grpc_python_out={proto_path}',
+                          "model.proto"]
+        subprocess.call(protoc_command)
+
+    def run(self):
+        self._build_proto()
+        _build_py.run(self)
+
+
+class ProtoClean(_clean):
+
+    @staticmethod
+    def _clean_proto():
+        proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
+
+        for (dir_path, dir_names, filenames) in os.walk(proto_path):
+            for filename in filenames:
+                print(filename)
+                filepath = os.path.join(dir_path, filename)
+                if "pb2" in filename:
+                    os.remove(filepath)
+
+    def run(self):
+        self._clean_proto()
+        _clean.run(self)
 
 
 setup(
@@ -73,4 +112,5 @@ setup(
             'review=hyperstyle.src.python.review.run_tool:main',
         ],
     },
+    cmdclass={'build_py': ProtoBuild, 'clean': ProtoClean},
 )
