@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from typing import List
 
-from setuptools import Command, find_packages, setup
+from setuptools import find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
 
@@ -18,10 +18,28 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
+def generate_proto():
+    proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
+    protoc_command = ['python3', '-m', 'grpc_tools.protoc',
+                      f'--proto_path={proto_path / "proto"}',
+                      f'--python_out={proto_path}',
+                      f'--pyi_out={proto_path}',
+                      f'--grpc_python_out={proto_path}',
+                      'model.proto']
+    subprocess.call(protoc_command)
+
+    result = []
+    for root, _, files in os.walk(proto_path):
+        for file in files:
+            if 'pb2' in file:
+                result.append(str(Path(root) / file))
+    return result
+
+
 def get_inspectors_additional_files() -> List[str]:
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
     configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
-    result = []
+    result = generate_proto()
     for root, _, files in os.walk(inspectors_path):
         for file in files:
             if not file.endswith('.py') and file.split('.')[-1] in configs:
@@ -32,26 +50,6 @@ def get_inspectors_additional_files() -> List[str]:
 def get_requires() -> List[str]:
     with open(current_dir / 'requirements.txt') as requirements_file:
         return requirements_file.read().split('\n')
-
-
-class GenerateProto(Command):
-    description = "Generates client and classes for protobuf ij inspector"
-
-    def initialize_options(self) -> None:
-        pass
-
-    def finalize_options(self) -> None:
-        pass
-
-    def run(self):
-        proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
-        protoc_command = ['python3', '-m', 'grpc_tools.protoc',
-                          f'--proto_path={proto_path / "proto"}',
-                          f'--python_out={proto_path}',
-                          f'--pyi_out={proto_path}',
-                          f'--grpc_python_out={proto_path}',
-                          'model.proto']
-        subprocess.call(protoc_command)
 
 
 setup(
@@ -89,18 +87,9 @@ setup(
     package_data={
         '': get_inspectors_additional_files(),
     },
-    extras_require={
-        "dev": [
-            "grpcio-tools",
-        ],
-    },
     entry_points={
         'console_scripts': [
             'review=hyperstyle.src.python.review.run_tool:main',
         ],
-        'distutils.commands': ["generate = ProtoBuild"],
-    },
-    cmdclass={
-        "generate": GenerateProto,
     },
 )
