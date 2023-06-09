@@ -1,11 +1,9 @@
 import os
 import subprocess
-from distutils.command.build_py import build_py
-from distutils.command.clean import clean
 from pathlib import Path
 from typing import List
 
-from setuptools import find_packages, setup
+from setuptools import Command, find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
 
@@ -36,7 +34,14 @@ def get_requires() -> List[str]:
         return requirements_file.read().split('\n')
 
 
-class ProtoBuild(build_py):
+class ProtoBuild(Command):
+    description = "Generates client and classes for protobuf ij inspector"
+
+    def initialize_options(self) -> None:
+        pass
+
+    def finalize_options(self) -> None:
+        pass
 
     @staticmethod
     def _build_proto():
@@ -107,10 +112,18 @@ setup(
     package_data={
         '': get_inspectors_additional_files(),
     },
+    extras_require={
+        "dev": [
+            "grpcio-tools",
+        ]
+    },
     entry_points={
         'console_scripts': [
             'review=hyperstyle.src.python.review.run_tool:main',
         ],
+        'distutils.commands': ["generate = ProtoBuild"],
     },
-    cmdclass={'build_py': ProtoBuild, 'clean': ProtoClean},
+    cmdclass={
+        "generate": ProtoBuild,
+    },
 )
