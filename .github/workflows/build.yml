@@ -27,7 +27,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt .
 
       - name: Set up git rights
         run: |
