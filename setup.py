@@ -1,7 +1,7 @@
 import os
 import subprocess
-from distutils.command.build_py import build_py_2to3 as _build_py
-from distutils.command.clean import clean as _clean
+from distutils.command.build_py import build_py
+from distutils.command.clean import clean
 from pathlib import Path
 from typing import List
 
@@ -36,7 +36,7 @@ def get_requires() -> List[str]:
         return requirements_file.read().split('\n')
 
 
-class ProtoBuild(_build_py):
+class ProtoBuild(build_py):
 
     @staticmethod
     def _build_proto():
@@ -54,7 +54,7 @@ class ProtoBuild(_build_py):
         _build_py.run(self)
 
 
-class ProtoClean(_clean):
+class ProtoClean(clean):
 
     @staticmethod
     def _clean_proto():
