@@ -19,13 +19,13 @@ def get_version() -> str:
 
 
 def generate_proto():
-    proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python'
+    proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'model.proto'
     protoc_command = ['python3', '-m', 'grpc_tools.protoc',
-                      f'--proto_path={proto_path / "proto"}',
-                      f'--python_out={proto_path}',
-                      f'--pyi_out={proto_path}',
-                      f'--grpc_python_out={proto_path}',
-                      'model.proto']
+                      f'--proto_path={current_dir}',
+                      f'--python_out={current_dir}',
+                      f'--pyi_out={current_dir}',
+                      f'--grpc_python_out={current_dir}',
+                      proto_path]
     subprocess.call(protoc_command)
 
     result = []

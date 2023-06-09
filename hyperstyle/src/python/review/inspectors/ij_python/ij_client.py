@@ -1,7 +1,7 @@
 import grpc
 
-import model_pb2 as model_pb2
-import model_pb2_grpc as model_pb2_grpc
+import hyperstyle.src.python.review.inspectors.ij_python.model_pb2 as model_pb2
+import hyperstyle.src.python.review.inspectors.ij_python.model_pb2_grpc as model_pb2_grpc
 
 
 class IJClient(object):
