@@ -27,11 +27,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
-
-      - name: Install review module
-        run: |
-          pip install .
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt .
 
       - name: Set up git rights
         run: |
@@ -66,11 +62,11 @@ jobs:
 
       - name: Check installed module can run python linters
         run: |
-            review test/resources/inspectors/python/case39_no_issues.py
+          review test/resources/inspectors/python/case39_no_issues.py
 
       - name: Check installed module can run java linters
         run: |
-            review test/resources/inspectors/java/test_algorithm_with_scanner.java
+          review test/resources/inspectors/java/test_algorithm_with_scanner.java
 
       - name: Check installed module can run js linters
         run: |
