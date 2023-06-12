@@ -120,6 +120,6 @@ setup(
     },
     cmdclass={
         'build_py': BuildPyCommand,
-        'bdist_wheel': BDistWheelCommand
+        'bdist_wheel': BDistWheelCommand,
     },
 )
