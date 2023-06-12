@@ -29,10 +29,6 @@ jobs:
         run: |
           pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
 
-      - name: Generate proto
-        run: |
-          python setup.py generate_proto
-
       - name: Install review module
         run: |
           pip install .
