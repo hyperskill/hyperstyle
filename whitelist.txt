@@ -195,6 +195,7 @@ pmd
 png
 popen
 pred
+sdist
 preprocess
 preprocessing
 pretrained
