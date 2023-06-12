@@ -216,6 +216,7 @@ removeprefix
 rfind
 rmdir
 runtime
+sdist
 setdefault
 setslice
 showline

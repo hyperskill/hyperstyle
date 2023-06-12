@@ -1,4 +1,5 @@
 import os
+from distutils.command.sdist import sdist
 from pathlib import Path
 from typing import List
 
@@ -68,12 +69,22 @@ class BuildPyCommand(build_py):
 
 class BDistWheelCommand(bdist_wheel):
     """
-    Generate proto code before building a wheel.
+    Generate proto code before building a bdist wheel.
     """
 
     def run(self):
         generate_proto()
         bdist_wheel.run(self)
+
+
+class SDistWheelCommand(sdist):
+    """
+    Generate proto code before building a sdist wheel.
+    """
+
+    def run(self):
+        generate_proto()
+        sdist.run(self)
 
 
 def get_inspectors_additional_files() -> List[str]:
@@ -112,6 +123,9 @@ setup(
     keywords='code review',
     python_requires='>=3.8, <4',
     install_requires=get_requires(),
+    setup_requires=[
+        'grpcio-tools==1.51.1',
+    ],
     include_package_data=True,
     packages=find_packages(exclude=[
         '*.unit_tests',
@@ -135,6 +149,7 @@ setup(
     cmdclass={
         'build_py': BuildPyCommand,
         'bdist_wheel': BDistWheelCommand,
+        'sdist': SDistWheelCommand,
         'generate_proto': GenerateProto,
     },
 )
