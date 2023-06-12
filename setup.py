@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from typing import List
 
-from setuptools import find_packages, setup
+from setuptools import Command, find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
 
@@ -26,7 +26,9 @@ def generate_proto():
                       f'--pyi_out={current_dir}',
                       f'--grpc_python_out={current_dir}',
                       proto_path / 'model.proto']
-    subprocess.call(protoc_command)
+    status = subprocess.call(protoc_command)
+    if status != 0:
+        exit(status)
 
     result = []
     for root, _, files in os.walk(proto_path):
@@ -34,6 +36,19 @@ def generate_proto():
             if 'pb2' in file:
                 result.append(str(Path(root) / file))
     return result
+
+
+class GenerateProto(Command):
+    description = "Generates client and classes for protobuf ij inspector"
+
+    def initialize_options(self) -> None:
+        pass
+
+    def finalize_options(self) -> None:
+        pass
+
+    def run(self):
+        generate_proto()
 
 
 def get_inspectors_additional_files() -> List[str]:
@@ -73,6 +88,11 @@ setup(
     python_requires='>=3.8, <4',
     install_requires=get_requires(),
     include_package_data=True,
+    extras_require={
+        "dev": [
+            "grpcio-tools",
+        ],
+    },
     packages=find_packages(exclude=[
         '*.unit_tests',
         '*.unit_tests.*',
