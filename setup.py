@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import List
 
 import grpc_tools.protoc
-from setuptools import Command, find_packages, setup
+from setuptools import find_packages, setup
+from setuptools.command.build_py import build_py
+from wheel.bdist_wheel import bdist_wheel
 
 current_dir = Path(__file__).parent.absolute()
 proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
@@ -19,41 +21,51 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
-class GenerateProto(Command):
-    description = "Generates client and classes for protobuf ij inspector"
-    user_options = []
+def get_proto_paths() -> List[str]:
+    result = []
+    for root, _, files in os.walk(proto_path):
+        for file in files:
+            if 'pb2' in file:
+                result.append(str(Path(root) / file))
+    return result
 
-    def initialize_options(self) -> None:
-        pass
 
-    def finalize_options(self) -> None:
-        pass
+def generate_proto():
+    grpc_tools.protoc.main(
+        ['grpc_tools.protoc',
+         f'--proto_path={current_dir}',
+         f'--python_out={current_dir}',
+         f'--pyi_out={current_dir}',
+         f'--grpc_python_out={current_dir}',
+         str(proto_path / 'model.proto'),
+         ],
+    )
 
-    @staticmethod
-    def get_proto_paths() -> List[str]:
-        result = []
-        for root, _, files in os.walk(proto_path):
-            for file in files:
-                if 'pb2' in file:
-                    result.append(str(Path(root) / file))
-        return result
+
+class BuildPyCommand(build_py):
+    """
+    Generate proto code before building the package.
+    """
 
     def run(self):
-        grpc_tools.protoc.main(
-            ['grpc_tools.protoc',
-             f'--proto_path={current_dir}',
-             f'--python_out={current_dir}',
-             f'--pyi_out={current_dir}',
-             f'--grpc_python_out={current_dir}',
-             str(proto_path / 'model.proto'),
-             ],
-        )
+        generate_proto()
+        build_py.run(self)
+
+
+class BDistWheelCommand(bdist_wheel):
+    """
+    Generate proto code before building a wheel.
+    """
+
+    def run(self):
+        generate_proto()
+        bdist_wheel.run(self)
 
 
 def get_inspectors_additional_files() -> List[str]:
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
     configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
-    result = GenerateProto.get_proto_paths()
+    result = get_proto_paths()
     for root, _, files in os.walk(inspectors_path):
         for file in files:
             if not file.endswith('.py') and file.split('.')[-1] in configs:
@@ -87,11 +99,6 @@ setup(
     python_requires='>=3.8, <4',
     install_requires=get_requires(),
     include_package_data=True,
-    extras_require={
-        "dev": [
-            "grpcio-tools",
-        ],
-    },
     packages=find_packages(exclude=[
         '*.unit_tests',
         '*.unit_tests.*',
@@ -112,6 +119,7 @@ setup(
         ],
     },
     cmdclass={
-        'generate_proto': GenerateProto,
+        'build_py': BuildPyCommand,
+        'bdist_wheel': BDistWheelCommand
     },
 )
