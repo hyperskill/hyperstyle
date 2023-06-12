@@ -13,14 +13,14 @@ jobs:
     steps:
       - name: Install git
         run: |
-            apt-get update
-            apt-get -y install git
+          apt-get update
+          apt-get -y install git
 
       - name: Check env variables
         run: |
-            echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
-            echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
-            echo $PMD_DIRECTORY && echo PMD_VERSION
+          echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
+          echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
+          echo $PMD_DIRECTORY && echo PMD_VERSION
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,6 +28,14 @@ jobs:
       - name: Install requirements
         run: |
           pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+
+      - name: Generate proto
+        run: |
+          python setup.py generate_proto
+
+      - name: Install review module
+        run: |
+          pip install .
 
       - name: Set up git rights
         run: |
@@ -45,10 +53,10 @@ jobs:
 
       - name: Sort whitelists
         run: |
-            for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
-            do
-            LC_ALL=C sort $file -o $file
-            done
+          for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
+          do
+          LC_ALL=C sort $file -o $file
+          done
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:
@@ -59,10 +67,6 @@ jobs:
         run: |
           # Consistent with eslint version in Dockerfile
           npm install eslint@7.5.0 -g && eslint --init
-
-      - name: Install review module
-        run: |
-          pip install .
 
       - name: Check installed module can run python linters
         run: |

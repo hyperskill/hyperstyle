@@ -1,11 +1,12 @@
 import os
-import subprocess
 from pathlib import Path
 from typing import List
 
+import grpc_tools.protoc
 from setuptools import Command, find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
+proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
 
 
 def get_long_description() -> str:
@@ -18,28 +19,9 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
-def generate_proto():
-    proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
-    protoc_command = ['python', 'grpc_tools.protoc',
-                      f'--proto_path={current_dir}',
-                      f'--python_out={current_dir}',
-                      f'--pyi_out={current_dir}',
-                      f'--grpc_python_out={current_dir}',
-                      proto_path / 'model.proto']
-    status = subprocess.call(protoc_command)
-    if status != 0:
-        exit(status)
-
-    result = []
-    for root, _, files in os.walk(proto_path):
-        for file in files:
-            if 'pb2' in file:
-                result.append(str(Path(root) / file))
-    return result
-
-
 class GenerateProto(Command):
     description = "Generates client and classes for protobuf ij inspector"
+    user_options = list(tuple())
 
     def initialize_options(self) -> None:
         pass
@@ -47,14 +29,31 @@ class GenerateProto(Command):
     def finalize_options(self) -> None:
         pass
 
+    @staticmethod
+    def get_proto_paths() -> List[str]:
+        result = []
+        for root, _, files in os.walk(proto_path):
+            for file in files:
+                if 'pb2' in file:
+                    result.append(str(Path(root) / file))
+        return result
+
     def run(self):
-        generate_proto()
+        grpc_tools.protoc.main(
+            ['grpc_tools.protoc',
+             f'--proto_path={current_dir}',
+             f'--python_out={current_dir}',
+             f'--pyi_out={current_dir}',
+             f'--grpc_python_out={current_dir}',
+             str(proto_path / 'model.proto'),
+             ]
+        )
 
 
 def get_inspectors_additional_files() -> List[str]:
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
     configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
-    result = generate_proto()
+    result = GenerateProto.get_proto_paths()
     for root, _, files in os.walk(inspectors_path):
         for file in files:
             if not file.endswith('.py') and file.split('.')[-1] in configs:
@@ -111,5 +110,8 @@ setup(
         'console_scripts': [
             'review=hyperstyle.src.python.review.run_tool:main',
         ],
+    },
+    cmdclass={
+        'generate_proto': GenerateProto,
     },
 )
