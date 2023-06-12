@@ -195,7 +195,6 @@ pmd
 png
 popen
 pred
-sdist
 preprocess
 preprocessing
 pretrained
@@ -217,6 +216,7 @@ removeprefix
 rfind
 rmdir
 runtime
+sdist
 setdefault
 setslice
 showline
