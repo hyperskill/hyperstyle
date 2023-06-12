@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 import grpc_tools.protoc
-from setuptools import find_packages, setup
+from setuptools import Command, find_packages, setup
 from setuptools.command.build_py import build_py
 from wheel.bdist_wheel import bdist_wheel
 
@@ -40,6 +40,20 @@ def generate_proto():
          str(proto_path / 'model.proto'),
          ],
     )
+
+
+class GenerateProto(Command):
+    description = "Generates client and classes for protobuf ij inspector"
+    user_options = []
+
+    def initialize_options(self) -> None:
+        pass
+
+    def finalize_options(self) -> None:
+        pass
+
+    def run(self):
+        generate_proto()
 
 
 class BuildPyCommand(build_py):
@@ -121,5 +135,6 @@ setup(
     cmdclass={
         'build_py': BuildPyCommand,
         'bdist_wheel': BDistWheelCommand,
+        'generate_proto': GenerateProto,
     },
 )
