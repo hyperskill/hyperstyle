@@ -34,6 +34,7 @@ astype
 atclause
 barmode
 bce
+bdist
 bgcolor
 binarizer
 capsys
@@ -199,7 +200,6 @@ preprocessing
 pretrained
 println
 proto
-bdist
 protoc
 punisher
 puppycrawl
