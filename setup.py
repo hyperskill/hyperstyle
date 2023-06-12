@@ -21,7 +21,7 @@ def get_version() -> str:
 
 class GenerateProto(Command):
     description = "Generates client and classes for protobuf ij inspector"
-    user_options = list(tuple())
+    user_options = []
 
     def initialize_options(self) -> None:
         pass
@@ -46,7 +46,7 @@ class GenerateProto(Command):
              f'--pyi_out={current_dir}',
              f'--grpc_python_out={current_dir}',
              str(proto_path / 'model.proto'),
-             ]
+             ],
         )
 
 
