@@ -21,7 +21,7 @@ Args = namedtuple('Args', [
 @pytest.fixture
 def config() -> ApplicationConfig:
     return ApplicationConfig(
-        disabled_inspectors=set(InspectorType.IJ_PYTHON),
+        disabled_inspectors={InspectorType.IJ_PYTHON},
         allow_duplicates=False,
         n_cpu=1,
         inspectors_config={"n_cpu": 1},
