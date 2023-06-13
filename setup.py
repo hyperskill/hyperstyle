@@ -54,10 +54,7 @@ class GenerateProto(setuptools.Command):
 
 def get_inspectors_additional_files() -> List[str]:
     print("Collection stub files...")
-    proto_paths = get_stubs()
-    if len(proto_paths) == 0:
-        raise Exception("Run generate_proto command first to generate .py and .pyi files from proto.")
-    result = proto_paths
+    result = get_stubs()
 
     print("Collection inspectors config files...")
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
