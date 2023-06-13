@@ -1,12 +1,9 @@
 import os
-from distutils.command.sdist import sdist
 from pathlib import Path
 from typing import List
 
-import grpc_tools.protoc
-from setuptools import Command, find_packages, setup
-from setuptools.command.build_py import build_py
-from wheel.bdist_wheel import bdist_wheel
+import setuptools
+from setuptools import find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
 proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
@@ -22,28 +19,16 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
-def get_proto_paths() -> List[str]:
+def get_stubs() -> List[str]:
     result = []
     for root, _, files in os.walk(proto_path):
         for file in files:
-            if 'pb2' in file:
+            if file.endswith('.pyi'):
                 result.append(str(Path(root) / file))
     return result
 
 
-def generate_proto():
-    grpc_tools.protoc.main(
-        ['grpc_tools.protoc',
-         f'--proto_path={current_dir}',
-         f'--python_out={current_dir}',
-         f'--pyi_out={current_dir}',
-         f'--grpc_python_out={current_dir}',
-         str(proto_path / 'model.proto'),
-         ],
-    )
-
-
-class GenerateProto(Command):
+class GenerateProto(setuptools.Command):
     description = "Generates client and classes for protobuf ij inspector"
     user_options = []
 
@@ -54,43 +39,29 @@ class GenerateProto(Command):
         pass
 
     def run(self):
-        generate_proto()
+        import grpc_tools.protoc
 
-
-class BuildPyCommand(build_py):
-    """
-    Generate proto code before building the package.
-    """
-
-    def run(self):
-        generate_proto()
-        build_py.run(self)
-
-
-class BDistWheelCommand(bdist_wheel):
-    """
-    Generate proto code before building a bdist wheel.
-    """
-
-    def run(self):
-        generate_proto()
-        bdist_wheel.run(self)
-
-
-class SDistWheelCommand(sdist):
-    """
-    Generate proto code before building a sdist wheel.
-    """
-
-    def run(self):
-        generate_proto()
-        sdist.run(self)
+        grpc_tools.protoc.main(
+            ['grpc_tools.protoc',
+             f'--proto_path={current_dir}',
+             f'--python_out={current_dir}',
+             f'--pyi_out={current_dir}',
+             f'--grpc_python_out={current_dir}',
+             str(proto_path / 'model.proto'),
+             ],
+        )
 
 
 def get_inspectors_additional_files() -> List[str]:
+    print("Collection stub files...")
+    proto_paths = get_stubs()
+    if len(proto_paths) == 0:
+        raise Exception("Run generate_proto command first to generate .py and .pyi files from proto.")
+    result = proto_paths
+
+    print("Collection inspectors config files...")
     inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
-    configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
-    result = get_proto_paths()
+    configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc', 'pyi']
     for root, _, files in os.walk(inspectors_path):
         for file in files:
             if not file.endswith('.py') and file.split('.')[-1] in configs:
@@ -147,9 +118,6 @@ setup(
         ],
     },
     cmdclass={
-        'build_py': BuildPyCommand,
-        'bdist_wheel': BDistWheelCommand,
-        'sdist': SDistWheelCommand,
         'generate_proto': GenerateProto,
     },
 )
