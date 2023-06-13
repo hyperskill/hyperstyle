@@ -1,5 +1,7 @@
 import json
 from collections import namedtuple
+
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest
@@ -19,7 +21,7 @@ Args = namedtuple('Args', [
 @pytest.fixture
 def config() -> ApplicationConfig:
     return ApplicationConfig(
-        disabled_inspectors=set(),
+        disabled_inspectors={InspectorType.IJ_PYTHON},
         allow_duplicates=False,
         n_cpu=1,
         inspectors_config={"n_cpu": 1},

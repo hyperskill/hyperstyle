@@ -71,7 +71,6 @@ echo "Checking variables..."
 
 : "${CODE_SERVER_HOST:?Variable is not defined}"
 : "${CODE_SERVER_PORT:?Variable is not defined}"
-: "${CODE_SERVER_ROOT:?Variable is not defined}"
 
 echo "The variables are defined."
 
@@ -151,3 +150,7 @@ if need_to_install_linter "golangci-lint" "${GOLANG_LINT_DIRECTORY}"; then
 else
   echo "Golangci-lint ${GOLANG_LINT_VERSION} installation skipped."
 fi
+
+echo "Generating proto files  ..."
+   export PROTO_PATH="hyperstyle/src/python/review/inspectors/ij_python/proto"
+   python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. "${PROTO_PATH}/model.proto

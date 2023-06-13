@@ -34,6 +34,7 @@ class LocalCommandBuilder:
             RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
         ]
 
+        self.disable.append('ij_python')
         if self.disable:
             command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
 

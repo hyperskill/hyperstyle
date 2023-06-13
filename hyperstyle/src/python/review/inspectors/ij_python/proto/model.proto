@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.jetbrains.research.ij.headless.server";
+option java_outer_classname = "CodeServerProto";
+
+service CodeInspectionService {
+    rpc inspect (Code) returns (InspectionResult) {};
+}
+
+enum LanguageId {
+    Python = 0;
+    kotlin = 1;
+    Java = 2;
+}
+
+message Code {
+    string text = 1;
+    LanguageId languageId = 2;
+}
+
+message Problem {
+    string name = 1;
+    string inspector = 2;
+    uint64 lineNumber = 3;
+    uint64 offset = 4;
+    uint64 length = 5;
+}
+
+message InspectionResult {
+    repeated Problem problems = 1;
+}
+
+message Service {
+    string name = 1;
+    LanguageId languageId = 2;
+}
+
+message InitResult {
+    uint64 status = 1;
+}

@@ -1,0 +1,5 @@
+# grpc
+protobuf==4.21.12
+google==3.0.0
+grpcio==1.51.1
+grpcio-tools==1.51.1

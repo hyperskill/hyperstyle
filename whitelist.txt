@@ -34,6 +34,7 @@ astype
 atclause
 barmode
 bce
+bdist
 bgcolor
 binarizer
 capsys
@@ -43,6 +44,7 @@ cbo
 changelog
 checkstyle
 cloneable
+cmdclass
 concat
 config
 configs
@@ -92,6 +94,7 @@ exprs
 f1
 file
 filemode
+filepath
 fillna
 formatter
 fs
@@ -107,6 +110,7 @@ getuid
 gradle
 groupby
 groupdict
+grpc
 hashtable
 hline
 hyperstyle
@@ -184,6 +188,7 @@ parametrize
 params
 parsers
 pathlib
+pb2
 pickler
 plotly
 pmd
@@ -194,6 +199,8 @@ preprocess
 preprocessing
 pretrained
 println
+proto
+protoc
 punisher
 puppycrawl
 pyast
@@ -209,6 +216,7 @@ removeprefix
 rfind
 rmdir
 runtime
+sdist
 setdefault
 setslice
 showline

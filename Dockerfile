@@ -4,10 +4,17 @@ RUN npm install eslint@7.5.0 -g \
     && eslint --init
 
 COPY . review
-RUN pip install --no-cache-dir \
+
+RUN pip install -r review/requirements-grpc.txt --use-feature=in-tree-build
+
+RUN python review/setup.py generate_proto
+
+RUN pip install \
     -r review/requirements-test.txt \
     -r review/requirements.txt \
-    ./review
+    ./review --use-feature=in-tree-build
+
+RUN pip install review
 
 ENV LINTERS_DIRECTORY      /opt/linters
 
@@ -23,9 +30,8 @@ ENV PMD_DIRECTORY  ${LINTERS_DIRECTORY}/pmd
 ENV GOLANG_LINT_VERSION  1.49.0
 ENV GOLANG_LINT_DIRECTORY  ${LINTERS_DIRECTORY}/golangci-lint
 
-ENV CODE_SERVER_HOST 0.0.0.0
+ENV CODE_SERVER_HOST localhost
 ENV CODE_SERVER_PORT 8080
-ENV CODE_SERVER_ROOT code/server/api/v1/
 
 RUN mkdir -p ${CHECKSTYLE_DIRECTORY} &&  \
     mkdir -p ${DETEKT_DIRECTORY} &&  \

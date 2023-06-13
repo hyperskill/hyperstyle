@@ -2,9 +2,11 @@ import os
 from pathlib import Path
 from typing import List
 
+import setuptools
 from setuptools import find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
+proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
 
 
 def get_long_description() -> str:
@@ -17,10 +19,46 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
-def get_inspectors_additional_files() -> List[str]:
-    inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
-    configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc']
+def get_stubs() -> List[str]:
     result = []
+    for root, _, files in os.walk(proto_path):
+        for file in files:
+            if file.endswith('.pyi'):
+                result.append(str(Path(root) / file))
+    return result
+
+
+class GenerateProto(setuptools.Command):
+    description = "Generates client and classes for protobuf ij inspector"
+    user_options = []
+
+    def initialize_options(self) -> None:
+        pass
+
+    def finalize_options(self) -> None:
+        pass
+
+    def run(self):
+        import grpc_tools.protoc
+
+        grpc_tools.protoc.main(
+            ['grpc_tools.protoc',
+             f'--proto_path={current_dir}',
+             f'--python_out={current_dir}',
+             f'--pyi_out={current_dir}',
+             f'--grpc_python_out={current_dir}',
+             str(proto_path / 'model.proto'),
+             ],
+        )
+
+
+def get_inspectors_additional_files() -> List[str]:
+    print("Collection stub files...")
+    result = get_stubs()
+
+    print("Collection inspectors config files...")
+    inspectors_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors'
+    configs = ['xml', 'yml', 'eslintrc', 'flake8', 'txt', 'pylintrc', 'pyi']
     for root, _, files in os.walk(inspectors_path):
         for file in files:
             if not file.endswith('.py') and file.split('.')[-1] in configs:
@@ -53,6 +91,9 @@ setup(
     keywords='code review',
     python_requires='>=3.8, <4',
     install_requires=get_requires(),
+    setup_requires=[
+        'grpcio-tools==1.51.1',
+    ],
     include_package_data=True,
     packages=find_packages(exclude=[
         '*.unit_tests',
@@ -72,5 +113,8 @@ setup(
         'console_scripts': [
             'review=hyperstyle.src.python.review.run_tool:main',
         ],
+    },
+    cmdclass={
+        'generate_proto': GenerateProto,
     },
 )
