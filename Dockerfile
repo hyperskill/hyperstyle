@@ -7,12 +7,14 @@ COPY . review
 
 RUN pip install --no-cache-dir -r review/requirements-grpc.txt --use-feature=in-tree-build
 
-RUN pip install --no-cache-dir \
+RUN pip install \
     -r review/requirements-test.txt \
     -r review/requirements.txt \
     ./review --use-feature=in-tree-build
 
 RUN python review/setup.py generate_proto
+
+RUN pip install review
 
 ENV LINTERS_DIRECTORY      /opt/linters
 
