@@ -13,7 +13,7 @@ DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
 @dataclass
 class LocalCommandBuilder:
     verbosity: int = 2
-    disable: List[str] = field(default_factory=lambda: [])
+    disable: List[str] = field(default_factory=lambda: ['ij_python'])
     allow_duplicates: bool = False
     language_version: Optional[str] = None
     n_cpu: int = 1

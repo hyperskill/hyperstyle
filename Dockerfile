@@ -4,10 +4,15 @@ RUN npm install eslint@7.5.0 -g \
     && eslint --init
 
 COPY . review
+
+RUN pip install --no-cache-dir -r review/requirements-grpc.txt --use-feature=in-tree-build
+
 RUN pip install --no-cache-dir \
     -r review/requirements-test.txt \
     -r review/requirements.txt \
-    ./review
+    ./review --use-feature=in-tree-build
+
+RUN python review/setup.py generate_proto
 
 ENV LINTERS_DIRECTORY      /opt/linters
 

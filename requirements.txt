@@ -30,11 +30,5 @@ django==3.2
 requests==2.25.1
 argparse==1.4.0
 
-# grpc
-protobuf==4.21.12
-google==3.0.0
-grpcio==1.51.1
-grpcio-tools==1.51.1
-
 # setup
 wheel==0.38.4

@@ -23,7 +23,7 @@ class IJInspector(BaseInspector):
     inspector_type = InspectorType.IJ_PYTHON
 
     def __init__(self, language: Language):
-        self.host = os.environ.get(CODE_SERVER_HOST, "0.0.0.0")
+        self.host = os.environ.get(CODE_SERVER_HOST, "localhost")
         self.port = os.environ.get(CODE_SERVER_PORT, 8080)
         if language != language.PYTHON:
             raise Exception(f"IJ inspector does not support {language} language now. Only python is supported now.")
