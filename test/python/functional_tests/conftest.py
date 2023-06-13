@@ -13,7 +13,7 @@ DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
 @dataclass
 class LocalCommandBuilder:
     verbosity: int = 2
-    disable: List[str] = field(default_factory=lambda: ['ij_python'])
+    disable: List[str] = field(default_factory=lambda: [])
     allow_duplicates: bool = False
     language_version: Optional[str] = None
     n_cpu: int = 1
@@ -34,6 +34,7 @@ class LocalCommandBuilder:
             RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
         ]
 
+        self.disable.append('ij_python')
         if self.disable:
             command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
 
