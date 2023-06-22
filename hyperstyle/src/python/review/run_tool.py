@@ -28,10 +28,6 @@ logger = logging.getLogger(__name__)
 
 def parse_disabled_inspectors(value: str) -> Set[InspectorType]:
     passed_names = value.upper().split(',')
-    # TODO: delete it after updating the run configuration in production
-    intellij_key_word = 'intellij'.upper()
-    if intellij_key_word in passed_names:
-        passed_names.remove(intellij_key_word)
     allowed_names = {inspector.value for inspector in InspectorType}
     if not all(name in allowed_names for name in passed_names):
         raise argparse.ArgumentError('disable', 'Incorrect inspectors\' names')
