@@ -3,10 +3,10 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
+import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2 as model_pb2
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2 as model_pb2
 from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.ij_python.ij_client import IJClient
 from hyperstyle.src.python.review.inspectors.ij_python.issue_configs import ISSUE_CONFIGS
@@ -58,15 +58,15 @@ class IJInspector(BaseInspector):
         for problem in inspection_result.problems:
             issue_type = self.choose_issue_type(problem.inspector, problem.name)
             base_issue = BaseIssue(
-                    origin_class=problem.inspector,
-                    type=issue_type,
-                    description=problem.name,
-                    file_path=file_path,
-                    line_no=problem.lineNumber,
-                    column_no=problem.offset,
-                    inspector_type=InspectorType.IJ_PYTHON,
-                    difficulty=IssueDifficulty.get_by_issue_type(issue_type),
-                )
+                origin_class=problem.inspector,
+                type=issue_type,
+                description=problem.name,
+                file_path=file_path,
+                line_no=problem.lineNumber,
+                column_no=problem.offset,
+                inspector_type=InspectorType.IJ_PYTHON,
+                difficulty=IssueDifficulty.get_by_issue_type(issue_type),
+            )
 
             issue = convert_base_issue(base_issue, issue_configs_handler)
             if issue is None:
