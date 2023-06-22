@@ -7,11 +7,14 @@ from hyperstyle.src.python.review.common.file_system import get_content_from_fil
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
 import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2 as model_pb2
+from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.ij_python.ij_client import IJClient
+from hyperstyle.src.python.review.inspectors.ij_python.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.ij_python.issue_types import IJ_PYTHON_CODE_TO_ISSUE_TYPE, \
     ISSUE_TYPE_EXCEPTIONS
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
 
 CODE_SERVER_HOST = "CODE_SERVER_HOST"
 CODE_SERVER_PORT = "CODE_SERVER_PORT"
@@ -51,10 +54,10 @@ class IJInspector(BaseInspector):
 
     def convert_to_base_issues(self, inspection_result: model_pb2.InspectionResult, file_path: Path) -> List[BaseIssue]:
         base_issues = []
+        issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         for problem in inspection_result.problems:
             issue_type = self.choose_issue_type(problem.inspector, problem.name)
-            base_issues.append(
-                BaseIssue(
+            base_issue = BaseIssue(
                     origin_class=problem.inspector,
                     type=issue_type,
                     description=problem.name,
@@ -63,8 +66,14 @@ class IJInspector(BaseInspector):
                     column_no=problem.offset,
                     inspector_type=InspectorType.IJ_PYTHON,
                     difficulty=IssueDifficulty.get_by_issue_type(issue_type),
-                ),
-            )
+                )
+
+            issue = convert_base_issue(base_issue, issue_configs_handler)
+            if issue is None:
+                logger.error(f'{self.inspector_type.value}: an error occurred during converting a base issue.')
+                continue
+
+            base_issues.append(base_issue)
 
         return base_issues
 
