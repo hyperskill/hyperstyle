@@ -26,6 +26,8 @@ class InspectorType(Enum):
 
     UNDEFINED = 'UNDEFINED'
     QODANA = 'QODANA'
+    # TODO: it is used on production for java inspections, remove in the future releases
+    IJ_OLD = 'INTELLIJ'
 
     @classmethod
     def available_values(cls) -> List[str]:
@@ -49,4 +51,6 @@ class InspectorType(Enum):
 
             # Go language
             cls.GOLANG_LINT.value,
+
+            cls.IJ_OLD.value,
         ]
