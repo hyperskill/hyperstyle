@@ -153,4 +153,4 @@ fi
 
 echo "Generating proto files  ..."
    export PROTO_PATH="hyperstyle/src/python/review/inspectors/ij_python/proto"
-   python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. "${PROTO_PATH}/model.proto
+   python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
