@@ -1,4 +1,5 @@
-# The configuration was made using the following table: https://bit.ly/3Kvz0nK
+# The configuration was made using the following table:
+# https://docs.google.com/spreadsheets/d/1zJrORtjZ3UyoLJV5qaLw9Y_cnK0sNlDW
 
 run:
   tests: false
