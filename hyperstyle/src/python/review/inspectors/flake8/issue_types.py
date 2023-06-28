@@ -37,7 +37,8 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # Cohesion
     'H601': IssueType.COHESION,
 
-    # The categorization for WPS was created using the following document: https://bit.ly/3yms06n
+    # The categorization for WPS was created using the following document:
+    # https://docs.google.com/document/d/1Y_DkYuglPvYlYmAJoyvkXEERbNDS3UhS
 
     # WPS: Naming
     'WPS117': IssueType.CODE_STYLE,  # Forbid naming variables self, cls, or mcs.

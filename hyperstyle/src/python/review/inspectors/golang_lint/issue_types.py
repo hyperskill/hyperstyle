@@ -4,7 +4,8 @@ from typing import Dict
 
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 
-# The configuration was made using the following table: https://bit.ly/3Kvz0nK
+# The configuration was made using the following table:
+# https://docs.google.com/spreadsheets/d/1zJrORtjZ3UyoLJV5qaLw9Y_cnK0sNlDW
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'errcheck': IssueType.ERROR_PRONE,
     'ineffassign': IssueType.ERROR_PRONE,
