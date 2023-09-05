@@ -27,7 +27,7 @@ BASE_COMMAND = [
     '--disable=django-not-configured',
     f'--rcfile={PATH_PYLINT_CONFIG}',
     f'--msg-template={MSG_TEMPLATE}',
-    '--recursive=true'
+    '--recursive=true',
 ]
 
 
