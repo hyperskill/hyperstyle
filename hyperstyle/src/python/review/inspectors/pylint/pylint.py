@@ -23,8 +23,11 @@ INFO_CATEGORY = 'I'
 BASE_COMMAND = [
     'pylint',
     '--load-plugins', 'pylint_django',
+    # TODO: ask about django settings via an cli argument?
+    '--disable=django-not-configured',
     f'--rcfile={PATH_PYLINT_CONFIG}',
     f'--msg-template={MSG_TEMPLATE}',
+    '--recursive=true'
 ]
 
 
