@@ -168,8 +168,7 @@ disable=invalid-name,
         W0622,
         W0511,
         R1718, # conflicts with R1735
-        R1717, # conflicts with R1734,
-        E5110, # Django was not configured
+        R1717, # conflicts with R1734
 
 
 # Enable the message, report, category or checker with the given id(s). You can
