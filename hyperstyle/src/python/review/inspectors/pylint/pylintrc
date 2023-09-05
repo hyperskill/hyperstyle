@@ -169,6 +169,7 @@ disable=invalid-name,
         W0511,
         R1718, # conflicts with R1735
         R1717, # conflicts with R1734
+        W1514, # Using open without explicitly specifying an encoding
 
 
 # Enable the message, report, category or checker with the given id(s). You can
