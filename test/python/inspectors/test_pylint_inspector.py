@@ -37,6 +37,20 @@ FILE_NAMES_AND_N_ISSUES = [
 ]
 
 
+FOLDER_NAMES_AND_N_ISSUES = [
+    ('case0_folder_without_init', 0),
+]
+
+
+@pytest.mark.parametrize(('folder_name', 'n_issues'), FOLDER_NAMES_AND_N_ISSUES)
+def test_folder_with_issues(folder_name: str, n_issues: int):
+    inspector = PylintInspector()
+    path_to_folder = PYTHON_DATA_FOLDER / folder_name
+    issues = inspector.inspect(path_to_folder, {})
+
+    assert len(issues) == n_issues
+
+
 @pytest.mark.parametrize(('file_name', 'n_issues'), FILE_NAMES_AND_N_ISSUES)
 def test_file_with_issues(file_name: str, n_issues: int):
     inspector = PylintInspector()
