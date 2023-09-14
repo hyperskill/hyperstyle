@@ -67,11 +67,16 @@ LANGUAGE_TO_INSPECTORS = {
 
 def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Language) -> Optional[List[BaseIssue]]:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
-    ij_inspectors = list(filter(lambda inspector: isinstance(inspector, BaseIJInspector), inspectors))
+    ij_inspectors = list(
+        filter(
+            lambda inspector: isinstance(inspector, BaseIJInspector)
+            and inspector.inspector_type not in config.disabled_inspectors,
+            inspectors,
+        )
+    )
 
-    ij_config = {} if config.ij_config is None else json.loads(config.ij_config)
-    language_ij_config = ij_config.get(language.value.lower())
-    if language_ij_config is None:
+    ij_config = None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
+    if ij_inspectors and ij_config is None:
         logging.warning(
             f'IJ inspectors for the {language.value} will be disabled '
             f'as the IJ config for this language was not specified.',
@@ -80,7 +85,7 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
         config.disabled_inspectors.update(map(lambda inspector: inspector.inspector_type, ij_inspectors))
     else:
         for inspector in ij_inspectors:
-            inspector.setup_connection_parameters(language_ij_config['host'], language_ij_config['port'])
+            inspector.setup_connection_parameters(ij_config['host'], ij_config['port'])
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
@@ -136,8 +141,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         }
 
         for code_statistics in code_statistics_by_difficulty.values():
-            code_statistics.total_lines = min(code_statistics.total_lines,
-                                              get_range_lines(config.start_line, config.end_line))
+            code_statistics.total_lines = min(
+                code_statistics.total_lines, get_range_lines(config.start_line, config.end_line)
+            )
 
         punisher_by_difficulty = {
             difficulty: Punisher(file_issues, previous_issues)
@@ -164,9 +170,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     )
 
 
-def filter_out_of_range_issues(issues: List[BaseIssue],
-                               start_line: int = 1,
-                               end_line: Optional[int] = None) -> List[BaseIssue]:
+def filter_out_of_range_issues(
+    issues: List[BaseIssue], start_line: int = 1, end_line: Optional[int] = None
+) -> List[BaseIssue]:
     if end_line is None:
         end_line = 100_000_000
 
