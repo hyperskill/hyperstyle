@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from test.python import TEST_DATA_FOLDER
 from typing import List, Optional
 
@@ -34,7 +36,10 @@ class LocalCommandBuilder:
             RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
         ]
 
-        self.disable.append('ij_python')
+        # TODO: remove after adding a test server
+        self.disable.append(InspectorType.IJ_PYTHON.value)
+        self.disable.append(InspectorType.IJ_KOTLIN.value)
+
         if self.disable:
             command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
 
