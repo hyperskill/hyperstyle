@@ -80,7 +80,7 @@ class RunToolArgument(Enum):
                                'should use the new format')
 
     HISTORY = ArgumentsInfo(None, '--history',
-                            'Json string, which contains lists of issues in the previous submissions '
+                            'JSON string, which contains lists of issues in the previous submissions '
                             'for other tasks for one user.')
 
     WITH_ALL_CATEGORIES = ArgumentsInfo(None, '--with-all-categories',
@@ -93,5 +93,7 @@ class RunToolArgument(Enum):
     IJ_CONFIG = ArgumentsInfo(
         None,
         '--ij-config',
-        'Json string, which contains dictionary with host and port for each IJ-inspector.',
+        'JSON string containing information for setting up a connection to the IJ server '
+        'for each language to be analyzed with the IJ inspector. '
+        'It should be a dictionary of dictionaries where for each language host and port are specified.',
     )
