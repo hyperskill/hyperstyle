@@ -1,6 +1,6 @@
 import re
 
-from hyperstyle.src.python.review.inspectors.common.tips import (
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_augmented_assign_pattern_tip,
     get_cohesion_tip,
     get_cyclomatic_complexity_tip,
@@ -8,7 +8,7 @@ from hyperstyle.src.python.review.inspectors.common.tips import (
     get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
-from hyperstyle.src.python.review.inspectors.issue_configs import (
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
     IssueConfig,
     IssueDescriptionParser,
     MeasurableIssueConfig,

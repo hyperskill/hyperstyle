@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Dict, List, Tuple
 
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType, Measurable
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType, Measurable
 from hyperstyle.src.python.review.quality.rules.boolean_length_scoring import LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG
 from hyperstyle.src.python.review.quality.rules.class_response_scoring import LANGUAGE_TO_RESPONSE_RULE_CONFIG
 from hyperstyle.src.python.review.quality.rules.cohesion_scoring import LANGUAGE_TO_COHESION_RULE_CONFIG

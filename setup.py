@@ -6,7 +6,7 @@ import setuptools
 from setuptools import find_packages, setup
 
 current_dir = Path(__file__).parent.absolute()
-proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'ij_python' / 'proto'
+proto_path = current_dir / 'hyperstyle' / 'src' / 'python' / 'review' / 'inspectors' / 'common' / 'inspector' / 'proto'
 
 
 def get_long_description() -> str:

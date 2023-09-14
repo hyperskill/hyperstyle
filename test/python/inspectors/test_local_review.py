@@ -1,7 +1,7 @@
 import json
 from collections import namedtuple
 
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from test.python.inspectors import PYTHON_DATA_FOLDER
 
 import pytest

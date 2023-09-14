@@ -4,7 +4,7 @@ from enum import Enum, unique
 from functools import total_ordering
 from typing import List
 
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 
 @total_ordering

@@ -7,7 +7,7 @@ import pytest
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_configs import ISSUE_CONFIGS
-from hyperstyle.src.python.review.inspectors.common.tips import (
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
@@ -15,8 +15,8 @@ from hyperstyle.src.python.review.inspectors.common.tips import (
     get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BoolExprLenIssue,
     CodeIssue,
     CyclomaticComplexityIssue,
@@ -25,7 +25,7 @@ from hyperstyle.src.python.review.inspectors.issue import (
     IssueType,
     LineLenIssue,
 )
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 
 FILE_NAME_AND_ISSUES = [

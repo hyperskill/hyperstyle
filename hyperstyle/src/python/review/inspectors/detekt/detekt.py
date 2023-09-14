@@ -5,13 +5,13 @@ from typing import Any, Dict, List
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
-from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 

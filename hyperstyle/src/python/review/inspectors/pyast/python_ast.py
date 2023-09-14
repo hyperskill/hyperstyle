@@ -6,10 +6,10 @@ from typing import Any, Dict, List
 from hyperstyle.src.python.review.common import language
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.tips import get_bool_expr_len_tip, get_func_len_tip
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_bool_expr_len_tip, get_func_len_tip
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue, BoolExprLenIssue, FuncLenIssue, IssueDifficulty, IssueType,
 )
 

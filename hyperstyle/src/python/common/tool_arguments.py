@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 
 @unique
@@ -89,3 +89,9 @@ class RunToolArgument(Enum):
 
     GROUP_BY_DIFFICULTY = ArgumentsInfo(None, '--group-by-difficulty',
                                         'With this flag, the final grade will be grouped by the issue difficulty.')
+
+    IJ_CONFIG = ArgumentsInfo(
+        None,
+        '--ij-config',
+        'Json string, which contains dictionary with host and port for each IJ-inspector.',
+    )

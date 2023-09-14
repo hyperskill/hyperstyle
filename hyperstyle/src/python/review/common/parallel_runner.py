@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
-from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 
 logger = logging.getLogger(__name__)
 

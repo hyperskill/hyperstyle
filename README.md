@@ -138,6 +138,11 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
 ```
 
+Also, you should generate model files for IntelliJ-based inspectors:
+```bash
+python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. hyperstyle/src/python/review/inspectors/common/inspector/proto/model.proto
+```
+
 ### Using docker
 
 Alternatively, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
