@@ -72,7 +72,7 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
             lambda inspector: isinstance(inspector, BaseIJInspector)
             and inspector.inspector_type not in config.disabled_inspectors,
             inspectors,
-        )
+        ),
     )
 
     ij_config = None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
@@ -142,7 +142,8 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
 
         for code_statistics in code_statistics_by_difficulty.values():
             code_statistics.total_lines = min(
-                code_statistics.total_lines, get_range_lines(config.start_line, config.end_line)
+                code_statistics.total_lines,
+                get_range_lines(config.start_line, config.end_line),
             )
 
         punisher_by_difficulty = {
@@ -171,7 +172,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
 
 
 def filter_out_of_range_issues(
-    issues: List[BaseIssue], start_line: int = 1, end_line: Optional[int] = None
+    issues: List[BaseIssue],
+    start_line: int = 1,
+    end_line: Optional[int] = None,
 ) -> List[BaseIssue]:
     if end_line is None:
         end_line = 100_000_000

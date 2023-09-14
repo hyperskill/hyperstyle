@@ -27,11 +27,11 @@ The 3rd party software we use in this project has its own licenses.
 
 Python language (all versions can be found in the [requirements.txt](requirements.txt) file):
 
-- [x]  flake8 [MIT]
+- [x] flake8 [MIT]
     * [Site and docs](https://flake8.pycqa.org/en/latest/)
     * [Repository](https://github.com/PyCQA/flake8)
   
-- [x]  Pylint [GNU LGPL v2]
+- [x] Pylint [GNU LGPL v2]
     * [Site and docs](https://www.pylint.org/)
     * [Repository](https://github.com/PyCQA/pylint)
    
@@ -39,19 +39,19 @@ Python language (all versions can be found in the [requirements.txt](requirement
     * [Site and docs](https://radon.readthedocs.io/en/latest/)
     * [Repository](https://github.com/rubik/radon)
 
-- [x] IJ Inspections
+- [x] IJ Python Inspections
     * [Site and docs](https://www.jetbrains.com/help/pycharm/disabling-and-enabling-inspections.html)
-    * [Repository is private, for more information contact dev team]()
+    * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
 
 
 Java language:
 
-- [x]  PMD [BSD] (Version: 6.37.0)
+- [x] PMD [BSD] (Version: 6.37.0)
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
-- [x]  Checkstyle [GNU LGPL v2.1] (Version: 8.44)
+- [x] Checkstyle [GNU LGPL v2.1] (Version: 8.44)
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
 
@@ -59,15 +59,18 @@ Java language:
 
 Kotlin language:
 
-- [x]  Detekt [Apache 2.0] (Version: 1.14.2)
+- [x] Detekt [Apache 2.0] (Version: 1.14.2)
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 
+- [x] IJ Kotlin inspections
+  * [Site and docs](https://www.jetbrains.com/help/idea/code-inspection.html)
+  * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
 
 JavaScript language:
 
-- [x]  ESlint [MIT] (Version: 7.5.0)
+- [x] ESlint [MIT] (Version: 7.5.0)
     * [Site and docs](https://eslint.org/)
     * [Repository](https://github.com/eslint/eslint)
   
