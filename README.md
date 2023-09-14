@@ -39,7 +39,7 @@ Python language (all versions can be found in the [requirements.txt](requirement
     * [Site and docs](https://radon.readthedocs.io/en/latest/)
     * [Repository](https://github.com/rubik/radon)
 
-- [x] IJ Python Inspections
+- [x] Python IJ Inspections
     * [Site and docs](https://www.jetbrains.com/help/pycharm/disabling-and-enabling-inspections.html)
     * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
@@ -63,9 +63,9 @@ Kotlin language:
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 
-- [x] IJ Kotlin inspections
-  * [Site and docs](https://www.jetbrains.com/help/idea/code-inspection.html)
-  * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
+- [x] Kotlin IJ inspections
+    * [Site and docs](https://www.jetbrains.com/help/idea/code-inspection.html)
+    * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
 
 JavaScript language:
