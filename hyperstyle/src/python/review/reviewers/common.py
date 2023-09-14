@@ -75,8 +75,8 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
         ),
     )
 
-    ij_config = None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
-    if ij_inspectors and ij_config is None:
+    connection_parameters = None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
+    if ij_inspectors and connection_parameters is None:
         logging.warning(
             f'IJ inspectors for the {language.value} will be disabled '
             f'as the IJ config for this language was not specified.',
@@ -85,7 +85,7 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
         config.disabled_inspectors.update(map(lambda inspector: inspector.inspector_type, ij_inspectors))
     else:
         for inspector in ij_inspectors:
-            inspector.setup_connection_parameters(ij_config['host'], ij_config['port'])
+            inspector.setup_connection_parameters(connection_parameters['host'], connection_parameters['port'])
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
