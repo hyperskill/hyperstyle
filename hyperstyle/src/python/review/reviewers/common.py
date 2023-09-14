@@ -75,7 +75,9 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
         ),
     )
 
-    connection_parameters = None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
+    connection_parameters = (
+        None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
+    )
     if ij_inspectors and connection_parameters is None:
         logging.warning(
             f'IJ inspectors for the {language.value} will be disabled '
