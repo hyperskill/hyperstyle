@@ -19,21 +19,14 @@ jobs:
       - name: Check env variables
         run: |
           echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
-          echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
-          echo $PMD_DIRECTORY && echo PMD_VERSION
+          echo $CHECKSTYLE_DIRECTORY && echo $CHECKSTYLE_VERSION
+          echo $PMD_DIRECTORY && echo $PMD_VERSION
+          echo $GOLANG_LINT_DIRECTORY && echo $GOLANG_LINT_VERSION
 
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install requirements
-        run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-grpc.txt
-
-      - name: Generate proto
-        run: |
-          python setup.py generate_proto
-
-      - name: Setup
+      - name: Install the tool
         run: |
           pip install --no-cache-dir .
 
@@ -50,13 +43,13 @@ jobs:
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
           flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400,I100,I201,I202, --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
 
-
       - name: Sort whitelists
         run: |
           for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
           do
           LC_ALL=C sort $file -o $file
           done
+
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:
