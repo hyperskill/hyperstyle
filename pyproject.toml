@@ -1,0 +1,56 @@
+[build-system]
+requires = [
+    "setuptools",
+    "setuptools-scm",
+    "wheel",
+    "grpcio-tools==1.51.1"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["version", "readme", "dependencies"]
+name = "hyperstyle"
+description = "A tool for running a set of pre-configured linters and evaluating code quality."
+requires-python = ">=3.8, <4"
+license = { file = "LICENSE" }
+authors = [{ name = "Stepik.org", email = "ivan.magda@stepik.org" }]
+keywords = ["code review"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Education",
+    "Topic :: Software Development :: Build Tools",
+]
+
+[project.urls]
+Homepage = "https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality"
+Repository = "https://github.com/hyperskill/hyperstyle"
+
+[project.scripts]
+review = "hyperstyle.src.python.review.run_tool:main"
+
+[tool.setuptools.dynamic]
+version = { file = "VERSION.md" }
+readme = { file = "README.md", content-type = "text/markdown" }
+dependencies = { file = "requirements.txt" }
+
+[tool.setuptools.packages.find]
+exclude = [
+    "*.unit_tests",
+    "*.unit_tests.*",
+    "unit_tests.*",
+    "unit_tests",
+    "*.functional_tests",
+    "*.functional_tests.*",
+    "functional_tests.*",
+    "functional_tests",
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.xml", "*.yml", "*.eslintrc", "*.flake8", "*.txt", "*.pylintrc", "*.pyi"]

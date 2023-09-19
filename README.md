@@ -6,7 +6,7 @@ A tool for running a set of pre-configured linters and evaluating code quality.
 It is used on the [Hyperskill](https://hyperskill.org/) platform 
 to check the quality of learners' code.
 
-[Read more detail about the project at Hyperskill Help Center](https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality)
+[Read more details about the project at Hyperskill Help Center](https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality)
 
 [The dockerized version](https://hub.docker.com/r/stepik/hyperstyle/tags)
 
@@ -85,7 +85,9 @@ Go language:
 
 ## Installation
 
-You have to create set of environment variables:
+### Pre-requirements
+
+You have to create a set of environment variables in order to be able to use several linters:
 - `CHECKSTYLE_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `CHECKSTYLE_DIRECTORY` (the directory with `CHECKSTYLE` linter sources)
 - `DETEKT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
@@ -94,62 +96,91 @@ You have to create set of environment variables:
 - `PMD_DIRECTORY` (the directory with `PMD` linter sources)
 - `GOLANG_LINT_VERSION` (the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 - `GOLANG_LINT_DIRECTORY` (the directory with `GOLANG_LINT` linter sources)
-- `CODE_SERVER_HOST` (host for code server, default is "0.0.0.0", the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
-- `CODE_SERVER_PORT` (port of code server, default is 8080, the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
-- `CODE_SERVER_ROOT` (root of code server, default is "code/server/api/v1/", the value of the variable must be the same with its value in [Dockerfile](Dockerfile))
 
+### Using pip
 
-### Using script
+Just run the following commands to install everything you need to run the tool:
 
-Just run the following command:
-```bash
-./setup_environment.sh
-```
-and install everything the script suggests. 
+1. Install hyperstyle from PyPI:
+   ```bash
+   pip intall hyperstyle
+   ```
 
-**Note**: You can also use this script to update linters. To do this, just update the corresponding 
-linter version variables, run the script, and reinstall only the necessary linters. 
-
-### Manually
-
-If you don't want to use the script, you can install the environment manually.
-
-Simply clone the repository and run the following commands:
-
-1. `pip install -r requirements.txt`
-2. `pip install -r requirements-test.txt` for tests
-3. `npm install eslint@7.5.0 -g && eslint --init`
-
-You can download all linters sources manually or by the following commands:
-- `CHECKSTYLE`: 
-```bash
-curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar > ${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
-```
-- `DETEKT`: 
-```bash
-curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
-&& unzip detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
-&&  curl -H "Accept: application/zip" https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar -o ${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar
-```
-- `PMD`: 
-```bash
-curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip \
-&& unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY}
-```
-- `GOLANG_LINT`:
-```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
-```
-
-Also, you should generate model files for IntelliJ-based inspectors:
-```bash
-python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. hyperstyle/src/python/review/inspectors/common/inspector/proto/model.proto
-```
+2. Install (or update) linters specified in the environment variables above:
+   ```bash
+   curl -sSL https://github.com/hyperskill/hyperstyle/blob/main/setup_environment.sh | bash -
+   ```
+    You can also install linters manually. To do this, please refer to [this](#linter-manual-installation) section.
 
 ### Using docker
 
 Alternatively, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
 Or use the public docker image, that we use in the [build.yml](.github/workflows/build.yml) file.
+
+### Manually (for development purposes)
+
+To set up a development environment, you need to run the following commands:
+
+1. Download the repository:
+   ```bash
+   git clone https://github.com/hyperskill/hyperstyle.git && cd hyperstyle
+   ```
+
+2. Install a virtual environment:
+   ```bash
+   python3 -m venv venv && source venv/bin/activate
+   ```
+
+3. Install (or update) linters specified in the environment variables above:
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
+   It will install all dependencies from the [requirements.txt](requirements.txt) file (required dependencies) 
+   and from the [requirements-test.txt](requirements-test.txt) file (tests dependencies), 
+   along with dependencies required to build the project.
+
+4. Install (or update) linters:
+   ```bash
+   ./setup_environment.sh
+   ```
+   You can also install linters manually. To do this, please refer to [this](#linter-manual-installation) section.
+
+### Linter manual installation
+
+You can download all linters' sources by the following commands:
+
+- `ESLINT`:
+  ```bash
+  npm install eslint@7.5.0 -g && eslint --init
+  ```
+
+- `CHECKSTYLE`: 
+  ```bash
+  curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar > ${CHECKSTYLE_DIRECTORY}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
+  ```
+
+- `DETEKT`: 
+  ```bash
+  curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
+  && unzip detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
+  &&  curl -H "Accept: application/zip" https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar -o ${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar
+  ```
+
+- `PMD`: 
+  ```bash
+  curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip \
+  && unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY}
+  ```
+
+- `GOLANG_LINT`:
+  ```bash
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
+  ```
+
+- IJ-based linters:
+  ```bash
+  python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. hyperstyle/src/python/review/inspectors/common/inspector/proto/model.proto
+  ```
 
 ## Usage
 
