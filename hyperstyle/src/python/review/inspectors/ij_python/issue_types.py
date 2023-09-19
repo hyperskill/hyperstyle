@@ -3,7 +3,7 @@ from typing import Dict
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 # Synchronized with https://github.com/JetBrains-Research/code-quality-ij-server/tree/master/docs/inspections/python
-IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+IJ_INSPECTION_TO_ISSUE_TYPE = {
     # BEST_PRACTICES
     'PyUnusedLocalInspection': IssueType.BEST_PRACTICES,
     'PySimplifyBooleanCheckInspection': IssueType.BEST_PRACTICES,
@@ -65,7 +65,7 @@ IJ_PYTHON_CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     'PyUnresolvedReferencesInspection': IssueType.ERROR_PRONE,
 }
 
-ISSUE_TYPE_EXCEPTIONS = {
+IJ_MESSAGE_TO_ISSUE_TYPE = {
     'PyDataclassInspection': {
         'is useless until ''__post_init__'' is declared': IssueType.BEST_PRACTICES,
         'should take all init-only variables (incl. inherited) in the same order as they are defined':

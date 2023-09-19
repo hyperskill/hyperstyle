@@ -39,7 +39,7 @@ Python language (all versions can be found in the [requirements.txt](requirement
     * [Site and docs](https://radon.readthedocs.io/en/latest/)
     * [Repository](https://github.com/rubik/radon)
 
-- [x] Python IJ Inspections
+- [x] Python IJ Inspections [MIT]
     * [Site and docs](https://www.jetbrains.com/help/pycharm/disabling-and-enabling-inspections.html)
     * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
@@ -63,7 +63,7 @@ Kotlin language:
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 
-- [x] Kotlin IJ inspections
+- [x] Kotlin IJ inspections [MIT]
     * [Site and docs](https://www.jetbrains.com/help/idea/code-inspection.html)
     * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
@@ -141,7 +141,7 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
 ```
 
-Also, you should generate model files for IntelliJ-based inspectors:
+Also, you must generate model files for IntelliJ-based inspectors:
 ```bash
 python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. hyperstyle/src/python/review/inspectors/common/inspector/proto/model.proto
 ```

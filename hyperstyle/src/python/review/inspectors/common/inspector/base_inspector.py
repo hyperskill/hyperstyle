@@ -75,10 +75,15 @@ class BaseIJInspector(BaseInspector):
     def issue_configs(self) -> List[IssueConfig]:
         raise NotImplementedError('issue_configs property is not implemented yet')
 
-    @staticmethod
+    @property
     @abstractmethod
-    def choose_issue_type(issue: model_pb2.Problem) -> IssueType:
-        raise NotImplementedError('choose_issue_type method is not implemented yet')
+    def ij_inspection_to_issue_type(self) -> Dict[str, IssueType]:
+        raise NotImplementedError('ij_inspection_to_issue_type property is not implemented yet')
+
+    @property
+    @abstractmethod
+    def ij_message_to_issue_type(self) -> Dict[str, Dict[str, IssueType]]:
+        raise NotImplementedError('ij_message_to_issue_type property is not implemented yet')
 
     def setup_connection_parameters(self, host: str, port: int):
         self.host = host
@@ -135,3 +140,15 @@ class BaseIJInspector(BaseInspector):
             # TODO: replace with error when add mock server into tests
             logger.info('Inspector failed to connect to code server.', e)
             return []
+
+    def choose_issue_type(self, problem: model_pb2.Problem) -> IssueType:
+        if problem.inspector in self.ij_message_to_issue_type:
+            for key, value in self.ij_message_to_issue_type[problem.inspector].items():
+                if problem.name in key:
+                    return value
+
+        if problem.inspector in self.ij_inspection_to_issue_type:
+            return self.ij_inspection_to_issue_type[problem.inspector]
+
+        # PEP-8 inspection
+        return IssueType.CODE_STYLE
