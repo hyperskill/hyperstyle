@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import setup, Command
+from setuptools import Command, setup
 
 
 class GenerateProto(Command):
