@@ -3,8 +3,8 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2
 from hyperstyle.src.python.review.inspectors.ij_kotlin.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.ij_kotlin.issue_types import (
-    IJ_MESSAGE_TO_ISSUE_TYPE,
     IJ_INSPECTION_TO_ISSUE_TYPE,
+    IJ_MESSAGE_TO_ISSUE_TYPE,
 )
 
 

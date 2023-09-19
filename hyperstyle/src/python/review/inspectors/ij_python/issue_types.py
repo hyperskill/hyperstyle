@@ -1,5 +1,3 @@
-from typing import Dict
-
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 # Synchronized with https://github.com/JetBrains-Research/code-quality-ij-server/tree/master/docs/inspections/python
