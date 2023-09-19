@@ -26,6 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install dev-requirements
+        run: |
+          pip install --no-cache-dir -r requirements-dev.txt
+
       - name: Install the tool
         run: |
           pip install --no-cache-dir .
