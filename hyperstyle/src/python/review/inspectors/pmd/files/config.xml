@@ -9,7 +9,8 @@
         The Basic ruleset contains a collection of good practices which should be followed.
     </description>
 
-    <!-- This config was created using the following table: https://bit.ly/2VC6E61 -->
+    <!-- This config was created using the following table: -->
+    <!-- https://docs.google.com/spreadsheets/d/1HS4LrgAV3a59D0zhjfb6OATkgxWkyz2G -->
 
     <!-- Best Practices -->
     <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod"/>
