@@ -21,7 +21,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Topic :: Education",
@@ -39,18 +39,3 @@ review = "hyperstyle.src.python.review.run_tool:main"
 version = { file = "VERSION.md" }
 readme = { file = "README.md", content-type = "text/markdown" }
 dependencies = { file = "requirements.txt" }
-
-[tool.setuptools.packages.find]
-exclude = [
-    "*.unit_tests",
-    "*.unit_tests.*",
-    "unit_tests.*",
-    "unit_tests",
-    "*.functional_tests",
-    "*.functional_tests.*",
-    "functional_tests.*",
-    "functional_tests",
-]
-
-[tool.setuptools.package-data]
-"*" = ["*.xml", "*.yml", "*.eslintrc", "*.flake8", "*.txt", "*.pylintrc", "*.pyi"]
