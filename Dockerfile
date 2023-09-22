@@ -10,7 +10,7 @@ RUN pip install \
     ./review
 
 # Generate proto
-ENV PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto"
+ENV PROTO_PATH "hyperstyle/src/python/review/inspectors/common/inspector/proto"
 RUN python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
 RUN pip install review
