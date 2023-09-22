@@ -30,6 +30,11 @@ jobs:
         run: |
           pip install --no-cache-dir -r requirements-dev.txt
 
+      - name: Generate proto
+        run: |
+          export PROTO_PATH="hyperstyle/src/python/review/inspectors/ij_python/proto"
+          python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
+
       - name: Install the tool
         run: |
           pip install --no-cache-dir .
