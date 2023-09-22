@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.quality.model import QualityType, Rule
 
 

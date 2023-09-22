@@ -17,6 +17,7 @@ class InspectorType(Enum):
 
     # Kotlin language
     DETEKT = 'DETEKT'
+    IJ_KOTLIN = 'IJ_KOTLIN'
 
     # JavaScript language
     ESLINT = 'ESLINT'
@@ -45,6 +46,7 @@ class InspectorType(Enum):
 
             # Kotlin language
             cls.DETEKT.value,
+            cls.IJ_KOTLIN.value,
 
             # JavaScript language
             cls.ESLINT.value,

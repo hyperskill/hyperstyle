@@ -27,11 +27,11 @@ The 3rd party software we use in this project has its own licenses.
 
 Python language (all versions can be found in the [requirements.txt](requirements.txt) file):
 
-- [x]  flake8 [MIT]
+- [x] flake8 [MIT]
     * [Site and docs](https://flake8.pycqa.org/en/latest/)
     * [Repository](https://github.com/PyCQA/flake8)
   
-- [x]  Pylint [GNU LGPL v2]
+- [x] Pylint [GNU LGPL v2]
     * [Site and docs](https://www.pylint.org/)
     * [Repository](https://github.com/PyCQA/pylint)
    
@@ -39,19 +39,19 @@ Python language (all versions can be found in the [requirements.txt](requirement
     * [Site and docs](https://radon.readthedocs.io/en/latest/)
     * [Repository](https://github.com/rubik/radon)
 
-- [x] IJ Inspections
+- [x] Python IJ Inspections [MIT]
     * [Site and docs](https://www.jetbrains.com/help/pycharm/disabling-and-enabling-inspections.html)
-    * [Repository is private, for more information contact dev team]()
+    * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
 
 
 Java language:
 
-- [x]  PMD [BSD] (Version: 6.37.0)
+- [x] PMD [BSD] (Version: 6.37.0)
     * [Site and docs](https://pmd.github.io/)
     * [Repository](https://github.com/pmd/pmd)
   
-- [x]  Checkstyle [GNU LGPL v2.1] (Version: 8.44)
+- [x] Checkstyle [GNU LGPL v2.1] (Version: 8.44)
     * [Site and docs](https://checkstyle.sourceforge.io/)
     * [Repository](https://github.com/checkstyle/checkstyle)
 
@@ -59,15 +59,18 @@ Java language:
 
 Kotlin language:
 
-- [x]  Detekt [Apache 2.0] (Version: 1.14.2)
+- [x] Detekt [Apache 2.0] (Version: 1.14.2)
     * [Site and docs](https://detekt.github.io/detekt/)
     * [Repository](https://github.com/detekt/detekt)
 
+- [x] Kotlin IJ inspections [MIT]
+    * [Site and docs](https://www.jetbrains.com/help/idea/code-inspection.html)
+    * [Repository](https://github.com/JetBrains-Research/code-quality-ij-server/tree/master)
 
 
 JavaScript language:
 
-- [x]  ESlint [MIT] (Version: 7.5.0)
+- [x] ESlint [MIT] (Version: 7.5.0)
     * [Site and docs](https://eslint.org/)
     * [Repository](https://github.com/eslint/eslint)
   
@@ -138,6 +141,11 @@ curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSI
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOLANG_LINT_DIRECTORY} v${GOLANG_LINT_VERSION}
 ```
 
+Also, you must generate model files for IntelliJ-based inspectors:
+```bash
+python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. hyperstyle/src/python/review/inspectors/common/inspector/proto/model.proto
+```
+
 ### Using docker
 
 Alternatively, you can build a docker image by [Dockerfile](Dockerfile) and run the tool inside this image.
@@ -154,22 +162,23 @@ A simple configuration: `python run_tool.py <path>`.
 
 Optional arguments:
 
-Argument | Description
---- | ---
-**&#8209;h**, **&#8209;&#8209;help**      |  show the help message and exit.
-**&#8209;v**, **&#8209;&#8209;verbosity** |  choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).
-**&#8209;d**, **&#8209;&#8209;disable**   |  disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST, `ij` for ij inspections (disabled by default); for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for `Kotlin` language: detekt for [Detekt](https://detekt.github.io/detekt/); for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/); for **Go** language: `golang_lint` for [golangci-lint](https://golangci-lint.run/). Example: `-d pylint,flake8`.
-**&#8209;&#8209;allow-duplicates**        |  allow duplicate issues found by different linters. By default, duplicates are skipped.
-**&#8209;&#8209;language-version**, **&#8209;&#8209;language_version**  |  specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`, `java15`, `java17`. **Note**: **&#8209;&#8209;language_version** is deprecated and will be deleted in the future.
-**&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**  |  specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.
-**&#8209;f**, **&#8209;&#8209;format**    |  the output format. Available values: `json`, `text`. Default value is `json`.
-**&#8209;s**, **&#8209;&#8209;start-line**|  the first line to be analyzed. By default it starts from `1`.
-**&#8209;e**, **&#8209;&#8209;end-line**  |  the end line to be analyzed. The default value is `None`, which meant to handle file by the end.
-**&#8209;&#8209;new-format**              |  the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.
-**&#8209;&#8209;history**                 |  JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"number\": 20}, {\"origin_class\": \"WPS314\", \"number\": 3}]}"`
-**&#8209;&#8209;with&#8209;all&#8209;categories** | Without this flag, all issues will be categorized into 5 main categories: `CODE_STYLE`, `BEST_PRACTICES`, `ERROR_PRONE`, `COMPLEXITY`, `INFO`.
-**&#8209;&#8209;group&#8209;by&#8209;difficulty** | With this flag, the final grade and influence on penalty will be grouped by the issue difficulty.
-**&#8209;&#8209;language** | Specify the language to inspect. The tool will check all languages by default. The default value is `None`.
+| Argument                                                               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;h**, **&#8209;&#8209;help**                                   | show the help message and exit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **&#8209;v**, **&#8209;&#8209;verbosity**                              | choose logging level according [this](https://docs.python.org/3/library/logging.html#levels) list: `1` - **ERROR**; `2` - **INFO**; `3` - **DEBUG**; `0` - disable logging (**CRITICAL** value); default value is `0` (**CRITICAL**).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **&#8209;d**, **&#8209;&#8209;disable**                                | disable inspectors. Available values: for **Python** language: `pylint` for [Pylint](https://github.com/PyCQA/pylint), `flake8` for [flake8](https://flake8.pycqa.org/en/latest/), `radon` for [Radon](https://radon.readthedocs.io/en/latest/), `python_ast` to check different measures providing by AST, `ij-python` for IJ inspections; for **Java** language: `checkstyle` for the [Checkstyle](https://checkstyle.sourceforge.io/), `pmd` for [PMD](https://pmd.github.io/); for **Kotlin** language: `detekt` for [Detekt](https://detekt.github.io/detekt/), `ij-kotlin` for IJ inspections; for **JavaScript** language: `eslint` for [ESlint](https://eslint.org/); for **Go** language: `golang_lint` for [golangci-lint](https://golangci-lint.run/). Example: `-d pylint,flake8`. |
+| **&#8209;&#8209;allow-duplicates**                                     | allow duplicate issues found by different linters. By default, duplicates are skipped.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **&#8209;&#8209;language-version**, **&#8209;&#8209;language_version** | specify the language version for JAVA inspectors. Available values: `java7`, `java8`, `java9`, `java11`, `java15`, `java17`. **Note**: **&#8209;&#8209;language_version** is deprecated and will be deleted in the future.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **&#8209;&#8209;n-cpu**, **&#8209;&#8209;n_cpu**                       | specify number of _cpu_ that can be used to run inspectors. **Note**: **&#8209;&#8209;n_cpu** is deprecated. Will be deleted in the future.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **&#8209;f**, **&#8209;&#8209;format**                                 | the output format. Available values: `json`, `text`. Default value is `json`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **&#8209;s**, **&#8209;&#8209;start-line**                             | the first line to be analyzed. By default it starts from `1`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **&#8209;e**, **&#8209;&#8209;end-line**                               | the end line to be analyzed. The default value is `None`, which meant to handle file by the end.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **&#8209;&#8209;new-format**                                           | the argument determines whether the tool should use the _new format_. _New format_ means separating the result by the files to allow getting quality and observed issues for each file separately. The default value is `False`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **&#8209;&#8209;history**                                              | JSON string with a list of issues for each language. For each issue its class and quantity are specified. Example: `--history "{\"python\": [{\"origin_class\": \"SC200\", \"number\": 20}, {\"origin_class\": \"WPS314\", \"number\": 3}]}"`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **&#8209;&#8209;with&#8209;all&#8209;categories**                      | Without this flag, all issues will be categorized into 5 main categories: `CODE_STYLE`, `BEST_PRACTICES`, `ERROR_PRONE`, `COMPLEXITY`, `INFO`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **&#8209;&#8209;group&#8209;by&#8209;difficulty**                      | With this flag, the final grade and influence on penalty will be grouped by the issue difficulty.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **&#8209;&#8209;language**                                             | Specify the language to inspect. The tool will check all languages by default. The default value is `None`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **&#8209;&#8209;ij&#8209;config**                                      | JSON string containing information for setting up a connection to the IJ server for each language to be analyzed with the IJ inspector. Example: `--ij-config "{\"python\": {\"host\": \"localhost\", \"port\": 8080}, \"kotlin\": {\"host\": \"localhost\", \"port\": 8081}}"`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 The output examples:
 

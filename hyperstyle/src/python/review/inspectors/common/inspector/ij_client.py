@@ -1,7 +1,6 @@
 import grpc
 
-import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2 as model_pb2
-import hyperstyle.src.python.review.inspectors.ij_python.proto.model_pb2_grpc as model_pb2_grpc
+from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2, model_pb2_grpc
 
 TIMEOUT = 1
 

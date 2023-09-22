@@ -6,7 +6,7 @@ from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Dict, List, Type, Union
 
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 logger = logging.getLogger(__name__)
 

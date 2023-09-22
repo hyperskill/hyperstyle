@@ -1,7 +1,7 @@
 from typing import List
 
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.quality.model import Quality, Rule
 from hyperstyle.src.python.review.quality.rules.best_practices_scoring import (
     BestPracticesRule,

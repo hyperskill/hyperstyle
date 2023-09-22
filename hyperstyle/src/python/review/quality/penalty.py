@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Set
 
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.quality.model import QualityType
 
 

@@ -6,8 +6,8 @@ from typing import Any, Dict, List, Union
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.file_system import get_file_line
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.quality.model import QualityType
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from hyperstyle.src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult, ReviewResult

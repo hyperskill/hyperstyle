@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Callable, List
 from xml.etree import ElementTree
 
-from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 

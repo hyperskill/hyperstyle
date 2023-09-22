@@ -2,7 +2,7 @@
 
 from typing import Dict
 
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 # The configuration was made using the following table:
 # https://docs.google.com/spreadsheets/d/1zJrORtjZ3UyoLJV5qaLw9Y_cnK0sNlDW

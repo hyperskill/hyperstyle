@@ -5,7 +5,7 @@ from string import Formatter
 from typing import List
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 logger = logging.getLogger(__name__)
 

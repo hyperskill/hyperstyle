@@ -1,3 +1,5 @@
+import json
+import logging
 from collections import defaultdict
 from typing import List, Optional
 
@@ -9,12 +11,14 @@ from hyperstyle.src.python.review.common.parallel_runner import (
     run_inspector_in_memory,
 )
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseIJInspector
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
-from hyperstyle.src.python.review.inspectors.ij_python.ij_inspections import IJInspector
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+from hyperstyle.src.python.review.inspectors.ij_kotlin.ij_kotlin import KotlinIJInspector
+from hyperstyle.src.python.review.inspectors.ij_python.ij_python import PythonIJInspector
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
 from hyperstyle.src.python.review.inspectors.pyast.python_ast import PythonAstInspector
 from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
@@ -42,7 +46,7 @@ LANGUAGE_TO_INSPECTORS = {
         Flake8Inspector(),
         PythonAstInspector(),
         RadonInspector(),
-        IJInspector(Language.PYTHON),
+        PythonIJInspector(),
     ],
     Language.JAVA: [
         CheckstyleInspector(),
@@ -50,6 +54,7 @@ LANGUAGE_TO_INSPECTORS = {
     ],
     Language.KOTLIN: [
         DetektInspector(),
+        KotlinIJInspector(),
     ],
     Language.JS: [
         ESLintInspector(),
@@ -62,8 +67,31 @@ LANGUAGE_TO_INSPECTORS = {
 
 def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Language) -> Optional[List[BaseIssue]]:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
+    ij_inspectors = list(
+        filter(
+            lambda inspector: isinstance(inspector, BaseIJInspector)
+            and inspector.inspector_type not in config.disabled_inspectors,
+            inspectors,
+        ),
+    )
+
+    connection_parameters = (
+        None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
+    )
+    if ij_inspectors and connection_parameters is None:
+        logging.warning(
+            f'IJ inspectors for the {language.value} will be disabled '
+            f'as the IJ config for this language was not specified.',
+        )
+
+        config.disabled_inspectors.update(map(lambda inspector: inspector.inspector_type, ij_inspectors))
+    else:
+        for inspector in ij_inspectors:
+            inspector.setup_connection_parameters(connection_parameters['host'], connection_parameters['port'])
+
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
+
     return inspect_in_parallel(run_inspector, metadata.path, config, inspectors)
 
 
@@ -102,9 +130,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         difficulty: Punisher(issues, previous_issues) for difficulty, issues in issues_by_difficulty.items()
     }
 
-    general_quality_by_difficulty = {
-        difficulty: Quality([]) for difficulty in issues_by_difficulty.keys()
-    }
+    general_quality_by_difficulty = {difficulty: Quality([]) for difficulty in issues_by_difficulty.keys()}
 
     file_review_results = []
     for file in current_files:
@@ -117,8 +143,10 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         }
 
         for code_statistics in code_statistics_by_difficulty.values():
-            code_statistics.total_lines = min(code_statistics.total_lines,
-                                              get_range_lines(config.start_line, config.end_line))
+            code_statistics.total_lines = min(
+                code_statistics.total_lines,
+                get_range_lines(config.start_line, config.end_line),
+            )
 
         punisher_by_difficulty = {
             difficulty: Punisher(file_issues, previous_issues)
@@ -145,9 +173,11 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
     )
 
 
-def filter_out_of_range_issues(issues: List[BaseIssue],
-                               start_line: int = 1,
-                               end_line: Optional[int] = None) -> List[BaseIssue]:
+def filter_out_of_range_issues(
+    issues: List[BaseIssue],
+    start_line: int = 1,
+    end_line: Optional[int] = None,
+) -> List[BaseIssue]:
     if end_line is None:
         end_line = 100_000_000
 

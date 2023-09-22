@@ -1,14 +1,14 @@
 import logging
 from typing import Optional
 
-from hyperstyle.src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
     get_issue_class_by_issue_type,
     get_measure_name_by_measurable_issue_type,
     IssueData,
     Measurable,
 )
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 
 logger = logging.getLogger(__name__)

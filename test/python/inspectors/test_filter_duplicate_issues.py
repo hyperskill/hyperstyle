@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import CodeIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
 
 

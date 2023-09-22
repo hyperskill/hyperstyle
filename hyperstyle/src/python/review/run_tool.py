@@ -14,7 +14,7 @@ from hyperstyle.src.python.common.tool_arguments import RunToolArgument, Verbosi
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
@@ -122,6 +122,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.GROUP_BY_DIFFICULTY.value.description,
                         action='store_true')
 
+    parser.add_argument(RunToolArgument.IJ_CONFIG.value.long_name,
+                        help=RunToolArgument.IJ_CONFIG.value.description,
+                        type=str)
+
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
     if verbosity is VerbosityLevel.ERROR:
@@ -169,6 +173,7 @@ def main() -> int:
             history=args.history,
             with_all_categories=args.with_all_categories,
             group_by_difficulty=args.group_by_difficulty,
+            ij_config=args.ij_config,
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)

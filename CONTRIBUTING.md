@@ -10,9 +10,9 @@ In this document you will find a detailed description of how to add new function
 ## Adding a new inspector for an existing language
 
 If you want to add a new inspector for an existing language, you need to:
-1. Inherit from the [`BaseInspector`](hyperstyle/src/python/review/inspectors/base_inspector.py#L9) class.
-2. Define the [`inspector_type`](hyperstyle/src/python/review/inspectors/base_inspector.py#L29) property. To do this, you need to update the [`InspectorType`](hyperstyle/src/python/review/inspectors/inspector_type.py#L6) class by adding there a name of the inspector.
-3. Implement the [`inspect`](hyperstyle/src/python/review/inspectors/base_inspector.py#L33) function, which should run an analysis of the language and return a list of found issues;
+1. Inherit from the [`BaseInspector`](hyperstyle/src/python/review/inspectors/common/inspector/base_inspector.py#L9) class.
+2. Define the [`inspector_type`](hyperstyle/src/python/review/inspectors/common/inspector/base_inspector.py#L29) property. To do this, you need to update the [`InspectorType`](hyperstyle/src/python/review/inspectors/common/inspector/inspector_type.py#L6) class by adding there a name of the inspector.
+3. Implement the [`inspect`](hyperstyle/src/python/review/inspectors/common/inspector/base_inspector.py#L33) function, which should run an analysis of the language and return a list of found issues;
 
 Usually the inspector runs a third-party linter through a command line and parses its result. In this case it will be useful to implement several auxiliary functions:
 1. `create_command` – creates a command to run the linter via subprocess.
@@ -31,9 +31,9 @@ If you are implementing the inspector that uses the third-party linter, you must
 
 ### Implementation of the `parse` function
 
-Usually, the `parse` function parses the result of the third-party linter line-by-line, then creates a base issue using the [`BaseIssue`](hyperstyle/src/python/review/inspectors/issue.py#L199) dataclass, which is later converted to either [`CodeIssue`](hyperstyle/src/python/review/inspectors/issue.py#L217) or one of the measurable issues using the [`convert_base_issue`](hyperstyle/src/python/review/inspectors/common/base_issue_converter.py#L17) function and an instance of the [`IssueConigsHandler`](hyperstyle/src/python/review/inspectors/issue_configs.py#L117) class. The resulting issue is added to the general list of found issues and this list is returned from the function after the parsing is finished.
+Usually, the `parse` function parses the result of the third-party linter line-by-line, then creates a base issue using the [`BaseIssue`](hyperstyle/src/python/review/inspectors/common/issue/issue.py#L199) dataclass, which is later converted to either [`CodeIssue`](hyperstyle/src/python/review/inspectors/common/issue/issue.py#L217) or one of the measurable issues using the [`convert_base_issue`](hyperstyle/src/python/review/inspectors/common/issue/base_issue_converter.py#L17) function and an instance of the [`IssueConigsHandler`](hyperstyle/src/python/review/inspectors/common/issue/issue_configs.py#L117) class. The resulting issue is added to the general list of found issues and this list is returned from the function after the parsing is finished.
 
-The `IssueConfigHandler` class handles custom issue descriptions and also parses metrics from their descriptions (examples of metrics are: line or function length, cyclomatic complexity, maintainability index).  It receives instances of [`IssueConfig`](hyperstyle/src/python/review/inspectors/issue_configs.py#L46) or [`MeasurableIssueConfig`](hyperstyle/src/python/review/inspectors/issue_configs.py#L85) classes as input, which should be stored in the `ISSUE_CONFIGS` list next to the inspector.
+The `IssueConfigHandler` class handles custom issue descriptions and also parses metrics from their descriptions (examples of metrics are: line or function length, cyclomatic complexity, maintainability index).  It receives instances of [`IssueConfig`](hyperstyle/src/python/review/inspectors/common/issue/issue_configs.py#L46) or [`MeasurableIssueConfig`](hyperstyle/src/python/review/inspectors/common/issue/issue_configs.py#L85) classes as input, which should be stored in the `ISSUE_CONFIGS` list next to the inspector.
 
 Also, if the third-party linter supports output in "Checkstyle" format, you can use the [`parse_xml_file_result`](hyperstyle/src/python/review/inspectors/common/xml_parser.py#L47) function to parse the output file.
 
@@ -42,7 +42,7 @@ Also, if the third-party linter supports output in "Checkstyle" format, you can 
 A sample checklist for adding a new inspector looks like this:
 - [ ] I've inherited from the `BaseInspector` class.
 - [ ] I've implemented the `inspect` function and _if needed_ I've added a check for the existence of third-party linter environment variables using the [`check_set_up_env_variable`](hyperstyle/src/python/review/common/file_system.py#L124) function.
-- [ ] I've added a new inspector type to the `InspectorType` class, updated the [`available_values`](hyperstyle/src/python/review/inspectors/inspector_type.py#L27) function and defined the inspector type.
+- [ ] I've added a new inspector type to the `InspectorType` class, updated the [`available_values`](hyperstyle/src/python/review/inspectors/common/inspector/inspector_type.py#L27) function and defined the inspector type.
 - [ ] _If needed_. I've added a config to run the third-party linter.
 - [ ] _If needed_. I've implemented the `create_command` function.
 - [ ] _if needed_. I've implemented the `parse` function and defined the `ISSUES_CONFIGS` list in a separate file.
