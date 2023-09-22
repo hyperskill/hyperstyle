@@ -1,10 +1,12 @@
+from distutils.command.build import build
 from pathlib import Path
 
 from setuptools import Command, setup
 
 
 class GenerateProto(Command):
-    description = "Generates client and classes for protobuf ij inspector"
+    """Generates a client and classes for IJ inspectors"""
+
     user_options = []
 
     def initialize_options(self) -> None:
@@ -14,7 +16,7 @@ class GenerateProto(Command):
         pass
 
     def run(self):
-        import grpc_tools
+        import grpc_tools.protoc
 
         current_dir = Path(__file__).parent.absolute()
         proto_path = (
@@ -34,4 +36,8 @@ class GenerateProto(Command):
 
 
 if __name__ == '__main__':
+    # Register a new command
+    build.sub_commands.insert(0, ('generate_proto', None))
+
+    # Run the setup script
     setup(cmdclass={"generate_proto": GenerateProto})
