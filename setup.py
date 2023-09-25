@@ -36,7 +36,7 @@ class GenerateProto(Command):
 
 
 if __name__ == '__main__':
-    # Register a new command
+    # Register a new pre-build command
     build.sub_commands.insert(0, ('generate_proto', None))
 
     # Run the setup script
