@@ -1,8 +1,7 @@
 [build-system]
 requires = [
-    "setuptools",
-    "setuptools-scm",
-    "wheel",
+    "setuptools==68.2.2",
+    "setuptools-scm==8.0.3",
     "grpcio-tools==1.51.1"
 ]
 build-backend = "setuptools.build_meta"
@@ -39,3 +38,14 @@ review = "hyperstyle.src.python.review.run_tool:main"
 version = { file = "VERSION.md" }
 readme = { file = "README.md", content-type = "text/markdown" }
 dependencies = { file = "requirements.txt" }
+
+[tool.setuptools.package-data]
+"hyperstyle.src.python.review.inspectors" = [
+    "**/*.xml",
+    "**/*.yml",
+    "**/.eslintrc",
+    "**/*.txt",
+    "**/pylintrc",
+    "**/*.pyi",
+    "**/.flake8",
+]
