@@ -73,6 +73,17 @@ echo "The variables are defined."
 
 echo
 
+read -p "Do you want to install Python development requirements for the Hyperstyle project? (Y/n): " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "Installing Python development requirements..."
+  pip install --no-cache-dir -r requirements-dev.txt
+  check_return_code $? "Python development requirements installed." "Python development requirements installation failed."
+else
+  echo "Python development requirements installation skipped."
+fi
+
+echo
+
 read -p "Do you want to install ESLint? This is the linter for JavaScript. ESLint will be installed globally. (Y/n): " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Installing ESLint..."
