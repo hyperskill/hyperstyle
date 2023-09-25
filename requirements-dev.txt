@@ -1,5 +1,3 @@
+-r requirements-build.txt
 -r requirements.txt
 -r requirements-test.txt
-
-# Build dependecies
-grpcio-tools==1.51.1
