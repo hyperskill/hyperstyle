@@ -60,6 +60,6 @@ RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5ead
 
 COPY . review
 
-RUN cd review && pip install -r requirements-dev.txt && pip install . --use-feature=in-tree-build
+RUN pip install -r ./review/requirements-dev.txt && pip install ./review --use-feature=in-tree-build
 
 CMD ["/bin/bash"]
