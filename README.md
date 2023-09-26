@@ -101,16 +101,27 @@ You have to create a set of environment variables in order to be able to use sev
 
 Just run the following commands to install everything you need to run the tool:
 
-1. Install hyperstyle from PyPI:
+1. Install the latest version of hyperstyle from [PyPI](https://pypi.org/project/hyperstyle/):
    ```bash
-   pip intall hyperstyle
+   pip install hyperstyle
    ```
+   
+   You could also install a specific version:
+   ```bash
+   pip install hyperstyle==<VERSION>
+   ```
+   where `<VERSION>` is your versions.
+   The list of all available versions you could find [here](https://pypi.org/project/hyperstyle/#history).
 
 2. Install (or update) linters specified in the environment variables above:
    ```bash
    curl -sSL https://github.com/hyperskill/hyperstyle/blob/main/setup_environment.sh | bash -
    ```
-    You can also install linters manually. To do this, please refer to [this](#linter-manual-installation) section.
+   This is necessary because the package does not distribute several third-party linters.
+
+   For now the script proposes to install development requirements, you should skip this step.
+
+   You can also install linters manually. To do this, please refer to [this](#linter-manual-installation) section.
 
 ### Using docker
 
@@ -131,18 +142,14 @@ To set up a development environment, you need to run the following commands:
    python3 -m venv venv && source venv/bin/activate
    ```
 
-3. Install (or update) linters specified in the environment variables above:
-   ```bash
-   pip install -r requirements-dev.txt
-   ```
-   It will install all dependencies from the [requirements.txt](requirements.txt) file (required dependencies) 
-   and from the [requirements-test.txt](requirements-test.txt) file (tests dependencies), 
-   along with dependencies required to build the project.
-
-4. Install (or update) linters:
+3. Install development requirements and install (or update) linters specified in the environment variables above:
    ```bash
    ./setup_environment.sh
    ```
+
+   It will install all dependencies from the [requirements-dev.txt](requirements-dev.txt), 
+   which contains runtime, test and build dependencies.   
+
    You can also install linters manually. To do this, please refer to [this](#linter-manual-installation) section.
 
 ### Linter manual installation
