@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools==68.2.2",
-    "setuptools-scm==8.0.3",
+    "wheel==0.38.4",
     "grpcio-tools==1.51.1"
 ]
 build-backend = "setuptools.build_meta"
@@ -24,7 +24,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Topic :: Education",
-    "Topic :: Software Development :: Build Tools",
 ]
 
 [project.urls]
@@ -48,4 +47,12 @@ dependencies = { file = "requirements.txt" }
     "**/pylintrc",
     "**/*.pyi",
     "**/.flake8",
+]
+
+[tool.setuptools.exclude-package-data]
+"*" = [
+    "**/__pycache__/*",
+    "**/*.pyc",
+    "**/*.pyo",
+    "**/*.orig",
 ]
