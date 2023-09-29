@@ -19,23 +19,20 @@ jobs:
       - name: Check env variables
         run: |
           echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
-          echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
-          echo $PMD_DIRECTORY && echo PMD_VERSION
+          echo $CHECKSTYLE_DIRECTORY && echo $CHECKSTYLE_VERSION
+          echo $PMD_DIRECTORY && echo $PMD_VERSION
+          echo $GOLANG_LINT_DIRECTORY && echo $GOLANG_LINT_VERSION
 
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install requirements
+      - name: Install development requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-grpc.txt
+          pip install --no-cache-dir -r requirements-dev.txt
 
-      - name: Generate proto
+      - name: Install the tool
         run: |
-          python setup.py generate_proto
-
-      - name: Setup
-        run: |
-          pip install --no-cache-dir .
+          pip install --no-cache-dir . --use-feature=in-tree-build
 
       - name: Set up git rights
         run: |
@@ -57,6 +54,7 @@ jobs:
           do
           LC_ALL=C sort $file -o $file
           done
+
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:

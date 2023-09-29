@@ -5,3 +5,8 @@
 .github
 .idea
 node_modules
+venv
+.venv
+build
+**/*.egg-info
+**/model_pb2*
