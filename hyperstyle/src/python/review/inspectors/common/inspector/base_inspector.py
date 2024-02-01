@@ -108,7 +108,7 @@ class BaseIJInspector(BaseInspector):
                 file_path=file_path,
                 line_no=problem.lineNumber,
                 column_no=problem.offset,
-                inspector_type=InspectorType.IJ_PYTHON,
+                inspector_type=self.inspector_type,
                 difficulty=IssueDifficulty.get_by_issue_type(issue_type),
             )
 
