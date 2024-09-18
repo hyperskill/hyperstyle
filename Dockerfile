@@ -65,12 +65,14 @@ RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5ead
 ARG POETRY_VERSION=1.8.3
 RUN pip install poetry==${POETRY_VERSION}
 
+WORKDIR /review
+
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-interaction --no-ansi --no-cache --no-root
 
-COPY . review
+COPY . .
 
-RUN PROTO_PATH="review/hyperstyle/src/python/review/inspectors/common/inspector/proto" \
+RUN PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto" \
   && poetry run python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
 CMD ["poetry", "run", "python", "-m", "pytest"]
