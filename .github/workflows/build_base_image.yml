@@ -27,12 +27,11 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - uses: docker/setup-buildx-action@v3
-      - uses: docker/setup-qemu-action@v3
 
       - name: Build and push server image
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           context: .
           pull: true
           push: true
