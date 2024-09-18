@@ -5,7 +5,13 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - 'whitelist.txt'
+      - 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt'
   pull_request:
+    paths:
+      - 'whitelist.txt'
+      - 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
