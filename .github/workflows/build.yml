@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_image:
     name: Build Image
@@ -66,20 +70,20 @@ jobs:
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
+          poetry run python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
 
           # TODO: change max-complexity into 10 after refactoring
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
-          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400,I100,I201,I202, --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
+          poetry run python -m flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400,I100,I201,I202, --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
 
       - name: Check installed module can run python linters
         run: |
-          review test/resources/inspectors/python/case39_no_issues.py
+          poetry run review test/resources/inspectors/python/case39_no_issues.py
 
       - name: Check installed module can run java linters
         run: |
-          review test/resources/inspectors/java/test_algorithm_with_scanner.java
+          poetry run review test/resources/inspectors/java/test_algorithm_with_scanner.java
 
       - name: Check installed module can run js linters
         run: |
-          review test/resources/inspectors/js/case0_no_issues.js
+          poetry run review test/resources/inspectors/js/case0_no_issues.js
