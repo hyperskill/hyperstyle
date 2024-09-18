@@ -1,4 +1,4 @@
-FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
+FROM hyperskill.azurecr.io/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
 
 ENV ESLINT_VERSION          7.5.0
 
