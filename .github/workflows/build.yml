@@ -37,7 +37,7 @@ jobs:
       - build_image
     runs-on: ubuntu-latest
     container:
-      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }
+      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
       credentials:
         username: ${{ secrets.REGISTRY_USER }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
@@ -51,7 +51,7 @@ jobs:
     needs:
       - build_image
     container:
-      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }
+      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
       credentials:
         username: ${{ secrets.REGISTRY_USER }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
