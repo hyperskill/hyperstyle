@@ -1,8 +1,9 @@
 FROM stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
 
-ENV ESLINT_VERSION          7.5.0
+RUN npm install eslint@7.5.0 -g \
+    && eslint --init
 
-ENV LINTERS_DIRECTORY       /opt/linters
+ENV LINTERS_DIRECTORY      /opt/linters
 
 ENV CHECKSTYLE_VERSION      8.44
 ENV CHECKSTYLE_DIRECTORY    ${LINTERS_DIRECTORY}/checkstyle
@@ -58,8 +59,15 @@ RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5ead
     rm main.go &&  \
     chmod ugo-w go.mod go.sum
 
+ARG POETRY_VERSION=1.8.3
+RUN pip install poetry==${POETRY_VERSION}
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-interaction --no-ansi --no-cache --no-root
+
 COPY . review
 
-RUN pip install -r ./review/requirements-dev.txt && pip install ./review --use-feature=in-tree-build
+RUN PROTO_PATH="review/hyperstyle/src/python/review/inspectors/common/inspector/proto" \
+  && poetry run python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
-CMD ["/bin/bash"]
+CMD ["poetry", "run", "pytest"]

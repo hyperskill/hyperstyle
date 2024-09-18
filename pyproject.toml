@@ -1,18 +1,9 @@
-[build-system]
-requires = [
-    "setuptools==68.2.2",
-    "wheel==0.38.4",
-    "grpcio-tools==1.51.1"
-]
-build-backend = "setuptools.build_meta"
-
-[project]
-dynamic = ["version", "readme", "dependencies"]
+[tool.poetry]
 name = "hyperstyle"
+version = "1.5.1"
 description = "A tool for running a set of pre-configured linters and evaluating code quality."
-requires-python = ">=3.8, <4"
-license = { file = "LICENSE" }
-authors = [{ name = "Hyperskill", email = "nikolay.vyahhi@hyperskill.org" }]
+authors = ["Hyperskill Team"]
+readme = "README.md"
 keywords = ["code review"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -33,26 +24,43 @@ Repository = "https://github.com/hyperskill/hyperstyle"
 [project.scripts]
 review = "hyperstyle.src.python.review.run_tool:main"
 
-[tool.setuptools.dynamic]
-version = { file = "VERSION.md" }
-readme = { file = "README.md", content-type = "text/markdown" }
-dependencies = { file = "requirements.txt" }
+[tool.poetry.dependencies]
+python = "~3.8"
+setuptools = "56.0.0"
+# python code analysis tools
+pylint = "2.13.0"
+pylint-django = "2.5.3"
+# flake8 plugins
+flake8 = "3.9.0"
+flake8-plugin-utils = "1.3.2"
+flake8-bugbear = "21.4.3"
+flake8-builtins = "1.5.3"
+flake8-comprehensions = "3.4.0"
+flake8-eradicate = "1.0.0"
+flake8-import-order = "0.18.1"
+flake8-polyfill = "1.0.2"
+flake8-return = "1.1.2"
+flake8-spellcheck = "0.24.0"
+mccabe = "0.6.1"
+pep8-naming = "0.11.1"
+wps-light = "0.15.2"
+flake8-broken-line = "0.3.0"
+flake8-string-format = "0.3.0"
+flake8-commas = "2.0.0"
+cohesion = "1.0.0"
+radon = "4.5.0"
+# extra libraries and frameworks
+argparse = "1.4.0"
+django = "4.2.5"
+grpcio-tools = "1.51.1"
+requests = "2.25.1"
 
-[tool.setuptools.package-data]
-"hyperstyle.src.python.review.inspectors" = [
-    "**/*.xml",
-    "**/*.yml",
-    "**/.eslintrc",
-    "**/*.txt",
-    "**/pylintrc",
-    "**/*.pyi",
-    "**/.flake8",
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "6.2.3"
+pytest-runner = "5.2"
+pytest-subtests = "0.4.0"
+jsonschema = "3.2.0"
 
-[tool.setuptools.exclude-package-data]
-"*" = [
-    "**/__pycache__/*",
-    "**/*.pyc",
-    "**/*.pyo",
-    "**/*.orig",
-]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
