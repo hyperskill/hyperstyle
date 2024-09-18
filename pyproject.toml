@@ -25,8 +25,7 @@ Repository = "https://github.com/hyperskill/hyperstyle"
 review = "hyperstyle.src.python.review.run_tool:main"
 
 [tool.poetry.dependencies]
-python = "~3.8"
-setuptools = "56.0.0"
+python = "~3.12"
 # python code analysis tools
 pylint = "2.13.0"
 pylint-django = "2.5.3"
@@ -51,15 +50,15 @@ cohesion = "1.0.0"
 radon = "4.5.0"
 # extra libraries and frameworks
 argparse = "1.4.0"
-django = "4.2.5"
+django = "5.1.1"
 grpcio-tools = "1.66.1"
-requests = "2.25.1"
+requests = "2.32.3"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "6.2.3"
-pytest-runner = "5.2"
-pytest-subtests = "0.4.0"
-jsonschema = "3.2.0"
+pytest = "8.3.3"
+pytest-runner = "6.0.1"
+pytest-subtests = "0.13.1"
+jsonschema = "4.23.0"
 
 [build-system]
 requires = ["poetry-core"]
