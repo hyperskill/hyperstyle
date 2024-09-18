@@ -42,7 +42,7 @@ jobs:
     name: Tests
     needs:
       - build_image
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     container:
       image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
       credentials:
@@ -54,7 +54,7 @@ jobs:
           poetry run python -m pytest
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs:
       - build_image
     container:
