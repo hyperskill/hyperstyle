@@ -1,4 +1,4 @@
-FROM hyperskill.azurecr.io/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
+FROM hyperskill.azurecr.io/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.21.6
 
 RUN npm install eslint@7.5.0 -g \
     && eslint --init
@@ -34,7 +34,7 @@ RUN npm install eslint@${ESLINT_VERSION} -g \
 
 # Install Detekt and Detekt-formatting
 RUN curl -sSLO https://github.com/detekt/detekt/releases/download/v${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}.zip \
-  && unzip -o detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
+  && unzip detekt-cli-${DETEKT_VERSION}.zip -d ${DETEKT_DIRECTORY} \
   && rm detekt-cli-${DETEKT_VERSION}.zip \
   && curl -H "Accept: application/zip" https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-formatting/${DETEKT_VERSION}/detekt-formatting-${DETEKT_VERSION}.jar -o ${DETEKT_DIRECTORY}/detekt-formatting-${DETEKT_VERSION}.jar
 
@@ -43,7 +43,7 @@ RUN curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyl
 
 # Install PMD
 RUN curl -sSLO https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip \
-  && unzip -o pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY} \
+  && unzip pmd-bin-${PMD_VERSION}.zip -d ${PMD_DIRECTORY} \
   && rm pmd-bin-${PMD_VERSION}.zip
 
 # Install golangci-lint
