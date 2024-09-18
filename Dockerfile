@@ -1,7 +1,4 @@
-FROM hyperskill.azurecr.io/hyperstyle-base:py3.12.5-java11.0.11-node14.17.3-go1.18.5
-
-RUN npm install eslint@7.5.0 -g \
-    && eslint --init
+FROM hyperskill.azurecr.io/hyperstyle-base:py3.11.9-java11.0.11-node14.17.3-go1.18.5
 
 ENV LINTERS_DIRECTORY=/opt/linters
 
@@ -23,9 +20,8 @@ RUN mkdir -p ${CHECKSTYLE_DIRECTORY} \
   && mkdir -p ${GOLANG_LINT_DIRECTORY}
 
 # Install Curl and Unzip
-RUN apt -y update \
-  && apt -y upgrade \
-  && apt -y install curl unzip \
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl unzip ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
 # Install eslint
@@ -75,4 +71,4 @@ COPY . .
 RUN PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto" \
   && poetry run python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
-CMD ["poetry", "run", "python", "-m", "pytest"]
+CMD ["poetry", "run", "python", "-m", "pytest", "test/python/functional_tests/test_different_languages.py"]
