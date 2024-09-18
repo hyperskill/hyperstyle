@@ -1,4 +1,4 @@
-# Publish to PyPI in case of releasing
+name: Publish to PyPI in case of releasing
 
 on:
   push:
