@@ -1,0 +1,41 @@
+name: Build Base Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        type: string
+        description: 'Image tag'
+        required: true
+        default: 'py3.8.11-java11.0.11-node14.17.3-go1.18.5'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build_base_image:
+    name: Build Base Image
+    runs-on: [ self-hosted, small ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: hyperskill.azurecr.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build and push server image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          pull: true
+          push: true
+          tags: hyperskill.azurecr.io/hyperstyle-base:${{ inputs.image_tag }}
+          cache-from: |
+            type=gha
+            type=gha,scope=main
+          cache-to: type=gha,mode=max
