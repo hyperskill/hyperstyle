@@ -1,4 +1,4 @@
-FROM hyperskill.azurecr.io/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.21.6
+FROM hyperskill.azurecr.io/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
 
 RUN npm install eslint@7.5.0 -g \
     && eslint --init
@@ -52,9 +52,9 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 
 # Install third party golang libraries and pre-cache them by compiling main.go
 # Taken from: https://github.com/StepicOrg/epicbox-images/blob/a5eadb5211909fc7ef99724ee0b8bf3a758ae1b7/epicbox-go/Dockerfile
-RUN curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/5da8f32100fefb0f70d10b8be8b10dbeca619da1/epicbox-go/go.mod \
-  && curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/5da8f32100fefb0f70d10b8be8b10dbeca619da1/epicbox-go/go.sum \
-  && curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/5da8f32100fefb0f70d10b8be8b10dbeca619da1/epicbox-go/main.go \
+RUN curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/39feae6b2a612668e5d02e42acfdb690e4e968db/epicbox-go/go.mod \
+  && curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/39feae6b2a612668e5d02e42acfdb690e4e968db/epicbox-go/go.sum \
+  && curl -sSfLO https://raw.githubusercontent.com/hyperskill/epicbox-images/39feae6b2a612668e5d02e42acfdb690e4e968db/epicbox-go/main.go \
   && go mod download \
   && go mod verify \
   && go mod tidy \
