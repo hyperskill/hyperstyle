@@ -10,7 +10,7 @@ class myclass:
         self.C = C
 
     def myFun(self):
-        print('hello 1')
+        print(f'hello 1 {self.A}')
 
     def my_fun(self, QQ):
         print('hello 2 {}'.format(QQ))
