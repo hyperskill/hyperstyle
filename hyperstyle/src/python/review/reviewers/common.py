@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import json
 import logging
 from collections import defaultdict
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
-from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.parallel_runner import (
     inspect_in_parallel,
@@ -18,7 +19,6 @@ from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspecto
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.inspectors.ij_kotlin.ij_kotlin import KotlinIJInspector
 from hyperstyle.src.python.review.inspectors.ij_python.ij_python import PythonIJInspector
-from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
 from hyperstyle.src.python.review.inspectors.pyast.python_ast import PythonAstInspector
 from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
@@ -39,6 +39,10 @@ from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import (
     Metadata,
     ProjectMetadata,
 )
+
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.application_config import ApplicationConfig
+    from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 
 LANGUAGE_TO_INSPECTORS = {
     Language.PYTHON: [
@@ -65,7 +69,9 @@ LANGUAGE_TO_INSPECTORS = {
 }
 
 
-def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Language) -> Optional[List[BaseIssue]]:
+def _inspect_code(
+    metadata: Metadata, config: ApplicationConfig, language: Language
+) -> list[BaseIssue] | None:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
     ij_inspectors = list(
         filter(
@@ -80,14 +86,16 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
     )
     if ij_inspectors and connection_parameters is None:
         logging.warning(
-            f'IJ inspectors for the {language.value} will be disabled '
-            f'as the IJ config for this language was not specified.',
+            f"IJ inspectors for the {language.value} will be disabled "
+            f"as the IJ config for this language was not specified.",
         )
 
-        config.disabled_inspectors.update(map(lambda inspector: inspector.inspector_type, ij_inspectors))
+        config.disabled_inspectors.update(inspector.inspector_type for inspector in ij_inspectors)
     else:
         for inspector in ij_inspectors:
-            inspector.setup_connection_parameters(connection_parameters['host'], connection_parameters['port'])
+            inspector.setup_connection_parameters(
+                connection_parameters["host"], connection_parameters["port"]
+            )
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
@@ -95,7 +103,9 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
     return inspect_in_parallel(run_inspector, metadata.path, config, inspectors)
 
 
-def perform_language_review(metadata: Metadata, config: ApplicationConfig, language: Language) -> GeneralReviewResult:
+def perform_language_review(
+    metadata: Metadata, config: ApplicationConfig, language: Language
+) -> GeneralReviewResult:
     issues = _inspect_code(metadata, config, language)
     if issues:
         issues = filter_low_measure_issues(issues, language)
@@ -116,10 +126,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
 
     if current_files is None:
         files = file_path_to_issues.keys()
-        if len(files) == 0:
-            current_files = []
-        else:
-            current_files = files
+        current_files = [] if len(files) == 0 else files
 
     previous_issues = get_previous_issues_by_language(config.history, language)
     categorize(previous_issues, issues)
@@ -130,7 +137,7 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         difficulty: Punisher(issues, previous_issues) for difficulty, issues in issues_by_difficulty.items()
     }
 
-    general_quality_by_difficulty = {difficulty: Quality([]) for difficulty in issues_by_difficulty.keys()}
+    general_quality_by_difficulty = {difficulty: Quality([]) for difficulty in issues_by_difficulty}
 
     file_review_results = []
     for file in current_files:
@@ -159,7 +166,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         }
 
         for difficulty, quality in quality_by_difficulty.items():
-            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
+            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(
+                quality
+            )
 
         file_review_results.append(
             FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file),
@@ -174,10 +183,10 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
 
 
 def filter_out_of_range_issues(
-    issues: List[BaseIssue],
+    issues: list[BaseIssue],
     start_line: int = 1,
-    end_line: Optional[int] = None,
-) -> List[BaseIssue]:
+    end_line: int | None = None,
+) -> list[BaseIssue]:
     if end_line is None:
         end_line = 100_000_000
 
@@ -189,7 +198,7 @@ def filter_out_of_range_issues(
     return suitable_issues
 
 
-def get_range_lines(start_line: int = 1, end_line: Optional[int] = None) -> int:
+def get_range_lines(start_line: int = 1, end_line: int | None = None) -> int:
     if end_line is None:
         return 100_000_000
 

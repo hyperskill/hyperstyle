@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -29,12 +30,12 @@ LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG = {
 
 
 class BestPracticesRule(Rule):
-    def __init__(self, config: BestPracticesRuleConfig):
+    def __init__(self, config: BestPracticesRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.BEST_PRACTICES
-        self.n_best_practices: Optional[int] = None
+        self.n_best_practices: int | None = None
 
-    def apply(self, n_best_practices):
+    def apply(self, n_best_practices) -> None:
         self.n_best_practices = n_best_practices
         ratio = n_best_practices / self.config.n_files
 
@@ -56,7 +57,7 @@ class BestPracticesRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'BestPracticesRule') -> 'BestPracticesRule':
+    def merge(self, other: BestPracticesRule) -> BestPracticesRule:
         config = BestPracticesRuleConfig(
             min(self.config.n_best_practices_moderate, other.config.n_best_practices_moderate),
             min(self.config.n_best_practices_good, other.config.n_best_practices_good),

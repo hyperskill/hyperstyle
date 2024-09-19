@@ -1,5 +1,12 @@
+from __future__ import annotations
+
 import re
 
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
+    IssueConfig,
+    IssueDescriptionParser,
+    MeasurableIssueConfig,
+)
 from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_augmented_assign_pattern_tip,
     get_cohesion_tip,
@@ -8,33 +15,30 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
-    IssueConfig,
-    IssueDescriptionParser,
-    MeasurableIssueConfig,
-)
 
 ISSUE_CONFIGS = [
     IssueConfig(
-        origin_class='WPS432',
+        origin_class="WPS432",
         new_description=get_magic_number_tip(),
-        parser=IssueDescriptionParser(re.compile(r'^Found magic number: (.+)$')),
+        parser=IssueDescriptionParser(re.compile(r"^Found magic number: (.+)$")),
     ),
     IssueConfig(
-        origin_class='WPS350',
+        origin_class="WPS350",
         new_description=get_augmented_assign_pattern_tip(),
     ),
     IssueConfig(
-        origin_class='B007',
+        origin_class="B007",
         new_description=(
             "Loop control variable '{0}' not used within the loop body. "
             "If this is intended, replace it with an underscore."
         ),
-        parser=IssueDescriptionParser(re.compile(r"Loop control variable '(.+)' not used within the loop body")),
+        parser=IssueDescriptionParser(
+            re.compile(r"Loop control variable '(.+)' not used within the loop body")
+        ),
     ),
     # Cyclomatic Complexity
     MeasurableIssueConfig(
-        origin_class='C901',
+        origin_class="C901",
         new_description=get_cyclomatic_complexity_tip(),
         parser=IssueDescriptionParser(
             regexp=re.compile(r"'.+' is too complex \((\d+)\)"),
@@ -43,7 +47,7 @@ ISSUE_CONFIGS = [
     ),
     # Cohesion
     MeasurableIssueConfig(
-        origin_class='H601',
+        origin_class="H601",
         new_description=get_cohesion_tip(),
         parser=IssueDescriptionParser(
             regexp=re.compile(r"class has low \((\d*\.?\d*)%\) cohesion"),
@@ -52,7 +56,7 @@ ISSUE_CONFIGS = [
     ),
     # Line len
     MeasurableIssueConfig(
-        origin_class='E501',
+        origin_class="E501",
         new_description=get_line_len_tip(),
         parser=IssueDescriptionParser(
             regexp=re.compile(r"line too long \((\d+) > \d+ characters\)"),

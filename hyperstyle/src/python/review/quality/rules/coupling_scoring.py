@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -27,12 +28,12 @@ LANGUAGE_TO_COUPLING_RULE_CONFIG = {
 
 
 class CouplingRule(Rule):
-    def __init__(self, config: CouplingRuleConfig):
+    def __init__(self, config: CouplingRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.COUPLING
-        self.coupling: Optional[int] = None
+        self.coupling: int | None = None
 
-    def apply(self, coupling):
+    def apply(self, coupling) -> None:
         self.coupling = coupling
         if coupling > self.config.coupling_bad:
             self.quality_type = QualityType.BAD
@@ -50,7 +51,7 @@ class CouplingRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'CouplingRule') -> 'CouplingRule':
+    def merge(self, other: CouplingRule) -> CouplingRule:
         config = CouplingRuleConfig(
             min(self.config.coupling_bad, other.config.coupling_bad),
             min(self.config.coupling_moderate, other.config.coupling_moderate),

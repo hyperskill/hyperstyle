@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 from collections import Counter
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, List
+from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.common.file_system import get_total_code_lines_from_file
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @dataclass
@@ -32,21 +36,18 @@ class CodeStatistics:
     total_lines: int
 
     @property
-    def issue_type_to_statistics_dict(self) -> Dict[IssueType, int]:
+    def issue_type_to_statistics_dict(self) -> dict[IssueType, int]:
         return {
             IssueType.BEST_PRACTICES: self.n_best_practices_issue,
             IssueType.ERROR_PRONE: self.n_error_prone_issues,
             IssueType.COMPLEXITY: self.n_complexity_issues,
             IssueType.LINE_LEN: self.n_line_len,
-
             IssueType.METHOD_NUMBER: self.method_number,
-
             IssueType.CYCLOMATIC_COMPLEXITY: self.max_cyclomatic_complexity,
             IssueType.COHESION: self.max_cohesion_lack,
             IssueType.MAINTAINABILITY: self.max_maintainability_lack,
             IssueType.FUNC_LEN: self.max_func_len,
             IssueType.BOOL_EXPR_LEN: self.max_bool_expr_len,
-
             IssueType.CODE_STYLE: self.code_style_lines,
             IssueType.INHERITANCE_DEPTH: self.inheritance_depth,
             IssueType.COUPLING: self.coupling,
@@ -55,21 +56,21 @@ class CodeStatistics:
         }
 
 
-def get_code_style_lines(issues: List[BaseIssue]) -> int:
+def get_code_style_lines(issues: list[BaseIssue]) -> int:
     code_style_issues = filter(lambda issue: issue.type == IssueType.CODE_STYLE, issues)
     line_counter = Counter([issue.line_no for issue in code_style_issues])
     return len(line_counter)
 
 
-def __get_max_measure_by_issue_type(issue_type: IssueType, issues: List[BaseIssue]) -> int:
-    return max(map(
-        lambda issue: issue.measure(),
-        filter(lambda issue: issue.type == issue_type, issues),
-    ), default=0)
+def __get_max_measure_by_issue_type(issue_type: IssueType, issues: list[BaseIssue]) -> int:
+    return max(
+        (issue.measure() for issue in filter(lambda issue: issue.type == issue_type, issues)),
+        default=0,
+    )
 
 
 # TODO: Need testing
-def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistics:
+def gather_code_statistics(issues: list[BaseIssue], path: Path) -> CodeStatistics:
     issue_type_counter = Counter([issue.type for issue in issues])
 
     bool_expr_lens = __get_max_measure_by_issue_type(IssueType.BOOL_EXPR_LEN, issues)
@@ -85,10 +86,7 @@ def gather_code_statistics(issues: List[BaseIssue], path: Path) -> CodeStatistic
     weighted_method_complexities = __get_max_measure_by_issue_type(IssueType.WEIGHTED_METHOD, issues)
     method_numbers = __get_max_measure_by_issue_type(IssueType.METHOD_NUMBER, issues)
 
-    if path.exists():
-        total_lines = get_total_code_lines_from_file(path)
-    else:
-        total_lines = 0
+    total_lines = get_total_code_lines_from_file(path) if path.exists() else 0
 
     return CodeStatistics(
         n_code_style_issues=issue_type_counter[IssueType.CODE_STYLE],

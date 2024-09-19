@@ -1,14 +1,16 @@
-from test.python.inspectors import PYTHON_DATA_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
+from __future__ import annotations
+
 from textwrap import dedent
 
 import pytest
+
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.common.issue.tips import get_maintainability_index_tip
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_maintainability_index_tip
 from hyperstyle.src.python.review.inspectors.radon.radon import RadonInspector
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
-
+from test.python.inspectors import PYTHON_DATA_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ("case13_complex_logic.py", 1),
@@ -18,7 +20,7 @@ FILE_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = RadonInspector()
 
     path_to_file = PYTHON_DATA_FOLDER / file_name
@@ -29,7 +31,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
         assert len(issues) == n_issues
 
 
-def test_mi_parse():
+def test_mi_parse() -> None:
     file_name = "test.py"
     output = f"""\
         {file_name} - C (4.32)

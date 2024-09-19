@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -29,12 +30,12 @@ LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG = {
 
 
 class ErrorProneRule(Rule):
-    def __init__(self, config: ErrorProneRuleConfig):
+    def __init__(self, config: ErrorProneRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.ERROR_PRONE
-        self.n_error_prone: Optional[int] = None
+        self.n_error_prone: int | None = None
 
-    def apply(self, n_error_prone):
+    def apply(self, n_error_prone) -> None:
         self.n_error_prone = n_error_prone
         if n_error_prone > self.config.n_error_prone_bad:
             self.quality_type = QualityType.BAD
@@ -47,9 +48,8 @@ class ErrorProneRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'ErrorProneRule') -> 'ErrorProneRule':
-        config = ErrorProneRuleConfig(min(self.config.n_error_prone_bad,
-                                          other.config.n_error_prone_bad))
+    def merge(self, other: ErrorProneRule) -> ErrorProneRule:
+        config = ErrorProneRuleConfig(min(self.config.n_error_prone_bad, other.config.n_error_prone_bad))
         result_rule = ErrorProneRule(config)
         result_rule.apply(self.n_error_prone + other.n_error_prone)
 

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -25,12 +26,12 @@ LANGUAGE_TO_INHERITANCE_DEPTH_RULE_CONFIG = {
 
 
 class InheritanceDepthRule(Rule):
-    def __init__(self, config: InheritanceDepthRuleConfig):
+    def __init__(self, config: InheritanceDepthRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.INHERITANCE_DEPTH
-        self.depth: Optional[int] = None
+        self.depth: int | None = None
 
-    def apply(self, depth):
+    def apply(self, depth) -> None:
         self.depth = depth
         if depth > self.config.depth_bad:
             self.quality_type = QualityType.BAD
@@ -43,9 +44,8 @@ class InheritanceDepthRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'InheritanceDepthRule') -> 'InheritanceDepthRule':
-        config = InheritanceDepthRuleConfig(min(self.config.depth_bad,
-                                                other.config.depth_bad))
+    def merge(self, other: InheritanceDepthRule) -> InheritanceDepthRule:
+        config = InheritanceDepthRuleConfig(min(self.config.depth_bad, other.config.depth_bad))
         result_rule = InheritanceDepthRule(config)
         result_rule.apply(max(self.depth, other.depth))
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseIJInspector
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -35,12 +36,12 @@ LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG = {
 
 
 class BooleanExpressionRule(Rule):
-    def __init__(self, config: BooleanExpressionRuleConfig):
+    def __init__(self, config: BooleanExpressionRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.BOOL_EXPR_LEN
-        self.bool_expr_len: Optional[int] = None
+        self.bool_expr_len: int | None = None
 
-    def apply(self, bool_expr_len):
+    def apply(self, bool_expr_len) -> None:
         self.bool_expr_len = bool_expr_len
         if bool_expr_len > self.config.bool_expr_len_bad:
             self.quality_type = QualityType.BAD
@@ -63,7 +64,7 @@ class BooleanExpressionRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'BooleanExpressionRule') -> 'BooleanExpressionRule':
+    def merge(self, other: BooleanExpressionRule) -> BooleanExpressionRule:
         config = BooleanExpressionRuleConfig(
             min(self.config.bool_expr_len_bad, other.config.bool_expr_len_bad),
             min(self.config.bool_expr_len_moderate, other.config.bool_expr_len_moderate),

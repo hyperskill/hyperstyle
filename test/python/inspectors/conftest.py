@@ -1,62 +1,67 @@
+from __future__ import annotations
+
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, TYPE_CHECKING
 
 import pytest
+
 from hyperstyle.src.python.review.common.file_system import new_temp_dir
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, FileMetadata
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 @pytest.fixture
-def branch_info_response() -> Dict[str, Any]:
+def branch_info_response() -> dict[str, Any]:
     return {
-        'result': {
-            'commitsCount': 1,
-            'filesCount': 1,
-            'branchingRevision': 'foo',
-            'headRevision': {
-                'projectId': 'foo',
-                'revisionId': 'foo',
-                'revisionDate': 1,
-                'effectiveRevisionDate': 1,
-                'revisionCommitMessage': 'foo',
-                'state': 1,
-                'vcsRevisionId': 1,
-                'shortRevisionId': 'foo',
-                'authorId': 'foo',
-                'reachability': 1,
+        "result": {
+            "commitsCount": 1,
+            "filesCount": 1,
+            "branchingRevision": "foo",
+            "headRevision": {
+                "projectId": "foo",
+                "revisionId": "foo",
+                "revisionDate": 1,
+                "effectiveRevisionDate": 1,
+                "revisionCommitMessage": "foo",
+                "state": 1,
+                "vcsRevisionId": 1,
+                "shortRevisionId": "foo",
+                "authorId": "foo",
+                "reachability": 1,
             },
-            'canCreateReview': {
-                'isAllowed': True,
+            "canCreateReview": {
+                "isAllowed": True,
             },
-            'stats': {
-                'parentBranch': 'bar',
-                'commitsAhead': 0,
-                'commitsBehind': 0,
+            "stats": {
+                "parentBranch": "bar",
+                "commitsAhead": 0,
+                "commitsBehind": 0,
             },
-            'mergeInfo': {},
-            'isPullRequest': False,
+            "mergeInfo": {},
+            "isPullRequest": False,
         },
     }
 
 
 @pytest.fixture
-def ownership_summary_response() -> Dict[str, Any]:
+def ownership_summary_response() -> dict[str, Any]:
     return {
-        'result': {
-            'files': [
+        "result": {
+            "files": [
                 {
-                    'filePath': '/foo.py',
-                    'state': 0,
-                    'userId': None,
+                    "filePath": "/foo.py",
+                    "state": 0,
+                    "userId": None,
                 },
                 {
-                    'filePath': '/bar/baz.py',
-                    'state': 0,
-                    'userId': None,
+                    "filePath": "/bar/baz.py",
+                    "state": 0,
+                    "userId": None,
                 },
             ],
         },
@@ -78,7 +83,7 @@ class IssuesTestInfo:
     n_info: int = 0
 
 
-def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
+def gather_issues_test_info(issues: list[BaseIssue]) -> IssuesTestInfo:
     counter = Counter([issue.type for issue in issues])
 
     return IssuesTestInfo(

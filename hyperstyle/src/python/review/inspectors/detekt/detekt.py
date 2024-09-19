@@ -1,25 +1,27 @@
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
-from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
+from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
 
-DETEKT_DIRECTORY_ENV = 'DETEKT_DIRECTORY'
-DETEKT_VERSION_ENV = 'DETEKT_VERSION'
+DETEKT_DIRECTORY_ENV = "DETEKT_DIRECTORY"
+DETEKT_VERSION_ENV = "DETEKT_VERSION"
 
-PATH_TOOLS_PMD_FILES = Path(__file__).parent / 'files'
-PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / 'detekt-config.yml'
+PATH_TOOLS_PMD_FILES = Path(__file__).parent / "files"
+PATH_DETEKT_CONFIG = PATH_TOOLS_PMD_FILES / "detekt-config.yml"
 
 
 class DetektInspector(BaseInspector):
@@ -27,32 +29,40 @@ class DetektInspector(BaseInspector):
 
     # We don't support in-memory inspection for Detekt yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
-        path_to_detekt_cli = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
-                             f'/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli'
-        path_detekt_plugin = f'{os.environ[DETEKT_DIRECTORY_ENV]}' \
-                             f'/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar'
+        path_to_detekt_cli = (
+            f"{os.environ[DETEKT_DIRECTORY_ENV]}"
+            f"/detekt-cli-{os.environ[DETEKT_VERSION_ENV]}/bin/detekt-cli"
+        )
+        path_detekt_plugin = (
+            f"{os.environ[DETEKT_DIRECTORY_ENV]}" f"/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar"
+        )
 
-        command = [
+        return [
             path_to_detekt_cli,
-            '--config', PATH_DETEKT_CONFIG,
-            '--plugins', path_detekt_plugin,
-            '--report', f'xml:{output_path}',
-            '--input', str(path),
+            "--config",
+            PATH_DETEKT_CONFIG,
+            "--plugins",
+            path_detekt_plugin,
+            "--report",
+            f"xml:{output_path}",
+            "--input",
+            str(path),
         ]
-        return command
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        if not (check_set_up_env_variable(DETEKT_DIRECTORY_ENV) and check_set_up_env_variable(DETEKT_VERSION_ENV)):
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
+        if not (
+            check_set_up_env_variable(DETEKT_DIRECTORY_ENV) and check_set_up_env_variable(DETEKT_VERSION_ENV)
+        ):
             return []
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with new_temp_dir() as temp_dir:
-            output_path = temp_dir / 'output.xml'
+            output_path = temp_dir / "output.xml"
             command = self._create_command(path, output_path)
 
             run_in_subprocess(command)
@@ -68,6 +78,6 @@ class DetektInspector(BaseInspector):
     def choose_issue_type(cls, issue_class: str) -> IssueType:
         issue_type = DETEKT_CLASS_NAME_TO_ISSUE_TYPE.get(issue_class)
         if not issue_type:
-            logger.info(f'{cls.inspector_type.value}: {issue_class} - unknown origin class')
+            logger.info(f"{cls.inspector_type.value}: {issue_class} - unknown origin class")
             return IssueType.BEST_PRACTICES
         return issue_type

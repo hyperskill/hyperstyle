@@ -1,42 +1,45 @@
+from __future__ import annotations
+
 import subprocess
 from pathlib import Path
+
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
-def test_exit_code_zero(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'exit_codes' / 'no_issues.py'
+def test_exit_code_zero(local_command: LocalCommandBuilder) -> None:
+    file_path = DATA_PATH / "exit_codes" / "no_issues.py"
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
 
     assert process.returncode == 0
 
 
-def test_exit_code_one(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'exit_codes' / 'with_issues.py'
+def test_exit_code_one(local_command: LocalCommandBuilder) -> None:
+    file_path = DATA_PATH / "exit_codes" / "with_issues.py"
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
 
     assert process.returncode == 1
 
 
-def test_exit_code_two(local_command: LocalCommandBuilder):
-    file_path = Path('no_such_file.py')
+def test_exit_code_two(local_command: LocalCommandBuilder) -> None:
+    file_path = Path("no_such_file.py")
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
 
     assert process.returncode == 2

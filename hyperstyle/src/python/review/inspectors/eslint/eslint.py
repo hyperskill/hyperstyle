@@ -1,17 +1,19 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.eslint.issue_configs import ISSUE_CONFIGS
-from hyperstyle.src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.eslint.issue_configs import ISSUE_CONFIGS
+from hyperstyle.src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
 
-PATH_ESLINT_CONFIG = Path(__file__).parent / '.eslintrc'
+PATH_ESLINT_CONFIG = Path(__file__).parent / ".eslintrc"
 
 
 class ESLintInspector(BaseInspector):
@@ -19,25 +21,28 @@ class ESLintInspector(BaseInspector):
 
     # We don't support in-memory inspection for ESLint yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
-    def _create_command(cls, path: Path, output_path: Path) -> List[str]:
-        local_path = 'node_modules/.bin/eslint'  # used only in local dev environment
-        eslint_command = local_path if Path(local_path).exists() else 'eslint'
+    def _create_command(cls, path: Path, output_path: Path) -> list[str]:
+        local_path = "node_modules/.bin/eslint"  # used only in local dev environment
+        eslint_command = local_path if Path(local_path).exists() else "eslint"
         return [
             eslint_command,
-            '-c', PATH_ESLINT_CONFIG,
-            '-f', 'checkstyle',
-            '-o', output_path,
+            "-c",
+            PATH_ESLINT_CONFIG,
+            "-f",
+            "checkstyle",
+            "-o",
+            output_path,
             path,
         ]
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with new_temp_dir() as temp_dir:
-            output_path = temp_dir / 'output.xml'
+            output_path = temp_dir / "output.xml"
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
@@ -55,5 +60,4 @@ class ESLintInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, issue_class: str) -> IssueType:
-        return ESLINT_CLASS_NAME_TO_ISSUE_TYPE.get(issue_class,
-                                                   IssueType.CODE_STYLE)
+        return ESLINT_CLASS_NAME_TO_ISSUE_TYPE.get(issue_class, IssueType.CODE_STYLE)

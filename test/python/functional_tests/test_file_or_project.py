@@ -1,16 +1,19 @@
+from __future__ import annotations
+
 import subprocess
+
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
-def test_inspect_file_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'file.py'
+def test_inspect_file_works(local_command: LocalCommandBuilder) -> None:
+    file_path = DATA_PATH / "file_or_project" / "file.py"
 
     local_command.path = file_path
 
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
@@ -18,34 +21,34 @@ def test_inspect_file_works(local_command: LocalCommandBuilder):
     assert file_path.name in output
 
 
-def test_inspect_project_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'project'
+def test_inspect_project_works(local_command: LocalCommandBuilder) -> None:
+    file_path = DATA_PATH / "file_or_project" / "project"
 
     local_command.path = file_path
 
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
     assert process.returncode == 1
-    assert 'one.py' in output
-    assert 'other.py' in output
+    assert "one.py" in output
+    assert "other.py" in output
 
 
-def test_inspect_project_with_unknown_extensions_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'project_with_unknown_extensions'
+def test_inspect_project_with_unknown_extensions_works(local_command: LocalCommandBuilder) -> None:
+    file_path = DATA_PATH / "file_or_project" / "project_with_unknown_extensions"
 
     local_command.path = file_path
 
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
     assert process.returncode == 1
-    assert 'file.py' in output
+    assert "file.py" in output

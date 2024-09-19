@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -29,12 +30,12 @@ LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG = {
 
 
 class WeightedMethodsRule(Rule):
-    def __init__(self, config: WeightedMethodsRuleConfig):
+    def __init__(self, config: WeightedMethodsRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.WEIGHTED_METHOD
-        self.weighted_methods: Optional[int] = None
+        self.weighted_methods: int | None = None
 
-    def apply(self, weighted_methods):
+    def apply(self, weighted_methods) -> None:
         self.weighted_methods = weighted_methods
         if weighted_methods > self.config.weighted_methods_bad:
             self.quality_type = QualityType.BAD
@@ -55,7 +56,7 @@ class WeightedMethodsRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'WeightedMethodsRule') -> 'WeightedMethodsRule':
+    def merge(self, other: WeightedMethodsRule) -> WeightedMethodsRule:
         config = WeightedMethodsRuleConfig(
             min(self.config.weighted_methods_bad, other.config.weighted_methods_bad),
             min(self.config.weighted_methods_moderate, other.config.weighted_methods_moderate),

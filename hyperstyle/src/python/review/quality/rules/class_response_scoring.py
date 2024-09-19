@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -27,12 +28,12 @@ LANGUAGE_TO_RESPONSE_RULE_CONFIG = {
 
 
 class ResponseRule(Rule):
-    def __init__(self, config: ResponseRuleConfig):
+    def __init__(self, config: ResponseRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.CLASS_RESPONSE
-        self.response: Optional[int] = None
+        self.response: int | None = None
 
-    def apply(self, response):
+    def apply(self, response) -> None:
         self.response = response
         if response > self.config.response_moderate:
             self.quality_type = QualityType.MODERATE
@@ -50,7 +51,7 @@ class ResponseRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'ResponseRule') -> 'ResponseRule':
+    def merge(self, other: ResponseRule) -> ResponseRule:
         config = ResponseRuleConfig(
             min(self.config.response_moderate, other.config.response_moderate),
             min(self.config.response_good, other.config.response_good),

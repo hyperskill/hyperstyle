@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import logging
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
@@ -8,15 +10,15 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     IssueData,
     Measurable,
 )
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 
 
-def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfigsHandler) -> Optional[BaseIssue]:
-    """
-    Convert the ``base_issue`` to a code issue or measurable one.
+def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfigsHandler) -> BaseIssue | None:
+    """Convert the ``base_issue`` to a code issue or measurable one.
 
     If necessary, the old description is replaced by the new one and the measure is parsed using the
     ``issue_configs_handler``.
@@ -37,13 +39,13 @@ def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfig
     if issubclass(issue_class, Measurable):
         measure = issue_configs_handler.parse_measure(origin_class, description)
         if measure is None:
-            logger.error(f'{inspector_type.value}: Unable to parse measure.')
+            logger.error(f"{inspector_type.value}: Unable to parse measure.")
             return None
 
         issue_data[get_measure_name_by_measurable_issue_type(issue_type)] = measure
 
     try:
         return issue_class(**issue_data)
-    except Exception as exception:
-        logger.error(f'{inspector_type.value}: Unable to create a new issue. {exception}')
+    except Exception:
+        logger.exception(f"{inspector_type.value}: Unable to create a new issue.")
         return None

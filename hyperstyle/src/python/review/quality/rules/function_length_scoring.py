@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -32,12 +33,12 @@ LANGUAGE_TO_FUNCTION_LENGTH_RULE_CONFIG = {
 
 
 class FunctionLengthRule(Rule):
-    def __init__(self, config: FunctionLengthRuleConfig):
+    def __init__(self, config: FunctionLengthRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.FUNC_LEN
-        self.func_len: Optional[int] = None
+        self.func_len: int | None = None
 
-    def apply(self, func_len):
+    def apply(self, func_len) -> None:
         self.func_len = func_len
         if func_len > self.config.func_len_bad:
             self.quality_type = QualityType.BAD
@@ -50,7 +51,7 @@ class FunctionLengthRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'FunctionLengthRule') -> 'FunctionLengthRule':
+    def merge(self, other: FunctionLengthRule) -> FunctionLengthRule:
         config = FunctionLengthRuleConfig(
             min(self.config.func_len_bad, other.config.func_len_bad),
         )

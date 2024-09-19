@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import grpc
 
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2, model_pb2_grpc
@@ -5,19 +7,20 @@ from hyperstyle.src.python.review.inspectors.common.inspector.proto import model
 TIMEOUT = 1
 
 
-class IJClient(object):
-    def __init__(self, host: str = 'localhost', port: int = 8080):
+class IJClient:
+    def __init__(self, host: str = "localhost", port: int = 8080) -> None:
         self.host = host
         self.port = port
 
         # instantiate a channel
-        self.channel = grpc.insecure_channel(f'{self.host}:{self.port}')
+        self.channel = grpc.insecure_channel(f"{self.host}:{self.port}")
 
         # bind the client and the server
         try:
             grpc.channel_ready_future(self.channel).result(timeout=TIMEOUT)
-        except grpc.FutureTimeoutError:
-            raise Exception("Failed to connect to ij code server")
+        except grpc.FutureTimeoutError as e:
+            msg = "Failed to connect to ij code server"
+            raise Exception(msg) from e
         else:
             self.stub = model_pb2_grpc.CodeInspectionServiceStub(self.channel)
 

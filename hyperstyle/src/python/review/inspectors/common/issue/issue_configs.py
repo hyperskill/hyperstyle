@@ -1,16 +1,24 @@
+from __future__ import annotations
+
 import logging
 from dataclasses import dataclass, field
-from typing import Callable, Dict, Optional, Pattern, Tuple
+from typing import Optional, TYPE_CHECKING
 
-from hyperstyle.src.python.review.inspectors.common.utils import contains_format_fields, contains_named_format_fields
+from hyperstyle.src.python.review.inspectors.common.utils import (
+    contains_format_fields,
+    contains_named_format_fields,
+)
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from re import Pattern
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
 class IssueDescriptionParser:
-    """
-    Parser for an issue description.
+    """Parser for an issue description.
 
     The ``converter`` must be a dictionary, where the keys correspond to the position of the group
     to which the converter specified as the dictionary value should be applied.
@@ -19,15 +27,13 @@ class IssueDescriptionParser:
     """
 
     regexp: Pattern[str]
-    converter: Dict[int, Callable] = field(default_factory=lambda: {})
+    converter: dict[int, Callable] = field(default_factory=dict)
 
-    def parse(self, description: str) -> Optional[Tuple]:
-        """
-        Parse the description into a tuple of converted regex groups.
+    def parse(self, description: str) -> tuple | None:
+        """Parse the description into a tuple of converted regex groups.
 
         :return: A tuple of converted regex groups. If there is an error during parsing, None will be returned.
         """
-
         match = self.regexp.search(description)
         if match is None or not match.groups():
             logger.error(f'Unable to parse ("{self.regexp.pattern}") the description: {description}')
@@ -35,8 +41,8 @@ class IssueDescriptionParser:
 
         try:
             args = tuple(self.converter.get(index, str)(group) for index, group in enumerate(match.groups()))
-        except Exception as exception:
-            logger.error(f'Unable to convert the groups: {exception}')
+        except Exception:
+            logger.exception("Unable to convert the groups")
             return None
 
         return args
@@ -44,8 +50,7 @@ class IssueDescriptionParser:
 
 @dataclass(frozen=True)
 class IssueConfig:
-    """
-    Custom config for a code issue.
+    """Custom config for a code issue.
 
     Required fields:
 
@@ -68,23 +73,25 @@ class IssueConfig:
     origin_class: str
     new_description: str
 
-    parser: Optional[IssueDescriptionParser] = None
+    parser: IssueDescriptionParser | None = None
 
     def __post_init__(self):
         if contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
+            msg = "The new description contains named format fields."
+            raise TypeError(msg)
 
         if self.parser is None and contains_format_fields(self.new_description):
-            raise TypeError('You need to specify a parser, since you are using a format string.')
+            msg = "You need to specify a parser, since you are using a format string."
+            raise TypeError(msg)
 
         if self.parser is not None and not contains_format_fields(self.new_description):
-            raise TypeError('You specified the parser, but the new description is not a format string.')
+            msg = "You specified the parser, but the new description is not a format string."
+            raise TypeError(msg)
 
 
 @dataclass(frozen=True)
 class MeasurableIssueConfig(IssueConfig):
-    """
-    Custom config for a measurable issue.
+    """Custom config for a measurable issue.
 
     Required fields:
 
@@ -108,27 +115,29 @@ class MeasurableIssueConfig(IssueConfig):
 
     def __post_init__(self):
         if contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
+            msg = "The new description contains named format fields."
+            raise TypeError(msg)
 
         if self.parser is None:
-            raise TypeError('You must specify a parser.')
+            msg = "You must specify a parser."
+            raise TypeError(msg)
 
 
 class IssueConfigsHandler:
-    """
-    A class that handles issue configs.
+    """A class that handles issue configs.
 
     It accepts issue configs and handles requests for getting new descriptions and parsing measures.
     """
 
-    origin_class_to_config: Dict[str, IssueConfig]
+    origin_class_to_config: dict[str, IssueConfig]
 
-    def __init__(self, *issue_configs: IssueConfig):
-        self.origin_class_to_config = {issue_config.origin_class: issue_config for issue_config in issue_configs}
+    def __init__(self, *issue_configs: IssueConfig) -> None:
+        self.origin_class_to_config = {
+            issue_config.origin_class: issue_config for issue_config in issue_configs
+        }
 
-    def _parse_description(self, origin_class: str, description: str) -> Optional[Tuple]:
-        """
-        Parse a description.
+    def _parse_description(self, origin_class: str, description: str) -> tuple | None:
+        """Parse a description.
 
         :param origin_class: An origin class of issue.
         :param description: A description that needs to be parsed.
@@ -139,19 +148,18 @@ class IssueConfigsHandler:
         parser = config.parser if config is not None else None
 
         if parser is None:
-            logger.error(f'{origin_class}: The parser is undefined.')
+            logger.error(f"{origin_class}: The parser is undefined.")
             return None
 
         args = parser.parse(description)
         if args is None:
-            logger.error(f'{origin_class}: Unable to parse description.')
+            logger.error(f"{origin_class}: Unable to parse description.")
             return None
 
         return args
 
     def parse_measure(self, origin_class: str, description: str) -> Optional:
-        """
-        Parse a measure from a description.
+        """Parse a measure from a description.
 
         :param origin_class: An origin class of issue.
         :param description: A description from which a measure must be parsed.
@@ -166,18 +174,17 @@ class IssueConfigsHandler:
         measure_position = config.measure_position if isinstance(config, MeasurableIssueConfig) else None
 
         if measure_position is None:
-            logger.error(f'{origin_class}: The position of measure is undefined.')
+            logger.error(f"{origin_class}: The position of measure is undefined.")
             return None
 
         if measure_position >= len(args):
-            logger.error(f'{origin_class}: The position of measure is out of range.')
+            logger.error(f"{origin_class}: The position of measure is out of range.")
             return None
 
         return args[measure_position]
 
     def get_description(self, origin_class: str, description: str) -> str:
-        """
-        Get an issue description.
+        """Get an issue description.
 
         If a new description is defined for the issue, it will be returned. If necessary, the passed
         description will be parsed and all extracted elements will be formatted into the new description.
@@ -206,6 +213,6 @@ class IssueConfigsHandler:
 
         try:
             return new_description.format(*args)
-        except Exception as exception:
-            logger.error(f'{origin_class}: Unable to format the new description. {exception}')
+        except Exception:
+            logger.exception(f"{origin_class}: Unable to format the new description.")
             return description
