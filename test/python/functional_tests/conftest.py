@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -33,7 +34,7 @@ class LocalCommandBuilder:
         assert self.path is not None
 
         command = [
-            'python3', (MAIN_FOLDER.parent / 'review/run_tool.py'),
+            sys.executable, (MAIN_FOLDER.parent / 'review/run_tool.py'),
             RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
         ]
 

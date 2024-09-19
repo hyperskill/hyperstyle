@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -21,6 +22,7 @@ FATAL_CATEGORY = 'F'
 INFO_CATEGORY = 'I'
 
 BASE_COMMAND = [
+    sys.executable, '-m',
     'pylint',
     '--load-plugins', 'pylint_django',
     # TODO: ask about django settings via an cli argument?

@@ -61,16 +61,19 @@ RUN curl -sSfLO https://raw.githubusercontent.com/StepicOrg/epicbox-images/a5ead
   && chmod ugo-w go.mod go.sum
 
 ARG POETRY_VERSION=1.8.3
-RUN pip install poetry==${POETRY_VERSION}
+RUN pip install poetry==${POETRY_VERSION} \
+  && poetry config virtualenvs.create false \
+  && python -m venv /hyperstyle
 
 WORKDIR /review
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-interaction --no-ansi --no-cache --no-root
+RUN . /hyperstyle/bin/activate \
+  && poetry install --no-interaction --no-ansi --no-cache --no-root
 
 COPY . .
 
 RUN PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto" \
-  && poetry run python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
+  && /hyperstyle/bin/python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
-CMD ["poetry", "run", "python", "-m", "pytest"]
+CMD ["/hyperstyle/bin/pytest"]

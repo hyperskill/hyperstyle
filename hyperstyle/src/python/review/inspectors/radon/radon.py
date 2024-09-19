@@ -1,4 +1,5 @@
 import re
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -30,6 +31,7 @@ class RadonInspector(BaseInspector):
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         mi_command = [
+            sys.executable, '-m',
             'radon', 'mi',  # compute the Maintainability Index score
             '--max', 'F',  # set the maximum MI rank to display
             '--show',  # actual MI value is shown in results, alongside the rank
