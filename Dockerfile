@@ -71,4 +71,4 @@ COPY . .
 RUN PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto" \
   && poetry run python -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto
 
-CMD ["poetry", "run", "python", "-m", "pytest", "test/python/functional_tests/test_different_languages.py"]
+CMD ["poetry", "run", "python", "-m", "pytest"]
