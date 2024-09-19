@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from test.python import TEST_DATA_FOLDER
 
 CURRENT_TEST_DATA_FOLDER = TEST_DATA_FOLDER / "inspectors"

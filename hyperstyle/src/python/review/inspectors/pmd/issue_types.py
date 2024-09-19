@@ -1,8 +1,8 @@
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
-PMD_RULE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+PMD_RULE_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # ---- Best Practices ----
     "AbstractClassWithoutAbstractMethod": IssueType.BEST_PRACTICES,
     "AccessorClassGeneration": IssueType.BEST_PRACTICES,

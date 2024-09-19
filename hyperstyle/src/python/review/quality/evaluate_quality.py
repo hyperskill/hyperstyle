@@ -1,6 +1,7 @@
-from typing import List
+from __future__ import annotations
 
-from hyperstyle.src.python.review.common.language import Language
+from typing import TYPE_CHECKING
+
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.quality.model import Quality, Rule
 from hyperstyle.src.python.review.quality.rules.best_practices_scoring import (
@@ -63,10 +64,13 @@ from hyperstyle.src.python.review.quality.rules.weighted_methods_scoring import 
     LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG,
     WeightedMethodsRule,
 )
-from hyperstyle.src.python.review.reviewers.utils.code_statistics import CodeStatistics
+
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.common.language import Language
+    from hyperstyle.src.python.review.reviewers.utils.code_statistics import CodeStatistics
 
 
-def __get_available_rules(language: Language) -> List[Rule]:
+def __get_available_rules(language: Language) -> list[Rule]:
     return [
         ErrorProneRule(LANGUAGE_TO_ERROR_PRONE_RULE_CONFIG[language]),
         BestPracticesRule(LANGUAGE_TO_BEST_PRACTICES_RULE_CONFIG[language]),

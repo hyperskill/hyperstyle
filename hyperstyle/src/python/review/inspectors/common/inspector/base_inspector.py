@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, TYPE_CHECKING
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 from hyperstyle.src.python.review.inspectors.common.inspector.ij_client import IJClient
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
@@ -14,13 +15,14 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
     IssueConfigsHandler,
 )
 
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 logger = logging.getLogger(__name__)
 
 
 class BaseInspector(ABC):
-    """
-    Each external inspector contains a dictionary in which the IssueType corresponds to the original linter classes.
+    """Each external inspector contains a dictionary in which the IssueType corresponds to the original linter classes.
     The dictionary helps to categorize errors during parsing the linters' output.
 
     To add a new inspector, you need:
@@ -42,20 +44,22 @@ class BaseInspector(ABC):
     @property
     @abstractmethod
     def inspector_type(self) -> InspectorType:
-        raise NotImplementedError("inspector_type property not implemented yet")
+        msg = "inspector_type property not implemented yet"
+        raise NotImplementedError(msg)
 
     @abstractmethod
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        raise NotImplementedError("inspect method not implemented yet")
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
+        msg = "inspect method not implemented yet"
+        raise NotImplementedError(msg)
 
     @abstractmethod
-    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        raise NotImplementedError("inspect in memory method not implemented yet")
+    def inspect_in_memory(self, code: str, config: dict[str, Any]) -> list[BaseIssue]:
+        msg = "inspect in memory method not implemented yet"
+        raise NotImplementedError(msg)
 
 
 class BaseIJInspector(BaseInspector):
-    """
-    Base class for every IJ-based inspector.
+    """Base class for every IJ-based inspector.
 
     It inherits from the `BaseInspector` class, so see its documentation for more information.
 
@@ -72,37 +76,41 @@ class BaseIJInspector(BaseInspector):
     @property
     @abstractmethod
     def language_id(self) -> model_pb2.LanguageId:
-        raise NotImplementedError("language_id property is not implemented yet")
+        msg = "language_id property is not implemented yet"
+        raise NotImplementedError(msg)
 
     @property
     @abstractmethod
-    def issue_configs(self) -> List[IssueConfig]:
-        raise NotImplementedError("issue_configs property is not implemented yet")
+    def issue_configs(self) -> list[IssueConfig]:
+        msg = "issue_configs property is not implemented yet"
+        raise NotImplementedError(msg)
 
     @property
     @abstractmethod
-    def ij_inspection_to_issue_type(self) -> Dict[str, IssueType]:
-        raise NotImplementedError("ij_inspection_to_issue_type property is not implemented yet")
+    def ij_inspection_to_issue_type(self) -> dict[str, IssueType]:
+        msg = "ij_inspection_to_issue_type property is not implemented yet"
+        raise NotImplementedError(msg)
 
     @property
     @abstractmethod
-    def ij_message_to_issue_type(self) -> Dict[str, Dict[str, IssueType]]:
-        raise NotImplementedError("ij_message_to_issue_type property is not implemented yet")
+    def ij_message_to_issue_type(self) -> dict[str, dict[str, IssueType]]:
+        msg = "ij_message_to_issue_type property is not implemented yet"
+        raise NotImplementedError(msg)
 
-    def setup_connection_parameters(self, host: str, port: int):
+    def setup_connection_parameters(self, host: str, port: int) -> None:
         self.host = host
         self.port = port
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         code = get_content_from_file(path)
         return self._get_inspection_result(code, path)
 
-    def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        return self._get_inspection_result(code, Path(""))
+    def inspect_in_memory(self, code: str, config: dict[str, Any]) -> list[BaseIssue]:
+        return self._get_inspection_result(code, Path())
 
     def convert_to_base_issues(
         self, inspection_result: model_pb2.InspectionResult, file_path: Path
-    ) -> List[BaseIssue]:
+    ) -> list[BaseIssue]:
         base_issues = []
         issue_configs_handler = IssueConfigsHandler(*self.issue_configs)
         for problem in inspection_result.problems:
@@ -129,9 +137,10 @@ class BaseIJInspector(BaseInspector):
 
         return base_issues
 
-    def _get_inspection_result(self, code_text: str, file_path: Path) -> List[BaseIssue]:
+    def _get_inspection_result(self, code_text: str, file_path: Path) -> list[BaseIssue]:
         if self.host is None or self.port is None:
-            raise Exception("Connection parameters is not set up.")
+            msg = "Connection parameters is not set up."
+            raise Exception(msg)
 
         try:
             client = IJClient(self.host, self.port)
@@ -144,9 +153,9 @@ class BaseIJInspector(BaseInspector):
 
             return self.convert_to_base_issues(inspection_result, file_path)
 
-        except Exception as e:
+        except Exception:
             # TODO: replace with error when add mock server into tests
-            logger.info("Inspector failed to connect to code server.", e)
+            logger.exception("Inspector failed to connect to code server.")
             return []
 
     def choose_issue_type(self, problem: model_pb2.Problem) -> IssueType:

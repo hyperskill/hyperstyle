@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from enum import Enum, unique
-from typing import List
 
 
 @unique
@@ -31,7 +32,7 @@ class InspectorType(Enum):
     IJ_OLD = "INTELLIJ"
 
     @classmethod
-    def available_values(cls) -> List[str]:
+    def available_values(cls) -> list[str]:
         return [
             # Python language
             cls.PYLINT.value,

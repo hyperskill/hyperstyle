@@ -1,14 +1,18 @@
+from __future__ import annotations
+
 import sys
 from dataclasses import dataclass, field
-from pathlib import Path
-
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
-from test.python import TEST_DATA_FOLDER
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 import pytest
+
 from hyperstyle.src.python import MAIN_FOLDER
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from test.python import TEST_DATA_FOLDER
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 DATA_PATH = TEST_DATA_FOLDER / "functional_tests"
 
@@ -16,21 +20,21 @@ DATA_PATH = TEST_DATA_FOLDER / "functional_tests"
 @dataclass
 class LocalCommandBuilder:
     verbosity: int = 2
-    disable: List[str] = field(default_factory=lambda: [])
+    disable: list[str] = field(default_factory=list)
     allow_duplicates: bool = False
-    language_version: Optional[str] = None
+    language_version: str | None = None
     n_cpu: int = 1
     format = "text"
     # format: Literal['json', 'text'] = 'text' take it from Py3.8
-    path: Optional[Path] = None
-    start_line: Optional[int] = None
-    end_line: Optional[int] = None
+    path: Path | None = None
+    start_line: int | None = None
+    end_line: int | None = None
     new_format: bool = False
     group_by_difficulty: bool = False
-    history: Optional[str] = None
-    ij_config: Optional[str] = None
+    history: str | None = None
+    ij_config: str | None = None
 
-    def build(self) -> List[str]:
+    def build(self) -> list[str]:
         assert self.path is not None
 
         command = [

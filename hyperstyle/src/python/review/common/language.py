@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from enum import Enum, unique
-from pathlib import Path
-from typing import List
+from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.common.file_system import Extension
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @unique
@@ -16,7 +20,7 @@ class Language(Enum):
     UNKNOWN = "UNKNOWN"
 
     @staticmethod
-    def from_language_version(language_version: LanguageVersion) -> "Language":
+    def from_language_version(language_version: LanguageVersion) -> Language:
         version_to_lang = {
             LanguageVersion.JAVA_7: Language.JAVA,
             LanguageVersion.JAVA_8: Language.JAVA,
@@ -33,7 +37,7 @@ class Language(Enum):
         return version_to_lang.get(language_version, Language.UNKNOWN)
 
     @classmethod
-    def values(cls) -> List[str]:
+    def values(cls) -> list[str]:
         return [member.value for member in Language]
 
     @classmethod
@@ -63,7 +67,7 @@ def guess_file_language(file_path: Path) -> Language:
     return EXTENSION_TO_LANGUAGE.get(extension, Language.UNKNOWN)
 
 
-def filter_paths_by_language(file_paths: List[Path], language: Language) -> List[Path]:
+def filter_paths_by_language(file_paths: list[Path], language: Language) -> list[Path]:
     result = []
     for path in file_paths:
         if guess_file_language(path) == language:

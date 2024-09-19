@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -29,12 +30,12 @@ LANGUAGE_TO_COMPLEXITY_RULE_CONFIG = {
 
 
 class ComplexityRule(Rule):
-    def __init__(self, config: ComplexityRuleConfig):
+    def __init__(self, config: ComplexityRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.COMPLEXITY
-        self.complexity: Optional[int] = None
+        self.complexity: int | None = None
 
-    def apply(self, complexity):
+    def apply(self, complexity) -> None:
         self.complexity = complexity
         if complexity > self.config.complexity_bad:
             self.quality_type = QualityType.BAD
@@ -53,11 +54,11 @@ class ComplexityRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
             return QualityType.MODERATE
-        elif self.quality_type == QualityType.MODERATE:
+        if self.quality_type == QualityType.MODERATE:
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "ComplexityRule") -> "ComplexityRule":
+    def merge(self, other: ComplexityRule) -> ComplexityRule:
         config = ComplexityRuleConfig(
             min(self.config.complexity_bad, other.config.complexity_bad),
             min(self.config.complexity_moderate, other.config.complexity_moderate),

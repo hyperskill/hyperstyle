@@ -1,11 +1,13 @@
+from __future__ import annotations
+
 import linecache
 import logging
 import os
 import tempfile
+from collections.abc import Callable
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
-from typing import Callable, List, Optional, Tuple, Union
 
 logger = logging.getLogger(__name__)
 
@@ -37,14 +39,14 @@ class Extension(Enum):
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
     @classmethod
-    def from_file(cls, file: Union[Path, str]) -> Optional["Extension"]:
+    def from_file(cls, file: Path | str) -> Extension | None:
         try:
             return Extension(get_extension_from_file(file))
         except ValueError:
             return None
 
 
-def get_extension_from_file(file: Union[Path, str]) -> str:
+def get_extension_from_file(file: Path | str) -> str:
     return os.path.splitext(file)[1]
 
 
@@ -62,15 +64,16 @@ def get_all_file_system_items(
     item_condition: ItemCondition = all_items_condition,
     item_type: FileSystemItem = FileSystemItem.FILE,
     without_subdirs: bool = False,
-) -> List[Path]:
+) -> list[Path]:
     if not root.is_dir():
-        raise ValueError(f"The {root} is not a directory")
+        msg = f"The {root} is not a directory"
+        raise ValueError(msg)
 
     items = []
     for fs_tuple in os.walk(root):
         for item in fs_tuple[item_type.value]:
             if item_condition(item):
-                items.append(Path(os.path.join(fs_tuple[FileSystemItem.PATH.value], item)))
+                items.append(Path(fs_tuple[FileSystemItem.PATH.value]) / item)
 
         if without_subdirs:
             break
@@ -85,7 +88,7 @@ def new_temp_dir() -> Path:
         yield Path(temp_dir)
 
 
-def new_temp_file(suffix: Extension = Extension.EMPTY) -> Tuple[str, str]:
+def new_temp_file(suffix: Extension = Extension.EMPTY) -> tuple[str, str]:
     yield tempfile.mkstemp(suffix=suffix.value)
 
 
@@ -99,9 +102,8 @@ def get_file_line(path: Path, line_number: int):
 def get_content_from_file(
     file_path: Path, encoding: str = Encoding.ISO_ENCODING.value, to_strip_nl: bool = True
 ) -> str:
-    with open(file_path, "r", encoding=encoding) as f:
-        content = f.read()
-        return content if not to_strip_nl else content.rstrip("\n")
+    content = Path(file_path).read_text(encoding=encoding)
+    return content if not to_strip_nl else content.rstrip("\n")
 
 
 # Before using it, check that there are no line breaks in the string

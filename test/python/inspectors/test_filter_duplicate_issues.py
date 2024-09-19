@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType

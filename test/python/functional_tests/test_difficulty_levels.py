@@ -1,15 +1,15 @@
+from __future__ import annotations
+
 import json
 import subprocess
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
-from typing import Dict, Optional
 
 import pytest
+
 from hyperstyle.src.python.review.inspectors.common.issue.tips import get_cohesion_tip
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
-def _get_output_json(
-    local_command: LocalCommandBuilder, file_path: str, history: Optional[str] = None
-) -> Dict:
+def _get_output_json(local_command: LocalCommandBuilder, file_path: str, history: str | None = None) -> dict:
     file_path = DATA_PATH / "difficulty_levels" / file_path
 
     local_command.verbosity = 0
@@ -21,8 +21,8 @@ def _get_output_json(
 
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
 
     return json.loads(process.stdout.decode())
@@ -227,7 +227,7 @@ DIFFICULTY_LEVELS_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("file", "expected_json"), DIFFICULTY_LEVELS_TEST_DATA)
-def test_difficulty_levels(local_command: LocalCommandBuilder, file: str, expected_json: Dict):
+def test_difficulty_levels(local_command: LocalCommandBuilder, file: str, expected_json: dict) -> None:
     assert _get_output_json(local_command, file) == expected_json
 
 
@@ -438,5 +438,7 @@ DIFFICULTY_LEVELS_WITH_HISTORY_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("file", "expected_json"), DIFFICULTY_LEVELS_WITH_HISTORY_TEST_DATA)
-def test_difficulty_levels_with_history(local_command: LocalCommandBuilder, file: str, expected_json: Dict):
+def test_difficulty_levels_with_history(
+    local_command: LocalCommandBuilder, file: str, expected_json: dict
+) -> None:
     assert _get_output_json(local_command, file, json.dumps(HISTORY)) == expected_json

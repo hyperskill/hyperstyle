@@ -1,12 +1,17 @@
-from pathlib import Path
-from typing import List
+from __future__ import annotations
 
-from hyperstyle.src.python.review.application_config import ApplicationConfig
+from typing import TYPE_CHECKING
+
 from hyperstyle.src.python.review.common.file_system import FileSystemItem, get_all_file_system_items
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.reviewers.common import perform_language_review
-from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import Metadata, ProjectMetadata
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from hyperstyle.src.python.review.application_config import ApplicationConfig
+    from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 
 
 def perform_python_review(metadata: Metadata, config: ApplicationConfig) -> GeneralReviewResult:
@@ -23,7 +28,7 @@ def perform_python_review(metadata: Metadata, config: ApplicationConfig) -> Gene
     return review_result
 
 
-def create_init_scripts_in_subdirs(path: Path) -> List[Path]:
+def create_init_scripts_in_subdirs(path: Path) -> list[Path]:
     created_file_paths = []
     for subdir in get_all_file_system_items(path, item_type=FileSystemItem.SUBDIR):
         init_file_path = subdir / "__init__.py"

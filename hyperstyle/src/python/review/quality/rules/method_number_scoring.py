@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -29,12 +30,12 @@ LANGUAGE_TO_METHOD_NUMBER_RULE_CONFIG = {
 
 
 class MethodNumberRule(Rule):
-    def __init__(self, config: MethodNumberRuleConfig):
+    def __init__(self, config: MethodNumberRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.METHOD_NUMBER
-        self.method_number: Optional[int] = None
+        self.method_number: int | None = None
 
-    def apply(self, method_number):
+    def apply(self, method_number) -> None:
         self.method_number = method_number
         if method_number > self.config.method_number_bad:
             self.quality_type = QualityType.BAD
@@ -57,7 +58,7 @@ class MethodNumberRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "MethodNumberRule") -> "MethodNumberRule":
+    def merge(self, other: MethodNumberRule) -> MethodNumberRule:
         config = MethodNumberRuleConfig(
             min(self.config.method_number_bad, other.config.method_number_bad),
             min(self.config.method_number_moderate, other.config.method_number_moderate),

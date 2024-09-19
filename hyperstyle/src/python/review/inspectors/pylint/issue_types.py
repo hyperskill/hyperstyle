@@ -1,8 +1,8 @@
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
-CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CODE_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # Basic checker
     "W0129": IssueType.ERROR_PRONE,  # Assert statement has a string literal as its first argument
     "W0127": IssueType.ERROR_PRONE,  # Assigning the same variable to itself
@@ -133,7 +133,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
 # W warnings for stylistic issues, or minor programming issues
 # E errors, for probable bugs in the code
 
-CATEGORY_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CATEGORY_TO_ISSUE_TYPE: dict[str, IssueType] = {
     "C": IssueType.CODE_STYLE,
     "R": IssueType.BEST_PRACTICES,
     "W": IssueType.BEST_PRACTICES,

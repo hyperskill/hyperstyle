@@ -1,17 +1,19 @@
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
-from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
-from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
+from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ class DetektInspector(BaseInspector):
 
     # We don't support in-memory inspection for Detekt yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
@@ -40,7 +42,7 @@ class DetektInspector(BaseInspector):
             f"{os.environ[DETEKT_DIRECTORY_ENV]}" f"/detekt-formatting-{os.environ[DETEKT_VERSION_ENV]}.jar"
         )
 
-        command = [
+        return [
             path_to_detekt_cli,
             "--config",
             PATH_DETEKT_CONFIG,
@@ -51,9 +53,8 @@ class DetektInspector(BaseInspector):
             "--input",
             str(path),
         ]
-        return command
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not (
             check_set_up_env_variable(DETEKT_DIRECTORY_ENV) and check_set_up_env_variable(DETEKT_VERSION_ENV)
         ):

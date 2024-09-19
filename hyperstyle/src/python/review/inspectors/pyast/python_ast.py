@@ -1,13 +1,13 @@
+from __future__ import annotations
+
 import ast
 from collections import Counter, defaultdict
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, TYPE_CHECKING
 
 from hyperstyle.src.python.review.common import language
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.issue.tips import get_bool_expr_len_tip, get_func_len_tip
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
@@ -16,18 +16,22 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     IssueDifficulty,
     IssueType,
 )
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_bool_expr_len_tip, get_func_len_tip
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 BOOL_EXPR_LEN_ORIGIN_CLASS = "C001"
 FUNC_LEN_ORIGIN_CLASS = "C002"
 
 
 class BoolExpressionLensGatherer(ast.NodeVisitor):
-    def __init__(self, file_path: Path, inspector_type: InspectorType):
+    def __init__(self, file_path: Path, inspector_type: InspectorType) -> None:
         self._inspector_type = inspector_type
         self._file_path = file_path
-        self.bool_expression_lens: List[BoolExprLenIssue] = []
+        self.bool_expression_lens: list[BoolExprLenIssue] = []
 
-    def visit(self, node: ast.AST):
+    def visit(self, node: ast.AST) -> None:
         if not isinstance(node, ast.BoolOp):
             super().visit(node)
             return
@@ -55,17 +59,17 @@ class BoolExpressionLensGatherer(ast.NodeVisitor):
 
 
 class FunctionLensGatherer(ast.NodeVisitor):
-    def __init__(self, content: str, file_path: Path, inspector_type: InspectorType):
+    def __init__(self, content: str, file_path: Path, inspector_type: InspectorType) -> None:
         self._inspector_type = inspector_type
         self._file_path = file_path
         self._content = content
         self._line_no_to_sym_no_map = create_line_no_to_sym_no_map(content)
         self._n_lines = Counter(content)["\n"] + 1
         self._previous_node = None
-        self._function_lens: List[FuncLenIssue] = []
+        self._function_lens: list[FuncLenIssue] = []
 
-    def visit(self, node):
-        if isinstance(self._previous_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+    def visit(self, node) -> None:
+        if isinstance(self._previous_node, ast.FunctionDef | ast.AsyncFunctionDef):
             func_length = self._find_func_len(
                 self._previous_node.lineno,
                 node.lineno,
@@ -88,12 +92,12 @@ class FunctionLensGatherer(ast.NodeVisitor):
             )
 
         self._previous_node = node
-        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
             super().visit(node)
 
     @property
-    def function_lens(self) -> List[FuncLenIssue]:
-        if isinstance(self._previous_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+    def function_lens(self) -> list[FuncLenIssue]:
+        if isinstance(self._previous_node, ast.FunctionDef | ast.AsyncFunctionDef):
             func_length = self._find_func_len(
                 self._previous_node.lineno,
                 self._n_lines + 1,
@@ -132,15 +136,12 @@ class PythonAstInspector(BaseInspector):
 
     # We don't support in-memory inspection for PythonAst yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        if path.is_file():
-            path_to_files = [path]
-        else:
-            path_to_files = get_all_file_system_items(path)
+    def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
+        path_to_files = [path] if path.is_file() else get_all_file_system_items(path)
 
         path_to_files = language.filter_paths_by_language(path_to_files, Language.PYTHON)
 
@@ -174,7 +175,7 @@ class PythonAstInspector(BaseInspector):
         return IssueType.BEST_PRACTICES
 
 
-def create_line_no_to_sym_no_map(content) -> Dict[int, int]:
+def create_line_no_to_sym_no_map(content) -> dict[int, int]:
     mapping = defaultdict(lambda: len(content), {1: 0})
     line_no = 2
     for sym_no, sym in enumerate(content):

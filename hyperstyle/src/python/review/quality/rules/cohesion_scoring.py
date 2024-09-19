@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -32,12 +33,12 @@ LANGUAGE_TO_COHESION_RULE_CONFIG = {
 
 
 class CohesionRule(Rule):
-    def __init__(self, config: CohesionRuleConfig):
+    def __init__(self, config: CohesionRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.COHESION
-        self.cohesion_lack: Optional[int] = None
+        self.cohesion_lack: int | None = None
 
-    def apply(self, cohesion_lack: int):
+    def apply(self, cohesion_lack: int) -> None:
         self.cohesion_lack = cohesion_lack
         if cohesion_lack > self.config.cohesion_lack_bad:
             self.quality_type = QualityType.BAD
@@ -56,11 +57,11 @@ class CohesionRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
             return QualityType.MODERATE
-        elif self.quality_type == QualityType.MODERATE:
+        if self.quality_type == QualityType.MODERATE:
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "CohesionRule") -> "CohesionRule":
+    def merge(self, other: CohesionRule) -> CohesionRule:
         config = CohesionRuleConfig(
             min(self.config.cohesion_lack_bad, other.config.cohesion_lack_bad),
             min(self.config.cohesion_lack_moderate, other.config.cohesion_lack_moderate),

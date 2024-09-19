@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def get_bool_expr_len_tip(unit_name: str = "operators") -> str:
     return f"Too long boolean expression ({{0}} {unit_name}). Try to split it into smaller expressions."
 
@@ -23,7 +26,7 @@ def get_cyclomatic_complexity_tip() -> str:
 
 def add_complexity_tip(description: str) -> str:
     description = description.strip()
-    description = description[:-1] if description.endswith(".") else description
+    description = description.removesuffix(".")
     description = description.replace("NCSS", "Non Commenting Source Statements metric")
     return (
         f"{description}. You can figure out how to simplify this code "

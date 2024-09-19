@@ -1,8 +1,8 @@
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
-CHECK_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CHECK_CLASS_NAME_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # ---- Annotations ----
     # 'AnnotationLocationCheck': IssueType.CODE_STYLE,
     # 'AnnotationOnSameLineCheck': IssueType.CODE_STYLE,

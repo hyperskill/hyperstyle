@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import logging.config
 import os
@@ -5,7 +7,6 @@ import sys
 import traceback
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Set
 
 sys.path.append("")
 sys.path.append("../../../..")
@@ -18,19 +19,20 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 from hyperstyle.src.python.review.logging_config import logging_config
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
-    PathNotExists,
+    PathNotExistsError,
     perform_and_print_review,
-    UnsupportedLanguage,
+    UnsupportedLanguageError,
 )
 
 logger = logging.getLogger(__name__)
 
 
-def parse_disabled_inspectors(value: str) -> Set[InspectorType]:
+def parse_disabled_inspectors(value: str) -> set[InspectorType]:
     passed_names = value.upper().split(",")
     allowed_names = {inspector.value for inspector in InspectorType}
     if not all(name in allowed_names for name in passed_names):
-        raise argparse.ArgumentError("disable", "Incorrect inspectors' names")
+        msg = "disable"
+        raise argparse.ArgumentError(msg, "Incorrect inspectors' names")
 
     return {InspectorType(name) for name in passed_names}
 
@@ -181,8 +183,7 @@ def main() -> int:
             logger.warning("Number of available cpu is %s, but %s was passed", max_n_cpu, n_cpu)
 
         start_line = args.start_line
-        if start_line < 1:
-            start_line = 1
+        start_line = max(start_line, 1)
 
         inspectors_config = {
             "language_version": LanguageVersion(args.language_version)
@@ -209,25 +210,21 @@ def main() -> int:
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)
         if not n_issues:
             return 0
-
-        return 1
-
-    except PathNotExists:
-        logger.error("Path not exists")
+    except PathNotExistsError:
+        logger.exception("Path not exists")
         return 2
-
-    except UnsupportedLanguage:
-        logger.error("Unsupported language. Supported ones are Java, Kotlin, Python")
+    except UnsupportedLanguageError:
+        logger.exception("Unsupported language. Supported ones are Java, Kotlin, Python")
         return 2
-
     except JSONDecodeError:
-        logger.error("Incorrect JSON")
+        logger.exception("Incorrect JSON")
         return 2
-
     except Exception:
         traceback.print_exc()
         logger.exception("An unexpected error")
         return 2
+    else:
+        return 1
 
 
 if __name__ == "__main__":

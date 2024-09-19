@@ -1,30 +1,30 @@
+from __future__ import annotations
+
 import logging
 from pathlib import Path
-from typing import Callable, List
-from xml.etree import ElementTree
+from typing import TYPE_CHECKING
+from xml.etree import ElementTree as ET
 
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
-from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+    from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 
 
-def __should_handle_element(element: ElementTree) -> bool:
-    """
-    Checks if a tree element is a file.
-    """
-
+def __should_handle_element(element: ET) -> bool:
+    """Checks if a tree element is a file."""
     return element.tag == "file"
 
 
-def __is_error(element: ElementTree) -> bool:
-    """
-    Checks if a tree element is an error.
-    """
-
+def __is_error(element: ET) -> bool:
+    """Checks if a tree element is an error."""
     return element.tag == "error"
 
 
@@ -34,9 +34,8 @@ def parse_xml_file_result(
     issue_type_selector: Callable[[str], IssueType],
     difficulty_selector: Callable[[IssueType], IssueDifficulty],
     issue_configs_handler: IssueConfigsHandler,
-) -> List[BaseIssue]:
-    """
-    Parse the output, which is a xml file, and returns a list of the issues found there.
+) -> list[BaseIssue]:
+    """Parse the output, which is a xml file, and returns a list of the issues found there.
 
     If the passed path is not a correct file, an empty list is returned.
 
@@ -47,13 +46,12 @@ def parse_xml_file_result(
     :param issue_configs_handler: A handler of issue configurations.
     :return: A list of parsed issues.
     """
-
     if not is_result_file_correct(file_path, inspector_type):
         return []
 
     # Parse result XML
-    tree = ElementTree.parse(file_path)
-    issues: List[BaseIssue] = []
+    tree = ET.parse(file_path)
+    issues: list[BaseIssue] = []
 
     for element in tree.getroot():
         if not __should_handle_element(element):

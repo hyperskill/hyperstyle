@@ -1,20 +1,12 @@
+from __future__ import annotations
+
 from pathlib import Path
-from test.python.inspectors import CHECKSTYLE_DATA_FOLDER, JAVA_DATA_FOLDER
-from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
-from typing import List
 
 import pytest
+
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_configs import ISSUE_CONFIGS
-from hyperstyle.src.python.review.inspectors.common.issue.tips import (
-    get_bool_expr_len_tip,
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
-    get_magic_number_tip,
-)
-from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BoolExprLenIssue,
@@ -26,7 +18,17 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     LineLenIssue,
 )
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
+    get_bool_expr_len_tip,
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+)
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+from test.python.inspectors import CHECKSTYLE_DATA_FOLDER, JAVA_DATA_FOLDER
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_NAME_AND_ISSUES = [
     ("empty_file.xml", []),
@@ -200,7 +202,7 @@ FILE_NAME_AND_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues"), FILE_NAME_AND_ISSUES)
-def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
+def test_output_parsing(file_name: str, expected_issues: list[CodeIssue]) -> None:
     path_to_file = CHECKSTYLE_DATA_FOLDER / file_name
     issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
     issues = parse_xml_file_result(
@@ -238,7 +240,6 @@ FILE_NAMES_AND_N_ISSUES = [
     ("test_switch_statement.java", 16),
     ("test_when_only_equals_overridden.java", 1),
     ("test_constants.java", 4),
-    # ("test_empty_lines_btw_members.java", 2),
     ("test_covariant_equals.java", 1),
     ("test_multi_statements.java", 7),
     ("test_boolean_expr.java", 4),
@@ -258,7 +259,7 @@ FILE_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = CheckstyleInspector()
 
     path_to_file = JAVA_DATA_FOLDER / file_name
@@ -291,7 +292,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues_info"), FILE_NAMES_AND_N_ISSUES_INFO)
-def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo):
+def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo) -> None:
     inspector = CheckstyleInspector()
 
     path_to_file = JAVA_DATA_FOLDER / file_name
@@ -311,14 +312,14 @@ MEASURE_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_measure"), MEASURE_TEST_DATA)
-def test_measure_parse(origin_class: str, expected_measure: int):
+def test_measure_parse(origin_class: str, expected_measure: int) -> None:
     inspector = CheckstyleInspector()
 
     path_to_file = CHECKSTYLE_DATA_FOLDER / "issues" / f"{origin_class}.java"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.measure() == expected_measure
 
@@ -333,13 +334,13 @@ NEW_DESCRIPTION_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_description"), NEW_DESCRIPTION_TEST_DATA)
-def test_new_issue_description(origin_class: str, expected_description: str):
+def test_new_issue_description(origin_class: str, expected_description: str) -> None:
     inspector = CheckstyleInspector()
 
     path_to_file = CHECKSTYLE_DATA_FOLDER / "issues" / f"{origin_class}.java"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.description == expected_description

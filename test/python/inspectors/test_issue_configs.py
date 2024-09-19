@@ -1,13 +1,20 @@
+from __future__ import annotations
+
 import re
-from typing import Callable, Dict, List, Optional, Pattern, Tuple, Type, Union
+from re import Pattern
+from typing import Optional, TYPE_CHECKING
 
 import pytest
+
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
     IssueConfig,
     IssueConfigsHandler,
     IssueDescriptionParser,
     MeasurableIssueConfig,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 MATCH_STRING = re.compile("string")
 MATCH_ONE_GROUP = re.compile(r"(.*)")
@@ -65,10 +72,10 @@ PARSE_TEST_DATA = [
 @pytest.mark.parametrize(("regexp", "converter", "description", "expected_groups"), PARSE_TEST_DATA)
 def test_parse(
     regexp: Pattern,
-    converter: Optional[Union[Callable, Dict[str, Callable]]],
+    converter: Callable | dict[str, Callable] | None,
     description: str,
-    expected_groups: Tuple,
-):
+    expected_groups: tuple,
+) -> None:
     parser = (
         IssueDescriptionParser(regexp) if converter is None else IssueDescriptionParser(regexp, converter)
     )
@@ -116,11 +123,11 @@ ISSUE_CONFIG_INIT_TEST_DATA = [
     ("cls", "args", "expected_exception", "expected_error_message"), ISSUE_CONFIG_INIT_TEST_DATA
 )
 def test_init_raises_exception(
-    cls: Type[IssueConfig],
-    args: List,
-    expected_exception: Type[Exception],
+    cls: type[IssueConfig],
+    args: list,
+    expected_exception: type[Exception],
     expected_error_message: str,
-):
+) -> None:
     with pytest.raises(expected_exception) as excinfo:
         cls(*args)
 
@@ -172,11 +179,11 @@ PARSE_DESCRIPTION_TEST_DATA = [
     PARSE_DESCRIPTION_TEST_DATA,
 )
 def test_parse_description(
-    issue_configs: List[IssueConfig],
+    issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
-    expected_tuple: Optional[Tuple],
-):
+    expected_tuple: tuple | None,
+) -> None:
     assert IssueConfigsHandler(*issue_configs)._parse_description(origin_class, description) == expected_tuple
 
 
@@ -223,11 +230,11 @@ PARSE_MEASURE_TEST_DATA = [
     PARSE_MEASURE_TEST_DATA,
 )
 def test_parse_measure(
-    issue_configs: List[IssueConfig],
+    issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
     expected_measure: Optional,
-):
+) -> None:
     assert IssueConfigsHandler(*issue_configs).parse_measure(origin_class, description) == expected_measure
 
 
@@ -309,7 +316,7 @@ GET_DESCRIPTION_TEST_DATA = [
         CONFIGS_WITH_ESCAPED_CHARACTERS,
         "IC-paired-escaped-curly-bracket-static",
         "This is a description.",
-        "This is a paired escaped curly bracket: {}",  # noqa: P103
+        "This is a paired escaped curly bracket: {}",
     ),
     (
         CONFIGS_WITH_ESCAPED_CHARACTERS,
@@ -321,7 +328,7 @@ GET_DESCRIPTION_TEST_DATA = [
         CONFIGS_WITH_ESCAPED_CHARACTERS,
         "IC-paired-escaped-curly-bracket-dynamic",
         "Name: Aboba",
-        "This is an escaped symbol {} and this is a format field Aboba",  # noqa: P103
+        "This is an escaped symbol {} and this is a format field Aboba",
     ),
 ]
 
@@ -331,11 +338,11 @@ GET_DESCRIPTION_TEST_DATA = [
     GET_DESCRIPTION_TEST_DATA,
 )
 def test_get_description(
-    issue_configs: List[IssueConfig],
+    issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
     expected_description: Optional,
-):
+) -> None:
     assert (
         IssueConfigsHandler(*issue_configs).get_description(origin_class, description) == expected_description
     )

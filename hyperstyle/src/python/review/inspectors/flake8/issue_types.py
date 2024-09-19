@@ -1,8 +1,8 @@
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
-CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CODE_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # Line length
     "E501": IssueType.LINE_LEN,
     # flake8-eradicate
@@ -94,7 +94,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     "WPS614": IssueType.ERROR_PRONE,  # Forbids descriptors in regular functions.
 }
 
-CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CODE_PREFIX_TO_ISSUE_TYPE: dict[str, IssueType] = {
     "B": IssueType.ERROR_PRONE,  # flake8-bugbear
     "A": IssueType.ERROR_PRONE,  # flake8-builtins
     "R": IssueType.ERROR_PRONE,  # flake8-return

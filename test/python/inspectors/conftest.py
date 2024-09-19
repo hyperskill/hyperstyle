@@ -1,17 +1,22 @@
+from __future__ import annotations
+
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, TYPE_CHECKING
 
 import pytest
+
 from hyperstyle.src.python.review.common.file_system import new_temp_dir
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, FileMetadata
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 @pytest.fixture
-def branch_info_response() -> Dict[str, Any]:
+def branch_info_response() -> dict[str, Any]:
     return {
         "result": {
             "commitsCount": 1,
@@ -44,7 +49,7 @@ def branch_info_response() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def ownership_summary_response() -> Dict[str, Any]:
+def ownership_summary_response() -> dict[str, Any]:
     return {
         "result": {
             "files": [
@@ -78,7 +83,7 @@ class IssuesTestInfo:
     n_info: int = 0
 
 
-def gather_issues_test_info(issues: List[BaseIssue]) -> IssuesTestInfo:
+def gather_issues_test_info(issues: list[BaseIssue]) -> IssuesTestInfo:
     counter = Counter([issue.type for issue in issues])
 
     return IssuesTestInfo(

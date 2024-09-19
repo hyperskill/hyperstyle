@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import ast
-from test.python.inspectors import PYTHON_AST_DATA_FOLDER, PYTHON_DATA_FOLDER
-from test.python.inspectors.conftest import use_file_metadata
 
 import pytest
-from hyperstyle.src.python.review.inspectors.common.issue.tips import get_bool_expr_len_tip, get_func_len_tip
+
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_bool_expr_len_tip, get_func_len_tip
 from hyperstyle.src.python.review.inspectors.pyast.python_ast import (
     BoolExpressionLensGatherer,
     FunctionLensGatherer,
     PythonAstInspector,
 )
+from test.python.inspectors import PYTHON_AST_DATA_FOLDER, PYTHON_DATA_FOLDER
+from test.python.inspectors.conftest import use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ("case0_spaces.py", 0),
@@ -38,7 +41,7 @@ FILE_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = PythonAstInspector()
     path_to_file = PYTHON_DATA_FOLDER / file_name
     with use_file_metadata(path_to_file) as file_metadata:
@@ -47,7 +50,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
     assert len(issues) == n_issues
 
 
-def test_bool_expr_len_gatherer_one_expr():
+def test_bool_expr_len_gatherer_one_expr() -> None:
     file_path = PYTHON_AST_DATA_FOLDER / "one_bool_expression.py"
     code = file_path.read_text()
 
@@ -61,7 +64,7 @@ def test_bool_expr_len_gatherer_one_expr():
     assert gatherer.bool_expression_lens[0].description == get_bool_expr_len_tip().format(5)
 
 
-def test_bool_expr_len_gatherer_many_exprs():
+def test_bool_expr_len_gatherer_many_exprs() -> None:
     file_path = PYTHON_AST_DATA_FOLDER / "many_bool_expressions.py"
     code = file_path.read_text()
 
@@ -76,7 +79,7 @@ def test_bool_expr_len_gatherer_many_exprs():
     )
 
 
-def test_function_lens_gatherer():
+def test_function_lens_gatherer() -> None:
     file_path = PYTHON_AST_DATA_FOLDER / "function.py"
     code = file_path.read_text()
 

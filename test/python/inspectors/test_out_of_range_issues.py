@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
@@ -35,9 +37,10 @@ def test_out_of_range_issues_when_no_issues() -> None:
 
 
 def test_out_of_range_issues_when_some_out_of_range_issues() -> None:
-    issues = []
-    for line_no in range(1, 6):  # 1, 2, 3, 4, 5
-        issues.append(create_code_issue_by_line(line_no))
+    issues = [
+        create_code_issue_by_line(line_no)
+        for line_no in range(1, 6)  # 1, 2, 3, 4, 5
+    ]
 
     assert filter_out_of_range_issues(issues) == issues
     assert filter_out_of_range_issues(issues, start_line=2) == issues[1:5]

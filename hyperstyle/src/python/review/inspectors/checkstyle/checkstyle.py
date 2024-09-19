@@ -1,17 +1,19 @@
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
-from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
-from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +29,11 @@ class CheckstyleInspector(BaseInspector):
 
     # We don't support in-memory inspection for Checkstyle yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
-    def _create_command(cls, path: Path, output_path: Path) -> List[str]:
+    def _create_command(cls, path: Path, output_path: Path) -> list[str]:
         path_checkstyle_jar = (
             f"{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/"
             f"checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar"
@@ -49,7 +51,7 @@ class CheckstyleInspector(BaseInspector):
             str(path),
         ]
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not (
             check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
             and check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
@@ -72,15 +74,12 @@ class CheckstyleInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, check_class: str) -> IssueType:
-        """
-        Defines IssueType by Checkstyle check class using config.
-        """
-
+        """Defines IssueType by Checkstyle check class using config."""
         # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
         check_class_name = check_class.split(".")[-1]
         issue_type = CHECK_CLASS_NAME_TO_ISSUE_TYPE.get(check_class_name)
         if not issue_type:
-            logger.warning("Checkstyle: %s - unknown check class" % check_class_name)
+            logger.warning(f"Checkstyle: {check_class_name} - unknown check class")
             return IssueType.BEST_PRACTICES
 
         return issue_type

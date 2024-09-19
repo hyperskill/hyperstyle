@@ -1,8 +1,8 @@
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
-ESLINT_CLASS_NAME_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+ESLINT_CLASS_NAME_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # Possible errors (according to Eslint doc)
     "for-direction": IssueType.ERROR_PRONE,
     "getter-return": IssueType.ERROR_PRONE,

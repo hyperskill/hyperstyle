@@ -1,12 +1,12 @@
+from __future__ import annotations
+
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.issue.tips import get_maintainability_index_tip
-from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
@@ -15,7 +15,8 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     IssueType,
     MaintainabilityLackIssue,
 )
-
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_maintainability_index_tip
+from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
 
 MAINTAINABILITY_ORIGIN_CLASS = "RAD100"
 
@@ -25,11 +26,11 @@ class RadonInspector(BaseInspector):
 
     # We don't support in-memory inspection for Radon yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         mi_command = [
             sys.executable,
             "-m",
@@ -45,17 +46,17 @@ class RadonInspector(BaseInspector):
         return cls.mi_parse(mi_output)
 
     @classmethod
-    def mi_parse(cls, mi_output: str) -> List[BaseIssue]:
-        """
-        Parses the results of the 'mi' command.
-        Description: https://radon.readthedocs.io/en/latest/commandline.html#the-mi-command
+    def mi_parse(cls, mi_output: str) -> list[BaseIssue]:
+        """Parses the results of the 'mi' command.
+
+        Description: https://radon.readthedocs.io/en/latest/commandline.html#the-mi-command.
 
         :param mi_output: 'mi' command output.
         :return: list of issues.
         """
-        row_re = re.compile(r"^(.*) - \w \((.*)\)$", re.M)
+        row_re = re.compile(r"^(.*) - \w \((.*)\)$", re.MULTILINE)
 
-        issues: List[BaseIssue] = []
+        issues: list[BaseIssue] = []
         for groups in row_re.findall(mi_output):
             file_path = Path(groups[0])
             maintainability_lack = convert_percentage_of_value_to_lack_of_value(float(groups[1]))

@@ -1,5 +1,12 @@
+from __future__ import annotations
+
 import re
 
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
+    IssueConfig,
+    IssueDescriptionParser,
+    MeasurableIssueConfig,
+)
 from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
@@ -8,11 +15,6 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_maintainability_index_tip,
 )
 from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
-    IssueConfig,
-    IssueDescriptionParser,
-    MeasurableIssueConfig,
-)
 
 ISSUE_CONFIGS = [
     IssueConfig(

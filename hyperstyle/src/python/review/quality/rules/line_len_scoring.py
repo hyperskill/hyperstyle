@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from hyperstyle.src.python.review.common.language import Language
@@ -28,12 +30,12 @@ LANGUAGE_TO_LINE_LENGTH_RULE_CONFIG = {
 
 
 class LineLengthRule(Rule):
-    def __init__(self, config: LineLengthRuleConfig):
+    def __init__(self, config: LineLengthRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.LINE_LEN
 
     # TODO: refactor
-    def apply(self, n_line_len, n_lines):
+    def apply(self, n_line_len, n_lines) -> None:
         self.ratio = self.get_ratio(n_line_len, n_lines)
         self.n_line_len = n_line_len
         self.n_lines = n_lines
@@ -57,7 +59,7 @@ class LineLengthRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "LineLengthRule") -> "LineLengthRule":
+    def merge(self, other: LineLengthRule) -> LineLengthRule:
         config = LineLengthRuleConfig(
             min(self.config.n_line_len_bad, other.config.n_line_len_bad),
             min(self.config.n_line_len_moderate, other.config.n_line_len_moderate),

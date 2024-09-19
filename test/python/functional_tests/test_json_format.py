@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import json
 import subprocess
-from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
-from typing import Dict
 
 import pytest
 from jsonschema import validate
+
+from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
 def _get_output_json(local_command: LocalCommandBuilder, new_format: bool, group_by_difficulty: bool) -> str:
@@ -18,15 +20,15 @@ def _get_output_json(local_command: LocalCommandBuilder, new_format: bool, group
 
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     stdout = process.stdout.decode()
 
     return json.loads(stdout)
 
 
-def _get_by_difficulty_schema(item_schema: Dict) -> Dict:
+def _get_by_difficulty_schema(item_schema: dict) -> dict:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -54,7 +56,7 @@ INFLUENCE_ON_PENALTY_SCHEMA = {"type": "integer"}
 INFLUENCE_ON_PENALTY_BY_DIFFICULTY_SCHEMA = _get_by_difficulty_schema(INFLUENCE_ON_PENALTY_SCHEMA)
 
 
-def _get_issues_schema(influence_in_penalty_schema: Dict) -> Dict:
+def _get_issues_schema(influence_in_penalty_schema: dict) -> dict:
     return {
         "type": "array",
         "additionalItems": False,
@@ -75,7 +77,7 @@ def _get_issues_schema(influence_in_penalty_schema: Dict) -> Dict:
     }
 
 
-def _get_old_format_schema(quality_schema: Dict, influence_in_penalty_schema: Dict) -> Dict:
+def _get_old_format_schema(quality_schema: dict, influence_in_penalty_schema: dict) -> dict:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -86,7 +88,7 @@ def _get_old_format_schema(quality_schema: Dict, influence_in_penalty_schema: Di
     }
 
 
-def _get_new_format_schema(quality_schema: Dict, influence_in_penalty_schema: Dict) -> Dict:
+def _get_new_format_schema(quality_schema: dict, influence_in_penalty_schema: dict) -> dict:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -131,7 +133,7 @@ def test_json_format_schema(
     new_format: bool,
     group_by_difficulty: bool,
     schema: str,
-):
+) -> None:
     validate(_get_output_json(local_command, new_format, group_by_difficulty), schema)
 
 
@@ -362,5 +364,5 @@ def test_json_format(
     new_format: bool,
     group_by_difficulty: bool,
     expected_json: str,
-):
+) -> None:
     assert _get_output_json(local_command, new_format, group_by_difficulty) == expected_json

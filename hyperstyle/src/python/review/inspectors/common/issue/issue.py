@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import abc
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
-from pathlib import Path
-from typing import Any, Dict, List, Type, Union
+from typing import Any, TYPE_CHECKING
 
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +51,8 @@ class IssueType(Enum):
     def __str__(self) -> str:
         return " ".join(self.value.lower().split("_"))
 
-    def to_main_type(self) -> "IssueType":
-        """
-        Converts the issue type to main issue type.
+    def to_main_type(self) -> IssueType:
+        """Converts the issue type to main issue type.
         Main issue types: CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.
         """
         return get_main_category_by_issue_type(self)
@@ -86,7 +89,7 @@ def get_main_category_by_issue_type(issue_type: IssueType) -> IssueType:
     return ISSUE_TYPE_TO_MAIN_CATEGORY.get(issue_type, IssueType.UNDEFINED)
 
 
-def main_category_to_issue_type_list_dict() -> Dict[IssueType, List[IssueType]]:
+def main_category_to_issue_type_list_dict() -> dict[IssueType, list[IssueType]]:
     main_category_to_issue_type = defaultdict(list)
     for key, value in ISSUE_TYPE_TO_MAIN_CATEGORY.items():
         main_category_to_issue_type[value].append(key)
@@ -95,11 +98,11 @@ def main_category_to_issue_type_list_dict() -> Dict[IssueType, List[IssueType]]:
 
 MAIN_CATEGORY_TO_ISSUE_TYPE_LIST = main_category_to_issue_type_list_dict()
 
-IssuesStat = Dict[IssueType, int]
+IssuesStat = dict[IssueType, int]
 
 
 def get_default_issue_stat() -> IssuesStat:
-    stat = {issue: 0 for issue in set(ISSUE_TYPE_TO_MAIN_CATEGORY.values())}
+    stat = dict.fromkeys(set(ISSUE_TYPE_TO_MAIN_CATEGORY.values()), 0)
     stat[IssueType.UNDEFINED] = 0
     return stat
 
@@ -129,12 +132,12 @@ class IssueData(Enum):
     @classmethod
     def get_base_issue_data_dict(
         cls,
-        file_path: Union[str, Path],
+        file_path: str | Path,
         inspector_type: InspectorType,
         line_number: int = 1,
         column_number: int = 1,
         origin_class: str = "",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return {
             cls.FILE_PATH.value: file_path,
             cls.LINE_NUMBER.value: line_number,
@@ -151,7 +154,7 @@ class IssueDifficulty(Enum):
     HARD = "HARD"
 
     @classmethod
-    def get_by_issue_type(cls, issue_type: IssueType) -> "IssueDifficulty":
+    def get_by_issue_type(cls, issue_type: IssueType) -> IssueDifficulty:
         issue_type_to_difficulty = {
             # Easy
             IssueType.CODE_STYLE: cls.EASY,
@@ -337,7 +340,7 @@ ISSUE_TYPE_TO_CLASS = {
 }
 
 
-def get_issue_class_by_issue_type(issue_type: IssueType) -> Type[BaseIssue]:
+def get_issue_class_by_issue_type(issue_type: IssueType) -> type[BaseIssue]:
     return ISSUE_TYPE_TO_CLASS.get(issue_type, CodeIssue)
 
 

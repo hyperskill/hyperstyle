@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import List, Set
 
 import pytest
+
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.quality.penalty import categorize, PreviousIssue, Punisher
@@ -10,7 +12,7 @@ punisher = Punisher([], [])
 
 CURRENT_ISSUES = [
     BaseIssue(
-        file_path=Path(""),
+        file_path=Path(),
         line_no=1,
         column_no=1,
         description="Possibly misspelt word",
@@ -20,7 +22,7 @@ CURRENT_ISSUES = [
         difficulty=IssueDifficulty.MEDIUM,
     ),
     BaseIssue(
-        file_path=Path(""),
+        file_path=Path(),
         line_no=10,
         column_no=5,
         description="Lambda may not be necessary",
@@ -46,10 +48,10 @@ PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES = [
     PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES,
 )
 def test_get_penalizing_classes(
-    previous_issues: List[PreviousIssue],
-    current_issues: List[BaseIssue],
-    expected_penalizing_classes: Set[str],
-):
+    previous_issues: list[PreviousIssue],
+    current_issues: list[BaseIssue],
+    expected_penalizing_classes: set[str],
+) -> None:
     actual = punisher._get_penalizing_classes(current_issues, previous_issues)
 
     assert actual == expected_penalizing_classes
@@ -78,13 +80,13 @@ PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES = [
     PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES,
 )
 def test_categorize(
-    previous_issues: List[PreviousIssue],
-    current_issues: List[BaseIssue],
-    expected_categories: List[IssueType],
-):
+    previous_issues: list[PreviousIssue],
+    current_issues: list[BaseIssue],
+    expected_categories: list[IssueType],
+) -> None:
     categorize(previous_issues, current_issues)
 
-    for issue, expected_category in zip(previous_issues, expected_categories):
+    for issue, expected_category in zip(previous_issues, expected_categories, strict=False):
         assert issue.category == expected_category
 
 
@@ -95,7 +97,7 @@ ISSUE_CLASS_EXPECTED_INFLUENCE = [
 
 
 @pytest.mark.parametrize(("issue_class", "expected_influence"), ISSUE_CLASS_EXPECTED_INFLUENCE)
-def test_get_issue_influence_on_penalty(issue_class: str, expected_influence: int):
+def test_get_issue_influence_on_penalty(issue_class: str, expected_influence: int) -> None:
     punisher._issue_class_to_influence = {"SC200": 0.636, "WPS312": 0.1225}
 
     actual = punisher.get_issue_influence_on_penalty(issue_class)
@@ -114,8 +116,8 @@ PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
     PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT,
 )
 def test_get_normalized_penalty_coefficient(
-    penalty_coefficient: float, current_issues: List[BaseIssue], normalized_penalty_coefficient
-):
+    penalty_coefficient: float, current_issues: list[BaseIssue], normalized_penalty_coefficient
+) -> None:
     punisher._penalty_coefficient = penalty_coefficient
 
     actual = punisher._get_normalized_penalty_coefficient(current_issues)
@@ -138,8 +140,8 @@ CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT = [
     CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT,
 )
 def test_get_penalty_coefficient(
-    current_issues: List[BaseIssue], previous_issues: List[PreviousIssue], expected_coefficient: float
-):
+    current_issues: list[BaseIssue], previous_issues: list[PreviousIssue], expected_coefficient: float
+) -> None:
     categorize(previous_issues, current_issues)
     actual = punisher._get_penalty_coefficient(current_issues, previous_issues)
 
@@ -169,11 +171,11 @@ CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE = [
     CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE,
 )
 def test_get_issue_class_to_influence(
-    current_issues: List[BaseIssue],
-    previous_issues: List[PreviousIssue],
+    current_issues: list[BaseIssue],
+    previous_issues: list[PreviousIssue],
     issue_class: str,
     expected_influence: int,
-):
+) -> None:
     categorize(previous_issues, current_issues)
     punisher = Punisher(current_issues, previous_issues)
     actual = punisher.get_issue_influence_on_penalty(issue_class)

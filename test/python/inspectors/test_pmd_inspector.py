@@ -1,12 +1,14 @@
+from __future__ import annotations
+
 from pathlib import Path
-from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
-from typing import List
 
 import pytest
+
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import CodeIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.pmd.pmd import DEFAULT_JAVA_VERSION, PMDInspector
+from test.python.inspectors import JAVA_DATA_FOLDER, PMD_DATA_FOLDER
 
 from .conftest import use_file_metadata
 
@@ -108,7 +110,7 @@ FILE_NAME_AND_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues"), FILE_NAME_AND_ISSUES)
-def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
+def test_output_parsing(file_name: str, expected_issues: list[CodeIssue]) -> None:
     path_to_file = PMD_DATA_FOLDER / file_name
     issues = PMDInspector().parse_output(path_to_file)
     assert issues == expected_issues
@@ -149,7 +151,7 @@ FILE_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues", "java_version"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int, java_version: LanguageVersion):
+def test_file_with_issues(file_name: str, n_issues: int, java_version: LanguageVersion) -> None:
     inspector = PMDInspector()
 
     path_to_file = JAVA_DATA_FOLDER / file_name

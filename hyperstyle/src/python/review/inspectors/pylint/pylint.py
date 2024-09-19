@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 import logging
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.pylint.issue_configs import ISSUE_CONFIGS
@@ -40,7 +42,7 @@ BASE_COMMAND = [
 
 class PylintInspector(BaseInspector):
     inspector_type = InspectorType.PYLINT
-    # noqa: SC100 TODO: Do not ignore complexity issues and add a complexity tip for R0915.
+
     supported_issue_types = (
         IssueType.CODE_STYLE,
         IssueType.BEST_PRACTICES,
@@ -48,18 +50,18 @@ class PylintInspector(BaseInspector):
     )
 
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        output = run_in_subprocess(BASE_COMMAND + ["--from-stdin"], subprocess_input=code)
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
+        output = run_in_subprocess([*BASE_COMMAND, "--from-stdin"], subprocess_input=code)
         return cls.parse(output)
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        output = run_in_subprocess(BASE_COMMAND + [str(path)])
+    def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
+        output = run_in_subprocess([*BASE_COMMAND, str(path)])
         return cls.parse(output)
 
     @classmethod
-    def parse(cls, output: str) -> List[BaseIssue]:
-        row_re = re.compile(r"^(.*):(\d+):(\d+):([IRCWEF]\d+):(.*)$", re.M)
+    def parse(cls, output: str) -> list[BaseIssue]:
+        row_re = re.compile(r"^(.*):(\d+):(\d+):([IRCWEF]\d+):(.*)$", re.MULTILINE)
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
         issues = []
@@ -102,7 +104,7 @@ class PylintInspector(BaseInspector):
         if code in CODE_TO_ISSUE_TYPE:
             return CODE_TO_ISSUE_TYPE[code]
 
-        issue_type: Optional[IssueType] = CATEGORY_TO_ISSUE_TYPE.get(code[0])
+        issue_type: IssueType | None = CATEGORY_TO_ISSUE_TYPE.get(code[0])
         if not issue_type:
             logger.warning(f"pylint: {code} - unknown error category")
             return IssueType.BEST_PRACTICES

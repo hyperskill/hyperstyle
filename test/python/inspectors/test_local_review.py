@@ -1,28 +1,27 @@
-import json
-from collections import namedtuple
+from __future__ import annotations
 
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
-from test.python.inspectors import PYTHON_DATA_FOLDER
+import json
+from typing import NamedTuple
 
 import pytest
+
 from hyperstyle.src.python.review.application_config import ApplicationConfig
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.quality.model import QualityType
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
-    PathNotExists,
+    PathNotExistsError,
     perform_and_print_review,
 )
+from test.python.inspectors import PYTHON_DATA_FOLDER
 
-Args = namedtuple(
-    "Args",
-    [
-        "path",
-        "allow_duplicates",
-        "disable",
-        "format",
-        "handler",
-    ],
-)
+
+class Args(NamedTuple):
+    path: str
+    allow_duplicates: bool
+    disable: list[str]
+    format: str
+    handler: str
 
 
 @pytest.fixture
@@ -36,7 +35,7 @@ def config() -> ApplicationConfig:
     )
 
 
-def test_run_code_review_when_no_issues(capsys, config):
+def test_run_code_review_when_no_issues(capsys, config) -> None:
     file_path = PYTHON_DATA_FOLDER / "case1_simple_valid_program.py"
     exit_code = perform_and_print_review(file_path, OutputFormat.JSON, config)
     assert exit_code == 0
@@ -52,7 +51,7 @@ def test_run_code_review_when_no_issues(capsys, config):
     assert len(review_result_json["issues"]) == 0
 
 
-def test_run_code_review_when_issues_found(capsys, config):
+def test_run_code_review_when_issues_found(capsys, config) -> None:
     file_path = PYTHON_DATA_FOLDER / "case0_spaces.py"
     exit_code = perform_and_print_review(file_path, OutputFormat.JSON, config)
 
@@ -77,7 +76,7 @@ def test_run_code_review_when_issues_found(capsys, config):
         assert issue["category"]
 
 
-def test_run_code_review_when_unknown_file(config):
+def test_run_code_review_when_unknown_file(config) -> None:
     file_path = PYTHON_DATA_FOLDER / "case_unknown_file.py"
-    with pytest.raises(PathNotExists):
+    with pytest.raises(PathNotExistsError):
         _ = perform_and_print_review(file_path, OutputFormat.JSON, config)

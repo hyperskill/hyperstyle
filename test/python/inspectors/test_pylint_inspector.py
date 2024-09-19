@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import textwrap
-from test.python.inspectors import PYLINT_DATA_FOLDER, PYTHON_DATA_FOLDER
 
 import pytest
+
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
+from test.python.inspectors import PYLINT_DATA_FOLDER, PYTHON_DATA_FOLDER
 
 from .conftest import use_file_metadata
 
@@ -43,7 +46,7 @@ FOLDER_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("folder_name", "n_issues"), FOLDER_NAMES_AND_N_ISSUES)
-def test_folder_with_issues(folder_name: str, n_issues: int):
+def test_folder_with_issues(folder_name: str, n_issues: int) -> None:
     inspector = PylintInspector()
     path_to_folder = PYTHON_DATA_FOLDER / folder_name
     issues = inspector.inspect(path_to_folder, {})
@@ -52,7 +55,7 @@ def test_folder_with_issues(folder_name: str, n_issues: int):
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = PylintInspector()
 
     path_to_file = PYTHON_DATA_FOLDER / file_name
@@ -62,7 +65,7 @@ def test_file_with_issues(file_name: str, n_issues: int):
     assert len(issues) == n_issues
 
 
-def test_parse():
+def test_parse() -> None:
     file_name = "test.py"
     output = f"""\
         {file_name}:1:11:R0123:test 1
@@ -81,7 +84,7 @@ def test_parse():
     assert [issue.type for issue in issues] == expected_issue_types
 
 
-def test_choose_issue_type():
+def test_choose_issue_type() -> None:
     error_categories = ["W", "R", "C", "E"]
     expected_issue_types = [
         IssueType.BEST_PRACTICES,
@@ -110,13 +113,13 @@ NEW_DESCRIPTION_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_description"), NEW_DESCRIPTION_TEST_DATA)
-def test_new_issue_description(origin_class: str, expected_description: str):
+def test_new_issue_description(origin_class: str, expected_description: str) -> None:
     inspector = PylintInspector()
 
     path_to_file = PYLINT_DATA_FOLDER / "issues" / f"{origin_class.lower()}.py"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.description == expected_description

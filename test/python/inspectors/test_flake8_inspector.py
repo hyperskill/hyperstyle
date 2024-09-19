@@ -1,9 +1,11 @@
-from test.python.inspectors import FLAKE_DATA_FOLDER, PYTHON_DATA_FOLDER
-from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
+from __future__ import annotations
+
 from textwrap import dedent
 
 import pytest
+
 from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_augmented_assign_pattern_tip,
     get_cohesion_tip,
@@ -12,8 +14,9 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+from test.python.inspectors import FLAKE_DATA_FOLDER, PYTHON_DATA_FOLDER
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_NAMES_AND_N_ISSUES = [
     ("case0_spaces.py", 5),
@@ -48,7 +51,7 @@ FILE_NAMES_AND_N_ISSUES = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_NAMES_AND_N_ISSUES)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = Flake8Inspector()
 
     path_to_file = PYTHON_DATA_FOLDER / file_name
@@ -87,7 +90,7 @@ FILE_NAMES_AND_N_ISSUES_INFO = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues_info"), FILE_NAMES_AND_N_ISSUES_INFO)
-def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo):
+def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo) -> None:
     inspector = Flake8Inspector()
 
     path_to_file = PYTHON_DATA_FOLDER / file_name
@@ -98,7 +101,7 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
     assert issues_info == expected_issues_info
 
 
-def test_parse():
+def test_parse() -> None:
     file_name = "test.py"
     output = f"""\
         {file_name}:1:11:W602:test 1
@@ -116,7 +119,7 @@ def test_parse():
     assert [issue.type for issue in issues] == [IssueType.CODE_STYLE, IssueType.CODE_STYLE, IssueType.INFO]
 
 
-def test_choose_issue_type():
+def test_choose_issue_type() -> None:
     error_codes = ["B006", "SC100", "R503", "ABC123", "E101"]
     expected_issue_types = [
         IssueType.ERROR_PRONE,
@@ -139,14 +142,14 @@ MEASURE_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_measure"), MEASURE_TEST_DATA)
-def test_measure_parse(origin_class: str, expected_measure: int):
+def test_measure_parse(origin_class: str, expected_measure: int) -> None:
     inspector = Flake8Inspector()
 
     path_to_file = FLAKE_DATA_FOLDER / "issues" / f"{origin_class.lower()}.py"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.measure() == expected_measure
 
@@ -156,7 +159,8 @@ NEW_DESCRIPTION_TEST_DATA = [
     ("WPS350", get_augmented_assign_pattern_tip()),
     (
         "B007",
-        "Loop control variable 'i' not used within the loop body. If this is intended, replace it with an underscore.",
+        "Loop control variable 'i' not used within the loop body. "
+        "If this is intended, replace it with an underscore.",
     ),
     (
         "C901",
@@ -174,13 +178,13 @@ NEW_DESCRIPTION_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_description"), NEW_DESCRIPTION_TEST_DATA)
-def test_new_issue_description(origin_class: str, expected_description: str):
+def test_new_issue_description(origin_class: str, expected_description: str) -> None:
     inspector = Flake8Inspector()
 
     path_to_file = FLAKE_DATA_FOLDER / "issues" / f"{origin_class.lower()}.py"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.description == expected_description

@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import subprocess
+
 from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
-def test_python(local_command: LocalCommandBuilder):
+def test_python(local_command: LocalCommandBuilder) -> None:
     file_path = DATA_PATH / "different_languages" / "python"
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
@@ -18,14 +21,14 @@ def test_python(local_command: LocalCommandBuilder):
     assert "b.py" in output
 
 
-def test_java(local_command: LocalCommandBuilder):
+def test_java(local_command: LocalCommandBuilder) -> None:
     file_path = DATA_PATH / "different_languages" / "java"
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
@@ -34,14 +37,14 @@ def test_java(local_command: LocalCommandBuilder):
     assert "Second.java" in output
 
 
-def test_kotlin(local_command: LocalCommandBuilder):
+def test_kotlin(local_command: LocalCommandBuilder) -> None:
     file_path = DATA_PATH / "different_languages" / "kotlin"
 
     local_command.path = file_path
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
@@ -50,15 +53,15 @@ def test_kotlin(local_command: LocalCommandBuilder):
     assert "person.kt" in output
 
 
-def test_all_java_inspectors(local_command: LocalCommandBuilder):
+def test_all_java_inspectors(local_command: LocalCommandBuilder) -> None:
     file_path = DATA_PATH / "different_languages" / "java"
 
     local_command.path = file_path
     local_command.disable = []
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 
@@ -67,15 +70,15 @@ def test_all_java_inspectors(local_command: LocalCommandBuilder):
     assert "Second.java" in output
 
 
-def test_go(local_command: LocalCommandBuilder):
+def test_go(local_command: LocalCommandBuilder) -> None:
     file_path = DATA_PATH / "different_languages" / "go"
 
     local_command.path = file_path
     local_command.disable = []
     process = subprocess.run(
         local_command.build(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False,
     )
     output = process.stdout.decode()
 

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import List, Optional
+from typing import ClassVar
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
@@ -9,9 +11,7 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 
 @unique
 class VerbosityLevel(Enum):
-    """
-    Same meaning as the logging level. Should be used in command-line args.
-    """
+    """Same meaning as the logging level. Should be used in command-line args."""
 
     DEBUG = 3
     INFO = 2
@@ -19,13 +19,13 @@ class VerbosityLevel(Enum):
     DISABLE = 0
 
     @classmethod
-    def values(cls) -> List[int]:
+    def values(cls) -> list[int]:
         return [member.value for member in VerbosityLevel]
 
 
 @dataclass(frozen=True)
 class ArgumentsInfo:
-    short_name: Optional[str]
+    short_name: str | None
     long_name: str
     description: str
 
@@ -43,7 +43,7 @@ class RunToolArgument(Enum):
         "default is 0",
     )
 
-    inspectors = [inspector.lower() for inspector in InspectorType.available_values()]
+    inspectors: ClassVar = [inspector.lower() for inspector in InspectorType.available_values()]
     disabled_inspectors_example = f"-d {inspectors[0].lower()},{inspectors[1].lower()}"
 
     DISABLE = ArgumentsInfo(

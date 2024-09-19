@@ -1,18 +1,10 @@
+from __future__ import annotations
+
 from pathlib import Path
-from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
-from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
-from typing import List
 
 import pytest
+
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.common.issue.tips import (
-    get_cyclomatic_complexity_tip,
-    get_func_len_tip,
-    get_line_len_tip,
-    get_magic_number_tip,
-    get_maintainability_index_tip,
-)
-from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     CodeIssue,
@@ -22,7 +14,17 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     IssueType,
     MaintainabilityLackIssue,
 )
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
+    get_cyclomatic_complexity_tip,
+    get_func_len_tip,
+    get_line_len_tip,
+    get_magic_number_tip,
+    get_maintainability_index_tip,
+)
+from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
+from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
+from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
     ("case0_empty.go", 0),
@@ -48,7 +50,7 @@ FILE_WITH_ISSUE_NUMBER_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("file_name", "n_issues"), FILE_WITH_ISSUE_NUMBER_TEST_DATA)
-def test_file_with_issues(file_name: str, n_issues: int):
+def test_file_with_issues(file_name: str, n_issues: int) -> None:
     inspector = GolangLintInspector()
 
     path_to_file = GO_DATA_FOLDER / file_name
@@ -111,7 +113,7 @@ FILE_WITH_ISSUE_INFO_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues_info"), FILE_WITH_ISSUE_INFO_TEST_DATA)
-def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo):
+def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestInfo) -> None:
     inspector = GolangLintInspector()
 
     path_to_file = GO_DATA_FOLDER / file_name
@@ -368,12 +370,12 @@ OUTPUT_PARSING_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("file_name", "expected_issues"), OUTPUT_PARSING_TEST_DATA)
-def test_output_parsing(file_name: str, expected_issues: List[CodeIssue]):
+def test_output_parsing(file_name: str, expected_issues: list[CodeIssue]) -> None:
     path_to_file = GOLANG_LINT_FOLDER / file_name
     assert GolangLintInspector.parse(path_to_file) == expected_issues
 
 
-def test_choose_issue_type():
+def test_choose_issue_type() -> None:
     error_codes = [
         "unused",
         "cyclop",
@@ -411,14 +413,14 @@ MEASURE_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_measure"), MEASURE_TEST_DATA)
-def test_measure_parse(origin_class: str, expected_measure: int):
+def test_measure_parse(origin_class: str, expected_measure: int) -> None:
     inspector = GolangLintInspector()
 
     path_to_file = GOLANG_LINT_FOLDER / "issues" / f"{origin_class.lower()}.go"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {"n_cpu": 1})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.measure() == expected_measure
 
@@ -433,13 +435,13 @@ NEW_DESCRIPTION_TEST_DATA = [
 
 
 @pytest.mark.parametrize(("origin_class", "expected_description"), NEW_DESCRIPTION_TEST_DATA)
-def test_new_issue_description(origin_class: str, expected_description: str):
+def test_new_issue_description(origin_class: str, expected_description: str) -> None:
     inspector = GolangLintInspector()
 
     path_to_file = GOLANG_LINT_FOLDER / "issues" / f"{origin_class.lower()}.go"
     with use_file_metadata(path_to_file) as file_metadata:
         issues = inspector.inspect(file_metadata.path, {"n_cpu": 1})
 
-    issue = list(filter(lambda elem: elem.origin_class == origin_class, issues))[0]
+    issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
     assert issue.description == expected_description

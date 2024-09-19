@@ -1,23 +1,25 @@
+from __future__ import annotations
+
 import json
 import logging
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
 from hyperstyle.src.python.review.inspectors.golang_lint.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.golang_lint.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
 )
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 GOLANG_LINT_DIRECTORY_ENV = "GOLANG_LINT_DIRECTORY"
 GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / "config.yml"
@@ -30,14 +32,14 @@ class GolangLintInspector(BaseInspector):
 
     # We don't support in-memory inspection for Golang yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     @classmethod
     def _create_command(
         cls, input_path: Path, output_path: Path, working_directory: Path, n_cpu: int
-    ) -> List[str]:
-        path_to_golang_lint_cli = os.path.join(os.environ[GOLANG_LINT_DIRECTORY_ENV], "golangci-lint")
+    ) -> list[str]:
+        path_to_golang_lint_cli = Path(os.environ[GOLANG_LINT_DIRECTORY_ENV]) / "golangci-lint"
         # In order to analyze a folder recursively, you must add '...'.
         input_path = input_path if input_path.is_file() else input_path / "..."
 
@@ -58,7 +60,7 @@ class GolangLintInspector(BaseInspector):
             "--allow-parallel-runners",
         ]
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not check_set_up_env_variable(GOLANG_LINT_DIRECTORY_ENV):
             return []
 
@@ -72,11 +74,11 @@ class GolangLintInspector(BaseInspector):
             return self.parse(output_path)
 
     @classmethod
-    def parse(cls, output_path: Path) -> List[BaseIssue]:
+    def parse(cls, output_path: Path) -> list[BaseIssue]:
         if not is_result_file_correct(output_path, cls.inspector_type):
             return []
 
-        with open(output_path) as file:
+        with output_path.open(encoding="utf-8") as file:
             data = json.load(file)
 
         metalinter_description_re = re.compile(r"^([A-Za-z\-]+\d*): (.*)$")

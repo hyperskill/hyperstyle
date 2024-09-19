@@ -1,7 +1,8 @@
-from collections import defaultdict
-from typing import Dict, List, Tuple
+from __future__ import annotations
 
-from hyperstyle.src.python.review.common.language import Language
+from collections import defaultdict
+from typing import TYPE_CHECKING
+
 from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
     IssueDifficulty,
@@ -33,8 +34,11 @@ from hyperstyle.src.python.review.quality.rules.weighted_methods_scoring import 
     LANGUAGE_TO_WEIGHTED_METHODS_RULE_CONFIG,
 )
 
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.common.language import Language
 
-def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, int]:
+
+def __get_issue_type_to_low_measure_dict(language: Language) -> dict[IssueType, int]:
     return {
         IssueType.CYCLOMATIC_COMPLEXITY: LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG[
             language
@@ -53,16 +57,15 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> Dict[IssueType, 
     }
 
 
-def __more_than_low_measure(issue: BaseIssue, issue_type_to_low_measure_dict: Dict[IssueType, int]) -> bool:
+def __more_than_low_measure(issue: BaseIssue, issue_type_to_low_measure_dict: dict[IssueType, int]) -> bool:
     issue_type = issue.type
-    if isinstance(issue, Measurable) and issue.measure() <= issue_type_to_low_measure_dict.get(
-        issue_type, -1
-    ):
-        return False
-    return True
+    return not (
+        isinstance(issue, Measurable)
+        and issue.measure() <= issue_type_to_low_measure_dict.get(issue_type, -1)
+    )
 
 
-def filter_low_measure_issues(issues: List[BaseIssue], language: Language) -> List[BaseIssue]:
+def filter_low_measure_issues(issues: list[BaseIssue], language: Language) -> list[BaseIssue]:
     issue_type_to_low_measure_dict = __get_issue_type_to_low_measure_dict(language)
 
     # Disable this types of issue, requires further investigation.
@@ -80,16 +83,15 @@ def filter_low_measure_issues(issues: List[BaseIssue], language: Language) -> Li
 FilePath = str
 LinesNumber = int
 Inspector = str
-GroupedIssues = Dict[FilePath, Dict[LinesNumber, Dict[Inspector, Dict[IssueType, List[BaseIssue]]]]]
+GroupedIssues = dict[FilePath, dict[LinesNumber, dict[Inspector, dict[IssueType, list[BaseIssue]]]]]
 
 
 def __init_grouped_issues() -> GroupedIssues:
-    return defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: []))))
+    return defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
 
 
-def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
-    """
-    Skipping duplicate issues using heuristic rules:
+def filter_duplicate_issues(issues: list[BaseIssue]) -> list[BaseIssue]:
+    """Skipping duplicate issues using heuristic rules.
 
     For each line's number try to count issues with unique type for each unique inspector and select the best one.
     The inspector with the biggest number of issues for each type will be chosen.
@@ -97,8 +99,8 @@ def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
     grouped_issues = group_issues(issues)
 
     selected_issues = []
-    for _, issues_in_file in grouped_issues.items():
-        for _, issues_in_line in issues_in_file.items():
+    for issues_in_file in grouped_issues.values():
+        for issues_in_line in issues_in_file.values():
             # no conflicts -> take all issues found by a single inspector
             if len(issues_in_line) == 1:
                 all_issues = [
@@ -112,7 +114,7 @@ def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
             elif len(issues_in_line) > 1:
                 default_inspector = "UNKNOWN"
                 # By default for each <IssueType> we add the tuple (inspector: 'UNKNOWN', issue_type_freq: -1)
-                inspectors_by_types: Dict[IssueType, Tuple[Inspector, int]] = defaultdict(
+                inspectors_by_types: dict[IssueType, tuple[Inspector, int]] = defaultdict(
                     lambda: (default_inspector, -1)
                 )
                 for inspector, issues_by_types in issues_in_line.items():
@@ -135,14 +137,14 @@ def filter_duplicate_issues(issues: List[BaseIssue]) -> List[BaseIssue]:
     return selected_issues
 
 
-def group_issues(issues: List[BaseIssue]) -> GroupedIssues:
-    """
-    Group issues according to the following structure:
+def group_issues(issues: list[BaseIssue]) -> GroupedIssues:
+    """Group issues according to the following structure.
+
     - FILE_PATH:
         - LINES_NUMBER:
             - INSPECTOR:
                 - ISSUE_TYPE:
-                    [ISSUES]
+                    [ISSUES].
 
     We will consider each file to find potential duplicates:
     if one line number in the file contains several same issues which were found by different inspectors,
@@ -161,7 +163,7 @@ def group_issues(issues: List[BaseIssue]) -> GroupedIssues:
     return grouped_issues
 
 
-def group_issues_by_difficulty(issues: List[BaseIssue]) -> Dict[IssueDifficulty, List[BaseIssue]]:
+def group_issues_by_difficulty(issues: list[BaseIssue]) -> dict[IssueDifficulty, list[BaseIssue]]:
     return {
         IssueDifficulty.EASY: [issue for issue in issues if issue.difficulty == IssueDifficulty.EASY],
         IssueDifficulty.MEDIUM: [issue for issue in issues if issue.difficulty != IssueDifficulty.HARD],

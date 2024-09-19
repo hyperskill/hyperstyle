@@ -1,20 +1,22 @@
+from __future__ import annotations
+
 import logging
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.flake8.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.flake8.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
 )
-from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 
 logger = logging.getLogger(__name__)
 
@@ -43,21 +45,21 @@ class Flake8Inspector(BaseInspector):
     inspector_type = InspectorType.FLAKE8
 
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        output = run_in_subprocess(BASE_COMMAND + ["-"], subprocess_input=code)
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
+        output = run_in_subprocess([*BASE_COMMAND, "-"], subprocess_input=code)
         return cls.parse(output)
 
     @classmethod
-    def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        output = run_in_subprocess(BASE_COMMAND + [str(path)])
+    def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
+        output = run_in_subprocess([*BASE_COMMAND, str(path)])
         return cls.parse(output)
 
     @classmethod
-    def parse(cls, output: str) -> List[BaseIssue]:
-        row_re = re.compile(r"^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$", re.M)
+    def parse(cls, output: str) -> list[BaseIssue]:
+        row_re = re.compile(r"^(.*):(\d+):(\d+):([A-Z]+\d{3}):(.*)$", re.MULTILINE)
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
-        issues: List[BaseIssue] = []
+        issues: list[BaseIssue] = []
         for groups in row_re.findall(output):
             origin_class = groups[3]
             issue_type = cls.choose_issue_type(origin_class)

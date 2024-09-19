@@ -1,8 +1,14 @@
-from hyperstyle.src.python.review.application_config import ApplicationConfig
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.reviewers.common import perform_language_review
-from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import Metadata, ProjectMetadata
+
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.application_config import ApplicationConfig
+    from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 
 
 def perform_go_review(metadata: Metadata, config: ApplicationConfig) -> GeneralReviewResult:

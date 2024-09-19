@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -46,12 +47,12 @@ LANGUAGE_TO_MAINTAINABILITY_RULE_CONFIG = {
 
 
 class MaintainabilityRule(Rule):
-    def __init__(self, config: MaintainabilityRuleConfig):
+    def __init__(self, config: MaintainabilityRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.MAINTAINABILITY
-        self.maintainability_lack: Optional[int] = None
+        self.maintainability_lack: int | None = None
 
-    def apply(self, maintainability_lack):
+    def apply(self, maintainability_lack) -> None:
         self.maintainability_lack = maintainability_lack
         if maintainability_lack > self.config.maintainability_lack_bad:
             self.quality_type = QualityType.BAD
@@ -70,11 +71,11 @@ class MaintainabilityRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
             return QualityType.MODERATE
-        elif self.quality_type == QualityType.MODERATE:
+        if self.quality_type == QualityType.MODERATE:
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "MaintainabilityRule") -> "MaintainabilityRule":
+    def merge(self, other: MaintainabilityRule) -> MaintainabilityRule:
         config = MaintainabilityRuleConfig(
             min(self.config.maintainability_lack_bad, other.config.maintainability_lack_bad),
             min(self.config.maintainability_lack_moderate, other.config.maintainability_lack_moderate),

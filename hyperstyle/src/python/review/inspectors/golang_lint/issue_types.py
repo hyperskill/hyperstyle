@@ -1,12 +1,10 @@
-# flake8: noqa
-
-from typing import Dict
+from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 # The configuration was made using the following table:
 # https://docs.google.com/spreadsheets/d/1zJrORtjZ3UyoLJV5qaLw9Y_cnK0sNlDW
-CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CODE_TO_ISSUE_TYPE: dict[str, IssueType] = {
     "errcheck": IssueType.ERROR_PRONE,
     "ineffassign": IssueType.ERROR_PRONE,
     # 'typecheck': IssueType.ERROR_PRONE,
@@ -300,7 +298,7 @@ CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # 'stylecheck-ST1019': IssueType.ERROR_PRONE,
 }
 
-CODE_PREFIX_TO_ISSUE_TYPE: Dict[str, IssueType] = {
+CODE_PREFIX_TO_ISSUE_TYPE: dict[str, IssueType] = {
     "gosimple": IssueType.BEST_PRACTICES,
     "staticcheck": IssueType.ERROR_PRONE,
     "govet": IssueType.ERROR_PRONE,

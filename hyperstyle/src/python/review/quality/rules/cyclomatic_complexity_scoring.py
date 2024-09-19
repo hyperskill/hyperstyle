@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
@@ -38,12 +39,12 @@ LANGUAGE_TO_CYCLOMATIC_COMPLEXITY_RULE_CONFIG = {
 
 
 class CyclomaticComplexityRule(Rule):
-    def __init__(self, config: CyclomaticComplexityRuleConfig):
+    def __init__(self, config: CyclomaticComplexityRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.CYCLOMATIC_COMPLEXITY
-        self.cc_value: Optional[int] = None
+        self.cc_value: int | None = None
 
-    def apply(self, cc_value):
+    def apply(self, cc_value) -> None:
         self.cc_value = cc_value
         if cc_value > self.config.cc_value_bad:
             self.quality_type = QualityType.BAD
@@ -61,7 +62,7 @@ class CyclomaticComplexityRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: "CyclomaticComplexityRule") -> "CyclomaticComplexityRule":
+    def merge(self, other: CyclomaticComplexityRule) -> CyclomaticComplexityRule:
         config = CyclomaticComplexityRuleConfig(
             min(self.config.cc_value_bad, other.config.cc_value_bad),
             min(self.config.cc_value_moderate, other.config.cc_value_moderate),

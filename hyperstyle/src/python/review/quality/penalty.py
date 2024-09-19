@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import json
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Set
+from typing import TYPE_CHECKING
 
-from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.quality.model import QualityType
+
+if TYPE_CHECKING:
+    from hyperstyle.src.python.review.common.language import Language
 
 
 @dataclass(frozen=True, eq=True)
@@ -58,12 +62,8 @@ class PreviousIssue:
     category: IssueType = None
 
 
-def get_previous_issues_by_language(
-    lang_to_history: Optional[str], language: Language
-) -> List[PreviousIssue]:
-    """
-    Reads a json string and returns a list of previously made issues for the specified language.
-    """
+def get_previous_issues_by_language(lang_to_history: str | None, language: Language) -> list[PreviousIssue]:
+    """Reads a json string and returns a list of previously made issues for the specified language."""
     if lang_to_history is None:
         return []
 
@@ -76,10 +76,8 @@ def get_previous_issues_by_language(
     return previous_issues
 
 
-def categorize(previous_issues: List[PreviousIssue], current_issues: List[BaseIssue]):
-    """
-    For each previously made issue determines its category, with the help of current issues.
-    """
+def categorize(previous_issues: list[PreviousIssue], current_issues: list[BaseIssue]) -> None:
+    """For each previously made issue determines its category, with the help of current issues."""
     origin_class_to_category = {}
     for issue in current_issues:
         origin_class_to_category[issue.origin_class] = issue.type
@@ -89,25 +87,22 @@ def categorize(previous_issues: List[PreviousIssue], current_issues: List[BaseIs
 
 
 class Punisher:
-    """
-    Punisher with the list of previous issues and current issues allows you to use the 'get_quality_with_penalty'
+    """Punisher with the list of previous issues and current issues allows you to use the 'get_quality_with_penalty'
     function to get quality including the penalty for previous issues and use the 'get_issue_influence_on_penalty'
     function to get the influence of an issues on reducing the quality score.
     """
 
     _penalty_coefficient: float
     _normalized_penalty_coefficient: float
-    _issue_class_to_influence: Dict[str, float]
+    _issue_class_to_influence: dict[str, float]
 
-    def __init__(self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]):
+    def __init__(self, current_issues: list[BaseIssue], previous_issues: list[PreviousIssue]) -> None:
         self._penalty_coefficient = self._get_penalty_coefficient(current_issues, previous_issues)
         self._normalized_penalty_coefficient = self._get_normalized_penalty_coefficient(current_issues)
         self._issue_class_to_influence = self._get_issue_class_to_influence(current_issues, previous_issues)
 
     def get_quality_with_penalty(self, quality_without_penalty: QualityType) -> QualityType:
-        """
-        Depending on the penalty coefficient, reduces the quality type.
-        """
+        """Depending on the penalty coefficient, reduces the quality type."""
         numbered_quality_type = quality_without_penalty.to_number()
         numbered_quality_type -= self._get_penalty_score()
 
@@ -123,21 +118,17 @@ class Punisher:
         return quality
 
     def get_issue_influence_on_penalty(self, issue_class: str) -> int:
-        """
-        Calculates the influence of the issue on the penalty.
+        """Calculates the influence of the issue on the penalty.
 
         Returns a number in the range from 0 to 100.
         """
-
         return int(self._issue_class_to_influence.get(issue_class, 0) * 100)
 
     def _get_penalty_score(self) -> int:
-        """
-        Calculates the penalty score with the penalty coefficient
+        """Calculates the penalty score with the penalty coefficient.
 
         Returns a number equal to 0, 1, 2 or 3, which describes how many levels the grade should be lowered.
         """
-
         penalty_score = 3
 
         if self._normalized_penalty_coefficient < common_penalty_rule.one_level_quality_reduction:
@@ -150,15 +141,14 @@ class Punisher:
         return penalty_score
 
     def _get_penalty_coefficient(
-        self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
+        self, current_issues: list[BaseIssue], previous_issues: list[PreviousIssue]
     ) -> float:
-        """
-        To calculate the penalty coefficient we use those issues that occurred earlier and repeated again.
+        """To calculate the penalty coefficient we use those issues that occurred earlier and repeated again.
+
         Such issues will be called penalizing issues. For each penalizing issue, we calculate a number equal to
         the number of times this issue was repeated earlier multiplied by the coefficient of the category to
         which the issue belongs. These numbers are added up to get the penalty coefficient.
         """
-
         penalizing_classes = self._get_penalizing_classes(current_issues, previous_issues)
         penalizing_issues = list(
             filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues)
@@ -170,12 +160,10 @@ class Punisher:
 
         return coefficient
 
-    def _get_normalized_penalty_coefficient(self, current_issues: List[BaseIssue]) -> float:
-        """
-        The penalty coefficient is normalized by the formula: k / (k + n),
+    def _get_normalized_penalty_coefficient(self, current_issues: list[BaseIssue]) -> float:
+        """The penalty coefficient is normalized by the formula: k / (k + n),
         where k is the penalty coefficient, n is the number of current issues.
         """
-
         coefficient = 0
         if current_issues:
             coefficient = self._penalty_coefficient / (self._penalty_coefficient + len(current_issues))
@@ -183,15 +171,13 @@ class Punisher:
         return coefficient
 
     def _get_issue_class_to_influence(
-        self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
-    ) -> Dict[str, float]:
-        """
-        For each issue to be penalized, the corresponding influence on penalty is calculated.
+        self, current_issues: list[BaseIssue], previous_issues: list[PreviousIssue]
+    ) -> dict[str, float]:
+        """For each issue to be penalized, the corresponding influence on penalty is calculated.
 
         To do this, for each issue we count its penalty coefficient, normalize it,
         and divide the resulting number by the total normalized penalty coefficient.
         """
-
         penalizing_classes = self._get_penalizing_classes(current_issues, previous_issues)
         penalizing_issues = list(
             filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues)
@@ -211,13 +197,12 @@ class Punisher:
 
     @staticmethod
     def _get_penalizing_classes(
-        current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
-    ) -> Set[str]:
-        """
-        Returns issues that should be penalized.
+        current_issues: list[BaseIssue], previous_issues: list[PreviousIssue]
+    ) -> set[str]:
+        """Returns issues that should be penalized.
         We penalize for those issues that were there before, but repeated again.
         """
-        current_classes = set(map(lambda issue: issue.origin_class, current_issues))
-        previous_classes = set(map(lambda issue: issue.origin_class, previous_issues))
+        current_classes = {issue.origin_class for issue in current_issues}
+        previous_classes = {issue.origin_class for issue in previous_issues}
 
         return previous_classes.intersection(current_classes)

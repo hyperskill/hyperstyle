@@ -1,19 +1,23 @@
+from __future__ import annotations
+
 import logging
 import subprocess
-from pathlib import Path
-from typing import Union
+from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.common.file_system import Encoding, Extension
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 
-# TODO it cannot compile gradle-based projects
+# TODO: it cannot compile gradle-based projects
 def javac_project(dir_path: Path) -> bool:
     return javac(f'$(find {dir_path} -name "*{Extension.JAVA.value}")')
 
 
-def javac(javac_args: Union[str, Path]) -> bool:
+def javac(javac_args: str | Path) -> bool:
     try:
         output_bytes: bytes = subprocess.check_output(
             f"javac {javac_args}",
@@ -24,10 +28,10 @@ def javac(javac_args: Union[str, Path]) -> bool:
 
         if output_str:
             logger.debug(output_str)
-
-        return True
     except subprocess.CalledProcessError as error:
-        logger.error(
+        logger.exception(
             f"Failed compile java code with error: " f"{str(error.stdout, Encoding.UTF_ENCODING.value)}"
         )
         return False
+    else:
+        return True

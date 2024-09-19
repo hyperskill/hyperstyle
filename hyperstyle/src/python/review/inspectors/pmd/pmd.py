@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 import csv
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from hyperstyle.src.python.review.common.file_system import check_set_up_env_variable, new_temp_dir
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.pmd.issue_configs import ISSUE_CONFIGS
@@ -31,12 +33,12 @@ class PMDInspector(BaseInspector):
 
     # We don't support in-memory inspection for PMD yet
     @classmethod
-    def inspect_in_memory(cls, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
         return []
 
     def _create_command(
         self, path: Path, output_path: Path, language_version: LanguageVersion, n_cpu: int
-    ) -> List[str]:
+    ) -> list[str]:
         path_tools_pmd_shell = (
             f"{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh"
         )
@@ -63,7 +65,7 @@ class PMDInspector(BaseInspector):
             str(n_cpu),
         ]
 
-    def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
+    def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not (check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)):
             return []
 
@@ -81,18 +83,17 @@ class PMDInspector(BaseInspector):
             run_in_subprocess(command)
             return self.parse_output(output_path)
 
-    def parse_output(self, output_path: Path) -> List[BaseIssue]:
-        """
-        Parses the PMD output, which is a csv file, and returns a list of the issues found there.
+    def parse_output(self, output_path: Path) -> list[BaseIssue]:
+        """Parses the PMD output, which is a csv file, and returns a list of the issues found there.
 
         If the passed path is not a file, an empty list is returned.
         """
         if not output_path.is_file():
-            logger.error("%s: error - no output file" % self.inspector_type.value)
+            logger.error(f"{self.inspector_type.value}: error - no output file")
             return []
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
-        with open(str(output_path)) as out_file:
+        with output_path.open(encoding="utf-8") as out_file:
             reader = csv.DictReader(out_file)
 
             issues = []
@@ -124,20 +125,17 @@ class PMDInspector(BaseInspector):
 
     @classmethod
     def choose_issue_type(cls, rule: str) -> IssueType:
-        """
-        Defines IssueType by PMD rule name using config.
-        """
+        """Defines IssueType by PMD rule name using config."""
         issue_type = PMD_RULE_TO_ISSUE_TYPE.get(rule)
         if not issue_type:
-            logger.warning("%s: %s - unknown rule" % (cls.inspector_type.value, rule))
+            logger.warning(f"{cls.inspector_type.value}: {rule} - unknown rule")
             return IssueType.BEST_PRACTICES
 
         return issue_type
 
     @staticmethod
     def _get_java_version(language_version: LanguageVersion) -> str:
-        """
-        Converts language_version to the version of Java that PMD can work with.
+        """Converts language_version to the version of Java that PMD can work with.
 
         For example, java11 will be converted to 11.
         """

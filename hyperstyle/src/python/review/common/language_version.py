@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from enum import Enum, unique
-from typing import Dict, List
 
 from hyperstyle.src.python.review.common.file_system import Extension
 
@@ -18,11 +19,11 @@ class LanguageVersion(Enum):
     GO = "go"
 
     @classmethod
-    def values(cls) -> List[str]:
+    def values(cls) -> list[str]:
         return [member.value for member in cls.__members__.values()]
 
     @classmethod
-    def language_to_extension_dict(cls) -> Dict["LanguageVersion", Extension]:
+    def language_to_extension_dict(cls) -> dict[LanguageVersion, Extension]:
         return {
             cls.JAVA_7: Extension.JAVA,
             cls.JAVA_8: Extension.JAVA,
@@ -40,14 +41,14 @@ class LanguageVersion(Enum):
         return self.language_to_extension_dict()[self]
 
     def is_java(self) -> bool:
-        return (
-            self == LanguageVersion.JAVA_7
-            or self == LanguageVersion.JAVA_8
-            or self == LanguageVersion.JAVA_9
-            or self == LanguageVersion.JAVA_11
-            or self == LanguageVersion.JAVA_15
-            or self == LanguageVersion.JAVA_17
-        )
+        return self in {
+            LanguageVersion.JAVA_7,
+            LanguageVersion.JAVA_8,
+            LanguageVersion.JAVA_9,
+            LanguageVersion.JAVA_11,
+            LanguageVersion.JAVA_15,
+            LanguageVersion.JAVA_17,
+        }
 
     @classmethod
     def from_value(cls, value: str, default=None):

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from hyperstyle.src.python.review.common.language import Language
@@ -65,7 +67,7 @@ LANGUAGE_TO_CODE_STYLE_RULE_CONFIG = {
 
 
 class CodeStyleRule(Rule):
-    def __init__(self, config: CodeStyleRuleConfig):
+    def __init__(self, config: CodeStyleRuleConfig) -> None:
         self.config = config
         self.rule_type = IssueType.CODE_STYLE
         self.total_lines = 0
@@ -75,7 +77,7 @@ class CodeStyleRule(Rule):
         self.next_level_delta = 0
 
     # TODO: refactor
-    def apply(self, n_code_style_lines, n_code_style, total_lines):
+    def apply(self, n_code_style_lines, n_code_style, total_lines) -> None:
         self.total_lines = total_lines
         self.n_code_style_lines = n_code_style_lines
         self.n_code_style = n_code_style
@@ -99,18 +101,16 @@ class CodeStyleRule(Rule):
     def get_ratio(n_code_style_lines: int, total_lines: int, language: Language) -> float:
         if language == Language.PYTHON:
             return n_code_style_lines / max(1, total_lines)
-        else:
-            return n_code_style_lines / max(1, total_lines - 4)
+        return n_code_style_lines / max(1, total_lines - 4)
 
-    def update_quality(self, n_code_style_lines: int, n_code_style: int):
+    def update_quality(self, n_code_style_lines: int, n_code_style: int) -> None:
         if self.config.language == Language.PYTHON:
             if n_code_style == 1:
                 self.save_quality(QualityType.MODERATE)
-        else:
-            if n_code_style_lines == 1:
-                self.save_quality(QualityType.GOOD)
-            elif n_code_style_lines == 2:
-                self.save_quality(QualityType.MODERATE)
+        elif n_code_style_lines == 1:
+            self.save_quality(QualityType.GOOD)
+        elif n_code_style_lines == 2:
+            self.save_quality(QualityType.MODERATE)
 
     def __get_next_quality_type(self) -> QualityType:
         if self.quality_type == QualityType.BAD:
@@ -119,13 +119,12 @@ class CodeStyleRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: "CodeStyleRule") -> "CodeStyleRule":
+    def merge(self, other: CodeStyleRule) -> CodeStyleRule:
         if self.quality_type > other.quality_type:
             return other
-        else:
-            return self
+        return self
 
-    def save_quality(self, quality_type):
+    def save_quality(self, quality_type) -> None:
         if not self.quality_type:
             self.quality_type = quality_type
         self.quality_type = max(self.quality_type, quality_type)
