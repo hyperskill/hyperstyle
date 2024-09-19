@@ -3,7 +3,7 @@ from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 
 
 def test_inspect_file_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'file.py'
+    file_path = DATA_PATH / "file_or_project" / "file.py"
 
     local_command.path = file_path
 
@@ -19,7 +19,7 @@ def test_inspect_file_works(local_command: LocalCommandBuilder):
 
 
 def test_inspect_project_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'project'
+    file_path = DATA_PATH / "file_or_project" / "project"
 
     local_command.path = file_path
 
@@ -31,12 +31,12 @@ def test_inspect_project_works(local_command: LocalCommandBuilder):
     output = process.stdout.decode()
 
     assert process.returncode == 1
-    assert 'one.py' in output
-    assert 'other.py' in output
+    assert "one.py" in output
+    assert "other.py" in output
 
 
 def test_inspect_project_with_unknown_extensions_works(local_command: LocalCommandBuilder):
-    file_path = DATA_PATH / 'file_or_project' / 'project_with_unknown_extensions'
+    file_path = DATA_PATH / "file_or_project" / "project_with_unknown_extensions"
 
     local_command.path = file_path
 
@@ -48,4 +48,4 @@ def test_inspect_project_with_unknown_extensions_works(local_command: LocalComma
     output = process.stdout.decode()
 
     assert process.returncode == 1
-    assert 'file.py' in output
+    assert "file.py" in output

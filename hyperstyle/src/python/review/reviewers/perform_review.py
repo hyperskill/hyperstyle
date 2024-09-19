@@ -44,8 +44,8 @@ language_to_reviewer = {
 
 
 class OutputFormat(enum.Enum):
-    JSON = 'json'
-    TEXT = 'text'
+    JSON = "json"
+    TEXT = "text"
 
     def __str__(self):
         return self.name.lower()
@@ -58,9 +58,7 @@ class OutputFormat(enum.Enum):
         return [member.value for _, member in OutputFormat.__members__.items()]
 
 
-def perform_and_print_review(path: Path,
-                             output_format: OutputFormat,
-                             config: ApplicationConfig) -> int:
+def perform_and_print_review(path: Path, output_format: OutputFormat, config: ApplicationConfig) -> int:
     review_result = perform_review(path, config)
 
     for file_review_result in review_result.file_review_results:
@@ -85,13 +83,13 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
     if path.is_file():
         metadata = explore_file(path)
         if metadata.language == Language.UNKNOWN:
-            logger.error(f'Unsupported language. Extension {metadata.extension} for file {path}')
+            logger.error(f"Unsupported language. Extension {metadata.extension} for file {path}")
             raise UnsupportedLanguage(path, metadata.extension)
         languages = [metadata.language]
     else:
         metadata = explore_project(path)
         if metadata.languages == {Language.UNKNOWN}:
-            logger.error(f'Unsupported language. Extensions {metadata.extensions} for project {path}')
+            logger.error(f"Unsupported language. Extensions {metadata.extensions} for project {path}")
             raise UnsupportedLanguage(path, metadata.extensions)
         languages = list(metadata.languages.difference({Language.UNKNOWN}))
 
@@ -102,7 +100,9 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
     return _preform_review(metadata, languages, config)
 
 
-def _preform_review(metadata: Metadata, languages: List[Language], config: ApplicationConfig) -> GeneralReviewResult:
+def _preform_review(
+    metadata: Metadata, languages: List[Language], config: ApplicationConfig
+) -> GeneralReviewResult:
     # TODO start review for several languages and do something with the results
     reviewer = language_to_reviewer[languages[0]]
     return reviewer(metadata, config)

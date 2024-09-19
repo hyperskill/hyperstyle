@@ -13,32 +13,32 @@ from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import ex
 @pytest.fixture
 def branch_info_response() -> Dict[str, Any]:
     return {
-        'result': {
-            'commitsCount': 1,
-            'filesCount': 1,
-            'branchingRevision': 'foo',
-            'headRevision': {
-                'projectId': 'foo',
-                'revisionId': 'foo',
-                'revisionDate': 1,
-                'effectiveRevisionDate': 1,
-                'revisionCommitMessage': 'foo',
-                'state': 1,
-                'vcsRevisionId': 1,
-                'shortRevisionId': 'foo',
-                'authorId': 'foo',
-                'reachability': 1,
+        "result": {
+            "commitsCount": 1,
+            "filesCount": 1,
+            "branchingRevision": "foo",
+            "headRevision": {
+                "projectId": "foo",
+                "revisionId": "foo",
+                "revisionDate": 1,
+                "effectiveRevisionDate": 1,
+                "revisionCommitMessage": "foo",
+                "state": 1,
+                "vcsRevisionId": 1,
+                "shortRevisionId": "foo",
+                "authorId": "foo",
+                "reachability": 1,
             },
-            'canCreateReview': {
-                'isAllowed': True,
+            "canCreateReview": {
+                "isAllowed": True,
             },
-            'stats': {
-                'parentBranch': 'bar',
-                'commitsAhead': 0,
-                'commitsBehind': 0,
+            "stats": {
+                "parentBranch": "bar",
+                "commitsAhead": 0,
+                "commitsBehind": 0,
             },
-            'mergeInfo': {},
-            'isPullRequest': False,
+            "mergeInfo": {},
+            "isPullRequest": False,
         },
     }
 
@@ -46,17 +46,17 @@ def branch_info_response() -> Dict[str, Any]:
 @pytest.fixture
 def ownership_summary_response() -> Dict[str, Any]:
     return {
-        'result': {
-            'files': [
+        "result": {
+            "files": [
                 {
-                    'filePath': '/foo.py',
-                    'state': 0,
-                    'userId': None,
+                    "filePath": "/foo.py",
+                    "state": 0,
+                    "userId": None,
                 },
                 {
-                    'filePath': '/bar/baz.py',
-                    'state': 0,
-                    'userId': None,
+                    "filePath": "/bar/baz.py",
+                    "state": 0,
+                    "userId": None,
                 },
             ],
         },

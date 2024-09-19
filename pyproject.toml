@@ -60,11 +60,122 @@ protobuf = "5.27.2"
 
 
 [tool.poetry.group.dev.dependencies]
+jsonschema = "4.23.0"
+mypy = "1.3.0"
 pytest = "8.3.3"
 pytest-runner = "6.0.1"
 pytest-subtests = "0.13.1"
-jsonschema = "4.23.0"
+ruff = "0.6.5"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+python_files = [
+    "tests.py",
+    "test_*.py"
+]
+norecursedirs = [
+    ".git",
+    ".idea",
+    "deploy",
+    "env",
+    "node_modules",
+    "out",
+    "test/resources",
+]
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "arena",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "linters",
+    "test/resources",
+]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "ALL"
+]
+
+ignore = [
+
+    # The following rules may cause conflicts when used with the formatter
+    "ISC001",
+    "COM812",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 25
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+
+[tool.ruff.lint.pylint]
+#max-args = 8
+#max-branches = 15
+#max-returns = 9
+#max-statements = 32
+#max-public-methods = 45
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-third-party = []
+order-by-type = false
+required-imports = ["from __future__ import annotations"]
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+explicit_package_bases = true
+ignore_errors = false
+ignore_missing_imports = true
+implicit_reexport = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+exclude = [
+    ".git",
+    ".idea",
+    "deploy",
+    "env",
+    "node_modules",
+    "out",
+    "linters",
+    "test/resources",
+]

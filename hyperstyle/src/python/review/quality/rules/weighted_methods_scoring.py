@@ -55,7 +55,7 @@ class WeightedMethodsRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'WeightedMethodsRule') -> 'WeightedMethodsRule':
+    def merge(self, other: "WeightedMethodsRule") -> "WeightedMethodsRule":
         config = WeightedMethodsRuleConfig(
             min(self.config.weighted_methods_bad, other.config.weighted_methods_bad),
             min(self.config.weighted_methods_moderate, other.config.weighted_methods_moderate),

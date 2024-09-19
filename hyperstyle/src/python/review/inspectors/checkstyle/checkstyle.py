@@ -15,11 +15,11 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import I
 
 logger = logging.getLogger(__name__)
 
-CHECKSTYLE_DIRECTORY_ENV = 'CHECKSTYLE_DIRECTORY'
-CHECKSTYLE_VERSION_ENV = 'CHECKSTYLE_VERSION'
+CHECKSTYLE_DIRECTORY_ENV = "CHECKSTYLE_DIRECTORY"
+CHECKSTYLE_VERSION_ENV = "CHECKSTYLE_VERSION"
 
-PATH_TOOLS_CHECKSTYLE_FILES = Path(__file__).parent / 'files'
-PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_CHECKSTYLE_FILES / 'config.xml'
+PATH_TOOLS_CHECKSTYLE_FILES = Path(__file__).parent / "files"
+PATH_TOOLS_CHECKSTYLE_CONFIG = PATH_TOOLS_CHECKSTYLE_FILES / "config.xml"
 
 
 class CheckstyleInspector(BaseInspector):
@@ -32,22 +32,33 @@ class CheckstyleInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> List[str]:
-        path_checkstyle_jar = f'{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/' \
-                              f'checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar'
+        path_checkstyle_jar = (
+            f"{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/"
+            f"checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar"
+        )
         return [
-            'java', '-jar', path_checkstyle_jar,
-            '-c', PATH_TOOLS_CHECKSTYLE_CONFIG,
-            '-f', 'xml', '-o', output_path, str(path),
+            "java",
+            "-jar",
+            path_checkstyle_jar,
+            "-c",
+            PATH_TOOLS_CHECKSTYLE_CONFIG,
+            "-f",
+            "xml",
+            "-o",
+            output_path,
+            str(path),
         ]
 
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        if not (check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV) and check_set_up_env_variable(
-                CHECKSTYLE_VERSION_ENV)):
+        if not (
+            check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
+            and check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
+        ):
             return []
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with new_temp_dir() as temp_dir:
-            output_path = temp_dir / 'output.xml'
+            output_path = temp_dir / "output.xml"
             command = self._create_command(path, output_path)
             run_in_subprocess(command)
 
@@ -66,10 +77,10 @@ class CheckstyleInspector(BaseInspector):
         """
 
         # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
-        check_class_name = check_class.split('.')[-1]
+        check_class_name = check_class.split(".")[-1]
         issue_type = CHECK_CLASS_NAME_TO_ISSUE_TYPE.get(check_class_name)
         if not issue_type:
-            logger.warning('Checkstyle: %s - unknown check class' % check_class_name)
+            logger.warning("Checkstyle: %s - unknown check class" % check_class_name)
             return IssueType.BEST_PRACTICES
 
         return issue_type

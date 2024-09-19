@@ -10,21 +10,27 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.quality.model import QualityType
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from hyperstyle.src.python.review.reviewers.review_result import FileReviewResult, GeneralReviewResult, ReviewResult
+from hyperstyle.src.python.review.reviewers.review_result import (
+    FileReviewResult,
+    GeneralReviewResult,
+    ReviewResult,
+)
 
 
-def print_review_result_as_text(review_result: GeneralReviewResult, path: Path, config: ApplicationConfig) -> None:
-    heading = f'\nReview of {str(path)} ({len(review_result.issues)} violations)'
+def print_review_result_as_text(
+    review_result: GeneralReviewResult, path: Path, config: ApplicationConfig
+) -> None:
+    heading = f"\nReview of {str(path)} ({len(review_result.issues)} violations)"
     print(heading)
 
     if len(review_result.issues) == 0:
-        print('There is no issues found')
+        print("There is no issues found")
     else:
         for file_review_result in review_result.file_review_results:
-            print('*' * len(heading))
-            print(f'File {file_review_result.file_path}')
-            print('-' * len(heading))
-            print('Line № : Column № : Type : Inspector : Origin : Description : Line : Path')
+            print("*" * len(heading))
+            print(f"File {file_review_result.file_path}")
+            print("-" * len(heading))
+            print("Line № : Column № : Type : Inspector : Origin : Description : Line : Path")
 
             sorted_issues = sorted(file_review_result.issues, key=lambda issue: issue.line_no)
             for issue in sorted_issues:
@@ -37,24 +43,29 @@ def print_review_result_as_text(review_result: GeneralReviewResult, path: Path, 
                 if not config.with_all_categories:
                     issue_type = issue_type.to_main_type()
 
-                print(f'{issue.line_no} : '
-                      f'{issue.column_no} : '
-                      f'{issue_type.value} : '
-                      f'{issue.inspector_type.value} : '
-                      f'{issue.origin_class} : '
-                      f'{issue.description} : '
-                      f'{line_text}: '
-                      f'{issue.file_path}')
-            print('-' * len(heading))
+                print(
+                    f"{issue.line_no} : "
+                    f"{issue.column_no} : "
+                    f"{issue_type.value} : "
+                    f"{issue.inspector_type.value} : "
+                    f"{issue.origin_class} : "
+                    f"{issue.description} : "
+                    f"{line_text}: "
+                    f"{issue.file_path}"
+                )
+            print("-" * len(heading))
             print(file_review_result.quality_by_difficulty[IssueDifficulty.HARD])
 
-    print('*' * len(heading))
-    print('General quality:')
-    print(review_result.quality_by_difficulty[IssueDifficulty.HARD], end='')
+    print("*" * len(heading))
+    print("General quality:")
+    print(review_result.quality_by_difficulty[IssueDifficulty.HARD], end="")
 
 
 def _get_quality_without_penalty(review_result: ReviewResult) -> Dict[IssueDifficulty, QualityType]:
-    return {difficulty: quality.quality_type for difficulty, quality in review_result.quality_by_difficulty.items()}
+    return {
+        difficulty: quality.quality_type
+        for difficulty, quality in review_result.quality_by_difficulty.items()
+    }
 
 
 def _get_quality_with_penalty(review_result: ReviewResult) -> Dict[IssueDifficulty, QualityType]:
@@ -70,7 +81,7 @@ def get_quality_json_dict(quality: Dict[IssueDifficulty, QualityType], config: A
     quality_json_dict = {
         difficulty.value: {
             OutputJsonFields.CODE.value: quality.value,
-            OutputJsonFields.TEXT.value: f'Code quality (beta): {quality.value}',
+            OutputJsonFields.TEXT.value: f"Code quality (beta): {quality.value}",
         }
         for difficulty, quality in quality.items()
     }
@@ -134,12 +145,16 @@ def print_review_result_as_json(review_result: GeneralReviewResult, config: Appl
     print(json.dumps(convert_review_result_to_json_dict(review_result, config)))
 
 
-def print_review_result_as_multi_file_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> None:
+def print_review_result_as_multi_file_json(
+    review_result: GeneralReviewResult, config: ApplicationConfig
+) -> None:
     output_json = get_review_result_as_multi_file_json(review_result, config)
     print(json.dumps(output_json))
 
 
-def get_review_result_as_multi_file_json(review_result: GeneralReviewResult, config: ApplicationConfig) -> dict:
+def get_review_result_as_multi_file_json(
+    review_result: GeneralReviewResult, config: ApplicationConfig
+) -> dict:
     review_result.file_review_results.sort(key=lambda result: result.file_path)
 
     file_review_result_jsons = []
@@ -156,19 +171,19 @@ def get_review_result_as_multi_file_json(review_result: GeneralReviewResult, con
 
 @unique
 class OutputJsonFields(Enum):
-    QUALITY = 'quality'
-    ISSUES = 'issues'
-    FILE_REVIEW_RESULTS = 'file_review_results'
-    FILE_NAME = 'file_name'
+    QUALITY = "quality"
+    ISSUES = "issues"
+    FILE_REVIEW_RESULTS = "file_review_results"
+    FILE_NAME = "file_name"
 
-    CODE = 'code'
-    TEXT = 'text'
-    LINE = 'line'
-    LINE_NUMBER = 'line_number'
-    COLUMN_NUMBER = 'column_number'
-    CATEGORY = 'category'
-    INFLUENCE_ON_PENALTY = 'influence_on_penalty'
-    DIFFICULTY = 'difficulty'
+    CODE = "code"
+    TEXT = "text"
+    LINE = "line"
+    LINE_NUMBER = "line_number"
+    COLUMN_NUMBER = "column_number"
+    CATEGORY = "category"
+    INFLUENCE_ON_PENALTY = "influence_on_penalty"
+    DIFFICULTY = "difficulty"
 
 
 def convert_issue_to_json(issue: BaseIssue, config: ApplicationConfig) -> Dict[str, Any]:
@@ -200,11 +215,12 @@ def convert_json_to_issues(issues_json: List[dict]) -> List[PenaltyIssue]:
                 line_no=int(issue[OutputJsonFields.LINE_NUMBER.value]),
                 column_no=int(issue[OutputJsonFields.COLUMN_NUMBER.value]),
                 type=IssueType(issue[OutputJsonFields.CATEGORY.value]),
-
                 file_path=Path(),
                 inspector_type=InspectorType.UNDEFINED,
                 influence_on_penalty=issue.get(OutputJsonFields.INFLUENCE_ON_PENALTY.value, 0),
-                difficulty=IssueDifficulty(issue.get(OutputJsonFields.DIFFICULTY.value, IssueDifficulty.HARD.value)),
+                difficulty=IssueDifficulty(
+                    issue.get(OutputJsonFields.DIFFICULTY.value, IssueDifficulty.HARD.value)
+                ),
             ),
         )
     return issues

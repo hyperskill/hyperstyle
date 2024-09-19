@@ -58,7 +58,9 @@ class PreviousIssue:
     category: IssueType = None
 
 
-def get_previous_issues_by_language(lang_to_history: Optional[str], language: Language) -> List[PreviousIssue]:
+def get_previous_issues_by_language(
+    lang_to_history: Optional[str], language: Language
+) -> List[PreviousIssue]:
     """
     Reads a json string and returns a list of previously made issues for the specified language.
     """
@@ -147,7 +149,9 @@ class Punisher:
 
         return penalty_score
 
-    def _get_penalty_coefficient(self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]) -> float:
+    def _get_penalty_coefficient(
+        self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
+    ) -> float:
         """
         To calculate the penalty coefficient we use those issues that occurred earlier and repeated again.
         Such issues will be called penalizing issues. For each penalizing issue, we calculate a number equal to
@@ -156,7 +160,9 @@ class Punisher:
         """
 
         penalizing_classes = self._get_penalizing_classes(current_issues, previous_issues)
-        penalizing_issues = list(filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues))
+        penalizing_issues = list(
+            filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues)
+        )
 
         coefficient = 0
         for issue in penalizing_issues:
@@ -176,9 +182,9 @@ class Punisher:
 
         return coefficient
 
-    def _get_issue_class_to_influence(self,
-                                      current_issues: List[BaseIssue],
-                                      previous_issues: List[PreviousIssue]) -> Dict[str, float]:
+    def _get_issue_class_to_influence(
+        self, current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
+    ) -> Dict[str, float]:
         """
         For each issue to be penalized, the corresponding influence on penalty is calculated.
 
@@ -187,12 +193,16 @@ class Punisher:
         """
 
         penalizing_classes = self._get_penalizing_classes(current_issues, previous_issues)
-        penalizing_issues = list(filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues))
+        penalizing_issues = list(
+            filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues)
+        )
 
         result = {}
         for issue in penalizing_issues:
             issue_coefficient = ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
-            normalized_issue_coefficient = issue_coefficient / (self._penalty_coefficient + len(current_issues))
+            normalized_issue_coefficient = issue_coefficient / (
+                self._penalty_coefficient + len(current_issues)
+            )
             influence = normalized_issue_coefficient / self._normalized_penalty_coefficient
 
             result[issue.origin_class] = influence
@@ -200,7 +210,9 @@ class Punisher:
         return result
 
     @staticmethod
-    def _get_penalizing_classes(current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]) -> Set[str]:
+    def _get_penalizing_classes(
+        current_issues: List[BaseIssue], previous_issues: List[PreviousIssue]
+    ) -> Set[str]:
         """
         Returns issues that should be penalized.
         We penalize for those issues that were there before, but repeated again.

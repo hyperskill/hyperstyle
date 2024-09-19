@@ -38,15 +38,12 @@ class CodeStatistics:
             IssueType.ERROR_PRONE: self.n_error_prone_issues,
             IssueType.COMPLEXITY: self.n_complexity_issues,
             IssueType.LINE_LEN: self.n_line_len,
-
             IssueType.METHOD_NUMBER: self.method_number,
-
             IssueType.CYCLOMATIC_COMPLEXITY: self.max_cyclomatic_complexity,
             IssueType.COHESION: self.max_cohesion_lack,
             IssueType.MAINTAINABILITY: self.max_maintainability_lack,
             IssueType.FUNC_LEN: self.max_func_len,
             IssueType.BOOL_EXPR_LEN: self.max_bool_expr_len,
-
             IssueType.CODE_STYLE: self.code_style_lines,
             IssueType.INHERITANCE_DEPTH: self.inheritance_depth,
             IssueType.COUPLING: self.coupling,
@@ -62,10 +59,13 @@ def get_code_style_lines(issues: List[BaseIssue]) -> int:
 
 
 def __get_max_measure_by_issue_type(issue_type: IssueType, issues: List[BaseIssue]) -> int:
-    return max(map(
-        lambda issue: issue.measure(),
-        filter(lambda issue: issue.type == issue_type, issues),
-    ), default=0)
+    return max(
+        map(
+            lambda issue: issue.measure(),
+            filter(lambda issue: issue.type == issue_type, issues),
+        ),
+        default=0,
+    )
 
 
 # TODO: Need testing

@@ -19,25 +19,25 @@ class FileSystemItem(Enum):
 
 @unique
 class Encoding(Enum):
-    ISO_ENCODING = 'ISO-8859-1'
-    UTF_ENCODING = 'utf-8'
+    ISO_ENCODING = "ISO-8859-1"
+    UTF_ENCODING = "utf-8"
 
 
 # Make sure all extensions (except an empty one) have a dot
 @unique
 class Extension(Enum):
-    EMPTY = ''
-    PY = '.py'
-    JAVA = '.java'
-    KT = '.kt'
-    JS = '.js'
-    KTS = '.kts'
-    GO = '.go'
+    EMPTY = ""
+    PY = ".py"
+    JAVA = ".java"
+    KT = ".kt"
+    JS = ".js"
+    KTS = ".kts"
+    GO = ".go"
 
     # Not empty extensions are returned with a dot, for example, '.txt'
     # If file has no extensions, an empty one ('') is returned
     @classmethod
-    def from_file(cls, file: Union[Path, str]) -> Optional['Extension']:
+    def from_file(cls, file: Union[Path, str]) -> Optional["Extension"]:
         try:
             return Extension(get_extension_from_file(file))
         except ValueError:
@@ -58,13 +58,13 @@ def all_items_condition(name: str) -> bool:
 # To get all files or subdirs (depends on the last parameter) from root that match item_condition
 # Note that all subdirs or files already contain the full path for them
 def get_all_file_system_items(
-        root: Path,
-        item_condition: ItemCondition = all_items_condition,
-        item_type: FileSystemItem = FileSystemItem.FILE,
-        without_subdirs: bool = False,
+    root: Path,
+    item_condition: ItemCondition = all_items_condition,
+    item_type: FileSystemItem = FileSystemItem.FILE,
+    without_subdirs: bool = False,
 ) -> List[Path]:
     if not root.is_dir():
-        raise ValueError(f'The {root} is not a directory')
+        raise ValueError(f"The {root} is not a directory")
 
     items = []
     for fs_tuple in os.walk(root):
@@ -96,11 +96,12 @@ def get_file_line(path: Path, line_number: int):
     ).strip()
 
 
-def get_content_from_file(file_path: Path, encoding: str = Encoding.ISO_ENCODING.value,
-                          to_strip_nl: bool = True) -> str:
-    with open(file_path, 'r', encoding=encoding) as f:
+def get_content_from_file(
+    file_path: Path, encoding: str = Encoding.ISO_ENCODING.value, to_strip_nl: bool = True
+) -> str:
+    with open(file_path, "r", encoding=encoding) as f:
         content = f.read()
-        return content if not to_strip_nl else content.rstrip('\n')
+        return content if not to_strip_nl else content.rstrip("\n")
 
 
 # Before using it, check that there are no line breaks in the string
@@ -109,7 +110,7 @@ def __is_line_empty(line: str) -> bool:
 
 
 def __is_comment(line: str) -> bool:
-    return line.strip().startswith(('#', '//'))
+    return line.strip().startswith(("#", "//"))
 
 
 def get_total_code_lines_from_file(path: Path) -> int:
@@ -124,6 +125,6 @@ def get_total_code_lines_from_code(code: str) -> int:
 
 def check_set_up_env_variable(variable_name: str) -> bool:
     if variable_name not in os.environ:
-        logger.warning(f'{variable_name} was not set up!')
+        logger.warning(f"{variable_name} was not set up!")
         return False
     return True

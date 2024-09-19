@@ -56,7 +56,7 @@ class BestPracticesRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'BestPracticesRule') -> 'BestPracticesRule':
+    def merge(self, other: "BestPracticesRule") -> "BestPracticesRule":
         config = BestPracticesRuleConfig(
             min(self.config.n_best_practices_moderate, other.config.n_best_practices_moderate),
             min(self.config.n_best_practices_good, other.config.n_best_practices_good),

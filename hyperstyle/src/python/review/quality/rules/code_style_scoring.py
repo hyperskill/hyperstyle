@@ -119,7 +119,7 @@ class CodeStyleRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'CodeStyleRule') -> 'CodeStyleRule':
+    def merge(self, other: "CodeStyleRule") -> "CodeStyleRule":
         if self.quality_type > other.quality_type:
             return other
         else:

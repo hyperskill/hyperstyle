@@ -21,12 +21,12 @@ class ApplicationConfig:
     ij_config: Optional[str] = None
 
     @staticmethod
-    def get_default_config() -> 'ApplicationConfig':
+    def get_default_config() -> "ApplicationConfig":
         return ApplicationConfig(
             disabled_inspectors=set(),
             allow_duplicates=False,
             n_cpu=1,
-            inspectors_config={'n_cpu': 1},
+            inspectors_config={"n_cpu": 1},
             with_all_categories=True,
             start_line=1,
             language=None,

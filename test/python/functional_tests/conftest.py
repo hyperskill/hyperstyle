@@ -10,7 +10,7 @@ import pytest
 from hyperstyle.src.python import MAIN_FOLDER
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 
-DATA_PATH = TEST_DATA_FOLDER / 'functional_tests'
+DATA_PATH = TEST_DATA_FOLDER / "functional_tests"
 
 
 @dataclass
@@ -20,7 +20,7 @@ class LocalCommandBuilder:
     allow_duplicates: bool = False
     language_version: Optional[str] = None
     n_cpu: int = 1
-    format = 'text'
+    format = "text"
     # format: Literal['json', 'text'] = 'text' take it from Py3.8
     path: Optional[Path] = None
     start_line: Optional[int] = None
@@ -34,8 +34,10 @@ class LocalCommandBuilder:
         assert self.path is not None
 
         command = [
-            sys.executable, (MAIN_FOLDER.parent / 'review/run_tool.py'),
-            RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
+            sys.executable,
+            (MAIN_FOLDER.parent / "review/run_tool.py"),
+            RunToolArgument.VERBOSITY.value.long_name,
+            str(self.verbosity),
         ]
 
         # TODO: remove after adding a test server
@@ -43,7 +45,7 @@ class LocalCommandBuilder:
         self.disable.append(InspectorType.IJ_KOTLIN.value)
 
         if self.disable:
-            command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
+            command.extend([RunToolArgument.DISABLE.value.long_name, ",".join(self.disable)])
 
         if self.allow_duplicates:
             command.append(RunToolArgument.DUPLICATES.value.long_name)
@@ -63,11 +65,15 @@ class LocalCommandBuilder:
         if self.group_by_difficulty:
             command.append(RunToolArgument.GROUP_BY_DIFFICULTY.value.long_name)
 
-        command.extend([
-            RunToolArgument.CPU.value.long_name, str(self.n_cpu),
-            RunToolArgument.FORMAT.value.long_name, self.format,
-            str(self.path),
-        ])
+        command.extend(
+            [
+                RunToolArgument.CPU.value.long_name,
+                str(self.n_cpu),
+                RunToolArgument.FORMAT.value.long_name,
+                self.format,
+                str(self.path),
+            ]
+        )
 
         if self.start_line is not None:
             command.extend([RunToolArgument.START_LINE.value.long_name, str(self.start_line)])

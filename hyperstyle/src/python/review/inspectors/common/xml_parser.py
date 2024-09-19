@@ -17,7 +17,7 @@ def __should_handle_element(element: ElementTree) -> bool:
     Checks if a tree element is a file.
     """
 
-    return element.tag == 'file'
+    return element.tag == "file"
 
 
 def __is_error(element: ElementTree) -> bool:
@@ -25,7 +25,7 @@ def __is_error(element: ElementTree) -> bool:
     Checks if a tree element is an error.
     """
 
-    return element.tag == 'error'
+    return element.tag == "error"
 
 
 def parse_xml_file_result(
@@ -59,29 +59,29 @@ def parse_xml_file_result(
         if not __should_handle_element(element):
             continue
 
-        code_file_path = Path(element.attrib['name'])
+        code_file_path = Path(element.attrib["name"])
         for inner_element in element:
             if not __is_error(inner_element):
                 continue
 
             # Example: com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck -> LineLengthCheck
-            origin_class = inner_element.attrib['source'].split('.')[-1]
+            origin_class = inner_element.attrib["source"].split(".")[-1]
             issue_type = issue_type_selector(origin_class)
 
             base_issue = BaseIssue(
                 origin_class=origin_class,
                 type=issue_type,
-                description=inner_element.attrib['message'],
+                description=inner_element.attrib["message"],
                 file_path=code_file_path,
-                line_no=int(inner_element.attrib['line']),
-                column_no=int(inner_element.attrib.get('column', 1)),
+                line_no=int(inner_element.attrib["line"]),
+                column_no=int(inner_element.attrib.get("column", 1)),
                 inspector_type=inspector_type,
                 difficulty=difficulty_selector(issue_type),
             )
 
             issue = convert_base_issue(base_issue, issue_configs_handler)
             if issue is None:
-                logger.error(f'{inspector_type.value}: an error occurred during converting base issue.')
+                logger.error(f"{inspector_type.value}: an error occurred during converting base issue.")
                 continue
 
             issues.append(issue)

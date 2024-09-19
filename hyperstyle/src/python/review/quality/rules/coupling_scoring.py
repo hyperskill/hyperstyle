@@ -50,7 +50,7 @@ class CouplingRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'CouplingRule') -> 'CouplingRule':
+    def merge(self, other: "CouplingRule") -> "CouplingRule":
         config = CouplingRuleConfig(
             min(self.config.coupling_bad, other.config.coupling_bad),
             min(self.config.coupling_moderate, other.config.coupling_moderate),

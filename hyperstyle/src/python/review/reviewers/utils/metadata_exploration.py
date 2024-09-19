@@ -64,7 +64,7 @@ Metadata = Union[FileMetadata, ProjectMetadata, InMemoryMetadata]
 
 def explore_file(path: Path) -> FileMetadata:
     if not path.exists() or not path.is_file():
-        raise ValueError(f'The file {path} does not exist or is not a file')
+        raise ValueError(f"The file {path} does not exist or is not a file")
 
     stat = os.stat(path)
     language = guess_file_language(path)
@@ -73,7 +73,7 @@ def explore_file(path: Path) -> FileMetadata:
 
 def explore_project(path: Path) -> ProjectMetadata:
     if not path.exists() or not path.is_dir():
-        raise ValueError(f'The file {path} does not exist or is not a directory')
+        raise ValueError(f"The file {path} does not exist or is not a directory")
 
     inner_files = []
     for file_path in get_all_file_system_items(path):

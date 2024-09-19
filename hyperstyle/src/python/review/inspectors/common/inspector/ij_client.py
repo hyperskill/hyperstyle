@@ -6,12 +6,12 @@ TIMEOUT = 1
 
 
 class IJClient(object):
-    def __init__(self, host: str = 'localhost', port: int = 8080):
+    def __init__(self, host: str = "localhost", port: int = 8080):
         self.host = host
         self.port = port
 
         # instantiate a channel
-        self.channel = grpc.insecure_channel(f'{self.host}:{self.port}')
+        self.channel = grpc.insecure_channel(f"{self.host}:{self.port}")
 
         # bind the client and the server
         try:

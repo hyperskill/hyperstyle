@@ -2,7 +2,10 @@ import logging
 from dataclasses import dataclass, field
 from typing import Callable, Dict, Optional, Pattern, Tuple
 
-from hyperstyle.src.python.review.inspectors.common.utils import contains_format_fields, contains_named_format_fields
+from hyperstyle.src.python.review.inspectors.common.utils import (
+    contains_format_fields,
+    contains_named_format_fields,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +39,7 @@ class IssueDescriptionParser:
         try:
             args = tuple(self.converter.get(index, str)(group) for index, group in enumerate(match.groups()))
         except Exception as exception:
-            logger.error(f'Unable to convert the groups: {exception}')
+            logger.error(f"Unable to convert the groups: {exception}")
             return None
 
         return args
@@ -72,13 +75,13 @@ class IssueConfig:
 
     def __post_init__(self):
         if contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
+            raise TypeError("The new description contains named format fields.")
 
         if self.parser is None and contains_format_fields(self.new_description):
-            raise TypeError('You need to specify a parser, since you are using a format string.')
+            raise TypeError("You need to specify a parser, since you are using a format string.")
 
         if self.parser is not None and not contains_format_fields(self.new_description):
-            raise TypeError('You specified the parser, but the new description is not a format string.')
+            raise TypeError("You specified the parser, but the new description is not a format string.")
 
 
 @dataclass(frozen=True)
@@ -108,10 +111,10 @@ class MeasurableIssueConfig(IssueConfig):
 
     def __post_init__(self):
         if contains_named_format_fields(self.new_description):
-            raise TypeError('The new description contains named format fields.')
+            raise TypeError("The new description contains named format fields.")
 
         if self.parser is None:
-            raise TypeError('You must specify a parser.')
+            raise TypeError("You must specify a parser.")
 
 
 class IssueConfigsHandler:
@@ -124,7 +127,9 @@ class IssueConfigsHandler:
     origin_class_to_config: Dict[str, IssueConfig]
 
     def __init__(self, *issue_configs: IssueConfig):
-        self.origin_class_to_config = {issue_config.origin_class: issue_config for issue_config in issue_configs}
+        self.origin_class_to_config = {
+            issue_config.origin_class: issue_config for issue_config in issue_configs
+        }
 
     def _parse_description(self, origin_class: str, description: str) -> Optional[Tuple]:
         """
@@ -139,12 +144,12 @@ class IssueConfigsHandler:
         parser = config.parser if config is not None else None
 
         if parser is None:
-            logger.error(f'{origin_class}: The parser is undefined.')
+            logger.error(f"{origin_class}: The parser is undefined.")
             return None
 
         args = parser.parse(description)
         if args is None:
-            logger.error(f'{origin_class}: Unable to parse description.')
+            logger.error(f"{origin_class}: Unable to parse description.")
             return None
 
         return args
@@ -166,11 +171,11 @@ class IssueConfigsHandler:
         measure_position = config.measure_position if isinstance(config, MeasurableIssueConfig) else None
 
         if measure_position is None:
-            logger.error(f'{origin_class}: The position of measure is undefined.')
+            logger.error(f"{origin_class}: The position of measure is undefined.")
             return None
 
         if measure_position >= len(args):
-            logger.error(f'{origin_class}: The position of measure is out of range.')
+            logger.error(f"{origin_class}: The position of measure is out of range.")
             return None
 
         return args[measure_position]
@@ -207,5 +212,5 @@ class IssueConfigsHandler:
         try:
             return new_description.format(*args)
         except Exception as exception:
-            logger.error(f'{origin_class}: Unable to format the new description. {exception}')
+            logger.error(f"{origin_class}: Unable to format the new description. {exception}")
             return description

@@ -65,7 +65,9 @@ LANGUAGE_TO_INSPECTORS = {
 }
 
 
-def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Language) -> Optional[List[BaseIssue]]:
+def _inspect_code(
+    metadata: Metadata, config: ApplicationConfig, language: Language
+) -> Optional[List[BaseIssue]]:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
     ij_inspectors = list(
         filter(
@@ -80,14 +82,16 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
     )
     if ij_inspectors and connection_parameters is None:
         logging.warning(
-            f'IJ inspectors for the {language.value} will be disabled '
-            f'as the IJ config for this language was not specified.',
+            f"IJ inspectors for the {language.value} will be disabled "
+            f"as the IJ config for this language was not specified.",
         )
 
         config.disabled_inspectors.update(map(lambda inspector: inspector.inspector_type, ij_inspectors))
     else:
         for inspector in ij_inspectors:
-            inspector.setup_connection_parameters(connection_parameters['host'], connection_parameters['port'])
+            inspector.setup_connection_parameters(
+                connection_parameters["host"], connection_parameters["port"]
+            )
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
@@ -95,7 +99,9 @@ def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Langu
     return inspect_in_parallel(run_inspector, metadata.path, config, inspectors)
 
 
-def perform_language_review(metadata: Metadata, config: ApplicationConfig, language: Language) -> GeneralReviewResult:
+def perform_language_review(
+    metadata: Metadata, config: ApplicationConfig, language: Language
+) -> GeneralReviewResult:
     issues = _inspect_code(metadata, config, language)
     if issues:
         issues = filter_low_measure_issues(issues, language)
@@ -159,7 +165,9 @@ def perform_language_review(metadata: Metadata, config: ApplicationConfig, langu
         }
 
         for difficulty, quality in quality_by_difficulty.items():
-            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(quality)
+            general_quality_by_difficulty[difficulty] = general_quality_by_difficulty[difficulty].merge(
+                quality
+            )
 
         file_review_results.append(
             FileReviewResult(quality_by_difficulty, punisher_by_difficulty, file_issues, file),

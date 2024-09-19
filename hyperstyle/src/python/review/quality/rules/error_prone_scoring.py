@@ -47,9 +47,8 @@ class ErrorProneRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'ErrorProneRule') -> 'ErrorProneRule':
-        config = ErrorProneRuleConfig(min(self.config.n_error_prone_bad,
-                                          other.config.n_error_prone_bad))
+    def merge(self, other: "ErrorProneRule") -> "ErrorProneRule":
+        config = ErrorProneRuleConfig(min(self.config.n_error_prone_bad, other.config.n_error_prone_bad))
         result_rule = ErrorProneRule(config)
         result_rule.apply(self.n_error_prone + other.n_error_prone)
 

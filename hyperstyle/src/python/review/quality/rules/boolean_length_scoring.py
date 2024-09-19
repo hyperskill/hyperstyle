@@ -63,7 +63,7 @@ class BooleanExpressionRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'BooleanExpressionRule') -> 'BooleanExpressionRule':
+    def merge(self, other: "BooleanExpressionRule") -> "BooleanExpressionRule":
         config = BooleanExpressionRuleConfig(
             min(self.config.bool_expr_len_bad, other.config.bool_expr_len_bad),
             min(self.config.bool_expr_len_moderate, other.config.bool_expr_len_moderate),

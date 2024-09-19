@@ -8,15 +8,15 @@ from hyperstyle.src.python.review.common.language_version import LanguageVersion
 
 @unique
 class Language(Enum):
-    JAVA = 'JAVA'
-    PYTHON = 'PYTHON'
-    KOTLIN = 'KOTLIN'
-    JS = 'JAVASCRIPT'
-    GO = 'GO'
-    UNKNOWN = 'UNKNOWN'
+    JAVA = "JAVA"
+    PYTHON = "PYTHON"
+    KOTLIN = "KOTLIN"
+    JS = "JAVASCRIPT"
+    GO = "GO"
+    UNKNOWN = "UNKNOWN"
 
     @staticmethod
-    def from_language_version(language_version: LanguageVersion) -> 'Language':
+    def from_language_version(language_version: LanguageVersion) -> "Language":
         version_to_lang = {
             LanguageVersion.JAVA_7: Language.JAVA,
             LanguageVersion.JAVA_8: Language.JAVA,

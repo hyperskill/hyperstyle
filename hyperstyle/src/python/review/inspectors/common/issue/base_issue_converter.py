@@ -14,7 +14,9 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import I
 logger = logging.getLogger(__name__)
 
 
-def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfigsHandler) -> Optional[BaseIssue]:
+def convert_base_issue(
+    base_issue: BaseIssue, issue_configs_handler: IssueConfigsHandler
+) -> Optional[BaseIssue]:
     """
     Convert the ``base_issue`` to a code issue or measurable one.
 
@@ -37,7 +39,7 @@ def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfig
     if issubclass(issue_class, Measurable):
         measure = issue_configs_handler.parse_measure(origin_class, description)
         if measure is None:
-            logger.error(f'{inspector_type.value}: Unable to parse measure.')
+            logger.error(f"{inspector_type.value}: Unable to parse measure.")
             return None
 
         issue_data[get_measure_name_by_measurable_issue_type(issue_type)] = measure
@@ -45,5 +47,5 @@ def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfig
     try:
         return issue_class(**issue_data)
     except Exception as exception:
-        logger.error(f'{inspector_type.value}: Unable to create a new issue. {exception}')
+        logger.error(f"{inspector_type.value}: Unable to create a new issue. {exception}")
         return None

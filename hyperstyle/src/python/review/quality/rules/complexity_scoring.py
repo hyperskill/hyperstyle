@@ -57,7 +57,7 @@ class ComplexityRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'ComplexityRule') -> 'ComplexityRule':
+    def merge(self, other: "ComplexityRule") -> "ComplexityRule":
         config = ComplexityRuleConfig(
             min(self.config.complexity_bad, other.config.complexity_bad),
             min(self.config.complexity_moderate, other.config.complexity_moderate),

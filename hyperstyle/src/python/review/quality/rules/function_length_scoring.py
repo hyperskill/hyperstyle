@@ -50,7 +50,7 @@ class FunctionLengthRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'FunctionLengthRule') -> 'FunctionLengthRule':
+    def merge(self, other: "FunctionLengthRule") -> "FunctionLengthRule":
         config = FunctionLengthRuleConfig(
             min(self.config.func_len_bad, other.config.func_len_bad),
         )

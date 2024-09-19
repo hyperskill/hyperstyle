@@ -12,33 +12,35 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 logger = logging.getLogger(__name__)
 
 
-def run_inspector(path: Path,
-                  config: ApplicationConfig,
-                  inspector: BaseInspector) -> List[BaseIssue]:
+def run_inspector(path: Path, config: ApplicationConfig, inspector: BaseInspector) -> List[BaseIssue]:
     return _run_inspector(inspector.inspect, path, config, inspector)
 
 
-def run_inspector_in_memory(code: str,
-                            config: ApplicationConfig,
-                            inspector: BaseInspector) -> List[BaseIssue]:
+def run_inspector_in_memory(
+    code: str, config: ApplicationConfig, inspector: BaseInspector
+) -> List[BaseIssue]:
     return _run_inspector(inspector.inspect_in_memory, code, config, inspector)
 
 
-def _run_inspector(inspect_function: Callable[[Any, Dict[str, Any]], List[BaseIssue]],
-                   data: Any,
-                   config: ApplicationConfig,
-                   inspector: BaseInspector) -> List[BaseIssue]:
+def _run_inspector(
+    inspect_function: Callable[[Any, Dict[str, Any]], List[BaseIssue]],
+    data: Any,
+    config: ApplicationConfig,
+    inspector: BaseInspector,
+) -> List[BaseIssue]:
     try:
         return inspect_function(data, config.inspectors_config)
     except Exception as e:
-        logger.error(f'Inspector {inspector.inspector_type} failed.', e)
+        logger.error(f"Inspector {inspector.inspector_type} failed.", e)
         return []
 
 
-def inspect_in_parallel(inspector_runner: Callable[[Any, ApplicationConfig, BaseInspector], List[BaseIssue]],
-                        data: Any,
-                        config: ApplicationConfig,
-                        inspectors: List[BaseInspector]) -> List[BaseIssue]:
+def inspect_in_parallel(
+    inspector_runner: Callable[[Any, ApplicationConfig, BaseInspector], List[BaseIssue]],
+    data: Any,
+    config: ApplicationConfig,
+    inspectors: List[BaseInspector],
+) -> List[BaseIssue]:
     inspectors_to_run = filter(lambda i: i.inspector_type not in config.disabled_inspectors, inspectors)
 
     if config.n_cpu == 1:

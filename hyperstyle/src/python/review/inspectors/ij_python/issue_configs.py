@@ -2,7 +2,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import I
 
 ISSUE_CONFIGS = [
     IssueConfig(
-        origin_class='E128',
-        new_description='Incorrect indent',
+        origin_class="E128",
+        new_description="Incorrect indent",
     ),
 ]

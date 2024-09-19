@@ -9,7 +9,10 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfig, IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
+    IssueConfig,
+    IssueConfigsHandler,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -39,15 +42,15 @@ class BaseInspector(ABC):
     @property
     @abstractmethod
     def inspector_type(self) -> InspectorType:
-        raise NotImplementedError('inspector_type property not implemented yet')
+        raise NotImplementedError("inspector_type property not implemented yet")
 
     @abstractmethod
     def inspect(self, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
-        raise NotImplementedError('inspect method not implemented yet')
+        raise NotImplementedError("inspect method not implemented yet")
 
     @abstractmethod
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
-        raise NotImplementedError('inspect in memory method not implemented yet')
+        raise NotImplementedError("inspect in memory method not implemented yet")
 
 
 class BaseIJInspector(BaseInspector):
@@ -62,28 +65,29 @@ class BaseIJInspector(BaseInspector):
     Before running the inspector, you should set up connection parameters
     using the `setup_connection_parameters` function.
     """
+
     host: str
     port: int
 
     @property
     @abstractmethod
     def language_id(self) -> model_pb2.LanguageId:
-        raise NotImplementedError('language_id property is not implemented yet')
+        raise NotImplementedError("language_id property is not implemented yet")
 
     @property
     @abstractmethod
     def issue_configs(self) -> List[IssueConfig]:
-        raise NotImplementedError('issue_configs property is not implemented yet')
+        raise NotImplementedError("issue_configs property is not implemented yet")
 
     @property
     @abstractmethod
     def ij_inspection_to_issue_type(self) -> Dict[str, IssueType]:
-        raise NotImplementedError('ij_inspection_to_issue_type property is not implemented yet')
+        raise NotImplementedError("ij_inspection_to_issue_type property is not implemented yet")
 
     @property
     @abstractmethod
     def ij_message_to_issue_type(self) -> Dict[str, Dict[str, IssueType]]:
-        raise NotImplementedError('ij_message_to_issue_type property is not implemented yet')
+        raise NotImplementedError("ij_message_to_issue_type property is not implemented yet")
 
     def setup_connection_parameters(self, host: str, port: int):
         self.host = host
@@ -96,7 +100,9 @@ class BaseIJInspector(BaseInspector):
     def inspect_in_memory(self, code: str, config: Dict[str, Any]) -> List[BaseIssue]:
         return self._get_inspection_result(code, Path(""))
 
-    def convert_to_base_issues(self, inspection_result: model_pb2.InspectionResult, file_path: Path) -> List[BaseIssue]:
+    def convert_to_base_issues(
+        self, inspection_result: model_pb2.InspectionResult, file_path: Path
+    ) -> List[BaseIssue]:
         base_issues = []
         issue_configs_handler = IssueConfigsHandler(*self.issue_configs)
         for problem in inspection_result.problems:
@@ -114,7 +120,9 @@ class BaseIJInspector(BaseInspector):
 
             issue = convert_base_issue(base_issue, issue_configs_handler)
             if issue is None:
-                logger.error(f'{self.inspector_type.value}: an error occurred during converting a base issue.')
+                logger.error(
+                    f"{self.inspector_type.value}: an error occurred during converting a base issue."
+                )
                 continue
 
             base_issues.append(base_issue)
@@ -123,7 +131,7 @@ class BaseIJInspector(BaseInspector):
 
     def _get_inspection_result(self, code_text: str, file_path: Path) -> List[BaseIssue]:
         if self.host is None or self.port is None:
-            raise Exception('Connection parameters is not set up.')
+            raise Exception("Connection parameters is not set up.")
 
         try:
             client = IJClient(self.host, self.port)
@@ -138,7 +146,7 @@ class BaseIJInspector(BaseInspector):
 
         except Exception as e:
             # TODO: replace with error when add mock server into tests
-            logger.info('Inspector failed to connect to code server.', e)
+            logger.info("Inspector failed to connect to code server.", e)
             return []
 
     def choose_issue_type(self, problem: model_pb2.Problem) -> IssueType:

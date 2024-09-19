@@ -16,7 +16,7 @@ def javac_project(dir_path: Path) -> bool:
 def javac(javac_args: Union[str, Path]) -> bool:
     try:
         output_bytes: bytes = subprocess.check_output(
-            f'javac {javac_args}',
+            f"javac {javac_args}",
             shell=True,
             stderr=subprocess.STDOUT,
         )
@@ -27,6 +27,7 @@ def javac(javac_args: Union[str, Path]) -> bool:
 
         return True
     except subprocess.CalledProcessError as error:
-        logger.error(f'Failed compile java code with error: '
-                     f'{str(error.stdout, Encoding.UTF_ENCODING.value)}')
+        logger.error(
+            f"Failed compile java code with error: " f"{str(error.stdout, Encoding.UTF_ENCODING.value)}"
+        )
         return False

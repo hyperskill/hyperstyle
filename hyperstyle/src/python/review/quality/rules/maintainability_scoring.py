@@ -74,7 +74,7 @@ class MaintainabilityRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'MaintainabilityRule') -> 'MaintainabilityRule':
+    def merge(self, other: "MaintainabilityRule") -> "MaintainabilityRule":
         config = MaintainabilityRuleConfig(
             min(self.config.maintainability_lack_bad, other.config.maintainability_lack_bad),
             min(self.config.maintainability_lack_moderate, other.config.maintainability_lack_moderate),

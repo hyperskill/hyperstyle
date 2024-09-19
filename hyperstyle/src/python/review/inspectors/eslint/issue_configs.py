@@ -8,10 +8,10 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
 
 ISSUE_CONFIGS = [
     MeasurableIssueConfig(
-        origin_class='complexity',
+        origin_class="complexity",
         new_description=get_cyclomatic_complexity_tip(),
         parser=IssueDescriptionParser(
-            regexp=re.compile(r'complexity of (\d+)'),
+            regexp=re.compile(r"complexity of (\d+)"),
             converter={0: int},
         ),
     ),

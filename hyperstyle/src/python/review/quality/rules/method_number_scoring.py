@@ -57,7 +57,7 @@ class MethodNumberRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'MethodNumberRule') -> 'MethodNumberRule':
+    def merge(self, other: "MethodNumberRule") -> "MethodNumberRule":
         config = MethodNumberRuleConfig(
             min(self.config.method_number_bad, other.config.method_number_bad),
             min(self.config.method_number_moderate, other.config.method_number_moderate),

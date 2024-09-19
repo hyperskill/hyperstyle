@@ -8,8 +8,8 @@ from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import Me
 def perform_go_review(metadata: Metadata, config: ApplicationConfig) -> GeneralReviewResult:
     # The project must contain a go.mod file. If it's missing, then create it.
     if isinstance(metadata, ProjectMetadata):
-        mod_file_path = metadata.path / 'go.mod'
+        mod_file_path = metadata.path / "go.mod"
         if not mod_file_path.exists():
-            mod_file_path.write_text('module main')
+            mod_file_path.write_text("module main")
 
     return perform_language_review(metadata, config, Language.GO)

@@ -50,7 +50,7 @@ class ResponseRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'ResponseRule') -> 'ResponseRule':
+    def merge(self, other: "ResponseRule") -> "ResponseRule":
         config = ResponseRuleConfig(
             min(self.config.response_moderate, other.config.response_moderate),
             min(self.config.response_good, other.config.response_good),

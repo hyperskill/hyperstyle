@@ -41,11 +41,15 @@ PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES = [
 ]
 
 
-@pytest.mark.parametrize(('previous_issues', 'current_issues', 'expected_penalizing_classes'),
-                         PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES)
-def test_get_penalizing_classes(previous_issues: List[PreviousIssue],
-                                current_issues: List[BaseIssue],
-                                expected_penalizing_classes: Set[str]):
+@pytest.mark.parametrize(
+    ("previous_issues", "current_issues", "expected_penalizing_classes"),
+    PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CLASSES,
+)
+def test_get_penalizing_classes(
+    previous_issues: List[PreviousIssue],
+    current_issues: List[BaseIssue],
+    expected_penalizing_classes: Set[str],
+):
     actual = punisher._get_penalizing_classes(current_issues, previous_issues)
 
     assert actual == expected_penalizing_classes
@@ -56,17 +60,28 @@ PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES = [
     ([], CURRENT_ISSUES, []),
     ([PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], [], [None, None]),
     ([PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], CURRENT_ISSUES, [None, None]),
-    ([PreviousIssue("SC200", 50), PreviousIssue("WPS312", 10)], CURRENT_ISSUES, [IssueType.BEST_PRACTICES, None]),
-    ([PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], CURRENT_ISSUES,
-     [IssueType.BEST_PRACTICES, IssueType.CODE_STYLE]),
+    (
+        [PreviousIssue("SC200", 50), PreviousIssue("WPS312", 10)],
+        CURRENT_ISSUES,
+        [IssueType.BEST_PRACTICES, None],
+    ),
+    (
+        [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)],
+        CURRENT_ISSUES,
+        [IssueType.BEST_PRACTICES, IssueType.CODE_STYLE],
+    ),
 ]
 
 
-@pytest.mark.parametrize(('previous_issues', 'current_issues', 'expected_categories'),
-                         PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES)
-def test_categorize(previous_issues: List[PreviousIssue],
-                    current_issues: List[BaseIssue],
-                    expected_categories: List[IssueType]):
+@pytest.mark.parametrize(
+    ("previous_issues", "current_issues", "expected_categories"),
+    PREVIOUS_ISSUES_CURRENT_ISSUES_EXPECTED_CATEGORIES,
+)
+def test_categorize(
+    previous_issues: List[PreviousIssue],
+    current_issues: List[BaseIssue],
+    expected_categories: List[IssueType],
+):
     categorize(previous_issues, current_issues)
 
     for issue, expected_category in zip(previous_issues, expected_categories):
@@ -79,7 +94,7 @@ ISSUE_CLASS_EXPECTED_INFLUENCE = [
 ]
 
 
-@pytest.mark.parametrize(('issue_class', 'expected_influence'), ISSUE_CLASS_EXPECTED_INFLUENCE)
+@pytest.mark.parametrize(("issue_class", "expected_influence"), ISSUE_CLASS_EXPECTED_INFLUENCE)
 def test_get_issue_influence_on_penalty(issue_class: str, expected_influence: int):
     punisher._issue_class_to_influence = {"SC200": 0.636, "WPS312": 0.1225}
 
@@ -94,11 +109,13 @@ PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
 ]
 
 
-@pytest.mark.parametrize(('penalty_coefficient', 'current_issues', 'normalized_penalty_coefficient'),
-                         PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT)
-def test_get_normalized_penalty_coefficient(penalty_coefficient: float,
-                                            current_issues: List[BaseIssue],
-                                            normalized_penalty_coefficient):
+@pytest.mark.parametrize(
+    ("penalty_coefficient", "current_issues", "normalized_penalty_coefficient"),
+    PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT,
+)
+def test_get_normalized_penalty_coefficient(
+    penalty_coefficient: float, current_issues: List[BaseIssue], normalized_penalty_coefficient
+):
     punisher._penalty_coefficient = penalty_coefficient
 
     actual = punisher._get_normalized_penalty_coefficient(current_issues)
@@ -116,11 +133,13 @@ CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT = [
 ]
 
 
-@pytest.mark.parametrize(('current_issues', 'previous_issues', 'expected_coefficient'),
-                         CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT)
-def test_get_penalty_coefficient(current_issues: List[BaseIssue],
-                                 previous_issues: List[PreviousIssue],
-                                 expected_coefficient: float):
+@pytest.mark.parametrize(
+    ("current_issues", "previous_issues", "expected_coefficient"),
+    CURRENT_ISSUES_PREVIOUS_ISSUES_EXPECTED_COEFFICIENT,
+)
+def test_get_penalty_coefficient(
+    current_issues: List[BaseIssue], previous_issues: List[PreviousIssue], expected_coefficient: float
+):
     categorize(previous_issues, current_issues)
     actual = punisher._get_penalty_coefficient(current_issues, previous_issues)
 
@@ -128,29 +147,33 @@ def test_get_penalty_coefficient(current_issues: List[BaseIssue],
 
 
 CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE = [
-    ([], [], 'WPS312', 0),
-    (CURRENT_ISSUES, [], 'WPS312', 0),
-    (CURRENT_ISSUES, [], 'SC200', 0),
-    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS312', 0),
-    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
-    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS312', 0),
-    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
-    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], 'SC200', 0),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'WPS301', 0),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'SC200', 100),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], 'WPS412', 0),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'WPS301', 0),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'SC200', 81),
-    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], 'W0108', 18),
+    ([], [], "WPS312", 0),
+    (CURRENT_ISSUES, [], "WPS312", 0),
+    (CURRENT_ISSUES, [], "SC200", 0),
+    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], "WPS312", 0),
+    ([], [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], "WPS301", 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], "WPS312", 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], "WPS301", 0),
+    (CURRENT_ISSUES, [PreviousIssue("WPS301", 50), PreviousIssue("WPS412", 10)], "SC200", 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], "WPS301", 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], "SC200", 100),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("WPS412", 10)], "WPS412", 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], "WPS301", 0),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], "SC200", 81),
+    (CURRENT_ISSUES, [PreviousIssue("SC200", 50), PreviousIssue("W0108", 10)], "W0108", 18),
 ]
 
 
-@pytest.mark.parametrize(('current_issues', 'previous_issues', 'issue_class', 'expected_influence'),
-                         CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE)
-def test_get_issue_class_to_influence(current_issues: List[BaseIssue],
-                                      previous_issues: List[PreviousIssue],
-                                      issue_class: str,
-                                      expected_influence: int):
+@pytest.mark.parametrize(
+    ("current_issues", "previous_issues", "issue_class", "expected_influence"),
+    CURRENT_ISSUES_PREVIOUS_ISSUES_ISSUE_CLASS_EXPECTED_INFLUENCE,
+)
+def test_get_issue_class_to_influence(
+    current_issues: List[BaseIssue],
+    previous_issues: List[PreviousIssue],
+    issue_class: str,
+    expected_influence: int,
+):
     categorize(previous_issues, current_issues)
     punisher = Punisher(current_issues, previous_issues)
     actual = punisher.get_issue_influence_on_penalty(issue_class)

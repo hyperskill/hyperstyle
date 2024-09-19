@@ -15,12 +15,12 @@ def is_result_file_correct(file_path: Path, inspector_type: InspectorType) -> bo
     Check if the result of the inspectors is correct: it exists and it is not empty.
     """
     if not file_path.is_file():
-        logger.error(f'{inspector_type.value}: error - no output file')
+        logger.error(f"{inspector_type.value}: error - no output file")
         return False
 
     file_content = get_content_from_file(file_path)
     if not file_content:
-        logger.error(f'{inspector_type.value}: error - empty file')
+        logger.error(f"{inspector_type.value}: error - empty file")
         return False
 
     return True
@@ -64,4 +64,4 @@ def contains_named_format_fields(input_string: str) -> bool:
     :param input_string: A string for which you want to check whether it contains named format fields or not.
     :return: Whether the input string contains named format fields or not.
     """
-    return any(field != '' and not field.isdigit() for field in _get_format_fields(input_string))
+    return any(field != "" and not field.isdigit() for field in _get_format_fields(input_string))

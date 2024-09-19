@@ -60,7 +60,7 @@ class CohesionRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'CohesionRule') -> 'CohesionRule':
+    def merge(self, other: "CohesionRule") -> "CohesionRule":
         config = CohesionRuleConfig(
             min(self.config.cohesion_lack_bad, other.config.cohesion_lack_bad),
             min(self.config.cohesion_lack_moderate, other.config.cohesion_lack_moderate),

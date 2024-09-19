@@ -17,7 +17,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
 )
 
 
-MAINTAINABILITY_ORIGIN_CLASS = 'RAD100'
+MAINTAINABILITY_ORIGIN_CLASS = "RAD100"
 
 
 class RadonInspector(BaseInspector):
@@ -31,10 +31,13 @@ class RadonInspector(BaseInspector):
     @classmethod
     def inspect(cls, path: Path, config: Dict[str, Any]) -> List[BaseIssue]:
         mi_command = [
-            sys.executable, '-m',
-            'radon', 'mi',  # compute the Maintainability Index score
-            '--max', 'F',  # set the maximum MI rank to display
-            '--show',  # actual MI value is shown in results, alongside the rank
+            sys.executable,
+            "-m",
+            "radon",
+            "mi",  # compute the Maintainability Index score
+            "--max",
+            "F",  # set the maximum MI rank to display
+            "--show",  # actual MI value is shown in results, alongside the rank
             path,
         ]
 
@@ -50,7 +53,7 @@ class RadonInspector(BaseInspector):
         :param mi_output: 'mi' command output.
         :return: list of issues.
         """
-        row_re = re.compile(r'^(.*) - \w \((.*)\)$', re.M)
+        row_re = re.compile(r"^(.*) - \w \((.*)\)$", re.M)
 
         issues: List[BaseIssue] = []
         for groups in row_re.findall(mi_output):
@@ -60,7 +63,9 @@ class RadonInspector(BaseInspector):
             issue_type = cls.choose_issue_type(MAINTAINABILITY_ORIGIN_CLASS)
 
             issue_data = IssueData.get_base_issue_data_dict(
-                file_path, cls.inspector_type, origin_class=MAINTAINABILITY_ORIGIN_CLASS,
+                file_path,
+                cls.inspector_type,
+                origin_class=MAINTAINABILITY_ORIGIN_CLASS,
             )
             issue_data[IssueData.DESCRIPTION.value] = get_maintainability_index_tip()
             issue_data[IssueData.MAINTAINABILITY_LACK.value] = maintainability_lack

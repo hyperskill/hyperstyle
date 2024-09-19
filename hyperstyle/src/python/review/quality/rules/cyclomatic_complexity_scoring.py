@@ -61,7 +61,7 @@ class CyclomaticComplexityRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: 'CyclomaticComplexityRule') -> 'CyclomaticComplexityRule':
+    def merge(self, other: "CyclomaticComplexityRule") -> "CyclomaticComplexityRule":
         config = CyclomaticComplexityRuleConfig(
             min(self.config.cc_value_bad, other.config.cc_value_bad),
             min(self.config.cc_value_moderate, other.config.cc_value_moderate),
