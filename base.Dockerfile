@@ -1,4 +1,4 @@
-FROM python:3.11.9-slim
+FROM python:3.10.14-slim
 
 #########
 # Taken from https://github.com/docker-library/openjdk/blob/608f26c5ea63ca34070b439c904cb94a30f6b0c1/11/jdk/slim-buster/Dockerfile

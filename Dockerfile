@@ -1,6 +1,8 @@
-FROM hyperskill.azurecr.io/hyperstyle-base:py3.11.9-java11.0.11-node14.17.3-go1.18.5
+FROM hyperskill.azurecr.io/hyperstyle-base:py3.10.14-java11.0.11-node14.17.3-go1.18.5
 
 ENV LINTERS_DIRECTORY=/opt/linters
+
+ENV ESLINT_VERSION=7.5.0
 
 ENV CHECKSTYLE_VERSION=8.44
 ENV CHECKSTYLE_DIRECTORY=${LINTERS_DIRECTORY}/checkstyle
