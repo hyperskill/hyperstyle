@@ -77,9 +77,11 @@ __pycache__/
 /.intellij_inspector/out/
 
 lightweight.Dockerfile
+linters
 
 node_modules
 .eslintrc.js
 package-lock.json
 
 hyperstyle/src/python/review/inspectors/common/inspector/proto/model_pb2*
+.env

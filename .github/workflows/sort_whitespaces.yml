@@ -1,0 +1,39 @@
+name: Sort whitespaces
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'whitelist.txt'
+      - 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt'
+  pull_request:
+    paths:
+      - 'whitelist.txt'
+      - 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sort_whitespaces:
+    name: Sort whitespaces
+    runs-on: [ self-hosted, small ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Sort whitelists
+        run: |
+          for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
+          do
+          LC_ALL=C sort $file -o $file
+          done
+
+      - name: Commit sorted whitelists
+        uses: EndBug/add-and-commit@v7.2.1
+        with:
+          add: "['whitelist.txt', 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt']"
+          message: 'Sort whitelists (Github Actions)'

@@ -1,19 +1,23 @@
-# Publish to PyPI in case of releasing
+name: Publish to PyPI in case of releasing
 
 on:
   push:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version-file: .python-version
       - name: Install pypa/build
         run: |
           python -m pip install build --user

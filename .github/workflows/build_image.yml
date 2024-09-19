@@ -1,21 +1,23 @@
-name: Build Base Image
+name: Build Image after Release
 
 on:
   workflow_dispatch:
     inputs:
       image_tag:
-        type: string
         description: 'Image tag'
         required: true
-        default: 'py3.10.14-java11.0.11-node14.17.3-go1.18.5'
+        default: 'latest'
+  release:
+    types:
+      - released
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build_base_image:
-    name: Build Base Image
+  build_image:
+    name: Build Image
     runs-on: [ self-hosted, small ]
     steps:
       - uses: actions/checkout@v4
@@ -31,12 +33,10 @@ jobs:
       - name: Build and push server image
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64
           context: .
           pull: true
           push: true
-          file: base.Dockerfile
-          tags: hyperskill.azurecr.io/hyperstyle-base:${{ inputs.image_tag }}
+          tags: hyperskill.azurecr.io/hyperstyle:${{ inputs.image_tag || github.event.release.tag_name }}
           cache-from: |
             type=gha
             type=gha,scope=main

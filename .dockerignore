@@ -10,3 +10,4 @@ venv
 build
 **/*.egg-info
 **/model_pb2*
+linters

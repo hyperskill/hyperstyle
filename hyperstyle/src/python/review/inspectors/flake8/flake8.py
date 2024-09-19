@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -22,6 +23,7 @@ PATH_FLAKE8_SPELLCHECK_WHITELIST = Path(__file__).parent / 'whitelist.txt'
 FORMAT = '%(path)s:%(row)d:%(col)d:%(code)s:%(text)s'
 INSPECTOR_NAME = 'flake8'
 BASE_COMMAND = [
+    sys.executable, '-m',
     'flake8',
     f'--format={FORMAT}',
     f'--config={PATH_FLAKE8_CONFIG}',
