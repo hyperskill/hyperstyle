@@ -51,6 +51,7 @@ jobs:
     steps:
       - name: Run tests
         run: |
+          cd /review
           poetry run python -m pytest
 
   build:
