@@ -5,7 +5,7 @@ from typing import List
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.common.tips import (
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_cyclomatic_complexity_tip,
     get_func_len_tip,
     get_line_len_tip,
@@ -13,8 +13,8 @@ from hyperstyle.src.python.review.inspectors.common.tips import (
     get_maintainability_index_tip,
 )
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     CodeIssue,
     CyclomaticComplexityIssue,
     FuncLenIssue,

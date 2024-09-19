@@ -4,8 +4,8 @@ from typing import List
 
 import pytest
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import CodeIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.pmd.pmd import DEFAULT_JAVA_VERSION, PMDInspector
 
 from .conftest import use_file_metadata

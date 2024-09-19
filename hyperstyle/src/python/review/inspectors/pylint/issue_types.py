@@ -1,6 +1,6 @@
 from typing import Dict
 
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 CODE_TO_ISSUE_TYPE: Dict[str, IssueType] = {
     # Basic checker

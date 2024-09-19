@@ -4,7 +4,7 @@ from test.python.functional_tests.conftest import DATA_PATH, LocalCommandBuilder
 from typing import Dict, Optional
 
 import pytest
-from hyperstyle.src.python.review.inspectors.common.tips import get_cohesion_tip
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_cohesion_tip
 
 
 def _get_output_json(local_command: LocalCommandBuilder, file_path: str, history: Optional[str] = None) -> Dict:

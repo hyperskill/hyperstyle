@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from hyperstyle.src.python.review.common.file_system import get_total_code_lines_from_file
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 
 
 @dataclass

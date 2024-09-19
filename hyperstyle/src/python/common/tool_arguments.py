@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 
 @unique
@@ -80,7 +80,7 @@ class RunToolArgument(Enum):
                                'should use the new format')
 
     HISTORY = ArgumentsInfo(None, '--history',
-                            'Json string, which contains lists of issues in the previous submissions '
+                            'JSON string, which contains lists of issues in the previous submissions '
                             'for other tasks for one user.')
 
     WITH_ALL_CATEGORIES = ArgumentsInfo(None, '--with-all-categories',
@@ -89,3 +89,11 @@ class RunToolArgument(Enum):
 
     GROUP_BY_DIFFICULTY = ArgumentsInfo(None, '--group-by-difficulty',
                                         'With this flag, the final grade will be grouped by the issue difficulty.')
+
+    IJ_CONFIG = ArgumentsInfo(
+        None,
+        '--ij-config',
+        'JSON string containing information for setting up a connection to the IJ server '
+        'for each language to be analyzed with the IJ inspector. '
+        'It should be a dictionary of dictionaries where for each language host and port are specified.',
+    )

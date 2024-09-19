@@ -2,7 +2,7 @@ import re
 from typing import Callable, Dict, List, Optional, Pattern, Tuple, Type, Union
 
 import pytest
-from hyperstyle.src.python.review.inspectors.issue_configs import (
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import (
     IssueConfig,
     IssueConfigsHandler,
     IssueDescriptionParser,

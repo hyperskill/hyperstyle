@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 
 import pytest
 from hyperstyle.src.python.review.common.file_system import new_temp_dir
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, FileMetadata
 
 

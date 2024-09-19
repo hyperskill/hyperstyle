@@ -1,14 +1,15 @@
 import logging
 import re
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
-from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.common.base_issue_converter import convert_base_issue
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty, IssueType
-from hyperstyle.src.python.review.inspectors.issue_configs import IssueConfigsHandler
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.pylint.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.pylint.issue_types import CATEGORY_TO_ISSUE_TYPE, CODE_TO_ISSUE_TYPE
 
@@ -21,6 +22,7 @@ FATAL_CATEGORY = 'F'
 INFO_CATEGORY = 'I'
 
 BASE_COMMAND = [
+    sys.executable, '-m',
     'pylint',
     '--load-plugins', 'pylint_django',
     # TODO: ask about django settings via an cli argument?

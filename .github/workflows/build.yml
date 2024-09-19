@@ -1,79 +1,97 @@
 name: Python build
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  build_image:
+    name: Build Image
+    runs-on: [ self-hosted, small ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: hyperskill.azurecr.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build and push server image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          pull: true
+          push: true
+          tags: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
+          cache-from: |
+            type=gha
+            type=gha,scope=main
+          cache-to: type=gha,mode=max
+
+  tests:
+    name: Tests
+    needs:
+      - build_image
+    runs-on: [ self-hosted, small ]
+    container:
+      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
+      credentials:
+        username: ${{ secrets.REGISTRY_USER }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    steps:
+      - name: Run tests
+        run: |
+          cd /review
+          /hyperstyle/bin/pytest
 
   build:
-    runs-on: ubuntu-latest
-    # Consistent with base image in Dockerfile
-    # container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3-go1.18.5
-    container: nastyabirillo/hyperstyle:1.4.4
-
+    runs-on: [ self-hosted, small ]
+    needs:
+      - build_image
+    container:
+      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
+      credentials:
+        username: ${{ secrets.REGISTRY_USER }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
     steps:
-      - name: Install git
-        run: |
-            apt-get update
-            apt-get -y install git
-
       - name: Check env variables
         run: |
-            echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
-            echo $CHECKSTYLE_DIRECTORY && echo CHECKSTYLE_VERSION
-            echo $PMD_DIRECTORY && echo PMD_VERSION
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install requirements
-        run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
-
-      - name: Set up git rights
-        run: |
-          git config --global --add safe.directory '*'
+          echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
+          echo $CHECKSTYLE_DIRECTORY && echo $CHECKSTYLE_VERSION
+          echo $PMD_DIRECTORY && echo $PMD_VERSION
+          echo $GOLANG_LINT_DIRECTORY && echo $GOLANG_LINT_VERSION
 
       - name: Lint with flake8
         run: |
+          cd /review
           # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          /hyperstyle/bin/flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
+
           # TODO: change max-complexity into 10 after refactoring
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
-          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
-
-      - name: Sort whitelists
-        run: |
-            for file in "whitelist.txt" "hyperstyle/src/python/review/inspectors/flake8/whitelist.txt"
-            do
-            LC_ALL=C sort $file -o $file
-            done
-      - name: Commit sorted whitelists
-        uses: EndBug/add-and-commit@v7.2.1
-        with:
-          add: "['whitelist.txt', 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt']"
-          message: 'Sort whitelists (Github Actions)'
-
-      - name: Set up Eslint
-        run: |
-          # Consistent with eslint version in Dockerfile
-          npm install eslint@7.5.0 -g && eslint --init
-
-      - name: Test with pytest
-        run: |
-          pytest -vv
-
-      - name: Install review module
-        run: |
-          pip install .
+          /hyperstyle/bin/flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS,H601,N400,I100,I201,I202, --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules,hyperstyle/src/python/review/inspectors/common/inspector/proto
 
       - name: Check installed module can run python linters
         run: |
-            review setup.py
+          cd /review
+          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool test/resources/inspectors/python/case39_no_issues.py
 
       - name: Check installed module can run java linters
         run: |
-            review test/resources/inspectors/java/test_algorithm_with_scanner.java
+          cd /review
+          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool test/resources/inspectors/java/test_algorithm_with_scanner.java
 
       - name: Check installed module can run js linters
         run: |
-          review test/resources/inspectors/js/case0_no_issues.js
+          cd /review
+          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool test/resources/inspectors/js/case0_no_issues.js

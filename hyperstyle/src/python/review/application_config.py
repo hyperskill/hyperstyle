@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Set
 
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 
 
 @dataclass
@@ -18,6 +18,7 @@ class ApplicationConfig:
     new_format: bool = False
     history: Optional[str] = None
     group_by_difficulty: bool = False
+    ij_config: Optional[str] = None
 
     @staticmethod
     def get_default_config() -> 'ApplicationConfig':

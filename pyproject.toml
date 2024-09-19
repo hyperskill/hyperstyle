@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "hyperstyle"
+version = "1.5.0"
+description = "A tool for running a set of pre-configured linters and evaluating code quality."
+authors = ["Hyperskill Team"]
+readme = "README.md"
+keywords = ["code review"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Education",
+]
+
+[project.urls]
+Homepage = "https://support.hyperskill.org/hc/en-us/articles/360049582712-Code-style-Code-quality"
+Repository = "https://github.com/hyperskill/hyperstyle"
+
+[project.scripts]
+review = "hyperstyle.src.python.review.run_tool:main"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+setuptools = "56.0.0"
+# python code analysis tools
+pylint = "2.13.9"
+pylint-django = "2.5.3"
+flake8 = "3.9.0"
+dataclasses-json="0.5.7"
+# flake8 plugins
+flake8-plugin-utils = "1.3.2"
+flake8-bugbear = "21.4.3"
+flake8-builtins = "1.5.3"
+flake8-comprehensions = "3.4.0"
+flake8-eradicate = "1.0.0"
+flake8-import-order = "0.18.1"
+flake8-polyfill = "1.0.2"
+flake8-return = "1.1.2"
+flake8-spellcheck = "0.24.0"
+mccabe = "0.6.1"
+pep8-naming = "0.11.1"
+wps-light = "0.15.3"
+flake8-broken-line = "0.3.0"
+flake8-string-format = "0.3.0"
+flake8-commas = "2.0.0"
+cohesion = "1.0.0"
+radon = "4.5.0"
+# extra libraries and frameworks
+argparse = "1.4.0"
+django = "4.2.5"
+requests = "2.32.3"
+# grpc
+grpcio-tools = "1.66.1"
+protobuf = "5.27.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.3"
+pytest-runner = "6.0.1"
+pytest-subtests = "0.13.1"
+jsonschema = "4.23.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

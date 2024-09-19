@@ -9,6 +9,7 @@ class InspectorType(Enum):
     PYTHON_AST = 'PYTHON_AST'
     FLAKE8 = 'FLAKE8'
     RADON = 'RADON'
+    IJ_PYTHON = 'IJ_PYTHON'
 
     # Java language
     PMD = 'PMD'
@@ -16,6 +17,7 @@ class InspectorType(Enum):
 
     # Kotlin language
     DETEKT = 'DETEKT'
+    IJ_KOTLIN = 'IJ_KOTLIN'
 
     # JavaScript language
     ESLINT = 'ESLINT'
@@ -25,6 +27,8 @@ class InspectorType(Enum):
 
     UNDEFINED = 'UNDEFINED'
     QODANA = 'QODANA'
+    # TODO: it is used on production for java inspections, remove in the future releases
+    IJ_OLD = 'INTELLIJ'
 
     @classmethod
     def available_values(cls) -> List[str]:
@@ -34,6 +38,7 @@ class InspectorType(Enum):
             cls.FLAKE8.value,
             cls.PYTHON_AST.value,
             cls.RADON.value,
+            cls.IJ_PYTHON.value,
 
             # Java language
             cls.PMD.value,
@@ -41,10 +46,13 @@ class InspectorType(Enum):
 
             # Kotlin language
             cls.DETEKT.value,
+            cls.IJ_KOTLIN.value,
 
             # JavaScript language
             cls.ESLINT.value,
 
             # Go language
             cls.GOLANG_LINT.value,
+
+            cls.IJ_OLD.value,
         ]

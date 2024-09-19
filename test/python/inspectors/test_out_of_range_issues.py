@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, CodeIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.reviewers.common import filter_out_of_range_issues
 
 DEFAULT_PATH = Path('test_out_of_range_issues.py')

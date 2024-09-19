@@ -1,5 +1,8 @@
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from test.python import TEST_DATA_FOLDER
 from typing import List, Optional
 
@@ -25,14 +28,19 @@ class LocalCommandBuilder:
     new_format: bool = False
     group_by_difficulty: bool = False
     history: Optional[str] = None
+    ij_config: Optional[str] = None
 
     def build(self) -> List[str]:
         assert self.path is not None
 
         command = [
-            'python3', (MAIN_FOLDER.parent / 'review/run_tool.py'),
+            sys.executable, (MAIN_FOLDER.parent / 'review/run_tool.py'),
             RunToolArgument.VERBOSITY.value.long_name, str(self.verbosity),
         ]
+
+        # TODO: remove after adding a test server
+        self.disable.append(InspectorType.IJ_PYTHON.value)
+        self.disable.append(InspectorType.IJ_KOTLIN.value)
 
         if self.disable:
             command.extend([RunToolArgument.DISABLE.value.long_name, ','.join(self.disable)])
@@ -48,6 +56,9 @@ class LocalCommandBuilder:
 
         if self.history is not None:
             command.extend([RunToolArgument.HISTORY.value.long_name, self.history])
+
+        if self.ij_config is not None:
+            command.extend([RunToolArgument.IJ_CONFIG.value.long_name, self.ij_config])
 
         if self.group_by_difficulty:
             command.append(RunToolArgument.GROUP_BY_DIFFICULTY.value.long_name)

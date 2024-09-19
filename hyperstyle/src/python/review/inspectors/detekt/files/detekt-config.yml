@@ -1,5 +1,5 @@
-# This config was created based on the default config for Detekt 1.18.0
-# using the following table: https://bit.ly/2V2kCyi
+# This config was created based on the default config for Detekt 1.18.0 using the following table:
+# https://docs.google.com/spreadsheets/d/1N6CMqXKW-FnrlevwwD8iO75M1gTjmLO_
 
 # Some inspections have been commented out due to problems with upgrading to version 1.18.0.
 # The current config contains only those inspections that work on version 1.14.2.

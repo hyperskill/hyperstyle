@@ -14,7 +14,7 @@ from hyperstyle.src.python.common.tool_arguments import RunToolArgument, Verbosi
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
-from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
@@ -28,10 +28,6 @@ logger = logging.getLogger(__name__)
 
 def parse_disabled_inspectors(value: str) -> Set[InspectorType]:
     passed_names = value.upper().split(',')
-    # TODO: delete it after updating the run configuration in production
-    intellij_key_word = 'intellij'.upper()
-    if intellij_key_word in passed_names:
-        passed_names.remove(intellij_key_word)
     allowed_names = {inspector.value for inspector in InspectorType}
     if not all(name in allowed_names for name in passed_names):
         raise argparse.ArgumentError('disable', 'Incorrect inspectors\' names')
@@ -55,7 +51,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         choices=VerbosityLevel.values(),
                         type=int)
 
-    # Usage example: -d Flake8,Intelli
+    # Usage example: -d Flake8,IntelliJ
     parser.add_argument(RunToolArgument.DISABLE.value.short_name,
                         RunToolArgument.DISABLE.value.long_name,
                         help=RunToolArgument.DISABLE.value.description,
@@ -126,6 +122,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=RunToolArgument.GROUP_BY_DIFFICULTY.value.description,
                         action='store_true')
 
+    parser.add_argument(RunToolArgument.IJ_CONFIG.value.long_name,
+                        help=RunToolArgument.IJ_CONFIG.value.description,
+                        type=str)
+
 
 def configure_logging(verbosity: VerbosityLevel) -> None:
     if verbosity is VerbosityLevel.ERROR:
@@ -173,6 +173,7 @@ def main() -> int:
             history=args.history,
             with_all_categories=args.with_all_categories,
             group_by_difficulty=args.group_by_difficulty,
+            ij_config=args.ij_config,
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)

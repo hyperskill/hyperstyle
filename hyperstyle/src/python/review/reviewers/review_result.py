@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueDifficulty
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty
 from hyperstyle.src.python.review.quality.model import Quality
 from hyperstyle.src.python.review.quality.penalty import Punisher
 

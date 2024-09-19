@@ -6,7 +6,7 @@ from typing import Final, List
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.reviewers.common import perform_language_review
 from hyperstyle.src.python.review.reviewers.go import perform_go_review
 from hyperstyle.src.python.review.reviewers.python import perform_python_review

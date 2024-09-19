@@ -2,7 +2,7 @@ import textwrap
 from test.python.inspectors import PYLINT_DATA_FOLDER, PYTHON_DATA_FOLDER
 
 import pytest
-from hyperstyle.src.python.review.inspectors.issue import IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
 
 from .conftest import use_file_metadata

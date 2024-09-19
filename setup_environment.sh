@@ -73,24 +73,13 @@ echo "The variables are defined."
 
 echo
 
-read -p "Do you want to install Python requirements for the Hyperstyle project? (Y/n): " -r
+read -p "Do you want to install Python development requirements for the Hyperstyle project? (Y/n): " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  echo "Installing Python requirements..."
-  pip install --no-cache-dir -r requirements.txt
-  check_return_code $? "Python requirements installed." "Python requirements installation failed."
+  echo "Installing Python development requirements..."
+  pip install --no-cache-dir -r requirements-dev.txt
+  check_return_code $? "Python development requirements installed." "Python development requirements installation failed."
 else
-  echo "Python requirements installation skipped."
-fi
-
-echo
-
-read -p "Do you want to install Python test requirements for the Hyperstyle project? (Y/n): " -r
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  echo "Installing Python test requirements..."
-  pip install --no-cache-dir -r requirements-test.txt
-  check_return_code $? "Python test requirements installed." "Python test requirements installation failed."
-else
-  echo "Python test requirements installation skipped."
+  echo "Python development requirements installation skipped."
 fi
 
 echo
@@ -147,3 +136,7 @@ if need_to_install_linter "golangci-lint" "${GOLANG_LINT_DIRECTORY}"; then
 else
   echo "Golangci-lint ${GOLANG_LINT_VERSION} installation skipped."
 fi
+
+echo "Generating proto files  ..."
+   export PROTO_PATH="hyperstyle/src/python/review/inspectors/common/inspector/proto"
+   python3 -m grpc_tools.protoc --proto_path=. --python_out=. --pyi_out=. --grpc_python_out=. ${PROTO_PATH}/model.proto

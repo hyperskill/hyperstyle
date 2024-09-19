@@ -3,7 +3,7 @@ from test.python.inspectors.conftest import use_file_metadata
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.common.tips import get_cyclomatic_complexity_tip
+from hyperstyle.src.python.review.inspectors.common.issue.tips import get_cyclomatic_complexity_tip
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 

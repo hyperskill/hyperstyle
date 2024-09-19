@@ -3,7 +3,7 @@ from test.python.inspectors.conftest import use_file_metadata
 
 import pytest
 from hyperstyle.src.python.review.common.language import Language
-from hyperstyle.src.python.review.inspectors.common.tips import (
+from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_bool_expr_len_tip,
     get_cyclomatic_complexity_tip,
     get_func_len_tip,

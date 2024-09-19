@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List
 
 from hyperstyle.src.python.review.application_config import ApplicationConfig
-from hyperstyle.src.python.review.inspectors.base_inspector import BaseInspector
-from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 
 logger = logging.getLogger(__name__)
 
@@ -39,11 +39,11 @@ def inspect_in_parallel(inspector_runner: Callable[[Any, ApplicationConfig, Base
                         data: Any,
                         config: ApplicationConfig,
                         inspectors: List[BaseInspector]) -> List[BaseIssue]:
-    inspectors = filter(lambda i: i.inspector_type not in config.disabled_inspectors, inspectors)
+    inspectors_to_run = filter(lambda i: i.inspector_type not in config.disabled_inspectors, inspectors)
 
     if config.n_cpu == 1:
         issues = []
-        for inspector in inspectors:
+        for inspector in inspectors_to_run:
             inspector_issues = inspector_runner(data, config, inspector)
             issues.extend(inspector_issues)
         return issues
@@ -51,7 +51,7 @@ def inspect_in_parallel(inspector_runner: Callable[[Any, ApplicationConfig, Base
     with multiprocessing.Pool(config.n_cpu) as pool:
         issues = pool.map(
             functools.partial(inspector_runner, data, config),
-            inspectors,
+            inspectors_to_run,
         )
 
     return list(itertools.chain(*issues))
