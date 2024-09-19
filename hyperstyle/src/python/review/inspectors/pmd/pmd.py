@@ -9,7 +9,6 @@ from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
-from hyperstyle.src.python.review.inspectors.common.utils import remove_prefix
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
