@@ -138,4 +138,4 @@ class PMDInspector(BaseInspector):
             )
             java_version = DEFAULT_JAVA_VERSION.value
 
-        return remove_prefix(java_version, "java")
+        return java_version.removeprefix('java')
