@@ -52,7 +52,7 @@ jobs:
       - name: Run tests
         run: |
           cd /review
-          poetry run pytest
+          poetry run python -m pytest
 
   build:
     runs-on: [ self-hosted, small ]
