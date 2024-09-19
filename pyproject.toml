@@ -85,6 +85,7 @@ norecursedirs = [
     "node_modules",
     "out",
     "test/resources",
+    "hyperstyle/src/python/review/inspectors/common/inspector/proto",
 ]
 
 [tool.ruff]
@@ -113,6 +114,7 @@ exclude = [
     "venv",
     "linters",
     "test/resources",
+    "hyperstyle/src/python/review/inspectors/common/inspector/proto",
 ]
 line-length = 110
 target-version = "py310"
@@ -230,4 +232,5 @@ exclude = [
     "out",
     "linters",
     "test/resources",
+    "hyperstyle/src/python/review/inspectors/common/inspector/proto",
 ]
