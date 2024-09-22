@@ -35,19 +35,19 @@ class CheckstyleInspector(BaseInspector):
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> list[str]:
         path_checkstyle_jar = (
-            f"{os.environ[CHECKSTYLE_DIRECTORY_ENV]}/"
-            f"checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar"
+            Path(os.environ[CHECKSTYLE_DIRECTORY_ENV])
+            / f"checkstyle-{os.environ[CHECKSTYLE_VERSION_ENV]}-all.jar"
         )
         return [
             "java",
             "-jar",
-            path_checkstyle_jar,
+            str(path_checkstyle_jar),
             "-c",
-            PATH_TOOLS_CHECKSTYLE_CONFIG,
+            str(PATH_TOOLS_CHECKSTYLE_CONFIG),
             "-f",
             "xml",
             "-o",
-            output_path,
+            str(output_path),
             str(path),
         ]
 

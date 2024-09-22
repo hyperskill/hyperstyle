@@ -39,7 +39,7 @@ class LocalCommandBuilder:
 
         command = [
             sys.executable,
-            (MAIN_FOLDER.parent / "review/run_tool.py"),
+            str(MAIN_FOLDER.parent / "review" / "run_tool.py"),
             RunToolArgument.VERBOSITY.value.long_name,
             str(self.verbosity),
         ]

@@ -168,7 +168,6 @@ ignore = [
     "PLR6301",  # Method `__get_next_quality_type` could be a function, class method, or static method
     "PT011",  # `pytest.raises(Exception)` is too broad, set the `match` parameter or use a more specific exception
     "PT012",  # `pytest.raises()` block should contain a single simple statement
-    "PTH101",  # `os.chmod()` should be replaced by `Path.chmod()`
     "PTH122",  # `os.path.splitext()` should be replaced by `Path.suffix`, `Path.stem`, and `Path.parent`
     "S103",  # `os.chmod` setting a permissive mask `0o777` on file or directory
     "S314",  # Using `xml` to parse untrusted data is known to be vulnerable to XML attacks; use `defusedxml` equivalents

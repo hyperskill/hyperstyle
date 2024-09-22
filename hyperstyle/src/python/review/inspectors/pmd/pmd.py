@@ -39,20 +39,20 @@ class PMDInspector(BaseInspector):
     def _create_command(
         self, path: Path, output_path: Path, language_version: LanguageVersion, n_cpu: int
     ) -> list[str]:
-        path_tools_pmd_shell = (
+        path_tools_pmd_shell = Path(
             f"{os.environ[PMD_DIRECTORY_ENV]}/pmd-bin-{os.environ[PMD_VERSION_ENV]}/bin/run.sh"
         )
         if not self.has_access:
-            os.chmod(path_tools_pmd_shell, 0o777)
+            path_tools_pmd_shell.chmod(0o777)
             self.has_access = True
         return [
-            path_tools_pmd_shell,
+            str(path_tools_pmd_shell),
             "pmd",
             "-d",
             str(path),
             "-no-cache",
             "-R",
-            PATH_TOOLS_PMD_RULES_SET,
+            str(PATH_TOOLS_PMD_RULES_SET),
             "-language",
             "java",
             "-version",
