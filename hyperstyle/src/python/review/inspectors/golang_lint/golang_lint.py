@@ -44,15 +44,15 @@ class GolangLintInspector(BaseInspector):
         input_path = input_path if input_path.is_file() else input_path / "..."
 
         return [
-            path_to_golang_lint_cli,
+            str(path_to_golang_lint_cli),
             "run",
             str(input_path),
             "--path-prefix",
-            working_directory,
+            str(working_directory),
             "--out-format",
             f"json:{output_path}",
             "-c",
-            GOLANG_LINT_CONFIG_PATH,
+            str(GOLANG_LINT_CONFIG_PATH),
             "--go",
             "1.18",
             "--concurrency",

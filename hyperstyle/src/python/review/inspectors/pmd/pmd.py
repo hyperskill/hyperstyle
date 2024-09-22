@@ -52,7 +52,7 @@ class PMDInspector(BaseInspector):
             str(path),
             "-no-cache",
             "-R",
-            PATH_TOOLS_PMD_RULES_SET,
+            str(PATH_TOOLS_PMD_RULES_SET),
             "-language",
             "java",
             "-version",

@@ -26,17 +26,17 @@ class ESLintInspector(BaseInspector):
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> list[str]:
-        local_path = "node_modules/.bin/eslint"  # used only in local dev environment
-        eslint_command = local_path if Path(local_path).exists() else "eslint"
+        local_path = Path("node_modules/.bin/eslint")  # used only in local dev environment
+        eslint_command = local_path if local_path.exists() else Path("eslint")
         return [
-            eslint_command,
+            str(eslint_command),
             "-c",
-            PATH_ESLINT_CONFIG,
+            str(PATH_ESLINT_CONFIG),
             "-f",
             "checkstyle",
             "-o",
-            output_path,
-            path,
+            str(output_path),
+            str(path),
         ]
 
     def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
