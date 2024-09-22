@@ -142,21 +142,15 @@ class BaseIJInspector(BaseInspector):
             msg = "Connection parameters is not set up."
             raise Exception(msg)
 
-        try:
-            client = IJClient(self.host, self.port)
+        client = IJClient(self.host, self.port)
 
-            code = model_pb2.Code()
-            code.languageId = self.language_id
-            code.text = code_text
+        code = model_pb2.Code()
+        code.languageId = self.language_id
+        code.text = code_text
 
-            inspection_result = client.inspect(code)
+        inspection_result = client.inspect(code)
 
-            return self.convert_to_base_issues(inspection_result, file_path)
-
-        except Exception:
-            # TODO: replace with error when add mock server into tests
-            logger.exception("Inspector failed to connect to code server.")
-            return []
+        return self.convert_to_base_issues(inspection_result, file_path)
 
     def choose_issue_type(self, problem: model_pb2.Problem) -> IssueType:
         if problem.inspector in self.ij_message_to_issue_type:
