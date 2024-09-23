@@ -47,6 +47,7 @@ class LocalCommandBuilder:
         # TODO: remove after adding a test server
         self.disable.append(InspectorType.IJ_PYTHON.value)
         self.disable.append(InspectorType.IJ_KOTLIN.value)
+        self.disable.append(InspectorType.IJ_JAVA.value)
 
         if self.disable:
             command.extend([RunToolArgument.DISABLE.value.long_name, ",".join(self.disable)])

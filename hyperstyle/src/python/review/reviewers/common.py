@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import logging
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
@@ -17,6 +16,7 @@ from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspecto
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
+from hyperstyle.src.python.review.inspectors.ij_java.ij_python import JavaIJInspector
 from hyperstyle.src.python.review.inspectors.ij_kotlin.ij_kotlin import KotlinIJInspector
 from hyperstyle.src.python.review.inspectors.ij_python.ij_python import PythonIJInspector
 from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
@@ -55,6 +55,7 @@ LANGUAGE_TO_INSPECTORS = {
     Language.JAVA: [
         CheckstyleInspector(),
         PMDInspector(),
+        JavaIJInspector(),
     ],
     Language.KOTLIN: [
         DetektInspector(),
@@ -85,17 +86,12 @@ def _inspect_code(
         None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
     )
     if ij_inspectors and connection_parameters is None:
-        logging.warning(
-            f"IJ inspectors for the {language.value} will be disabled "
-            f"as the IJ config for this language was not specified.",
+        msg = f"Connection parameters for {language.value} inspectors are not provided"
+        raise ValueError(msg)
+    for inspector in ij_inspectors:
+        inspector.setup_connection_parameters(
+            connection_parameters["host"], connection_parameters["port"]
         )
-
-        config.disabled_inspectors.update(inspector.inspector_type for inspector in ij_inspectors)
-    else:
-        for inspector in ij_inspectors:
-            inspector.setup_connection_parameters(
-                connection_parameters["host"], connection_parameters["port"]
-            )
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)

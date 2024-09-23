@@ -15,6 +15,7 @@ class InspectorType(Enum):
     # Java language
     PMD = "PMD"
     CHECKSTYLE = "CHECKSTYLE"
+    IJ_JAVA = "IJ_JAVA"
 
     # Kotlin language
     DETEKT = "DETEKT"
@@ -43,6 +44,7 @@ class InspectorType(Enum):
             # Java language
             cls.PMD.value,
             cls.CHECKSTYLE.value,
+            cls.IJ_JAVA.value,
             # Kotlin language
             cls.DETEKT.value,
             cls.IJ_KOTLIN.value,
