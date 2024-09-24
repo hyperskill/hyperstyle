@@ -80,12 +80,12 @@ jobs:
       - name: Check installed module can run python linters
         run: |
           cd /review
-          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool test/resources/inspectors/python/case39_no_issues.py
+          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool -d=ij_python test/resources/inspectors/python/case39_no_issues.py
 
       - name: Check installed module can run java linters
         run: |
           cd /review
-          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool test/resources/inspectors/java/test_algorithm_with_scanner.java
+          /hyperstyle/bin/python -m hyperstyle.src.python.review.run_tool -d=ij_java test/resources/inspectors/java/test_algorithm_with_scanner.java
 
       - name: Check installed module can run js linters
         run: |
