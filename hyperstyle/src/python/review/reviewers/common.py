@@ -16,7 +16,7 @@ from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspecto
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
-from hyperstyle.src.python.review.inspectors.ij_java.ij_python import JavaIJInspector
+from hyperstyle.src.python.review.inspectors.ij_java.ij_java import JavaIJInspector
 from hyperstyle.src.python.review.inspectors.ij_kotlin.ij_kotlin import KotlinIJInspector
 from hyperstyle.src.python.review.inspectors.ij_python.ij_python import PythonIJInspector
 from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
