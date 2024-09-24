@@ -27,7 +27,7 @@ class RadonInspector(BaseInspector):
     # We don't support in-memory inspection for Radon yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     @classmethod
     def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:

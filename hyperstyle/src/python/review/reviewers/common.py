@@ -89,9 +89,7 @@ def _inspect_code(
         msg = f"Connection parameters for {language.value} inspectors are not provided"
         raise ValueError(msg)
     for inspector in ij_inspectors:
-        inspector.setup_connection_parameters(
-            connection_parameters["host"], connection_parameters["port"]
-        )
+        inspector.setup_connection_parameters(connection_parameters["host"], connection_parameters["port"])
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)

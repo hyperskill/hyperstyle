@@ -8,6 +8,7 @@ from xml.etree import ElementTree as ET
 from hyperstyle.src.python.review.inspectors.common.issue.base_issue_converter import convert_base_issue
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_correct
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -48,7 +49,8 @@ def parse_xml_file_result(
     :return: A list of parsed issues.
     """
     if not is_result_file_correct(file_path, inspector_type):
-        return []
+        msg = f"{inspector_type.value}: error - incorrect output file"
+        raise InspectionError(msg)
 
     # Parse result XML
     tree = ET.parse(file_path)

@@ -14,6 +14,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import I
 from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
 from hyperstyle.src.python.review.inspectors.detekt.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class DetektInspector(BaseInspector):
     # We don't support in-memory inspection for Detekt yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path):
@@ -60,7 +61,8 @@ class DetektInspector(BaseInspector):
         if not (
             check_set_up_env_variable(DETEKT_DIRECTORY_ENV) and check_set_up_env_variable(DETEKT_VERSION_ENV)
         ):
-            return []
+            msg = "Detekt is not set up"
+            raise InspectionError(msg)
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with new_temp_dir() as temp_dir:

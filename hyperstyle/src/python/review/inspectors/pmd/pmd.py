@@ -16,6 +16,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.pmd.issue_configs import ISSUE_CONFIGS
 from hyperstyle.src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ class PMDInspector(BaseInspector):
     # We don't support in-memory inspection for PMD yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     def _create_command(
         self, path: Path, output_path: Path, language_version: LanguageVersion, n_cpu: int
@@ -67,7 +68,8 @@ class PMDInspector(BaseInspector):
 
     def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not (check_set_up_env_variable(PMD_DIRECTORY_ENV) and check_set_up_env_variable(PMD_VERSION_ENV)):
-            return []
+            msg = "PMD is not set up"
+            raise InspectionError(msg)
 
         with new_temp_dir() as temp_dir:
             output_path = Path(temp_dir / "out.csv")
@@ -90,7 +92,8 @@ class PMDInspector(BaseInspector):
         """
         if not output_path.is_file():
             logger.error(f"{self.inspector_type.value}: error - no output file")
-            return []
+            msg = f"{self.inspector_type.value}: error - no output file"
+            raise InspectionError(msg)
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with output_path.open(encoding="utf-8") as out_file:

@@ -26,12 +26,12 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_magic_number_tip,
 )
 from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 from test.python.inspectors import CHECKSTYLE_DATA_FOLDER, JAVA_DATA_FOLDER
 from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
 
 FILE_NAME_AND_ISSUES = [
-    ("empty_file.xml", []),
     ("single_file_project_without_issues.xml", []),
     ("multi_file_project_without_issues.xml", []),
     (
@@ -213,6 +213,26 @@ def test_output_parsing(file_name: str, expected_issues: list[CodeIssue]) -> Non
         issue_configs_handler,
     )
     assert issues == expected_issues
+
+
+@pytest.mark.parametrize(
+    "file_name",
+    [
+        "empty_file.xml",
+    ],
+)
+def test_incorrect_output_parsing(file_name: str) -> None:
+    path_to_file = CHECKSTYLE_DATA_FOLDER / file_name
+    issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
+
+    with pytest.raises(InspectionError):
+        parse_xml_file_result(
+            path_to_file,
+            InspectorType.CHECKSTYLE,
+            CheckstyleInspector.choose_issue_type,
+            IssueDifficulty.get_by_issue_type,
+            issue_configs_handler,
+        )
 
 
 FILE_NAMES_AND_N_ISSUES = [

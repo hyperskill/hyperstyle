@@ -37,7 +37,7 @@ def _run_inspector(
         return inspect_function(data, config.inspectors_config)
     except Exception:
         logger.exception(f"Inspector {inspector.inspector_type} failed.")
-        return []
+        raise
 
 
 def inspect_in_parallel(

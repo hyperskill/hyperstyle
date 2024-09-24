@@ -22,7 +22,7 @@ class ESLintInspector(BaseInspector):
     # We don't support in-memory inspection for ESLint yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> list[str]:

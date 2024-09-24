@@ -22,6 +22,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_maintainability_index_tip,
 )
 from hyperstyle.src.python.review.inspectors.golang_lint.golang_lint import GolangLintInspector
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_low_measure_issues
 from test.python.inspectors import GO_DATA_FOLDER, GOLANG_LINT_FOLDER
 from test.python.inspectors.conftest import gather_issues_test_info, IssuesTestInfo, use_file_metadata
@@ -125,8 +126,6 @@ def test_file_with_issues_info(file_name: str, expected_issues_info: IssuesTestI
 
 
 OUTPUT_PARSING_TEST_DATA = [
-    ("non_existent_file.json", []),
-    ("empty_file.json", []),
     ("single_file_project_without_issues.json", []),
     (
         "single_file_project_with_issues.json",
@@ -373,6 +372,19 @@ OUTPUT_PARSING_TEST_DATA = [
 def test_output_parsing(file_name: str, expected_issues: list[CodeIssue]) -> None:
     path_to_file = GOLANG_LINT_FOLDER / file_name
     assert GolangLintInspector.parse(path_to_file) == expected_issues
+
+
+@pytest.mark.parametrize(
+    "file_name",
+    [
+        "non_existent_file.json",
+        "empty_file.json",
+    ],
+)
+def test_incorrect_output_parsing(file_name: str) -> None:
+    path_to_file = GOLANG_LINT_FOLDER / file_name
+    with pytest.raises(InspectionError):
+        GolangLintInspector.parse(path_to_file)
 
 
 def test_choose_issue_type() -> None:

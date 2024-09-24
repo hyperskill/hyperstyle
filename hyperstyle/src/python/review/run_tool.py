@@ -17,11 +17,11 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
+from hyperstyle.src.python.review.reviewers.exceptions import PathNotExistsError, \
+    UnsupportedLanguageError, InspectionError
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
-    PathNotExistsError,
     perform_and_print_review,
-    UnsupportedLanguageError,
 )
 
 logger = logging.getLogger(__name__)
@@ -218,6 +218,9 @@ def main() -> int:
         return 2
     except JSONDecodeError:
         logger.exception("Incorrect JSON")
+        return 2
+    except InspectionError:
+        logger.exception("Inspection error")
         return 2
     except Exception:
         traceback.print_exc()

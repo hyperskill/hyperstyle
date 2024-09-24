@@ -8,9 +8,9 @@ import pytest
 from hyperstyle.src.python.review.application_config import ApplicationConfig
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.quality.model import QualityType
+from hyperstyle.src.python.review.reviewers.exceptions import PathNotExistsError
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
-    PathNotExistsError,
     perform_and_print_review,
 )
 from test.python.inspectors import PYTHON_DATA_FOLDER

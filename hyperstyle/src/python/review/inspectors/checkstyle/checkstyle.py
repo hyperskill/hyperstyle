@@ -14,6 +14,7 @@ from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type imp
 from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueDifficulty, IssueType
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfigsHandler
 from hyperstyle.src.python.review.inspectors.common.xml_parser import parse_xml_file_result
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class CheckstyleInspector(BaseInspector):
     # We don't support in-memory inspection for Checkstyle yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     @classmethod
     def _create_command(cls, path: Path, output_path: Path) -> list[str]:
@@ -56,7 +57,8 @@ class CheckstyleInspector(BaseInspector):
             check_set_up_env_variable(CHECKSTYLE_DIRECTORY_ENV)
             and check_set_up_env_variable(CHECKSTYLE_VERSION_ENV)
         ):
-            return []
+            msg = "Checkstyle is not set up"
+            raise InspectionError(msg)
 
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
         with new_temp_dir() as temp_dir:

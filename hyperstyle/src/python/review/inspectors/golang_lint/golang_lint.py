@@ -20,6 +20,7 @@ from hyperstyle.src.python.review.inspectors.golang_lint.issue_types import (
     CODE_PREFIX_TO_ISSUE_TYPE,
     CODE_TO_ISSUE_TYPE,
 )
+from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 GOLANG_LINT_DIRECTORY_ENV = "GOLANG_LINT_DIRECTORY"
 GOLANG_LINT_CONFIG_PATH = Path(__file__).parent / "config.yml"
@@ -33,7 +34,7 @@ class GolangLintInspector(BaseInspector):
     # We don't support in-memory inspection for Golang yet
     @classmethod
     def inspect_in_memory(cls, code: str, config: dict[str, Any]) -> list[BaseIssue]:
-        return []
+        raise NotImplementedError
 
     @classmethod
     def _create_command(
@@ -62,7 +63,8 @@ class GolangLintInspector(BaseInspector):
 
     def inspect(self, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
         if not check_set_up_env_variable(GOLANG_LINT_DIRECTORY_ENV):
-            return []
+            msg = "Golang Lint is not set up"
+            raise InspectionError(msg)
 
         with new_temp_dir() as temp_dir:
             output_path = temp_dir / "output.json"
@@ -76,7 +78,8 @@ class GolangLintInspector(BaseInspector):
     @classmethod
     def parse(cls, output_path: Path) -> list[BaseIssue]:
         if not is_result_file_correct(output_path, cls.inspector_type):
-            return []
+            msg = f"{cls.inspector_type.value}: the result file is incorrect."
+            raise InspectionError(msg)
 
         with output_path.open(encoding="utf-8") as file:
             data = json.load(file)

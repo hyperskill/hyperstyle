@@ -8,6 +8,7 @@ from typing import Final, TYPE_CHECKING
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 from hyperstyle.src.python.review.reviewers.common import perform_language_review
+from hyperstyle.src.python.review.reviewers.exceptions import PathNotExistsError, UnsupportedLanguageError
 from hyperstyle.src.python.review.reviewers.go import perform_go_review
 from hyperstyle.src.python.review.reviewers.python import perform_python_review
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import (
@@ -29,15 +30,6 @@ if TYPE_CHECKING:
     from hyperstyle.src.python.review.reviewers.review_result import GeneralReviewResult
 
 logger: Final = logging.getLogger(__name__)
-
-
-class UnsupportedLanguageError(Exception):
-    pass
-
-
-class PathNotExistsError(Exception):
-    pass
-
 
 language_to_reviewer = {
     Language.PYTHON: perform_python_review,
