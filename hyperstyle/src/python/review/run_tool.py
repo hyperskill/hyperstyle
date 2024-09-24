@@ -17,8 +17,11 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
 from hyperstyle.src.python.review.logging_config import logging_config
-from hyperstyle.src.python.review.reviewers.exceptions import PathNotExistsError, \
-    UnsupportedLanguageError, InspectionError
+from hyperstyle.src.python.review.reviewers.exceptions import (
+    InspectionError,
+    PathNotExistsError,
+    UnsupportedLanguageError,
+)
 from hyperstyle.src.python.review.reviewers.perform_review import (
     OutputFormat,
     perform_and_print_review,
@@ -208,26 +211,20 @@ def main() -> int:
         )
 
         n_issues = perform_and_print_review(args.path, OutputFormat(args.format), config)
-        if not n_issues:
-            return 0
+        return bool(n_issues)
     except PathNotExistsError:
         logger.exception("Path not exists")
-        return 2
     except UnsupportedLanguageError:
         logger.exception("Unsupported language. Supported ones are Java, Kotlin, Python")
-        return 2
     except JSONDecodeError:
         logger.exception("Incorrect JSON")
-        return 2
     except InspectionError:
         logger.exception("Inspection error")
-        return 2
     except Exception:
         traceback.print_exc()
         logger.exception("An unexpected error")
-        return 2
-    else:
-        return 1
+
+    return 2
 
 
 if __name__ == "__main__":
