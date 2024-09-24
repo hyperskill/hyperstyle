@@ -36,11 +36,11 @@ class Rule(abc.ABC):
     rule_type: IssueType
     quality_type: QualityType
     next_level_type: QualityType
-    next_level_delta: int
+    next_level_delta: float
     value: int
 
     @abc.abstractmethod
-    def apply(self, value):
+    def apply(self, *args, **kwargs) -> None:
         pass
 
 

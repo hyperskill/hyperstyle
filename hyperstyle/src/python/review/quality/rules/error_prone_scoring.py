@@ -35,7 +35,7 @@ class ErrorProneRule(Rule):
         self.rule_type = IssueType.ERROR_PRONE
         self.n_error_prone: int | None = None
 
-    def apply(self, n_error_prone) -> None:
+    def apply(self, n_error_prone: int) -> None:
         self.n_error_prone = n_error_prone
         if n_error_prone > self.config.n_error_prone_bad:
             self.quality_type = QualityType.BAD

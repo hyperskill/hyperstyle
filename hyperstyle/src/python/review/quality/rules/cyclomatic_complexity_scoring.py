@@ -44,7 +44,7 @@ class CyclomaticComplexityRule(Rule):
         self.rule_type = IssueType.CYCLOMATIC_COMPLEXITY
         self.cc_value: int | None = None
 
-    def apply(self, cc_value) -> None:
+    def apply(self, cc_value: int) -> None:
         self.cc_value = cc_value
         if cc_value > self.config.cc_value_bad:
             self.quality_type = QualityType.BAD

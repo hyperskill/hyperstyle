@@ -28,7 +28,7 @@ def _get_output_json(local_command: LocalCommandBuilder, new_format: bool, group
     return json.loads(stdout)
 
 
-def _get_by_difficulty_schema(item_schema: dict) -> dict:
+def _get_by_difficulty_schema(item_schema: dict[str, object]) -> dict[str, object]:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -40,7 +40,7 @@ def _get_by_difficulty_schema(item_schema: dict) -> dict:
     }
 
 
-QUALITY_SCHEMA = {
+QUALITY_SCHEMA: dict[str, object] = {
     "type": "object",
     "additionalProperties": False,
     "properties": {
@@ -51,12 +51,12 @@ QUALITY_SCHEMA = {
 
 QUALITY_BY_DIFFICULTY_SCHEMA = _get_by_difficulty_schema(QUALITY_SCHEMA)
 
-INFLUENCE_ON_PENALTY_SCHEMA = {"type": "integer"}
+INFLUENCE_ON_PENALTY_SCHEMA: dict[str, object] = {"type": "integer"}
 
 INFLUENCE_ON_PENALTY_BY_DIFFICULTY_SCHEMA = _get_by_difficulty_schema(INFLUENCE_ON_PENALTY_SCHEMA)
 
 
-def _get_issues_schema(influence_in_penalty_schema: dict) -> dict:
+def _get_issues_schema(influence_in_penalty_schema: dict[str, object]) -> dict[str, object]:
     return {
         "type": "array",
         "additionalItems": False,
@@ -77,7 +77,9 @@ def _get_issues_schema(influence_in_penalty_schema: dict) -> dict:
     }
 
 
-def _get_old_format_schema(quality_schema: dict, influence_in_penalty_schema: dict) -> dict:
+def _get_old_format_schema(
+    quality_schema: dict[str, object], influence_in_penalty_schema: dict[str, object]
+) -> dict[str, object]:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -88,7 +90,9 @@ def _get_old_format_schema(quality_schema: dict, influence_in_penalty_schema: di
     }
 
 
-def _get_new_format_schema(quality_schema: dict, influence_in_penalty_schema: dict) -> dict:
+def _get_new_format_schema(
+    quality_schema: dict[str, object], influence_in_penalty_schema: dict[str, object]
+) -> dict[str, object]:
     return {
         "type": "object",
         "additionalProperties": False,

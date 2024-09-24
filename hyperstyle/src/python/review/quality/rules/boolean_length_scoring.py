@@ -41,7 +41,7 @@ class BooleanExpressionRule(Rule):
         self.rule_type = IssueType.BOOL_EXPR_LEN
         self.bool_expr_len: int | None = None
 
-    def apply(self, bool_expr_len) -> None:
+    def apply(self, bool_expr_len: int) -> None:
         self.bool_expr_len = bool_expr_len
         if bool_expr_len > self.config.bool_expr_len_bad:
             self.quality_type = QualityType.BAD

@@ -35,7 +35,7 @@ class LineLengthRule(Rule):
         self.rule_type = IssueType.LINE_LEN
 
     # TODO: refactor
-    def apply(self, n_line_len, n_lines) -> None:
+    def apply(self, n_line_len: int, n_lines: int) -> None:
         self.ratio = self.get_ratio(n_line_len, n_lines)
         self.n_line_len = n_line_len
         self.n_lines = n_lines

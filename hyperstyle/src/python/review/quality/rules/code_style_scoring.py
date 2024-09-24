@@ -77,7 +77,7 @@ class CodeStyleRule(Rule):
         self.next_level_delta = 0
 
     # TODO: refactor
-    def apply(self, n_code_style_lines, n_code_style, total_lines) -> None:
+    def apply(self, n_code_style_lines: int, n_code_style: int, total_lines: int) -> None:
         self.total_lines = total_lines
         self.n_code_style_lines = n_code_style_lines
         self.n_code_style = n_code_style
@@ -124,7 +124,7 @@ class CodeStyleRule(Rule):
             return other
         return self
 
-    def save_quality(self, quality_type) -> None:
+    def save_quality(self, quality_type: QualityType) -> None:
         if not self.quality_type:
             self.quality_type = quality_type
         self.quality_type = max(self.quality_type, quality_type)

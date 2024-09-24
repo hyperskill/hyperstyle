@@ -51,7 +51,7 @@ class LanguageVersion(Enum):
         }
 
     @classmethod
-    def from_value(cls, value: str, default=None):
+    def from_value(cls, value: str, default: LanguageVersion | None = None) -> LanguageVersion | None:
         try:
             return LanguageVersion(value)
         except ValueError:

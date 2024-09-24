@@ -34,7 +34,7 @@ class DetektInspector(BaseInspector):
         raise NotImplementedError
 
     @classmethod
-    def _create_command(cls, path: Path, output_path: Path):
+    def _create_command(cls, path: Path, output_path: Path) -> list[str]:
         path_to_detekt_cli = (
             Path(os.environ[DETEKT_DIRECTORY_ENV])
             / f"detekt-cli-{os.environ[DETEKT_VERSION_ENV]}"

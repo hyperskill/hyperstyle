@@ -41,7 +41,7 @@ class Language(Enum):
         return [member.value for member in Language]
 
     @classmethod
-    def from_value(cls, value: str, default=None):
+    def from_value(cls, value: str, default: Language | None = None) -> Language | None:
         try:
             return Language(value)
         except ValueError:

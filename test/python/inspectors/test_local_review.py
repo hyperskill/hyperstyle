@@ -35,7 +35,9 @@ def config() -> ApplicationConfig:
     )
 
 
-def test_run_code_review_when_no_issues(capsys, config) -> None:
+def test_run_code_review_when_no_issues(
+    capsys: pytest.CaptureFixture[str], config: ApplicationConfig
+) -> None:
     file_path = PYTHON_DATA_FOLDER / "case1_simple_valid_program.py"
     exit_code = perform_and_print_review(file_path, OutputFormat.JSON, config)
     assert exit_code == 0
@@ -51,7 +53,9 @@ def test_run_code_review_when_no_issues(capsys, config) -> None:
     assert len(review_result_json["issues"]) == 0
 
 
-def test_run_code_review_when_issues_found(capsys, config) -> None:
+def test_run_code_review_when_issues_found(
+    capsys: pytest.CaptureFixture[str], config: ApplicationConfig
+) -> None:
     file_path = PYTHON_DATA_FOLDER / "case0_spaces.py"
     exit_code = perform_and_print_review(file_path, OutputFormat.JSON, config)
 
@@ -76,7 +80,7 @@ def test_run_code_review_when_issues_found(capsys, config) -> None:
         assert issue["category"]
 
 
-def test_run_code_review_when_unknown_file(config) -> None:
+def test_run_code_review_when_unknown_file(config: ApplicationConfig) -> None:
     file_path = PYTHON_DATA_FOLDER / "case_unknown_file.py"
     with pytest.raises(PathNotExistsError):
         _ = perform_and_print_review(file_path, OutputFormat.JSON, config)

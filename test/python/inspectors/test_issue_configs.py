@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from re import Pattern
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -25,7 +25,9 @@ MATCH_NAMED_AND_UNNAMED_GROUPS = re.compile(
     r"\|(.*)\| \((?P<parentheses_group>.*)\) \|(.*)\| {(?P<curly_group>.*)} \|(.*)\|",
 )
 
-PARSE_TEST_DATA = [
+PARSE_TEST_DATA: list[
+    tuple[Pattern[str], dict[int, type[int | float]] | None, str, tuple[object, ...] | None]
+] = [
     (MATCH_STRING, None, "12345", None),
     (MATCH_STRING, None, "string", None),
     (MATCH_ONE_GROUP, None, "12345", ("12345",)),
@@ -71,10 +73,10 @@ PARSE_TEST_DATA = [
 
 @pytest.mark.parametrize(("regexp", "converter", "description", "expected_groups"), PARSE_TEST_DATA)
 def test_parse(
-    regexp: Pattern,
-    converter: Callable | dict[str, Callable] | None,
+    regexp: Pattern[str],
+    converter: dict[int, Callable[[str], object]] | None,
     description: str,
-    expected_groups: tuple,
+    expected_groups: tuple[str, ...],
 ) -> None:
     parser = (
         IssueDescriptionParser(regexp) if converter is None else IssueDescriptionParser(regexp, converter)
@@ -124,7 +126,7 @@ ISSUE_CONFIG_INIT_TEST_DATA = [
 )
 def test_init_raises_exception(
     cls: type[IssueConfig],
-    args: list,
+    args: list[object],
     expected_exception: type[Exception],
     expected_error_message: str,
 ) -> None:
@@ -182,7 +184,7 @@ def test_parse_description(
     issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
-    expected_tuple: tuple | None,
+    expected_tuple: tuple[str, ...] | None,
 ) -> None:
     assert IssueConfigsHandler(*issue_configs)._parse_description(origin_class, description) == expected_tuple
 
@@ -233,7 +235,7 @@ def test_parse_measure(
     issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
-    expected_measure: Optional,
+    expected_measure: int | None,
 ) -> None:
     assert IssueConfigsHandler(*issue_configs).parse_measure(origin_class, description) == expected_measure
 
@@ -341,7 +343,7 @@ def test_get_description(
     issue_configs: list[IssueConfig],
     origin_class: str,
     description: str,
-    expected_description: Optional,
+    expected_description: str,
 ) -> None:
     assert (
         IssueConfigsHandler(*issue_configs).get_description(origin_class, description) == expected_description

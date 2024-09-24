@@ -81,7 +81,9 @@ def _get_quality_with_penalty(review_result: ReviewResult) -> dict[IssueDifficul
     }
 
 
-def get_quality_json_dict(quality: dict[IssueDifficulty, QualityType], config: ApplicationConfig) -> dict:
+def get_quality_json_dict(
+    quality: dict[IssueDifficulty, QualityType], config: ApplicationConfig
+) -> dict[str, object]:
     quality_json_dict = {
         difficulty.value: {
             OutputJsonFields.CODE.value: quality.value,
@@ -117,7 +119,9 @@ def get_influence_on_penalty_json_dict(
     return influence_on_penalty_json_dict[IssueDifficulty.HARD.value]
 
 
-def convert_review_result_to_json_dict(review_result: ReviewResult, config: ApplicationConfig) -> dict:
+def convert_review_result_to_json_dict(
+    review_result: ReviewResult, config: ApplicationConfig
+) -> dict[str, object]:
     issues = review_result.issues
     issues.sort(key=lambda issue: issue.line_no)
 

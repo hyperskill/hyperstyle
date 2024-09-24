@@ -35,7 +35,7 @@ class BestPracticesRule(Rule):
         self.rule_type = IssueType.BEST_PRACTICES
         self.n_best_practices: int | None = None
 
-    def apply(self, n_best_practices) -> None:
+    def apply(self, n_best_practices: int) -> None:
         self.n_best_practices = n_best_practices
         ratio = n_best_practices / self.config.n_files
 

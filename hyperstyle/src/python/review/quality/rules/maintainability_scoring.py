@@ -52,7 +52,7 @@ class MaintainabilityRule(Rule):
         self.rule_type = IssueType.MAINTAINABILITY
         self.maintainability_lack: int | None = None
 
-    def apply(self, maintainability_lack) -> None:
+    def apply(self, maintainability_lack: int) -> None:
         self.maintainability_lack = maintainability_lack
         if maintainability_lack > self.config.maintainability_lack_bad:
             self.quality_type = QualityType.BAD

@@ -33,7 +33,7 @@ class CouplingRule(Rule):
         self.rule_type = IssueType.COUPLING
         self.coupling: int | None = None
 
-    def apply(self, coupling) -> None:
+    def apply(self, coupling: int) -> None:
         self.coupling = coupling
         if coupling > self.config.coupling_bad:
             self.quality_type = QualityType.BAD

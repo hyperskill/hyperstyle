@@ -65,10 +65,10 @@ class FunctionLensGatherer(ast.NodeVisitor):
         self._content = content
         self._line_no_to_sym_no_map = create_line_no_to_sym_no_map(content)
         self._n_lines = Counter(content)["\n"] + 1
-        self._previous_node = None
+        self._previous_node: ast.AST | None = None
         self._function_lens: list[FuncLenIssue] = []
 
-    def visit(self, node) -> None:
+    def visit(self, node: ast.AST) -> None:
         if isinstance(self._previous_node, ast.FunctionDef | ast.AsyncFunctionDef):
             func_length = self._find_func_len(
                 self._previous_node.lineno,
@@ -122,7 +122,7 @@ class FunctionLensGatherer(ast.NodeVisitor):
         self._previous_node = None
         return self._function_lens
 
-    def _find_func_len(self, start_line_no: int, end_line_no: int):
+    def _find_func_len(self, start_line_no: int, end_line_no: int) -> int:
         func_body = self._content[
             self._line_no_to_sym_no_map[start_line_no] : self._line_no_to_sym_no_map[end_line_no]
         ]
@@ -175,7 +175,7 @@ class PythonAstInspector(BaseInspector):
         return IssueType.BEST_PRACTICES
 
 
-def create_line_no_to_sym_no_map(content) -> dict[int, int]:
+def create_line_no_to_sym_no_map(content: str) -> dict[int, int]:
     mapping = defaultdict(lambda: len(content), {1: 0})
     line_no = 2
     for sym_no, sym in enumerate(content):

@@ -11,7 +11,7 @@ from hyperstyle.src.python.review.inspectors.common.utils import is_result_file_
 from hyperstyle.src.python.review.reviewers.exceptions import InspectionError
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterator
     from xml.etree.ElementTree import Element
 
     from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
@@ -73,7 +73,7 @@ def process_inner_elements(
     inspector_type: InspectorType,
     issue_configs_handler: IssueConfigsHandler,
     issue_type_selector: Callable[[str], IssueType],
-) -> list[BaseIssue]:
+) -> Iterator[BaseIssue]:
     code_file_path = Path(element.attrib["name"])
     for inner_element in element:
         if not __is_error(inner_element):

@@ -38,7 +38,7 @@ class FunctionLengthRule(Rule):
         self.rule_type = IssueType.FUNC_LEN
         self.func_len: int | None = None
 
-    def apply(self, func_len) -> None:
+    def apply(self, func_len: int) -> None:
         self.func_len = func_len
         if func_len > self.config.func_len_bad:
             self.quality_type = QualityType.BAD

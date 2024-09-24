@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 
-logging_config = {
+logging_config: dict[str, object] = {
     "version": 1,
     "formatters": {
         "common": {

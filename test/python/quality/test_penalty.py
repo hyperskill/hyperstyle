@@ -116,7 +116,7 @@ PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT = [
     PENALTY_COEFFICIENT_CURRENT_ISSUES_NORMALIZED_PENALTY_COEFFICIENT,
 )
 def test_get_normalized_penalty_coefficient(
-    penalty_coefficient: float, current_issues: list[BaseIssue], normalized_penalty_coefficient
+    penalty_coefficient: float, current_issues: list[BaseIssue], normalized_penalty_coefficient: float
 ) -> None:
     punisher._penalty_coefficient = penalty_coefficient
 

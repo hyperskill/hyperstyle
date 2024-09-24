@@ -35,7 +35,7 @@ class ComplexityRule(Rule):
         self.rule_type = IssueType.COMPLEXITY
         self.complexity: int | None = None
 
-    def apply(self, complexity) -> None:
+    def apply(self, complexity: int) -> None:
         self.complexity = complexity
         if complexity > self.config.complexity_bad:
             self.quality_type = QualityType.BAD

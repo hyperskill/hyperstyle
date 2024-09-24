@@ -434,6 +434,7 @@ def test_measure_parse(origin_class: str, expected_measure: int) -> None:
 
     issue = next(filter(lambda elem: elem.origin_class == origin_class, issues))
 
+    assert hasattr(issue, "measure")
     assert issue.measure() == expected_measure
 
 

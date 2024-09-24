@@ -31,7 +31,7 @@ class InheritanceDepthRule(Rule):
         self.rule_type = IssueType.INHERITANCE_DEPTH
         self.depth: int | None = None
 
-    def apply(self, depth) -> None:
+    def apply(self, depth: int) -> None:
         self.depth = depth
         if depth > self.config.depth_bad:
             self.quality_type = QualityType.BAD

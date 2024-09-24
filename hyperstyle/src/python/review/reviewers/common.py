@@ -11,7 +11,10 @@ from hyperstyle.src.python.review.common.parallel_runner import (
     run_inspector_in_memory,
 )
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
-from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseIJInspector
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import (
+    BaseIJInspector,
+    BaseInspector,
+)
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
@@ -44,7 +47,7 @@ if TYPE_CHECKING:
     from hyperstyle.src.python.review.application_config import ApplicationConfig
     from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 
-LANGUAGE_TO_INSPECTORS = {
+LANGUAGE_TO_INSPECTORS: dict[Language, list[BaseInspector]] = {
     Language.PYTHON: [
         PylintInspector(),
         Flake8Inspector(),

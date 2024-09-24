@@ -14,7 +14,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
     get_magic_number_tip,
 )
 
-ISSUE_CONFIGS = [
+ISSUE_CONFIGS: list[IssueConfig] = [
     IssueConfig(
         origin_class="MagicNumber",
         new_description=get_magic_number_tip(with_number_field=False),

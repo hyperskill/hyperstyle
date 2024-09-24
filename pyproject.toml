@@ -126,6 +126,8 @@ select = [
 
 ignore = [
     "ANN204",  # Missing return type annotation for special method `__post_init__`
+    "ANN003",  # Missing type annotation for `**kwargs`
+    "ANN002",  #  Missing type annotation for `*args`
     "CPY001",  # Missing copyright notice at top of file
     "D101",  # Missing docstring in public class
     "D104",  # Missing docstring in public package
@@ -140,10 +142,6 @@ ignore = [
     "TD003",  # Missing issue link on the line following this TODO
 
     # TODO: Remove the following rules after fixing the issues
-    "ANN001",  # Missing type annotation for function argument `normalized_penalty_coefficient`
-    "ANN201",  # Missing return type annotation for public function `apply`
-    "ANN202",  # Missing return type annotation for private function `_find_func_len`
-    "ANN206",  # Missing return type annotation for classmethod `_create_command`
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed in `data`
     "ARG001",  # Unused function argument: `name`
     "ARG002",  # Unused method argument: `config`

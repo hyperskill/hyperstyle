@@ -35,7 +35,7 @@ class WeightedMethodsRule(Rule):
         self.rule_type = IssueType.WEIGHTED_METHOD
         self.weighted_methods: int | None = None
 
-    def apply(self, weighted_methods) -> None:
+    def apply(self, weighted_methods: int) -> None:
         self.weighted_methods = weighted_methods
         if weighted_methods > self.config.weighted_methods_bad:
             self.quality_type = QualityType.BAD

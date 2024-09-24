@@ -16,6 +16,7 @@ from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import (
     explore_in_memory_metadata,
     explore_project,
     Metadata,
+    ProjectMetadata,
 )
 from hyperstyle.src.python.review.reviewers.utils.print_review import (
     print_review_result_as_json,
@@ -24,6 +25,7 @@ from hyperstyle.src.python.review.reviewers.utils.print_review import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
     from hyperstyle.src.python.review.application_config import ApplicationConfig
@@ -31,7 +33,7 @@ if TYPE_CHECKING:
 
 logger: Final = logging.getLogger(__name__)
 
-language_to_reviewer = {
+language_to_reviewer: dict[Language, Callable[[Metadata, ApplicationConfig], GeneralReviewResult]] = {
     Language.PYTHON: perform_python_review,
     Language.JAVA: partial(perform_language_review, language=Language.JAVA),
     Language.KOTLIN: partial(perform_language_review, language=Language.KOTLIN),
@@ -77,6 +79,7 @@ def perform_review(path: Path, config: ApplicationConfig) -> GeneralReviewResult
     if not path.exists():
         raise PathNotExistsError
 
+    metadata: Metadata | ProjectMetadata
     if path.is_file():
         metadata = explore_file(path)
         if metadata.language == Language.UNKNOWN:

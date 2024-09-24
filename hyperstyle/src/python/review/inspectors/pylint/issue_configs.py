@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from hyperstyle.src.python.review.inspectors.common.issue.issue_configs import IssueConfig
 
-ISSUE_CONFIGS = [
+ISSUE_CONFIGS: list[IssueConfig] = [
     IssueConfig(
         origin_class="W1404",
         new_description='Found implicit string concatenation. If you want to concatenate strings, use "+".',

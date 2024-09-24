@@ -12,6 +12,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
 from hyperstyle.src.python.review.reviewers.utils.metadata_exploration import explore_file, FileMetadata
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from pathlib import Path
 
 
@@ -102,7 +103,7 @@ def gather_issues_test_info(issues: list[BaseIssue]) -> IssuesTestInfo:
 
 
 @contextmanager
-def use_file_metadata(file_path: Path) -> FileMetadata:
+def use_file_metadata(file_path: Path) -> Iterator[FileMetadata]:
     with new_temp_dir() as temp_dir:
         new_file_path = temp_dir / file_path.name
 

@@ -4,7 +4,7 @@ import linecache
 import logging
 import os
 import tempfile
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from enum import Enum, unique
 from pathlib import Path
@@ -83,16 +83,16 @@ def get_all_file_system_items(
 
 # TODO: Need testing
 @contextmanager
-def new_temp_dir() -> Path:
+def new_temp_dir() -> Iterator[Path]:
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
 
-def new_temp_file(suffix: Extension = Extension.EMPTY) -> tuple[str, str]:
+def new_temp_file(suffix: Extension = Extension.EMPTY) -> Iterator[tuple[str, str]]:
     yield tempfile.mkstemp(suffix=suffix.value)
 
 
-def get_file_line(path: Path, line_number: int):
+def get_file_line(path: Path, line_number: int) -> str:
     return linecache.getline(
         str(path),
         line_number,

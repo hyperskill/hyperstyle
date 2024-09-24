@@ -27,9 +27,9 @@ class IssueDescriptionParser:
     """
 
     regexp: Pattern[str]
-    converter: dict[int, Callable] = field(default_factory=dict)
+    converter: dict[int, Callable[[str], object]] = field(default_factory=dict)
 
-    def parse(self, description: str) -> tuple | None:
+    def parse(self, description: str) -> tuple[object, ...] | None:
         """Parse the description into a tuple of converted regex groups.
 
         :return: A tuple of converted regex groups. If there is an error during parsing, None will be returned.

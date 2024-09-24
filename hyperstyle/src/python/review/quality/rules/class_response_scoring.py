@@ -33,7 +33,7 @@ class ResponseRule(Rule):
         self.rule_type = IssueType.CLASS_RESPONSE
         self.response: int | None = None
 
-    def apply(self, response) -> None:
+    def apply(self, response: int) -> None:
         self.response = response
         if response > self.config.response_moderate:
             self.quality_type = QualityType.MODERATE

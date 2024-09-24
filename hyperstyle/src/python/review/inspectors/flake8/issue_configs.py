@@ -16,7 +16,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.tips import (
 )
 from hyperstyle.src.python.review.inspectors.common.utils import convert_percentage_of_value_to_lack_of_value
 
-ISSUE_CONFIGS = [
+ISSUE_CONFIGS: list[IssueConfig] = [
     IssueConfig(
         origin_class="WPS432",
         new_description=get_magic_number_tip(),

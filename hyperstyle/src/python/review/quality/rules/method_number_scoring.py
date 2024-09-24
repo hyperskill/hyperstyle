@@ -35,7 +35,7 @@ class MethodNumberRule(Rule):
         self.rule_type = IssueType.METHOD_NUMBER
         self.method_number: int | None = None
 
-    def apply(self, method_number) -> None:
+    def apply(self, method_number: int) -> None:
         self.method_number = method_number
         if method_number > self.config.method_number_bad:
             self.quality_type = QualityType.BAD
