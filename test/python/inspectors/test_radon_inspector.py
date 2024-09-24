@@ -51,11 +51,11 @@ def test_mi_parse() -> None:
         IssueType.MAINTAINABILITY,
         IssueType.MAINTAINABILITY,
     ]
-    assert hasattr(issues[0], "maintainability_index")
-    assert issues[0].maintainability_index == 95
+    assert hasattr(issues[0], "maintainability_lack")
+    assert issues[0].maintainability_lack == 95
 
-    assert hasattr(issues[1], "maintainability_index")
-    assert issues[1].maintainability_index == 86
+    assert hasattr(issues[1], "maintainability_lack")
+    assert issues[1].maintainability_lack == 86
 
-    assert hasattr(issues[2], "maintainability_index")
-    assert issues[2].maintainability_index == 30
+    assert hasattr(issues[2], "maintainability_lack")
+    assert issues[2].maintainability_lack == 30
