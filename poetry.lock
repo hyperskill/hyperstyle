@@ -446,13 +446,13 @@ flake8-plugin-utils = ">=1.0,<2.0"
 
 [[package]]
 name = "flake8-spellcheck"
-version = "0.24.0"
+version = "0.28.0"
 description = "Spellcheck variables, comments and docstrings"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "flake8-spellcheck-0.24.0.tar.gz", hash = "sha256:833c92222158b5dea74f858ccfb9f980b7c865fbd89cabc18447dadb07ec62e6"},
-    {file = "flake8_spellcheck-0.24.0-py2.py3-none-any.whl", hash = "sha256:33d1727e4edb2b0cda3a78dee467d7bde53ff5a2a90056bc7d1764e0b060f331"},
+    {file = "flake8-spellcheck-0.28.0.tar.gz", hash = "sha256:6fb79724f27097af0b4c678c7eaf731f0d87cf4c1eae7fbd7836c1c78d67e12c"},
+    {file = "flake8_spellcheck-0.28.0-py3-none-any.whl", hash = "sha256:a0a37164b9175819b143ce0f0a8d2475457af3f0d77cd8423b0daf204662ee72"},
 ]
 
 [package.dependencies]
@@ -1463,4 +1463,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "9db75465afe75cbcef197a6aed301dd091eb6d71d5fe460103ff74e8fa35a8e4"
+content-hash = "eba95fa2dd526bb065a020cdbe12d689e960f0781ebcc4531759e76a6eb6eb1f"
