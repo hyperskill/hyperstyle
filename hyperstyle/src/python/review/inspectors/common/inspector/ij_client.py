@@ -4,7 +4,7 @@ import grpc
 
 from hyperstyle.src.python.review.inspectors.common.inspector.proto import model_pb2, model_pb2_grpc
 
-TIMEOUT = 1
+TIMEOUT = 3
 
 
 class IJClient:
