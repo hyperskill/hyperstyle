@@ -7,7 +7,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     BaseIssue,
     IssueDifficulty,
     IssueType,
-    Measurable,
+    MeasurableIssue,
 )
 from hyperstyle.src.python.review.quality.rules.boolean_length_scoring import (
     LANGUAGE_TO_BOOLEAN_EXPRESSION_RULE_CONFIG,
@@ -60,7 +60,7 @@ def __get_issue_type_to_low_measure_dict(language: Language) -> dict[IssueType, 
 def __more_than_low_measure(issue: BaseIssue, issue_type_to_low_measure_dict: dict[IssueType, int]) -> bool:
     issue_type = issue.type
     return not (
-        isinstance(issue, Measurable)
+        isinstance(issue, MeasurableIssue)
         and issue.measure() <= issue_type_to_low_measure_dict.get(issue_type, -1)
     )
 

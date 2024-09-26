@@ -131,7 +131,7 @@ def test_init_raises_exception(
     expected_error_message: str,
 ) -> None:
     with pytest.raises(expected_exception) as excinfo:
-        cls(*args)
+        cls(*args)  # type: ignore[arg-type]
 
     assert str(excinfo.value) == expected_error_message
 

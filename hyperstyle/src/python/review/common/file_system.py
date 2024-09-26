@@ -88,10 +88,6 @@ def new_temp_dir() -> Iterator[Path]:
         yield Path(temp_dir)
 
 
-def new_temp_file(suffix: Extension = Extension.EMPTY) -> Iterator[tuple[str, str]]:
-    yield tempfile.mkstemp(suffix=suffix.value)
-
-
 def get_file_line(path: Path, line_number: int) -> str:
     return linecache.getline(
         str(path),

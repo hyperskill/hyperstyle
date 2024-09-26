@@ -138,10 +138,6 @@ class BaseIJInspector(BaseInspector):
         return base_issues
 
     def _get_inspection_result(self, code_text: str, file_path: Path) -> list[BaseIssue]:
-        if self.host is None or self.port is None:
-            msg = "Connection parameters is not set up."
-            raise Exception(msg)
-
         client = IJClient(self.host, self.port)
 
         code = model_pb2.Code()

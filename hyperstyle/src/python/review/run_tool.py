@@ -35,7 +35,7 @@ def parse_disabled_inspectors(value: str) -> set[InspectorType]:
     allowed_names = {inspector.value for inspector in InspectorType}
     if not all(name in allowed_names for name in passed_names):
         msg = "disable"
-        raise argparse.ArgumentError(msg, "Incorrect inspectors' names")
+        raise argparse.ArgumentError(msg, "Incorrect inspectors' names")  # type: ignore[arg-type]
 
     return {InspectorType(name) for name in passed_names}
 
@@ -50,7 +50,7 @@ def positive_int(value: str) -> int:
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        RunToolArgument.VERBOSITY.value.short_name,
+        RunToolArgument.VERBOSITY.value.short_name,  # type: ignore[arg-type]
         RunToolArgument.VERBOSITY.value.long_name,
         help=RunToolArgument.VERBOSITY.value.description,
         default=VerbosityLevel.DISABLE.value,
@@ -60,7 +60,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
     # Usage example: -d Flake8,IntelliJ
     parser.add_argument(
-        RunToolArgument.DISABLE.value.short_name,
+        RunToolArgument.DISABLE.value.short_name,  # type: ignore[arg-type]
         RunToolArgument.DISABLE.value.long_name,
         help=RunToolArgument.DISABLE.value.description,
         type=parse_disabled_inspectors,
@@ -107,7 +107,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        RunToolArgument.FORMAT.value.short_name,
+        RunToolArgument.FORMAT.value.short_name,  # type: ignore[arg-type]
         RunToolArgument.FORMAT.value.long_name,
         default=OutputFormat.JSON.value,
         choices=OutputFormat.values(),
@@ -116,7 +116,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        RunToolArgument.START_LINE.value.short_name,
+        RunToolArgument.START_LINE.value.short_name,  # type: ignore[arg-type]
         RunToolArgument.START_LINE.value.long_name,
         default=1,
         type=positive_int,
@@ -124,7 +124,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        RunToolArgument.END_LINE.value.short_name,
+        RunToolArgument.END_LINE.value.short_name,  # type: ignore[arg-type]
         RunToolArgument.END_LINE.value.long_name,
         default=None,
         type=positive_int,

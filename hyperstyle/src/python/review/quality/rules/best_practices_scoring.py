@@ -57,13 +57,16 @@ class BestPracticesRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: BestPracticesRule) -> BestPracticesRule:
+    def merge(self, other: Rule) -> BestPracticesRule:
+        assert isinstance(other, BestPracticesRule)
         config = BestPracticesRuleConfig(
             min(self.config.n_best_practices_moderate, other.config.n_best_practices_moderate),
             min(self.config.n_best_practices_good, other.config.n_best_practices_good),
             n_files=self.config.n_files + other.config.n_files,
         )
         result_rule = BestPracticesRule(config)
+        assert self.n_best_practices is not None
+        assert other.n_best_practices is not None
         result_rule.apply(self.n_best_practices + other.n_best_practices)
 
         return result_rule

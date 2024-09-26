@@ -31,7 +31,7 @@ class RadonInspector(BaseInspector):
 
     @classmethod
     def inspect(cls, path: Path, config: dict[str, Any]) -> list[BaseIssue]:
-        mi_command = [
+        mi_command: list[str] = [
             sys.executable,
             "-m",
             "radon",
@@ -39,7 +39,7 @@ class RadonInspector(BaseInspector):
             "--max",
             "F",  # set the maximum MI rank to display
             "--show",  # actual MI value is shown in results, alongside the rank
-            path,
+            str(path),
         ]
 
         mi_output = run_in_subprocess(mi_command)

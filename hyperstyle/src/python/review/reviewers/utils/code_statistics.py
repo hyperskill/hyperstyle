@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.common.file_system import get_total_code_lines_from_file
-from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue, IssueType, MeasurableIssue
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -64,7 +64,11 @@ def get_code_style_lines(issues: list[BaseIssue]) -> int:
 
 def __get_max_measure_by_issue_type(issue_type: IssueType, issues: list[BaseIssue]) -> int:
     return max(
-        (issue.measure() for issue in filter(lambda issue: issue.type == issue_type, issues)),
+        (
+            issue.measure() or 0
+            for issue in issues
+            if isinstance(issue, MeasurableIssue) and issue.type == issue_type
+        ),
         default=0,
     )
 

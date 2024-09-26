@@ -29,9 +29,7 @@ class ProjectMetadata:
 
     @property
     def languages(self) -> set[Language]:
-        languages = set()
-        languages.update(file_metadata.language for file_metadata in self.inner_files)
-        return languages
+        return {file_metadata.language for file_metadata in self.inner_files}
 
     @property
     def size_bytes(self) -> int:

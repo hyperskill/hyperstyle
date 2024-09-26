@@ -56,13 +56,16 @@ class WeightedMethodsRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: WeightedMethodsRule) -> WeightedMethodsRule:
+    def merge(self, other: Rule) -> WeightedMethodsRule:
+        assert isinstance(other, WeightedMethodsRule)
         config = WeightedMethodsRuleConfig(
             min(self.config.weighted_methods_bad, other.config.weighted_methods_bad),
             min(self.config.weighted_methods_moderate, other.config.weighted_methods_moderate),
             min(self.config.weighted_methods_good, other.config.weighted_methods_good),
         )
         result_rule = WeightedMethodsRule(config)
+        assert self.weighted_methods is not None
+        assert other.weighted_methods is not None
         result_rule.apply(max(self.weighted_methods, other.weighted_methods))
 
         return result_rule

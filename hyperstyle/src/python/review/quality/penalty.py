@@ -59,7 +59,7 @@ common_penalty_rule = PenaltyConfig(
 class PreviousIssue:
     origin_class: str
     number: int
-    category: IssueType = None
+    category: IssueType | None = None
 
 
 def get_previous_issues_by_language(lang_to_history: str | None, language: Language) -> list[PreviousIssue]:
@@ -78,12 +78,10 @@ def get_previous_issues_by_language(lang_to_history: str | None, language: Langu
 
 def categorize(previous_issues: list[PreviousIssue], current_issues: list[BaseIssue]) -> None:
     """For each previously made issue determines its category, with the help of current issues."""
-    origin_class_to_category = {}
-    for issue in current_issues:
-        origin_class_to_category[issue.origin_class] = issue.type
+    origin_class_to_category = {issue.origin_class: issue.type for issue in current_issues}
 
     for issue in previous_issues:
-        issue.category = origin_class_to_category.get(issue.origin_class, None)
+        issue.category = origin_class_to_category.get(issue.origin_class)
 
 
 class Punisher:
@@ -154,9 +152,13 @@ class Punisher:
             filter(lambda issue: issue.origin_class in penalizing_classes, previous_issues)
         )
 
-        coefficient = 0
+        coefficient: float = 0
         for issue in penalizing_issues:
-            coefficient += ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
+            coefficient += (
+                ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
+                if issue.category
+                else issue.number
+            )
 
         return coefficient
 
@@ -164,7 +166,7 @@ class Punisher:
         """The penalty coefficient is normalized by the formula: k / (k + n),
         where k is the penalty coefficient, n is the number of current issues.
         """
-        coefficient = 0
+        coefficient: float = 0
         if current_issues:
             coefficient = self._penalty_coefficient / (self._penalty_coefficient + len(current_issues))
 
@@ -185,7 +187,11 @@ class Punisher:
 
         result = {}
         for issue in penalizing_issues:
-            issue_coefficient = ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
+            issue_coefficient = (
+                ISSUE_TYPE_TO_PENALTY_COEFFICIENT.get(issue.category, 1) * issue.number
+                if issue.category
+                else issue.number
+            )
             normalized_issue_coefficient = issue_coefficient / (
                 self._penalty_coefficient + len(current_issues)
             )

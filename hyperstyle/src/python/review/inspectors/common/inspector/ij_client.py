@@ -8,6 +8,8 @@ TIMEOUT = 1
 
 
 class IJClient:
+    stub: model_pb2_grpc.CodeInspectionServiceStub
+
     def __init__(self, host: str = "localhost", port: int = 8080) -> None:
         self.host = host
         self.port = port
@@ -22,10 +24,10 @@ class IJClient:
             msg = "Failed to connect to ij code server"
             raise Exception(msg) from e
         else:
-            self.stub = model_pb2_grpc.CodeInspectionServiceStub(self.channel)
+            self.stub = model_pb2_grpc.CodeInspectionServiceStub(self.channel)  # type: ignore[no-untyped-call]
 
     def inspect(self, code: model_pb2.Code) -> model_pb2.InspectionResult:
         return self.stub.inspect(code, timeout=TIMEOUT)
 
     def init(self, service: model_pb2.Service) -> model_pb2.InitResult:
-        return self.stub.init(service, timeout=TIMEOUT)
+        return self.stub.init(service, timeout=TIMEOUT)  # type: ignore[attr-defined]

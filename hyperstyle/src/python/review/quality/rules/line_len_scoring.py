@@ -59,7 +59,8 @@ class LineLengthRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: LineLengthRule) -> LineLengthRule:
+    def merge(self, other: Rule) -> LineLengthRule:
+        assert isinstance(other, LineLengthRule)
         config = LineLengthRuleConfig(
             min(self.config.n_line_len_bad, other.config.n_line_len_bad),
             min(self.config.n_line_len_moderate, other.config.n_line_len_moderate),

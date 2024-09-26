@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import abc
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Any, TYPE_CHECKING
+from typing import Any, Protocol, runtime_checkable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -206,10 +205,9 @@ class BaseIssue(ShortIssue):
     difficulty: IssueDifficulty
 
 
-class Measurable(abc.ABC):
-    @abc.abstractmethod
-    def measure(self) -> int:
-        pass
+@runtime_checkable
+class MeasurableIssue(Protocol):
+    def measure(self) -> int: ...
 
 
 @dataclass(frozen=True)
@@ -218,7 +216,7 @@ class CodeIssue(BaseIssue):
 
 
 @dataclass(frozen=True)
-class BoolExprLenIssue(BaseIssue, Measurable):
+class BoolExprLenIssue(BaseIssue, MeasurableIssue):
     bool_expr_len: int
     type = IssueType.BOOL_EXPR_LEN
 
@@ -227,7 +225,7 @@ class BoolExprLenIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class FuncLenIssue(BaseIssue, Measurable):
+class FuncLenIssue(BaseIssue, MeasurableIssue):
     func_len: int
     type = IssueType.FUNC_LEN
 
@@ -236,7 +234,7 @@ class FuncLenIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class LineLenIssue(BaseIssue, Measurable):
+class LineLenIssue(BaseIssue, MeasurableIssue):
     line_len: int
     type = IssueType.LINE_LEN
 
@@ -245,7 +243,7 @@ class LineLenIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class CyclomaticComplexityIssue(BaseIssue, Measurable):
+class CyclomaticComplexityIssue(BaseIssue, MeasurableIssue):
     cc_value: int
     type = IssueType.CYCLOMATIC_COMPLEXITY
 
@@ -254,7 +252,7 @@ class CyclomaticComplexityIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class InheritanceIssue(BaseIssue, Measurable):
+class InheritanceIssue(BaseIssue, MeasurableIssue):
     inheritance_tree_depth: int
     type = IssueType.INHERITANCE_DEPTH
 
@@ -263,7 +261,7 @@ class InheritanceIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class ChildrenNumberIssue(BaseIssue, Measurable):
+class ChildrenNumberIssue(BaseIssue, MeasurableIssue):
     children_number: int
     type = IssueType.CHILDREN_NUMBER
 
@@ -272,7 +270,7 @@ class ChildrenNumberIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class WeightedMethodIssue(BaseIssue, Measurable):
+class WeightedMethodIssue(BaseIssue, MeasurableIssue):
     weighted_method: int
     type = IssueType.WEIGHTED_METHOD
 
@@ -281,7 +279,7 @@ class WeightedMethodIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class CouplingIssue(BaseIssue, Measurable):
+class CouplingIssue(BaseIssue, MeasurableIssue):
     class_objects_coupling: int
     type = IssueType.COUPLING
 
@@ -290,7 +288,7 @@ class CouplingIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class CohesionIssue(BaseIssue, Measurable):
+class CohesionIssue(BaseIssue, MeasurableIssue):
     cohesion_lack: int
     type = IssueType.COHESION
 
@@ -299,7 +297,7 @@ class CohesionIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class ClassResponseIssue(BaseIssue, Measurable):
+class ClassResponseIssue(BaseIssue, MeasurableIssue):
     class_response: int
     type = IssueType.CLASS_RESPONSE
 
@@ -308,7 +306,7 @@ class ClassResponseIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class MethodNumberIssue(BaseIssue, Measurable):
+class MethodNumberIssue(BaseIssue, MeasurableIssue):
     method_number: int
     type = IssueType.METHOD_NUMBER
 
@@ -317,7 +315,7 @@ class MethodNumberIssue(BaseIssue, Measurable):
 
 
 @dataclass(frozen=True)
-class MaintainabilityLackIssue(BaseIssue, Measurable):
+class MaintainabilityLackIssue(BaseIssue, MeasurableIssue):
     maintainability_lack: int
     type = IssueType.MAINTAINABILITY
 

@@ -58,13 +58,16 @@ class ComplexityRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: ComplexityRule) -> ComplexityRule:
+    def merge(self, other: Rule) -> ComplexityRule:
+        assert isinstance(other, ComplexityRule)
         config = ComplexityRuleConfig(
             min(self.config.complexity_bad, other.config.complexity_bad),
             min(self.config.complexity_moderate, other.config.complexity_moderate),
             min(self.config.complexity_good, other.config.complexity_good),
         )
         result_rule = ComplexityRule(config)
+        assert self.complexity is not None
+        assert other.complexity is not None
         result_rule.apply(max(self.complexity, other.complexity))
 
         return result_rule

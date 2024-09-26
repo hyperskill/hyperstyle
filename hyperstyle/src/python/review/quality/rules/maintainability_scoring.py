@@ -75,13 +75,16 @@ class MaintainabilityRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: MaintainabilityRule) -> MaintainabilityRule:
+    def merge(self, other: Rule) -> MaintainabilityRule:
+        assert isinstance(other, MaintainabilityRule)
         config = MaintainabilityRuleConfig(
             min(self.config.maintainability_lack_bad, other.config.maintainability_lack_bad),
             min(self.config.maintainability_lack_moderate, other.config.maintainability_lack_moderate),
             min(self.config.maintainability_lack_good, other.config.maintainability_lack_good),
         )
         result_rule = MaintainabilityRule(config)
+        assert self.maintainability_lack is not None
+        assert other.maintainability_lack is not None
         result_rule.apply(max(self.maintainability_lack, other.maintainability_lack))
 
         return result_rule

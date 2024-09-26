@@ -12,7 +12,7 @@ from hyperstyle.src.python.review.inspectors.ij_java.issue_types import (
 
 class JavaIJInspector(BaseIJInspector):
     inspector_type = InspectorType.IJ_JAVA
-    language_id = model_pb2.LanguageId.Java
+    language_id = model_pb2.LanguageId.Java  # type: ignore[attr-defined]
     issue_configs = ISSUE_CONFIGS
     ij_inspection_to_issue_type = IJ_INSPECTION_TO_ISSUE_TYPE
     ij_message_to_issue_type = IJ_MESSAGE_TO_ISSUE_TYPE

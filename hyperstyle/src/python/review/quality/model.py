@@ -34,7 +34,7 @@ class QualityType(Enum):
 
 class Rule(abc.ABC):
     rule_type: IssueType
-    quality_type: QualityType
+    quality_type: QualityType | None
     next_level_type: QualityType
     next_level_delta: float
     value: int
@@ -43,6 +43,10 @@ class Rule(abc.ABC):
     def apply(self, *args, **kwargs) -> None:
         pass
 
+    @abc.abstractmethod
+    def merge(self, other: Rule) -> Rule:
+        raise NotImplementedError
+
 
 class Quality:
     def __init__(self, rules: list[Rule]) -> None:
@@ -50,7 +54,10 @@ class Quality:
 
     @property
     def quality_type(self) -> QualityType:
-        return min((rule.quality_type for rule in self.rules), default=QualityType.EXCELLENT)
+        return min(
+            (rule.quality_type for rule in self.rules if rule.quality_type is not None),
+            default=QualityType.EXCELLENT,
+        )
 
     @property
     def next_quality_type(self) -> QualityType:

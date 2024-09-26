@@ -48,9 +48,12 @@ class ErrorProneRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: ErrorProneRule) -> ErrorProneRule:
+    def merge(self, other: Rule) -> ErrorProneRule:
+        assert isinstance(other, ErrorProneRule)
         config = ErrorProneRuleConfig(min(self.config.n_error_prone_bad, other.config.n_error_prone_bad))
         result_rule = ErrorProneRule(config)
+        assert self.n_error_prone is not None
+        assert other.n_error_prone is not None
         result_rule.apply(self.n_error_prone + other.n_error_prone)
 
         return result_rule

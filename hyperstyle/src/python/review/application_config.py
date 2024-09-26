@@ -13,7 +13,7 @@ class ApplicationConfig:
     disabled_inspectors: set[InspectorType]
     allow_duplicates: bool
     n_cpu: int
-    inspectors_config: dict
+    inspectors_config: dict[str, object]
     with_all_categories: bool
     start_line: int = 1
     language: Language | None = None

@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import sys
+from typing import TYPE_CHECKING
 
-logging_config: dict[str, object] = {
+if TYPE_CHECKING:
+    from logging.config import _DictConfigArgs
+
+logging_config: _DictConfigArgs = {
     "version": 1,
     "formatters": {
         "common": {

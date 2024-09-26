@@ -51,12 +51,15 @@ class ResponseRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: ResponseRule) -> ResponseRule:
+    def merge(self, other: Rule) -> ResponseRule:
+        assert isinstance(other, ResponseRule)
         config = ResponseRuleConfig(
             min(self.config.response_moderate, other.config.response_moderate),
             min(self.config.response_good, other.config.response_good),
         )
         result_rule = ResponseRule(config)
+        assert self.response is not None
+        assert other.response is not None
         result_rule.apply(max(self.response, other.response))
 
         return result_rule

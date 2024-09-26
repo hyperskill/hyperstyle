@@ -54,6 +54,22 @@ jobs:
           cd /review
           /hyperstyle/bin/pytest
 
+  type-checking:
+    name: Type checking
+    runs-on: [ self-hosted, small ]
+    needs:
+      - build_image
+    container:
+      image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
+      credentials:
+        username: ${{ secrets.REGISTRY_USER }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    steps:
+      - name: Lint
+        run: |
+          cd /review
+          /hyperstyle/bin/mypy .
+
   build:
     runs-on: [ self-hosted, small ]
     needs:

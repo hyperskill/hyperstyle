@@ -51,12 +51,15 @@ class CouplingRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: CouplingRule) -> CouplingRule:
+    def merge(self, other: Rule) -> CouplingRule:
+        assert isinstance(other, CouplingRule)
         config = CouplingRuleConfig(
             min(self.config.coupling_bad, other.config.coupling_bad),
             min(self.config.coupling_moderate, other.config.coupling_moderate),
         )
         result_rule = CouplingRule(config)
+        assert self.coupling is not None
+        assert other.coupling is not None
         result_rule.apply(max(self.coupling, other.coupling))
 
         return result_rule
