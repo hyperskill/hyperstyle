@@ -3,7 +3,7 @@ from __future__ import annotations
 from hyperstyle.src.python.review.inspectors.common.issue.issue import IssueType
 
 # Synchronized with https://github.com/JetBrains-Research/code-quality-ij-server/tree/master/docs/inspections/python
-IJ_INSPECTION_TO_ISSUE_TYPE = {
+IJ_INSPECTION_TO_ISSUE_TYPE: dict[str, IssueType] = {
     # BEST_PRACTICES
     "PyUnusedLocalInspection": IssueType.BEST_PRACTICES,
     "PySimplifyBooleanCheckInspection": IssueType.BEST_PRACTICES,
@@ -63,7 +63,7 @@ IJ_INSPECTION_TO_ISSUE_TYPE = {
     "PyUnresolvedReferencesInspection": IssueType.ERROR_PRONE,
 }
 
-IJ_MESSAGE_TO_ISSUE_TYPE = {
+IJ_MESSAGE_TO_ISSUE_TYPE: dict[str, dict[str, IssueType]] = {
     "PyDataclassInspection": {
         "is useless until " "__post_init__" " is declared": IssueType.BEST_PRACTICES,
         "should take all init-only variables (incl. inherited) in the same order as they are defined": IssueType.BEST_PRACTICES,

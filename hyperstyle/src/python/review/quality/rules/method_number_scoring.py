@@ -58,13 +58,16 @@ class MethodNumberRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: MethodNumberRule) -> MethodNumberRule:
+    def merge(self, other: Rule) -> MethodNumberRule:
+        assert isinstance(other, MethodNumberRule)
         config = MethodNumberRuleConfig(
             min(self.config.method_number_bad, other.config.method_number_bad),
             min(self.config.method_number_moderate, other.config.method_number_moderate),
             min(self.config.method_number_good, other.config.method_number_good),
         )
         result_rule = MethodNumberRule(config)
+        assert self.method_number is not None
+        assert other.method_number is not None
         result_rule.apply(max(self.method_number, other.method_number))
 
         return result_rule

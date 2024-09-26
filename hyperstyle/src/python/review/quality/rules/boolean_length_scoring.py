@@ -64,13 +64,16 @@ class BooleanExpressionRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: BooleanExpressionRule) -> BooleanExpressionRule:
+    def merge(self, other: Rule) -> BooleanExpressionRule:
+        assert isinstance(other, BooleanExpressionRule)
         config = BooleanExpressionRuleConfig(
             min(self.config.bool_expr_len_bad, other.config.bool_expr_len_bad),
             min(self.config.bool_expr_len_moderate, other.config.bool_expr_len_moderate),
             min(self.config.bool_expr_len_good, other.config.bool_expr_len_good),
         )
         result_rule = BooleanExpressionRule(config)
+        assert self.bool_expr_len is not None
+        assert other.bool_expr_len is not None
         result_rule.apply(max(self.bool_expr_len, other.bool_expr_len))
 
         return result_rule

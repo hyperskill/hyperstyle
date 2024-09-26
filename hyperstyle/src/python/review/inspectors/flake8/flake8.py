@@ -91,6 +91,7 @@ class Flake8Inspector(BaseInspector):
             return CODE_TO_ISSUE_TYPE[code]
 
         regex_match = re.match(r"^([A-Z]+)(\d)\d*$", code, re.IGNORECASE)
+        assert regex_match is not None, f"flake8: {code} - unexpected error code format"
         code_prefix = regex_match.group(1)
         first_code_number = regex_match.group(2)
 

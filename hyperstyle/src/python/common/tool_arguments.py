@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import ClassVar
 
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.common.language_version import LanguageVersion
@@ -30,6 +29,10 @@ class ArgumentsInfo:
     description: str
 
 
+INSPECTORS = [inspector.lower() for inspector in InspectorType.available_values()]
+DISABLED_INSPECTORS_EXAMPLE = f"-d {INSPECTORS[0].lower()},{INSPECTORS[1].lower()}"
+
+
 @unique
 class RunToolArgument(Enum):
     VERBOSITY = ArgumentsInfo(
@@ -43,15 +46,12 @@ class RunToolArgument(Enum):
         "default is 0",
     )
 
-    inspectors: ClassVar = [inspector.lower() for inspector in InspectorType.available_values()]
-    disabled_inspectors_example = f"-d {inspectors[0].lower()},{inspectors[1].lower()}"
-
     DISABLE = ArgumentsInfo(
         "-d",
         "--disable",
         'Disable inspectors. '
-        f'Available values: {", ".join(inspectors)}. '
-        f'Example: {disabled_inspectors_example}',
+        f'Available values: {", ".join(INSPECTORS)}. '
+        f'Example: {DISABLED_INSPECTORS_EXAMPLE}',
     )
 
     DUPLICATES = ArgumentsInfo(

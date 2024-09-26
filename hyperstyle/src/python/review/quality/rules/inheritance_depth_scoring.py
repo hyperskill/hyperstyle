@@ -44,9 +44,12 @@ class InheritanceDepthRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: InheritanceDepthRule) -> InheritanceDepthRule:
+    def merge(self, other: Rule) -> InheritanceDepthRule:
+        assert isinstance(other, InheritanceDepthRule)
         config = InheritanceDepthRuleConfig(min(self.config.depth_bad, other.config.depth_bad))
         result_rule = InheritanceDepthRule(config)
+        assert self.depth is not None
+        assert other.depth is not None
         result_rule.apply(max(self.depth, other.depth))
 
         return result_rule

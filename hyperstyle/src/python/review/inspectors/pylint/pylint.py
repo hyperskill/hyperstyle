@@ -64,7 +64,7 @@ class PylintInspector(BaseInspector):
         row_re = re.compile(r"^(.*):(\d+):(\d+):([IRCWEF]\d+):(.*)$", re.MULTILINE)
         issue_configs_handler = IssueConfigsHandler(*ISSUE_CONFIGS)
 
-        issues = []
+        issues: list[BaseIssue] = []
         for groups in row_re.findall(output):
             if groups[1] == INFO_CATEGORY:
                 continue
@@ -76,7 +76,7 @@ class PylintInspector(BaseInspector):
             origin_class = groups[3]
             issue_type = cls.choose_issue_type(origin_class)
             if issue_type not in cls.supported_issue_types:
-                logger.error("pylint: unsupported issue type %s", issue_type.__name__)
+                logger.error("pylint: unsupported issue type %s", issue_type.__name__)  # type: ignore[attr-defined]
                 continue
 
             base_issue = BaseIssue(

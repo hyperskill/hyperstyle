@@ -51,11 +51,14 @@ class FunctionLengthRule(Rule):
     def __get_next_quality_type(self) -> QualityType:
         return QualityType.EXCELLENT
 
-    def merge(self, other: FunctionLengthRule) -> FunctionLengthRule:
+    def merge(self, other: Rule) -> FunctionLengthRule:
+        assert isinstance(other, FunctionLengthRule)
         config = FunctionLengthRuleConfig(
             min(self.config.func_len_bad, other.config.func_len_bad),
         )
         result_rule = FunctionLengthRule(config)
+        assert self.func_len is not None
+        assert other.func_len is not None
         result_rule.apply(max(self.func_len, other.func_len))
 
         return result_rule

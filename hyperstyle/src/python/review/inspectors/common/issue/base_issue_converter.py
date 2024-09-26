@@ -8,7 +8,7 @@ from hyperstyle.src.python.review.inspectors.common.issue.issue import (
     get_issue_class_by_issue_type,
     get_measure_name_by_measurable_issue_type,
     IssueData,
-    Measurable,
+    MeasurableIssue,
 )
 
 if TYPE_CHECKING:
@@ -36,7 +36,7 @@ def convert_base_issue(base_issue: BaseIssue, issue_configs_handler: IssueConfig
     issue_data[IssueData.DESCRIPTION.value] = issue_configs_handler.get_description(origin_class, description)
 
     issue_class = get_issue_class_by_issue_type(issue_type)
-    if issubclass(issue_class, Measurable):
+    if issubclass(issue_class, MeasurableIssue):
         measure = issue_configs_handler.parse_measure(origin_class, description)
         if measure is None:
             logger.error(f"{inspector_type.value}: Unable to parse measure.")

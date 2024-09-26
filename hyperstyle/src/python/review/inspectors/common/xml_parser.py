@@ -20,12 +20,12 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def __should_handle_element(element: ET) -> bool:
+def __should_handle_element(element: Element) -> bool:
     """Checks if a tree element is a file."""
     return element.tag == "file"
 
 
-def __is_error(element: ET) -> bool:
+def __is_error(element: Element) -> bool:
     """Checks if a tree element is an error."""
     return element.tag == "error"
 

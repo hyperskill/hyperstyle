@@ -62,12 +62,15 @@ class CyclomaticComplexityRule(Rule):
             return QualityType.MODERATE
         return QualityType.EXCELLENT
 
-    def merge(self, other: CyclomaticComplexityRule) -> CyclomaticComplexityRule:
+    def merge(self, other: Rule) -> CyclomaticComplexityRule:
+        assert isinstance(other, CyclomaticComplexityRule)
         config = CyclomaticComplexityRuleConfig(
             min(self.config.cc_value_bad, other.config.cc_value_bad),
             min(self.config.cc_value_moderate, other.config.cc_value_moderate),
         )
         result_rule = CyclomaticComplexityRule(config)
+        assert self.cc_value is not None
+        assert other.cc_value is not None
         result_rule.apply(max(self.cc_value, other.cc_value))
 
         return result_rule

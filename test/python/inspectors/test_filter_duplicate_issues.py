@@ -3,12 +3,17 @@ from __future__ import annotations
 from pathlib import Path
 
 from hyperstyle.src.python.review.inspectors.common.inspector.inspector_type import InspectorType
-from hyperstyle.src.python.review.inspectors.common.issue.issue import CodeIssue, IssueDifficulty, IssueType
+from hyperstyle.src.python.review.inspectors.common.issue.issue import (
+    BaseIssue,
+    CodeIssue,
+    IssueDifficulty,
+    IssueType,
+)
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
 
 
 def test_filter_duplicate_issues_when_single_inspector() -> None:
-    issues = [
+    issues: list[BaseIssue] = [
         CodeIssue(
             file_path=Path("code.py"),
             line_no=10,
@@ -57,7 +62,7 @@ def test_filter_duplicate_issues_when_single_inspector() -> None:
 
 
 def test_filter_duplicate_issues_when_several_inspectors() -> None:
-    issues = [
+    issues: list[BaseIssue] = [
         CodeIssue(
             file_path=Path("code.py"),
             line_no=10,
@@ -106,7 +111,7 @@ def test_filter_duplicate_issues_when_several_inspectors() -> None:
 
 
 def test_filter_duplicate_issues_when_several_issues_in_line_no() -> None:
-    issues = [
+    issues: list[BaseIssue] = [
         CodeIssue(
             file_path=Path("code.py"),
             line_no=10,

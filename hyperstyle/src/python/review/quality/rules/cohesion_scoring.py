@@ -61,13 +61,16 @@ class CohesionRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: CohesionRule) -> CohesionRule:
+    def merge(self, other: Rule) -> CohesionRule:
+        assert isinstance(other, CohesionRule)
         config = CohesionRuleConfig(
             min(self.config.cohesion_lack_bad, other.config.cohesion_lack_bad),
             min(self.config.cohesion_lack_moderate, other.config.cohesion_lack_moderate),
             min(self.config.cohesion_lack_good, other.config.cohesion_lack_good),
         )
         result_rule = CohesionRule(config)
+        assert self.cohesion_lack is not None
+        assert other.cohesion_lack is not None
         result_rule.apply(max(self.cohesion_lack, other.cohesion_lack))
 
         return result_rule

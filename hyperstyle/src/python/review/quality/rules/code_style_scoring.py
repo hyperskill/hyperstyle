@@ -72,8 +72,8 @@ class CodeStyleRule(Rule):
         self.rule_type = IssueType.CODE_STYLE
         self.total_lines = 0
         self.n_code_style_lines = 0
-        self.ratio = 0
-        self.quality_type = None
+        self.ratio: float = 0
+        self.quality_type: QualityType | None = None
         self.next_level_delta = 0
 
     # TODO: refactor
@@ -119,7 +119,10 @@ class CodeStyleRule(Rule):
             return QualityType.GOOD
         return QualityType.EXCELLENT
 
-    def merge(self, other: CodeStyleRule) -> CodeStyleRule:
+    def merge(self, other: Rule) -> CodeStyleRule:
+        assert isinstance(other, CodeStyleRule)
+        assert self.quality_type is not None
+        assert other.quality_type is not None
         if self.quality_type > other.quality_type:
             return other
         return self

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from hyperstyle.src.python.review.inspectors.common.utils import (
     contains_format_fields,
@@ -136,7 +136,7 @@ class IssueConfigsHandler:
             issue_config.origin_class: issue_config for issue_config in issue_configs
         }
 
-    def _parse_description(self, origin_class: str, description: str) -> tuple | None:
+    def _parse_description(self, origin_class: str, description: str) -> tuple[object, ...] | None:
         """Parse a description.
 
         :param origin_class: An origin class of issue.
@@ -158,7 +158,7 @@ class IssueConfigsHandler:
 
         return args
 
-    def parse_measure(self, origin_class: str, description: str) -> Optional:
+    def parse_measure(self, origin_class: str, description: str) -> object | None:
         """Parse a measure from a description.
 
         :param origin_class: An origin class of issue.

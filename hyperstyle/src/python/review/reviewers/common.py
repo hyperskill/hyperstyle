@@ -73,26 +73,28 @@ LANGUAGE_TO_INSPECTORS: dict[Language, list[BaseInspector]] = {
 }
 
 
-def _inspect_code(
-    metadata: Metadata, config: ApplicationConfig, language: Language
-) -> list[BaseIssue] | None:
+def _inspect_code(metadata: Metadata, config: ApplicationConfig, language: Language) -> list[BaseIssue]:
     inspectors = LANGUAGE_TO_INSPECTORS[language]
-    ij_inspectors = list(
-        filter(
-            lambda inspector: isinstance(inspector, BaseIJInspector)
-            and inspector.inspector_type not in config.disabled_inspectors,
-            inspectors,
-        ),
-    )
+    ij_inspectors: list[BaseIJInspector] = [
+        inspector
+        for inspector in inspectors
+        if (
+            isinstance(inspector, BaseIJInspector)
+            and inspector.inspector_type not in config.disabled_inspectors
+        )
+    ]
 
     connection_parameters = (
         None if config.ij_config is None else json.loads(config.ij_config).get(language.value.lower())
     )
-    if ij_inspectors and connection_parameters is None:
-        msg = f"Connection parameters for {language.value} inspectors are not provided"
-        raise ValueError(msg)
-    for inspector in ij_inspectors:
-        inspector.setup_connection_parameters(connection_parameters["host"], connection_parameters["port"])
+    if ij_inspectors:
+        if connection_parameters is None:
+            msg = f"Connection parameters for {language.value} inspectors are not provided"
+            raise ValueError(msg)
+        for inspector in ij_inspectors:
+            inspector.setup_connection_parameters(
+                connection_parameters["host"], connection_parameters["port"]
+            )
 
     if isinstance(metadata, InMemoryMetadata):
         return inspect_in_parallel(run_inspector_in_memory, metadata.code, config, inspectors)
@@ -110,19 +112,20 @@ def perform_language_review(
         if not config.allow_duplicates:
             issues = filter_duplicate_issues(issues)
 
-    current_files = None
     if isinstance(metadata, FileMetadata):
         current_files = [metadata.path]
         issues = filter_out_of_range_issues(issues, config.start_line, config.end_line)
     elif isinstance(metadata, ProjectMetadata):
         current_files = metadata.language_to_files[language]
+    else:
+        current_files = None
 
     file_path_to_issues = defaultdict(list)
     for issue in issues:
         file_path_to_issues[issue.file_path].append(issue)
 
     if current_files is None:
-        files = file_path_to_issues.keys()
+        files = list(file_path_to_issues.keys())
         current_files = [] if len(files) == 0 else files
 
     previous_issues = get_previous_issues_by_language(config.history, language)

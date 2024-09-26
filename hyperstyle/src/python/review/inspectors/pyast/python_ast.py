@@ -145,7 +145,7 @@ class PythonAstInspector(BaseInspector):
 
         path_to_files = language.filter_paths_by_language(path_to_files, Language.PYTHON)
 
-        metrics = []
+        metrics: list[BaseIssue] = []
         for path_to_file in path_to_files:
             file_content = path_to_file.read_text()
             tree = ast.parse(file_content, path_to_file.name)

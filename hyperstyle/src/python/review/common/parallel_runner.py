@@ -56,9 +56,11 @@ def inspect_in_parallel(
         return issues
 
     with multiprocessing.Pool(config.n_cpu) as pool:
-        issues = pool.map(
-            functools.partial(inspector_runner, data, config),
-            inspectors_to_run,
+        return list(
+            itertools.chain(
+                *pool.map(
+                    functools.partial(inspector_runner, data, config),
+                    inspectors_to_run,
+                )
+            )
         )
-
-    return list(itertools.chain(*issues))
