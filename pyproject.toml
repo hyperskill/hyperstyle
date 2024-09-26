@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hyperstyle"
-version = "1.6.0"
+version = "1.6.2"
 description = "A tool for running a set of pre-configured linters and evaluating code quality."
 authors = ["Hyperskill Team"]
 readme = "README.md"
