@@ -144,7 +144,9 @@ class BaseIJInspector(BaseInspector):
 
         client = IJClient(self.host, self.port)
 
-        code = model_pb2.Code(code_text, self.language_id)
+        code = model_pb2.Code()
+        code.languageId = self.language_id
+        code.text = code_text
 
         inspection_result = client.inspect(code)
 
