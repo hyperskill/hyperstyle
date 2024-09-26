@@ -9,9 +9,9 @@ service CodeInspectionService {
 }
 
 enum LanguageId {
-    Python = 0;
+    python = 0;
     kotlin = 1;
-    Java = 2;
+    java = 2;
 }
 
 message Code {
