@@ -11,8 +11,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from hyperstyle.src.python.review.application_config import ApplicationConfig
-    from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector
     from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
+
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseInspector, BaseIJInspector
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +37,11 @@ def _run_inspector(
     try:
         return inspect_function(data, config.inspectors_config)
     except Exception:
+        if isinstance(inspector, BaseIJInspector):
+            logger.exception(f"Inspector {inspector.inspector_type} failed. Returning empty result.")
+            return []
         logger.exception(f"Inspector {inspector.inspector_type} failed.")
-        return []
+        raise
 
 
 def inspect_in_parallel(
