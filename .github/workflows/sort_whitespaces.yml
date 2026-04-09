@@ -14,16 +14,22 @@ on:
       - 'hyperstyle/src/python/review/inspectors/flake8/whitelist.txt'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: sort-whitespaces-${{ github.ref_name }}
   cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: write
+
+run-name: Sort Whitespaces - ${{ github.ref_name }}
 
 jobs:
   sort_whitespaces:
     name: Sort whitespaces
-    runs-on: [ self-hosted, small ]
+    runs-on: arc-runners-small
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Sort whitelists
         run: |

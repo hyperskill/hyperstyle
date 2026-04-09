@@ -8,15 +8,21 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: build-${{ github.ref_name }}
   cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+run-name: Build - ${{ github.ref_name }}
 
 jobs:
   build_image:
     name: Build Image
-    runs-on: [ self-hosted, small ]
+    runs-on: arc-runners-small
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: docker/login-action@v3
         with:
@@ -42,7 +48,7 @@ jobs:
     name: Tests
     needs:
       - build_image
-    runs-on: [ self-hosted, small ]
+    runs-on: arc-runners-small
     container:
       image: hyperskill.azurecr.io/hyperstyle:${{ github.sha }}
       credentials:
@@ -55,7 +61,7 @@ jobs:
           /hyperstyle/bin/pytest
 
   build:
-    runs-on: [ self-hosted, small ]
+    runs-on: arc-runners-small
     needs:
       - build_image
     container:
