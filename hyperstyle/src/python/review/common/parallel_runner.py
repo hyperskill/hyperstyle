@@ -6,14 +6,17 @@ import logging
 import multiprocessing
 from typing import Any, TYPE_CHECKING
 
-from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import BaseIJInspector, BaseInspector
-
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
     from hyperstyle.src.python.review.application_config import ApplicationConfig
     from hyperstyle.src.python.review.inspectors.common.issue.issue import BaseIssue
+
+from hyperstyle.src.python.review.inspectors.common.inspector.base_inspector import (
+    BaseIJInspector,
+    BaseInspector,
+)
 
 logger = logging.getLogger(__name__)
 
